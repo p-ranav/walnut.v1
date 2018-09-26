@@ -1,0 +1,65 @@
+#ifndef LEXER_TOKEN
+#define LEXER_TOKEN
+
+#define TOKEN_LIST                       \
+  TOKEN(INVALID, "invalid")              \
+  TOKEN(WHITESPACE, " ")                 \
+  TOKEN(END_OF_LINE, "EOL")              \
+  TOKEN(END_OF_FILE, "EOF")              \
+  /* Delimiters */                       \
+  TOKEN(DOT, ".")                        \
+  TOKEN(COMMA, ",")                      \
+  TOKEN(COLON, ":")                      \
+  TOKEN(SEMI_COLON, ";")                 \
+  TOKEN(EXCLAMATION, "!")                \
+  TOKEN(QUESTION, "?")                   \
+  /* Comparison Operators */             \
+  TOKEN(EQUAL, "==")                     \
+  TOKEN(NOT_EQUAL, "!=")                 \
+  TOKEN(GREATER, ">")                    \
+  TOKEN(GREATER_EQUAL, ">=")             \
+  TOKEN(LESSER, "<")                     \
+  TOKEN(LESSER_EQUAL, "<=")              \
+  /* Paranthesis, Braces and Brackets */ \
+  TOKEN(LEFT_PARANTHESIS, "(")           \
+  TOKEN(LEFT_CURLY, "{")                 \
+  TOKEN(LEFT_BRACKETS, "[")              \
+  TOKEN(RIGHT_PARANTHESIS, ")")          \
+  TOKEN(RIGHT_CURLY, "}")                \
+  TOKEN(RIGHT_BRACKETS, "]")             \
+  /* Arithmetic Operators */             \
+  TOKEN(ADD, "+")                        \
+  TOKEN(SUBTRACT, "-")                   \
+  TOKEN(MULTIPLY, "*")                   \
+  TOKEN(DIVIDE, "/")                     \
+  TOKEN(MODULUS, "%")                    \
+  /* Assignment Operators */             \
+  TOKEN(ASSIGN, "=")                     \
+  TOKEN(ADD_ASSIGN, "+=")                \
+  TOKEN(SUBTRACT_ASSIGN, "-=")           \
+  TOKEN(MULTIPLY_ASSIGN, "*=")           \
+  TOKEN(DIVIDE_ASSIGN, "/=")             \
+  TOKEN(MODULUS_ASSIGN, "%=")            \
+  /* Bitwise Operators */                \
+  TOKEN(BITWISE_AND, "&")                \
+  TOKEN(BITWISE_OR, "|")                 \
+  TOKEN(BITWISE_NOT, "!")                \
+  TOKEN(BITWISE_XOR, "^")                \
+  TOKEN(BITWISE_ONES_COMPLEMENT, "~")    \
+  TOKEN(BITWISE_LEFT_SHIFT, "<<")        \
+  TOKEN(BITWISE_RIGHT_SHIFT, ">>")
+
+enum token_t
+{
+#define TOKEN(token, string) #token,
+  TOKEN_LIST
+#undef TOKEN
+};
+
+static char *token_strings[] = {
+#define TOKEN(token, string) string,
+    TOKEN_LIST
+#undef TOKEN
+};
+
+#endif
