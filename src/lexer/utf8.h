@@ -1,3 +1,10 @@
+#if defined(_WIN32)
+#include <stdint.h>
+typedef uint8_t u_int8_t;
+typedef uint16_t u_int16_t;
+typedef uint32_t u_int32_t;
+#endif
+
 #include <stdarg.h>
 
 /* is c the start of a utf8 sequence? */
