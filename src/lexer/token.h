@@ -49,17 +49,26 @@
   TOKEN(BITWISE_LEFT_SHIFT, "<<")        \
   TOKEN(BITWISE_RIGHT_SHIFT, ">>")
 
-enum token_t
+typedef enum
 {
 #define TOKEN(token, string) #token,
   TOKEN_LIST
 #undef TOKEN
-};
+} token;
 
 static char *token_strings[] = {
 #define TOKEN(token, string) string,
     TOKEN_LIST
 #undef TOKEN
+};
+
+struct token_t
+{
+  token type;
+  char *value; // UTF-8
+  const char *filename;
+  unsigned int line;
+  unsigned int cursor;
 };
 
 #endif
