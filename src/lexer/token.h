@@ -6,6 +6,7 @@
   TOKEN(WHITESPACE, " ")                 \
   TOKEN(END_OF_LINE, "EOL")              \
   TOKEN(END_OF_FILE, "EOF")              \
+  TOKEN(SYMBOL, "symbol")\
   /* Delimiters */                       \
   TOKEN(DOT, ".")                        \
   TOKEN(COMMA, ",")                      \
@@ -51,7 +52,7 @@
 
 typedef enum
 {
-#define TOKEN(label, string) label,
+#define TOKEN(label, string) TOKEN_##label,
   TOKEN_LIST
 #undef TOKEN
 } token;
@@ -65,8 +66,8 @@ static char *token_strings[] = {
 struct token_t
 {
   token type;
-  char *value; // UTF-8
-  const char *filename;
+  char *value;
+  const char *file_path;
   unsigned int line;
   unsigned int cursor;
 };

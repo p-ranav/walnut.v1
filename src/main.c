@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     trace("%s (%ld bytes)\n", file_path, file_size);
 
     // Tokenize the buffer of characters
-    tokenize(file_size, buffer);
+    tokenize(file_path, file_size, buffer);
 
   }
 

@@ -7,4 +7,6 @@
 #define trace(...) (void)0;
 #endif
 
+#define error(...) fprintf(stderr, __VA_ARGS__)
+
 #endif
