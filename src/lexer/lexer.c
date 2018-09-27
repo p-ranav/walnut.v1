@@ -356,7 +356,8 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
     (*cursor) += 1;
 
-    if (startswith(character_in_string, character_in_string_width, '\\'))
+    if (startswith(character_in_string, character_in_string_width, '\\') ||
+      endswith(character_in_string, character_in_string_width, '\\'))
     {
       // escape sequence
       char * peek_character = NULL;
