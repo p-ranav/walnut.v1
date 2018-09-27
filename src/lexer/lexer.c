@@ -27,8 +27,10 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
       if (startswith(next_character, next_character_width, '/'))
         parse_comments(buffer_size, buffer, &line, &cursor, &index, &character);
       else if (valid_symbol(next_character_width, next_character))
-        parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index, &character, 
+        parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
+      else if (whitespace(next_character_width, next_character))
+        parse_whitespace(buffer_size, buffer, &line, &cursor, &index, &character);
     }
 
   }
@@ -245,4 +247,36 @@ int valid_symbol(long character_width, char * multi_byte_character) {
       ((unsigned char)character >= 0x80));
   }
   return result;
+}
+
+void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor,
+  long * index, char * current_character) 
+{
+  while (1)
+  {
+    // loop here until we stop encountering 'space' characters
+    char * peek_character = NULL;
+    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    if (whitespace(peek_character_width, peek_character))
+    {
+      peek_character_width = consume(buffer, index, current_character, &peek_character);
+      (*cursor) += 1;
+      (*index) += 1;
+      continue;
+    }
+    return; // break out of this loop
+  }
+  // we don't need to store whitespace tokens in the result
+}
+
+int whitespace(long character_width, char * multi_byte_character) {
+  if (
+    startswith(multi_byte_character, character_width, ' ') ||
+    startswith(multi_byte_character, character_width, 0x09) ||
+    startswith(multi_byte_character, character_width, 0x08) ||
+    startswith(multi_byte_character, character_width, 0x0D)
+    )
+    return 1;
+  else
+    return 0;
 }

@@ -64,4 +64,11 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
 // characters >= 0x80, which is the range of UTF-8 continuation bytes.
 int valid_symbol(long character_width, char * multi_byte_character);
 
+// Parse and ignore whitespace
+void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor,
+  long * index, char * current_character);
+
+// check if a multi-byte character is a space character
+int whitespace(long character_width, char * multi_byte_character);
+
 #endif
