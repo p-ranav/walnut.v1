@@ -21,12 +21,9 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
       char * next_character = NULL;
       long next_character_width = consume(buffer, &index, &character, &next_character);
 
-      // Print unicode character for debugging
-      trace("%s", next_character);
-
       if (startswith(next_character, next_character_width, '/'))
         parse_comments(buffer_size, buffer, &line, &cursor, &index, &character);
-      else if (valid_symbol(next_character_width, next_character))
+      if (valid_symbol(next_character_width, next_character))
         parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
       else if (whitespace(next_character_width, next_character))
@@ -66,8 +63,7 @@ long consume(char * buffer, long * index, char * current_character, char ** mult
     sequence_index += 1;
     (*multi_byte_character)[sequence_index - 1] = *current_character;
   }
-  (*multi_byte_character)[sequence_index] = '\0';
-
+  (*multi_byte_character)[character_width] = '\0';
   // return the width of the consumed multi-byte character
   return character_width;
 }
@@ -109,54 +105,6 @@ int startswith(char * multi_byte_character, long character_width, char character
     return 1;
   else
     return 0;
-}
-
-int endswith(char * multi_byte_character, long character_width, char character) {
-
-  // if the multi-byte character is NULL for some reason, return false
-  if (!multi_byte_character)
-    return 0;
-
-  // compare the last byte of the multi-byte character with input character
-  if (multi_byte_character[character_width - 1] == character)
-    return 1;
-  else
-    return 0;
-}
-
-int contains(char * multi_byte_character, long character_width, char character) {
-
-  // if the multi-byte character is NULL for some reason, return false
-  if (!multi_byte_character)
-    return 0;
-
-  long i;
-  for (i = 0; i < character_width; i++)
-  {
-    // compare each byte of the multi-byte character with input character
-    if (multi_byte_character[i] == character)
-      return 1;
-  }
-  return 0;
-}
-
-int equals(char * multi_byte_character, long character_width, char * rhs_character) 
-{
-  // if the multi-byte character is NULL for some reason, return false
-  if (!multi_byte_character)
-    return 0;
-
-  long rhs_width = u8_seqlen(rhs_character);
-  if (character_width != rhs_width)
-    return 0;
-
-  long i;
-  for (i = 0; i < character_width; i++)
-  {
-    if (multi_byte_character[i] != rhs_character[i])
-      return 0;
-  }
-  return 1;
 }
 
 void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor, long * index, char * current_character)
@@ -225,7 +173,7 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
   symbol->cursor = *cursor;
   symbol->type = TOKEN_SYMBOL;
 
-  symbol->value = (char *)malloc(next_character_width + 1);
+  symbol->value = (char *)malloc(next_character_width);
   long i;
   for (i = 0; i < next_character_width; i++)
   {
@@ -353,11 +301,10 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
   {
     // loop till we encounter the closing double quotes
     char * character_in_string = NULL;
-    long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+    long character_in_string_width = peek(buffer, index, current_character, &character_in_string);
     (*cursor) += 1;
 
-    if (startswith(character_in_string, character_in_string_width, '\\') ||
-      endswith(character_in_string, character_in_string_width, '\\'))
+    if (startswith(character_in_string, character_in_string_width, '\\'))
     {
       // escape sequence
       char * peek_character = NULL;
@@ -393,12 +340,12 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     }
 
     // Add to string literal if not closing quotes or end of file
-    // TODO: is this really enough? checking against int 34 for double quotes?
-    // TODO: check against other unicode double quote variations
-    if (!endswith(character_in_string, character_in_string_width, 34) &&
+    if (!startswith(character_in_string, character_in_string_width, '\"') &&
         !startswith(character_in_string, character_in_string_width, EOF))
     {
       // realloc and add character_in_string to string->value
+      char * character_in_string = NULL;
+      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
       continue;
     }
@@ -410,8 +357,8 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
       // TODO: report this error a little better
       error("EOL/EOF encountered before closing literal quotes\n");
     }
-    character_in_string_width -= 1;
-    append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
+    // consume the closing double quotes
+    consume(buffer, index, current_character, &character_in_string);
     break;
   }
   list_node_t *node = list_node_new(string);

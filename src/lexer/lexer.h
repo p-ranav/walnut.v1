@@ -43,30 +43,6 @@ long peek(char * buffer, long * index, char * current_character, char ** multi_b
 // the next character starts with, e.g., '/' or \" or \'
 int startswith(char * multi_byte_character, long character_width, char character);
 
-// Return true (1) if the multi-byte character ends with input character
-// If the multi_byte_character is NULL for some reason, return false
-// else, compare last byte and return appropriate result
-//
-// This function will be extensively used in tokenize(...) to check if 
-// the next character starts with, e.g., '/' or \" or \'
-int endswith(char * multi_byte_character, long character_width, char character);
-
-// Return true (1) if the multi-byte character contains input character
-// If the multi_byte_character is NULL for some reason, return false
-// else, compare each byte and return appropriate result
-//
-// This function will be extensively used in tokenize(...) to check if 
-// the next character starts with, e.g., '/' or \" or \'
-int contains(char * multi_byte_character, long character_width, char character);
-
-// Return true (1) if the multi-byte character equals another multi-byte character
-// If the multi_byte_character is NULL for some reason, return false
-// else, compare each byte and return appropriate result
-//
-// This function will be extensively used in tokenize(...) to check if 
-// the next character starts with, e.g., '/' or \" or \'
-int equals(char * multi_byte_character, long character_width, char * rhs_character);
-
 // Parse and remove comments
 // checks both comments '// ...' and block comments /* ... */
 // we're not creating tokens for these characters. consume and move on.
