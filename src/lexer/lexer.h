@@ -64,11 +64,22 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
 // characters >= 0x80, which is the range of UTF-8 continuation bytes.
 int valid_symbol(long character_width, char * multi_byte_character);
 
+// helper function to append two unicode multi-byte character arrays
+// what I want here is lhs += rhs where lhs and rhs are character arrays
+void append_to(char ** lhs, long * lhs_size, char ** rhs, long * rhs_size);
+
 // Parse and ignore whitespace
 void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor,
   long * index, char * current_character);
 
 // check if a multi-byte character is a space character
 int whitespace(long character_width, char * multi_byte_character);
+
+// check if a multi-byte character is a string literal, e.g., "Hello World"
+// accept everything between double quotes
+// push string literal to end of tokens when done
+void parse_string_literal(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
+  char * next_character, list_t * tokens);
 
 #endif

@@ -7,6 +7,7 @@
   TOKEN(END_OF_LINE, "EOL")              \
   TOKEN(END_OF_FILE, "EOF")              \
   TOKEN(SYMBOL, "symbol")\
+  TOKEN(STRING_LITERAL, "string")\
   /* Delimiters */                       \
   TOKEN(DOT, ".")                        \
   TOKEN(COMMA, ",")                      \

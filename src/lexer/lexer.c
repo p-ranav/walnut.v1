@@ -31,6 +31,9 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
           next_character_width, next_character, tokens);
       else if (whitespace(next_character_width, next_character))
         parse_whitespace(buffer_size, buffer, &line, &cursor, &index, &character);
+      //else if (startswith(next_character, next_character_width, '\"'))
+      //  parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
+      //    next_character_width, next_character, tokens);
     }
 
   }
@@ -200,21 +203,22 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
       // reallocate space in symbol->value and copy this peek_character
       // the way this is done here is probably not efficient
       // I'm reallocating after each multi-byte character is consumed
-      current_size += peek_character_width;
-      char * realloc_value = realloc(symbol->value, current_size + 1);
-      if (!realloc_value) {
+      // append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
+      // current_size += peek_character_width;
+      char * realloc_symbol = realloc(symbol->value, current_size + peek_character_width + 1);
+      if (!realloc_symbol) {
         error("realloc failed!\n");
         exit(EXIT_FAILURE);
       }
-      symbol->value = realloc_value;
-      
+      symbol->value = realloc_symbol;
+
       // save new multi-byte character
       long i;
       for (i = 0; i < peek_character_width; i++) {
-        symbol->value[current_index] = peek_character[i];
-        current_index += 1;
+        symbol->value[current_size] = peek_character[i];
+        current_size += 1;
       }
-      symbol->value[current_index] = '\0';
+      symbol->value[current_size] = '\0'; // null terminate the updated LHS
 
       // continue to next character
       continue;
@@ -249,6 +253,26 @@ int valid_symbol(long character_width, char * multi_byte_character) {
   return result;
 }
 
+void append_to(char ** lhs, long * lhs_size, char ** rhs, long * rhs_size) 
+{
+  // reallocate space in lhs and copy rhs
+  // (*lhs_size) += (*rhs_size);
+  char * realloc_lhs = realloc(*lhs, (*lhs_size + *rhs_size) + 1);
+  if (!realloc_lhs) {
+    error("realloc failed!\n");
+    exit(EXIT_FAILURE);
+  }
+  *lhs = realloc_lhs;
+
+  // save new multi-byte character
+  long i;
+  for (i = 0; i < (*rhs_size); i++) {
+    (*lhs)[(*lhs_size)] = (*rhs)[i];
+    (*lhs_size) += 1;
+  }
+  (*lhs)[(*lhs_size)] = '\0'; // null terminate the updated LHS
+}
+
 void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor,
   long * index, char * current_character) 
 {
@@ -279,4 +303,82 @@ int whitespace(long character_width, char * multi_byte_character) {
     return 1;
   else
     return 0;
+}
+
+void parse_string_literal(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
+  char * next_character, list_t * tokens) 
+{
+  // create a "string" token
+  struct token_t * string = (struct token_t*)malloc(sizeof(struct token_t));
+  string->file_path = file_path;
+  string->line = *line;
+  string->cursor = *cursor;
+  string->type = TOKEN_STRING_LITERAL;
+
+  string->value = NULL;
+  long current_size = 0;
+  while (1)
+  {
+    // loop till we encounter the closing double quotes
+    char * character_in_string = NULL;
+    long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+    printf("string: %s\n", character_in_string);
+    (*cursor) += 1;
+
+    if (startswith(character_in_string, character_in_string_width, '\\'))
+    {
+      // escape sequence
+      char * peek_character = NULL;
+      long peek_character_width = consume(buffer, index, current_character, &peek_character);
+      if (startswith(peek_character, peek_character_width, '\"') ||
+        startswith(peek_character, peek_character_width, '\\'))
+      {
+        // realloc and add '\\' to string->value
+        char * escape = "\\";
+        long escape_size = 1;
+        append_to(&string->value, &current_size, &escape, &escape_size);
+
+        peek_character_width = consume(buffer, index, current_character, &peek_character);
+        (*cursor) += 1;
+
+        // realloc and add peek_character to string->value
+        append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+
+        continue;
+      }
+
+      // end of line or end of file before the closing quotes
+      if (startswith(peek_character, peek_character_width, 0x0A) ||
+        startswith(peek_character, peek_character_width, EOF))
+      {
+        // TODO: report this error a little better
+        error("EOL/EOF encountered before closing literal quotes\n");
+      }
+
+      // realloc and add peek_character to string->value
+      append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+      continue;
+    }
+
+    // Add to string literal if not closing quotes or end of file
+    if (!startswith(character_in_string, character_in_string_width, '\"') &&
+        !startswith(character_in_string, character_in_string_width, EOF))
+    {
+      // realloc and add character_in_string to string->value
+      append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
+      continue;
+    }
+
+    // end of line or end of file before the closing quotes
+    if (startswith(character_in_string, character_in_string_width, 0x0A) ||
+      startswith(character_in_string, character_in_string_width, EOF))
+    {
+      // TODO: report this error a little better
+      error("EOL/EOF encountered before closing literal quotes\n");
+    }
+    break;
+  }
+  list_node_t *node = list_node_new(string);
+  list_rpush(tokens, node);
 }
