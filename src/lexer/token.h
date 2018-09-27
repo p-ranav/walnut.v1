@@ -51,13 +51,13 @@
 
 typedef enum
 {
-#define TOKEN(token, string) #token,
+#define TOKEN(label, string) label,
   TOKEN_LIST
 #undef TOKEN
 } token;
 
 static char *token_strings[] = {
-#define TOKEN(token, string) string,
+#define TOKEN(label, string) string,
     TOKEN_LIST
 #undef TOKEN
 };
