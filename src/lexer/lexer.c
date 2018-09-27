@@ -146,8 +146,6 @@ int equals(char * multi_byte_character, long character_width, char * rhs_charact
   if (!multi_byte_character)
     return 0;
 
-  printf("Comparing %s against %s\n", multi_byte_character, rhs_character);
-
   long rhs_width = u8_seqlen(rhs_character);
   if (character_width != rhs_width)
     return 0;
@@ -291,7 +289,7 @@ int valid_symbol(long character_width, char * multi_byte_character) {
 void append_to(char ** lhs, long * lhs_size, char ** rhs, long * rhs_size) 
 {
   // reallocate space in lhs and copy rhs
-  char * realloc_lhs = realloc(*lhs, *lhs_size + *rhs_size);
+  char * realloc_lhs = realloc(*lhs, *lhs_size + *rhs_size + 1);
   if (!realloc_lhs) {
     error("realloc failed!\n");
     exit(EXIT_FAILURE);
@@ -319,7 +317,6 @@ void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsi
     {
       peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
-      (*index) += 1;
       continue;
     }
     return; // break out of this loop
@@ -352,7 +349,6 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
 
   string->value = NULL;
   long current_size = 0;
-  printf("\n");
   while (1)
   {
     // loop till we encounter the closing double quotes
@@ -396,10 +392,9 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     }
 
     // Add to string literal if not closing quotes or end of file
-    // TODO: implement substring check. ugh this is hard
-    if (!equals(character_in_string, character_in_string_width, "\"") &&
-        !equals(character_in_string, character_in_string_width, "“") &&
-        !equals(character_in_string, character_in_string_width, "”") &&
+    // TODO: is this really enough? checking against int 34 for double quotes?
+    // TODO: check against other unicode double quote variations
+    if (!endswith(character_in_string, character_in_string_width, 34) &&
         !startswith(character_in_string, character_in_string_width, EOF))
     {
       // realloc and add character_in_string to string->value
@@ -414,6 +409,8 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
       // TODO: report this error a little better
       error("EOL/EOF encountered before closing literal quotes\n");
     }
+    character_in_string_width -= 1;
+    append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
     break;
   }
   list_node_t *node = list_node_new(string);
