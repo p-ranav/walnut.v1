@@ -31,9 +31,9 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
           next_character_width, next_character, tokens);
       else if (whitespace(next_character_width, next_character))
         parse_whitespace(buffer_size, buffer, &line, &cursor, &index, &character);
-      //else if (startswith(next_character, next_character_width, '\"'))
-      //  parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
-      //    next_character_width, next_character, tokens);
+      else if (startswith(next_character, next_character_width, '\"'))
+        parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
+          next_character_width, next_character, tokens);
     }
 
   }
@@ -109,6 +109,56 @@ int startswith(char * multi_byte_character, long character_width, char character
     return 1;
   else
     return 0;
+}
+
+int endswith(char * multi_byte_character, long character_width, char character) {
+
+  // if the multi-byte character is NULL for some reason, return false
+  if (!multi_byte_character)
+    return 0;
+
+  // compare the last byte of the multi-byte character with input character
+  if (multi_byte_character[character_width - 1] == character)
+    return 1;
+  else
+    return 0;
+}
+
+int contains(char * multi_byte_character, long character_width, char character) {
+
+  // if the multi-byte character is NULL for some reason, return false
+  if (!multi_byte_character)
+    return 0;
+
+  long i;
+  for (i = 0; i < character_width; i++)
+  {
+    // compare each byte of the multi-byte character with input character
+    if (multi_byte_character[i] == character)
+      return 1;
+  }
+  return 0;
+}
+
+int equals(char * multi_byte_character, long character_width, char * rhs_character) 
+{
+  // if the multi-byte character is NULL for some reason, return false
+  if (!multi_byte_character)
+    return 0;
+
+  printf("Comparing %s against %s\n", multi_byte_character, rhs_character);
+
+  long rhs_width = u8_seqlen(rhs_character);
+  if (character_width != rhs_width)
+    return 0;
+
+  long i;
+  for (i = 0; i < character_width; i++)
+  {
+    if (multi_byte_character[i] != rhs_character[i])
+      return 0;
+  }
+  return 1;
 }
 
 void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor, long * index, char * current_character)
@@ -203,22 +253,7 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
       // reallocate space in symbol->value and copy this peek_character
       // the way this is done here is probably not efficient
       // I'm reallocating after each multi-byte character is consumed
-      // append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
-      // current_size += peek_character_width;
-      char * realloc_symbol = realloc(symbol->value, current_size + peek_character_width + 1);
-      if (!realloc_symbol) {
-        error("realloc failed!\n");
-        exit(EXIT_FAILURE);
-      }
-      symbol->value = realloc_symbol;
-
-      // save new multi-byte character
-      long i;
-      for (i = 0; i < peek_character_width; i++) {
-        symbol->value[current_size] = peek_character[i];
-        current_size += 1;
-      }
-      symbol->value[current_size] = '\0'; // null terminate the updated LHS
+      append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
 
       // continue to next character
       continue;
@@ -256,8 +291,7 @@ int valid_symbol(long character_width, char * multi_byte_character) {
 void append_to(char ** lhs, long * lhs_size, char ** rhs, long * rhs_size) 
 {
   // reallocate space in lhs and copy rhs
-  // (*lhs_size) += (*rhs_size);
-  char * realloc_lhs = realloc(*lhs, (*lhs_size + *rhs_size) + 1);
+  char * realloc_lhs = realloc(*lhs, *lhs_size + *rhs_size);
   if (!realloc_lhs) {
     error("realloc failed!\n");
     exit(EXIT_FAILURE);
@@ -318,12 +352,12 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
 
   string->value = NULL;
   long current_size = 0;
+  printf("\n");
   while (1)
   {
     // loop till we encounter the closing double quotes
     char * character_in_string = NULL;
     long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
-    printf("string: %s\n", character_in_string);
     (*cursor) += 1;
 
     if (startswith(character_in_string, character_in_string_width, '\\'))
@@ -362,7 +396,10 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     }
 
     // Add to string literal if not closing quotes or end of file
-    if (!startswith(character_in_string, character_in_string_width, '\"') &&
+    // TODO: implement substring check. ugh this is hard
+    if (!equals(character_in_string, character_in_string_width, "\"") &&
+        !equals(character_in_string, character_in_string_width, "“") &&
+        !equals(character_in_string, character_in_string_width, "”") &&
         !startswith(character_in_string, character_in_string_width, EOF))
     {
       // realloc and add character_in_string to string->value
