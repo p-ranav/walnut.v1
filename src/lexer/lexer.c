@@ -38,20 +38,20 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
   list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it))) {
     struct token_t * token = ((struct token_t *)node->val);
-    printf("%s\n", token->value);
+    trace("%s: %s\n", token_strings[token->type], token->value);
   }
 
   // return the list of tokens
   return tokens;
 }
 
-long consume(char * buffer, int * index, char * current_character, char ** multi_byte_character) {
+long consume(char * buffer, long * index, char * current_character, char ** multi_byte_character) {
   // get the width of this unicode character
   int character_width = u8_seqlen(current_character);
 
   // prepare character array to hold multi-byte character
-  *multi_byte_character = (char *)malloc(sizeof(char) * character_width);
-  memset(*multi_byte_character, '\0', sizeof(char) * character_width);
+  *multi_byte_character = (char *)malloc(character_width);
+  memset(*multi_byte_character, '\0', character_width);
 
   // parse multi-byte unicode character
   int sequence_index = 0;
@@ -67,13 +67,13 @@ long consume(char * buffer, int * index, char * current_character, char ** multi
   return character_width;
 }
 
-long peek(char * buffer, int * index, char * current_character, char ** multi_byte_character) {
+long peek(char * buffer, long * index, char * current_character, char ** multi_byte_character) {
   // get the width of this unicode character
   int character_width = u8_seqlen(current_character);
 
   // prepare character array to hold multi-byte character
-  *multi_byte_character = (char *)malloc(sizeof(char) * character_width);
-  memset(*multi_byte_character, '\0', sizeof(char) * character_width);
+  *multi_byte_character = (char *)malloc(character_width);
+  memset(*multi_byte_character, '\0', character_width);
 
   // parse multi-byte unicode character
   int sequence_index = 0;
@@ -106,7 +106,7 @@ int startswith(char * multi_byte_character, long character_width, char character
     return 0;
 }
 
-void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor, int * index, char * current_character)
+void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor, long * index, char * current_character)
 {
   char * peek_character;
   long peek_character_width = consume(buffer, index, current_character, &peek_character);
@@ -162,7 +162,7 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
 }
 
 void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsigned int * line, 
-  unsigned int * cursor, int * index, char * current_character, 
+  unsigned int * cursor, long * index, char * current_character,
   long next_character_width, char * next_character, list_t * tokens) {
   
   // create a "symbol" token
@@ -172,15 +172,16 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
   symbol->cursor = *cursor;
   symbol->type = TOKEN_SYMBOL;
 
-  symbol->value = (char *)malloc(sizeof(char) * next_character_width);
-  for (int i = 0; i < next_character_width; i++)
+  symbol->value = (char *)malloc(next_character_width + 1);
+  long i;
+  for (i = 0; i < next_character_width; i++)
   {
     symbol->value[i] = next_character[i];
   }
   symbol->value[next_character_width] = '\0';
 
-  int current_size = next_character_width;
-  int current_index = next_character_width;
+  long current_size = next_character_width;
+  long current_index = next_character_width;
   while (1)
   {
     char * peek_character = NULL;
@@ -198,7 +199,7 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
       // the way this is done here is probably not efficient
       // I'm reallocating after each multi-byte character is consumed
       current_size += peek_character_width;
-      char * realloc_value = realloc(symbol->value, sizeof(char) * current_size);
+      char * realloc_value = realloc(symbol->value, current_size + 1);
       if (!realloc_value) {
         error("realloc failed!\n");
         exit(EXIT_FAILURE);
@@ -206,7 +207,8 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
       symbol->value = realloc_value;
       
       // save new multi-byte character
-      for (int i = 0; i < peek_character_width; i++) {
+      long i;
+      for (i = 0; i < peek_character_width; i++) {
         symbol->value[current_index] = peek_character[i];
         current_index += 1;
       }
@@ -232,7 +234,8 @@ int valid_symbol(long character_width, char * multi_byte_character) {
   int result = 1;
   // check every byte in multi-byte character
   // if the characters conform to these rules, its a valid symbol
-  for (long i = 0; i < character_width; i++) {
+  long i;
+  for (i = 0; i < character_width; i++) {
     char character = multi_byte_character[0];
     result *= (
       (character >= 'A' && character <= 'Z') ||

@@ -20,7 +20,9 @@ MACRO(ADD_SUBLIBRARY LIBRARY_NAME RELATIVE_PATH)
 ENDMACRO(ADD_SUBLIBRARY)
 
 # Disable deprecation for windows
-add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+if (WIN32)
+	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
 
 ADD_SUBLIBRARY(UTILS src/utils)
 set_target_properties(UTILS PROPERTIES OUTPUT_NAME utils) # utils.lib
@@ -29,6 +31,8 @@ set_property(TARGET UTILS PROPERTY C_STANDARD 90)
 ADD_SUBLIBRARY(LEXER src/lexer)
 set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
 set_property(TARGET LEXER PROPERTY C_STANDARD 90)
+
+TARGET_LINK_LIBRARIES(LEXER UTILS)
 
 file(GLOB EXECUTABLE_SOURCES 
     "src/main.c" 

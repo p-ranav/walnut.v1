@@ -8,6 +8,7 @@ typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
 #endif
 
+#include <stdlib.h>
 #include <stdarg.h>
 
 /* is c the start of a utf8 sequence? */

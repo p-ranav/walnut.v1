@@ -23,7 +23,7 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer);
 // current_character points to the 1-byte character at buffer[index]
 // the potentially multi-byte character is pointed to by next_character
 // returns the width of next character
-long consume(char * buffer, int * index, char * current_character, char ** multi_byte_character);
+long consume(char * buffer, long * index, char * current_character, char ** multi_byte_character);
 
 // Peek 1 unicode character
 // buffer is the input buffer of characters (originally read from file)
@@ -33,7 +33,7 @@ long consume(char * buffer, int * index, char * current_character, char ** multi
 // returns the width of next character
 // 
 // peek is similar to consume but index is not updated
-long peek(char * buffer, int * index, char * current_character, char ** multi_byte_character);
+long peek(char * buffer, long * index, char * current_character, char ** multi_byte_character);
 
 // Return true (1) if the multi-byte character starts with input character
 // If the multi_byte_character is NULL for some reason, return false
@@ -47,13 +47,13 @@ int startswith(char * multi_byte_character, long character_width, char character
 // checks both comments '// ...' and block comments /* ... */
 // we're not creating tokens for these characters. consume and move on.
 void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsigned int * cursor, 
-  int * index, char * current_character);
+  long * index, char * current_character);
 
 // Parse and save symbols - symbols include identifiers and keywords
 // this function DOES NOT try to separate identifiers from keywords. Both are legally symbols.
 // saves to result linked list 
 void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsigned int * line, 
-  unsigned int * cursor, int * index, char * current_character, long next_character_width, 
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
   char * next_character, list_t * tokens);
 
 // Check if a multi-byte character is a valid symbol
