@@ -8,6 +8,7 @@
   TOKEN(END_OF_FILE, "EOF")              \
   TOKEN(SYMBOL, "symbol")\
   TOKEN(STRING_LITERAL, "string")\
+  TOKEN(PUNCTUATION, "punctuation")\
   /* Delimiters */                       \
   TOKEN(DOT, ".")                        \
   TOKEN(COMMA, ",")                      \

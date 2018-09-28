@@ -31,6 +31,11 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
       else if (startswith(next_character, next_character_width, '\"'))
         parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
+      else if (ispunct(*next_character))
+        parse_punctuation(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
+          next_character_width, next_character, tokens);
+      continue;
+
     }
 
   }
@@ -40,7 +45,7 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
   list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it))) {
     struct token_t * token = ((struct token_t *)node->val);
-    printf("%s: %s\n", token_strings[token->type], token->value);
+    trace("%s: %s\n", token_strings[token->type], token->value);
   }
 
   // return the list of tokens
@@ -153,6 +158,7 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
 
         if (startswith(peek_character, peek_character_width, '/'))
         {
+          consume(buffer, index, current_character, &peek_character);
           consume(buffer, index, current_character, &peek_character);
           (*cursor) += 1;
           break;
@@ -364,4 +370,25 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
   }
   list_node_t *node = list_node_new(string);
   list_rpush(tokens, node);
+}
+
+void parse_punctuation(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
+  char * next_character, list_t * tokens)
+{
+  if (ispunct(*current_character))
+  {
+    // create a "punctuation" token
+    struct token_t * punctuation = (struct token_t*)malloc(sizeof(struct token_t));
+    punctuation->file_path = file_path;
+    punctuation->line = *line;
+    punctuation->cursor = *cursor;
+    punctuation->type = TOKEN_PUNCTUATION;
+    punctuation->value = (char *)malloc(2);
+    punctuation->value[0] = (*current_character);
+    punctuation->value[1] = '\0';
+
+    list_node_t *node = list_node_new(punctuation);
+    list_rpush(tokens, node);
+  }
 }
