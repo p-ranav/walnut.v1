@@ -379,9 +379,9 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
         startswith(peek_character, peek_character_width, '\\'))
       {
         // realloc and add '\\' to string->value
-        char * escape = "\\";
-        long escape_size = 1;
-        append_to(&string->value, &current_size, &escape, &escape_size);
+        //char * escape = "\\";
+        //long escape_size = 1;
+        //append_to(&string->value, &current_size, &escape, &escape_size);
 
         if (peek_character)
           free(peek_character);
@@ -485,8 +485,8 @@ void parse_number(long buffer_size, char * buffer, const char * file_path, unsig
       if (character_in_string)
         free(character_in_string);
 
-      char * peek_character = NULL;
-      long peek_character_width = peek(buffer, index, current_character, &peek_character);
+      //char * peek_character = NULL;
+      //long peek_character_width = peek(buffer, index, current_character, &peek_character);
       while (1)
       {
         char * character_in_string = NULL;
@@ -503,6 +503,10 @@ void parse_number(long buffer_size, char * buffer, const char * file_path, unsig
           free(character_in_string);
         break;
       }
+    }
+    else {
+      if (peek_character)
+        free(peek_character);
     }
   }
 
