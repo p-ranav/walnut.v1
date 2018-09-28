@@ -83,9 +83,16 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
   unsigned int * cursor, long * index, char * current_character, long next_character_width,
   char * next_character, list_t * tokens);
 
+// check if a multi-byte character is a digit
+// accept everything until next character is not a digit
+// create number token and push to end of tokens
+void parse_number(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
+  char * next_character, list_t * tokens);
+
 // check if a multi-byte character is an ASCII special character, e.g., *, /, ;, - etc.
 // accept 1 character
-// create punctuation tokne and push to end of tokens
+// create punctuation token and push to end of tokens
 void parse_punctuation(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
   unsigned int * cursor, long * index, char * current_character, long next_character_width,
   char * next_character, list_t * tokens);

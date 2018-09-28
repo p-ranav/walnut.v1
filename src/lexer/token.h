@@ -9,6 +9,7 @@
   TOKEN(SYMBOL, "symbol")\
   TOKEN(STRING_LITERAL, "string")\
   TOKEN(PUNCTUATION, "punctuation")\
+  TOKEN(NUMBER, "number")\
   /* Delimiters */                       \
   TOKEN(DOT, ".")                        \
   TOKEN(COMMA, ",")                      \

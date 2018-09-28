@@ -31,6 +31,9 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
       else if (startswith(next_character, next_character_width, '\"'))
         parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
+      else if (isdigit(*next_character))
+        parse_number(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
+          next_character_width, next_character, tokens);
       else if (ispunct(*next_character))
         parse_punctuation(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
@@ -369,6 +372,70 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     break;
   }
   list_node_t *node = list_node_new(string);
+  list_rpush(tokens, node);
+}
+
+void parse_number(long buffer_size, char * buffer, const char * file_path, unsigned int * line,
+  unsigned int * cursor, long * index, char * current_character, long next_character_width,
+  char * next_character, list_t * tokens)
+{
+  // create a "punctuation" token
+  struct token_t * number = (struct token_t*)malloc(sizeof(struct token_t));
+  number->file_path = file_path;
+  number->line = *line;
+  number->cursor = *cursor;
+  number->type = TOKEN_NUMBER;
+  number->value = (char*)malloc(2);
+  number->value[0] = *next_character;
+  number->value[1] = '\0';
+  long current_size = 1;
+
+  if (*next_character == '0')
+  {
+    char * peek_character = NULL;
+    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    if (*peek_character == 'X' || *peek_character == 'x')
+    {
+      char * character_in_string = NULL;
+      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+      (*cursor) += 1;
+      append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+
+      char * peek_character = NULL;
+      long peek_character_width = peek(buffer, index, current_character, &peek_character);
+      while (1)
+      {
+        char * character_in_string = NULL;
+        long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+        (*cursor) += 1;
+        if (isxdigit(*character_in_string))
+        {
+          append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+          continue;
+        }
+        break;
+      }
+
+    }
+
+  }
+
+  while (1)
+  {
+    char * peek_character = NULL;
+    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    if (peek_character_width == 1 && (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f'))
+    {
+      char * character_in_string = NULL;
+      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+      *cursor += 1;
+      append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+      continue;
+    }
+    break;
+  }
+
+  list_node_t *node = list_node_new(number);
   list_rpush(tokens, node);
 }
 
