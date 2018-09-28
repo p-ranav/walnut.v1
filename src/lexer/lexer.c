@@ -91,15 +91,19 @@ void delete_tokens(list_t *tokens)
 
 long consume(char *buffer, long *index, char *current_character, char **multi_byte_character)
 {
+  /* declarations */
+  int character_width;
+  int sequence_index;
+
   /* get the width of this unicode character */
-  int character_width = u8_seqlen(current_character);
+  character_width = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
   *multi_byte_character = (char *)malloc(character_width + 1);
   memset(*multi_byte_character, '\0', character_width);
 
   /* parse multi-byte unicode character */
-  int sequence_index = 0;
+  sequence_index = 0;
   while (sequence_index < character_width)
   {
     *current_character = buffer[*index];
@@ -114,15 +118,19 @@ long consume(char *buffer, long *index, char *current_character, char **multi_by
 
 long peek(char *buffer, long *index, char *current_character, char **multi_byte_character)
 {
+  /* declarations */
+  int character_width;
+  int sequence_index;
+
   /* get the width of this unicode character */
-  int character_width = u8_seqlen(current_character);
+  character_width = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
   *multi_byte_character = (char *)malloc(character_width + 1);
   memset(*multi_byte_character, '\0', character_width);
 
   /* parse multi-byte unicode character */
-  int sequence_index = 0;
+  sequence_index = 0;
   while (sequence_index < character_width)
   {
     *current_character = buffer[*index];
@@ -157,7 +165,9 @@ int startswith(char *multi_byte_character, long character_width, char character)
 void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned int *cursor, long *index, char *current_character)
 {
   char *peek_character = NULL;
-  long peek_character_width = consume(buffer, index, current_character, &peek_character);
+  long peek_character_width;
+  
+  peek_character_width = consume(buffer, index, current_character, &peek_character);
 
   /* check if next character starts with '/'
      if yes, treat this as the start of a line comment */
@@ -168,7 +178,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
     {
       if (peek_character)
         free(peek_character);
-      long peek_character_width = consume(buffer, index, current_character, &peek_character);
+      peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
     }
   }
@@ -180,7 +190,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
     {
       if (peek_character)
         free(peek_character);
-      long peek_character_width = consume(buffer, index, current_character, &peek_character);
+      peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
 
       if (startswith(peek_character, peek_character_width, EOF))
@@ -199,7 +209,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
         /* peek into the next character. We're hoping for '/' to close out the block comment */
         if (peek_character)
           free(peek_character);
-        long peek_character_with = peek(buffer, index, current_character, &peek_character);
+        peek_character_width = peek(buffer, index, current_character, &peek_character);
 
         if (startswith(peek_character, peek_character_width, EOF))
           error("block comment not terminated before end of file\n");
@@ -230,28 +240,35 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
                   unsigned int *cursor, long *index, char *current_character,
                   long next_character_width, char *next_character, list_t *tokens)
 {
+  /* declarations */
+  long i;
+  long current_size;
+  long current_index;
+  char * peek_character;
+  long peek_character_width;
+  list_node_t *node;
+  struct token_t *symbol;
 
   /* create a "symbol" token */
-  struct token_t *symbol = (struct token_t *)malloc(sizeof(struct token_t));
+  symbol = (struct token_t *)malloc(sizeof(struct token_t));
   symbol->file_path = file_path;
   symbol->line = *line;
   symbol->cursor = *cursor;
   symbol->type = TOKEN_SYMBOL;
 
   symbol->value = (char *)malloc(next_character_width + 1);
-  long i;
   for (i = 0; i < next_character_width; i++)
   {
     symbol->value[i] = next_character[i];
   }
   symbol->value[next_character_width] = '\0';
 
-  long current_size = next_character_width;
-  long current_index = next_character_width;
+  current_size = next_character_width;
+  current_index = next_character_width;
   while (1)
   {
-    char *peek_character = NULL;
-    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    peek_character = NULL;
+    peek_character_width = peek(buffer, index, current_character, &peek_character);
 
     if (valid_symbol(peek_character_width, peek_character))
     {
@@ -261,7 +278,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
 
       peek_character_width = consume(buffer, index, current_character, &peek_character);
 
-      /* since we treat this as a single character, update cursor by 1
+      /* since we treat this as a single character, update cursor by 1 */
       cursor += 1;
 
       /* reallocate space in symbol->value and copy this peek_character
@@ -281,22 +298,25 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
 
     break;
   }
-  list_node_t *node = list_node_new(symbol);
+  node = list_node_new(symbol);
   list_rpush(tokens, node);
 }
 
 int valid_symbol(long character_width, char *multi_byte_character)
 {
+  /* declarations */
+  int result;
+  long i;
+
   if (!multi_byte_character)
     return 0;
 
   if (character_width == 0)
     return 0;
 
-  int result = 1;
+  result = 1;
   /* check every byte in multi-byte character
      if the characters conform to these rules, its a valid symbol */
-  long i;
   for (i = 0; i < character_width; i++)
   {
     char character = multi_byte_character[0];
@@ -311,6 +331,9 @@ int valid_symbol(long character_width, char *multi_byte_character)
 
 void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
 {
+  /* declarations */
+  long i;
+
   /* reallocate space in lhs and copy rhs */
   char *realloc_lhs = realloc(*lhs, *lhs_size + *rhs_size + 1);
   if (!realloc_lhs)
@@ -321,7 +344,6 @@ void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
   *lhs = realloc_lhs;
 
   /* save new multi-byte character */
-  long i;
   for (i = 0; i < (*rhs_size); i++)
   {
     (*lhs)[(*lhs_size)] = (*rhs)[i];
@@ -371,6 +393,14 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
                           unsigned int *cursor, long *index, char *current_character, long next_character_width,
                           char *next_character, list_t *tokens)
 {
+  /* declarations */
+  long current_size;
+  char *character_in_string;
+  long character_in_string_width;
+  char *peek_character;
+  long peek_character_width;
+  list_node_t *node;
+
   /* create a "string" token */
   struct token_t *string = (struct token_t *)malloc(sizeof(struct token_t));
   string->file_path = file_path;
@@ -379,12 +409,12 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
   string->type = TOKEN_STRING_LITERAL;
 
   string->value = NULL;
-  long current_size = 0;
+  current_size = 0;
   while (1)
   {
     /* loop till we encounter the closing double quotes */
-    char *character_in_string = NULL;
-    long character_in_string_width = peek(buffer, index, current_character, &character_in_string);
+    character_in_string = NULL;
+    character_in_string_width = peek(buffer, index, current_character, &character_in_string);
     (*cursor) += 1;
 
     if (startswith(character_in_string, character_in_string_width, '\\'))
@@ -393,8 +423,8 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
         free(character_in_string);
 
       /* escape sequence */
-      char *peek_character = NULL;
-      long peek_character_width = consume(buffer, index, current_character, &peek_character);
+      peek_character = NULL;
+      peek_character_width = consume(buffer, index, current_character, &peek_character);
       if (startswith(peek_character, peek_character_width, '\"') ||
           startswith(peek_character, peek_character_width, '\\'))
       {
@@ -439,8 +469,8 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
         free(character_in_string);
 
       /* realloc and add character_in_string to string->value */
-      char *character_in_string = NULL;
-      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+      character_in_string = NULL;
+      character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
 
       if (character_in_string)
@@ -466,7 +496,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
       free(character_in_string);
     break;
   }
-  list_node_t *node = list_node_new(string);
+  node = list_node_new(string);
   list_rpush(tokens, node);
 }
 
@@ -474,6 +504,14 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
                   unsigned int *cursor, long *index, char *current_character, long next_character_width,
                   char *next_character, list_t *tokens)
 {
+  /* declarations */
+  long current_size;
+  char *peek_character;
+  long peek_character_width;
+  char *character_in_string;
+  long character_in_string_width;
+  list_node_t *node;
+
   /* create a "punctuation" token */
   struct token_t *number = (struct token_t *)malloc(sizeof(struct token_t));
   number->file_path = file_path;
@@ -483,18 +521,18 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   number->value = (char *)malloc(2);
   number->value[0] = *next_character;
   number->value[1] = '\0';
-  long current_size = 1;
+  current_size = 1;
 
   if (*next_character == '0')
   {
-    char *peek_character = NULL;
-    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    peek_character = NULL;
+    peek_character_width = peek(buffer, index, current_character, &peek_character);
     if (*peek_character == 'X' || *peek_character == 'x')
     {
       if (peek_character)
         free(peek_character);
-      char *character_in_string = NULL;
-      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+      character_in_string = NULL;
+      character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       (*cursor) += 1;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
       if (character_in_string)
@@ -502,8 +540,8 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
 
       while (1)
       {
-        char *character_in_string = NULL;
-        long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+        character_in_string = NULL;
+        character_in_string_width = consume(buffer, index, current_character, &character_in_string);
         (*cursor) += 1;
         if (isxdigit(*character_in_string))
         {
@@ -526,14 +564,14 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
 
   while (1)
   {
-    char *peek_character = NULL;
-    long peek_character_width = peek(buffer, index, current_character, &peek_character);
+    peek_character = NULL;
+    peek_character_width = peek(buffer, index, current_character, &peek_character);
     if (peek_character_width == 1 && (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f'))
     {
       if (peek_character)
         free(peek_character);
-      char *character_in_string = NULL;
-      long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
+      character_in_string = NULL;
+      character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       *cursor += 1;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
       if (character_in_string)
@@ -545,7 +583,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
     break;
   }
 
-  list_node_t *node = list_node_new(number);
+  node = list_node_new(number);
   list_rpush(tokens, node);
 }
 
@@ -553,6 +591,9 @@ void parse_punctuation(long buffer_size, char *buffer, const char *file_path, un
                        unsigned int *cursor, long *index, char *current_character, long next_character_width,
                        char *next_character, list_t *tokens)
 {
+  /* declarations */
+  list_node_t *node;
+
   if (ispunct(*current_character))
   {
     /* create a "punctuation" token */
@@ -565,7 +606,7 @@ void parse_punctuation(long buffer_size, char *buffer, const char *file_path, un
     punctuation->value[0] = (*current_character);
     punctuation->value[1] = '\0';
 
-    list_node_t *node = list_node_new(punctuation);
+    node = list_node_new(punctuation);
     list_rpush(tokens, node);
   }
 }
