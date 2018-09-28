@@ -37,12 +37,22 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
       else if (ispunct(*next_character))
         parse_punctuation(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
           next_character_width, next_character, tokens);
+
+      if (next_character)
+        free(next_character);
+
       continue;
 
     }
 
   }
 
+  // return the list of tokens
+  return tokens;
+}
+
+void print_tokens(list_t * tokens)
+{
   // print tokens
   list_node_t *node;
   list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
@@ -50,9 +60,21 @@ list_t * tokenize(const char * file_path, long buffer_size, char * buffer) {
     struct token_t * token = ((struct token_t *)node->val);
     trace("%s: %s\n", token_strings[token->type], token->value);
   }
+  free(it);
+}
 
-  // return the list of tokens
-  return tokens;
+void delete_tokens(list_t * tokens)
+{
+  // print tokens
+  list_node_t *node;
+  list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
+  while ((node = list_iterator_next(it))) {
+    struct token_t * token = ((struct token_t *)node->val);
+    free(token->value);
+    free(token);
+  }
+  list_destroy(tokens);
+  free(it);
 }
 
 long consume(char * buffer, long * index, char * current_character, char ** multi_byte_character) {
@@ -127,6 +149,8 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
     // loop until end of line comment, i.e., end of line or end of file
     while (!startswith(peek_character, peek_character_width, 0x0A) && (*index < buffer_size))
     {
+      if (peek_character)
+        free(peek_character);
       long peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
     }
@@ -137,6 +161,8 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
     // consume characters till we encounter '*' followed by '/'
     while (1)
     {
+      if (peek_character)
+        free(peek_character);
       long peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
       
@@ -154,6 +180,8 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
       if (startswith(peek_character, peek_character_width, '*'))
       {
         // peek into the next character. We're hoping for '/' to close out the block comment
+        if (peek_character)
+          free(peek_character);
         long peek_character_with = peek(buffer, index, current_character, &peek_character);
         
         if (startswith(peek_character, peek_character_width, EOF))
@@ -161,14 +189,25 @@ void parse_comments(long buffer_size, char * buffer, unsigned int * line, unsign
 
         if (startswith(peek_character, peek_character_width, '/'))
         {
+          if (peek_character)
+            free(peek_character);
           consume(buffer, index, current_character, &peek_character);
+          if (peek_character)
+            free(peek_character);
           consume(buffer, index, current_character, &peek_character);
           (*cursor) += 1;
-          break;
+          if (peek_character)
+            free(peek_character);
+          return;
         }
+        if (peek_character)
+          free(peek_character);
       }
     }
   }
+  if (peek_character)
+    free(peek_character);
+
 }
 
 void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsigned int * line, 
@@ -200,6 +239,9 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
     if (valid_symbol(peek_character_width, peek_character))
     {
       // consume peek_character_width bytes
+      if (peek_character)
+        free(peek_character);
+
       peek_character_width = consume(buffer, index, current_character, &peek_character);
 
       // since we treat this as a single character, update cursor by 1
@@ -210,9 +252,15 @@ void parse_symbol(long buffer_size, char * buffer, const char * file_path, unsig
       // I'm reallocating after each multi-byte character is consumed
       append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
 
+      if (peek_character)
+        free(peek_character);
+
       // continue to next character
       continue;
     }
+
+    if (peek_character)
+      free(peek_character);
 
     break;
   }
@@ -272,10 +320,16 @@ void parse_whitespace(long buffer_size, char * buffer, unsigned int * line, unsi
     long peek_character_width = peek(buffer, index, current_character, &peek_character);
     if (whitespace(peek_character_width, peek_character))
     {
+      if (peek_character)
+        free(peek_character);
       peek_character_width = consume(buffer, index, current_character, &peek_character);
+      if (peek_character)
+        free(peek_character);
       (*cursor) += 1;
       continue;
     }
+    if (peek_character)
+      free(peek_character);
     return; // break out of this loop
   }
   // we don't need to store whitespace tokens in the result
@@ -315,6 +369,9 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
 
     if (startswith(character_in_string, character_in_string_width, '\\'))
     {
+      if (character_in_string)
+        free(character_in_string);
+
       // escape sequence
       char * peek_character = NULL;
       long peek_character_width = consume(buffer, index, current_character, &peek_character);
@@ -326,11 +383,17 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
         long escape_size = 1;
         append_to(&string->value, &current_size, &escape, &escape_size);
 
+        if (peek_character)
+          free(peek_character);
+
         peek_character_width = consume(buffer, index, current_character, &peek_character);
         (*cursor) += 1;
 
         // realloc and add peek_character to string->value
         append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+
+        if (peek_character)
+          free(peek_character);
 
         continue;
       }
@@ -339,12 +402,17 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
       if (startswith(peek_character, peek_character_width, 0x0A) ||
         startswith(peek_character, peek_character_width, EOF))
       {
+        if (peek_character)
+          free(peek_character);
         // TODO: report this error a little better
         error("EOL/EOF encountered before closing literal quotes\n");
       }
 
       // realloc and add peek_character to string->value
       append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+
+      if (peek_character)
+        free(peek_character);
       continue;
     }
 
@@ -352,10 +420,16 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
     if (!startswith(character_in_string, character_in_string_width, '\"') &&
         !startswith(character_in_string, character_in_string_width, EOF))
     {
+      if (character_in_string)
+        free(character_in_string);
+
       // realloc and add character_in_string to string->value
       char * character_in_string = NULL;
       long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       append_to(&string->value, &current_size, &character_in_string, &character_in_string_width);
+
+      if (character_in_string)
+        free(character_in_string);
       continue;
     }
 
@@ -367,8 +441,14 @@ void parse_string_literal(long buffer_size, char * buffer, const char * file_pat
       error("EOL/EOF encountered before closing literal quotes\n");
     }
     // consume the closing double quotes
+    if (character_in_string)
+      free(character_in_string);
+
     character_in_string = NULL;
     consume(buffer, index, current_character, &character_in_string);
+
+    if (character_in_string)
+      free(character_in_string);
     break;
   }
   list_node_t *node = list_node_new(string);
@@ -396,10 +476,14 @@ void parse_number(long buffer_size, char * buffer, const char * file_path, unsig
     long peek_character_width = peek(buffer, index, current_character, &peek_character);
     if (*peek_character == 'X' || *peek_character == 'x')
     {
+      if (peek_character)
+        free(peek_character);
       char * character_in_string = NULL;
       long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       (*cursor) += 1;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+      if (character_in_string)
+        free(character_in_string);
 
       char * peek_character = NULL;
       long peek_character_width = peek(buffer, index, current_character, &peek_character);
@@ -411,13 +495,15 @@ void parse_number(long buffer_size, char * buffer, const char * file_path, unsig
         if (isxdigit(*character_in_string))
         {
           append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+          if (character_in_string)
+            free(character_in_string);
           continue;
         }
+        if (character_in_string)
+          free(character_in_string);
         break;
       }
-
     }
-
   }
 
   while (1)
@@ -426,12 +512,18 @@ void parse_number(long buffer_size, char * buffer, const char * file_path, unsig
     long peek_character_width = peek(buffer, index, current_character, &peek_character);
     if (peek_character_width == 1 && (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f'))
     {
+      if (peek_character)
+        free(peek_character);
       char * character_in_string = NULL;
       long character_in_string_width = consume(buffer, index, current_character, &character_in_string);
       *cursor += 1;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
+      if (character_in_string)
+        free(character_in_string);
       continue;
     }
+    if (peek_character)
+      free(peek_character);
     break;
   }
 

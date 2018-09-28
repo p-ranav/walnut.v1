@@ -28,8 +28,16 @@ int main(int argc, char *argv[]) {
     trace("%s (%ld bytes)\n", file_path, file_size);
 
     // Tokenize the buffer of characters
-    tokenize(file_path, file_size, buffer);
+    list_t * tokens = tokenize(file_path, file_size, buffer);
 
+    // Print lexer tokens
+    print_tokens(tokens);
+
+    // Delete lexer tokens
+    delete_tokens(tokens);
+
+    // Delete original file buffer
+    free(buffer);
   }
 
   return 0;
