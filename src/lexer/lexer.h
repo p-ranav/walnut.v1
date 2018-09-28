@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 // The lexer needs to do the following:
 // (1) Take the sequence of bytes in the input buffer
