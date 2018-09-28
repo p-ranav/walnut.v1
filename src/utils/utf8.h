@@ -1,12 +1,9 @@
 #ifndef UTF8_H
 #define UTF8_H
-
-#if defined(_WIN32)
 #include <stdint.h>
 typedef uint8_t u_int8_t;
 typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
-#endif
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -74,11 +71,5 @@ char *u8_memchr(char *s, u_int32_t ch, size_t sz, int *charn);
 int u8_strlen(char *s);
 
 int u8_is_locale_utf8(char *locale);
-
-/* printf where the format string and arguments may be in UTF-8.
-   you can avoid this function and just use ordinary printf() if the current
-   locale is UTF-8. */
-int u8_vprintf(char *fmt, va_list ap);
-int u8_printf(char *fmt, ...);
 
 #endif

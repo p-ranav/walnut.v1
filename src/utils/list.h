@@ -2,7 +2,7 @@
 #define LIST_H
 #include <stdlib.h>
 
-// Memory management macros
+/* memory management macros */
 #ifndef LIST_MALLOC
 #define LIST_MALLOC malloc
 #endif
@@ -11,14 +11,14 @@
 #define LIST_FREE free
 #endif
 
-// List iterator direction
+/* list iterator direction */
 typedef enum
 {
   LIST_HEAD,
   LIST_TAIL
 } list_direction_t;
 
-// List node struct
+/* list node struct */
 typedef struct list_node
 {
   struct list_node *prev;
@@ -26,7 +26,7 @@ typedef struct list_node
   void *val;
 } list_node_t;
 
-// List struct
+/* list struct */
 typedef struct
 {
   list_node_t *head;
@@ -36,17 +36,17 @@ typedef struct
   int (*match)(void *a, void *b);
 } list_t;
 
-// List iterator struct
+/* list iterator struct */
 typedef struct
 {
   list_node_t *next;
   list_direction_t direction;
 } list_iterator_t;
 
-// Node prototypes.
+/* node prototypes */
 list_node_t *list_node_new(void *val);
 
-// list_t prototypes
+/* list_t prototypes */
 list_t *list_new();
 list_node_t *list_rpush(list_t *self, list_node_t *node);
 list_node_t *list_lpush(list_t *self, list_node_t *node);
@@ -57,7 +57,7 @@ list_node_t *list_lpop(list_t *self);
 void list_remove(list_t *self, list_node_t *node);
 void list_destroy(list_t *self);
 
-// list_t iterator prototypes.
+/* list_t iterator prototypes */
 list_iterator_t *list_iterator_new(list_t *list, list_direction_t direction);
 list_iterator_t *list_iterator_new_from_node(list_node_t *node, list_direction_t direction);
 list_node_t *list_iterator_next(list_iterator_t *self);

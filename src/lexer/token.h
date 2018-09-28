@@ -2,7 +2,6 @@
 #define LEXER_TOKEN
 
 #define TOKEN_LIST                       \
-  TOKEN(INVALID, "invalid")              \
   TOKEN(WHITESPACE, " ")                 \
   TOKEN(END_OF_LINE, "EOL")              \
   TOKEN(END_OF_FILE, "EOF")              \
@@ -58,12 +57,14 @@ typedef enum
 #define TOKEN(label, string) TOKEN_##label,
   TOKEN_LIST
 #undef TOKEN
+  TOKEN_INVALID
 } token;
 
 static char *token_strings[] = {
 #define TOKEN(label, string) string,
     TOKEN_LIST
 #undef TOKEN
+  "invalid"
 };
 
 struct token_t

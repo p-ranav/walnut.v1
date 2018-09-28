@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 project(CARBON)
 
+if (UNIX)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
+endif(UNIX)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
