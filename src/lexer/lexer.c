@@ -12,6 +12,8 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   char character;
   char *next;
   long next_width;
+  struct token_t * eof;
+  list_node_t * node;
 
   /* initialize the result */
   tokens = list_new();
@@ -67,6 +69,20 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
     }
 
   }
+
+  /* create a "end of file" token */
+  eof = (struct token_t *)malloc(sizeof(struct token_t));
+  eof->file_path = file_path;
+  eof->line = line;
+  eof->cursor = cursor;
+  eof->type = TOKEN_END_OF_FILE;
+  eof->value = (char*)malloc(2);
+  eof->value[0] = EOF;
+  eof->value[1] = '\0';
+
+  /* save eof token in linked list */
+  node = list_node_new(eof);
+  list_rpush(tokens, node);
 
   /* return the list of tokens */
   return tokens;
