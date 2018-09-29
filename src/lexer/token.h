@@ -53,7 +53,27 @@
   TOKEN(BITWISE_RIGHT_SHIFT, "BITWISE_RIGHT_SHIFT")         \
   /* Logical Operators */                                   \
   TOKEN(LOGICAL_AND, "LOGICAL_AND")                         \
-  TOKEN(LOGICAL_OR, "LOGICAL_OR")
+  TOKEN(LOGICAL_OR, "LOGICAL_OR")                           \
+  /* Basic Data Types */                                    \
+  TOKEN(BYTE, "BYTE")                                       \
+  TOKEN(UINT8, "UINT8")                                     \
+  TOKEN(UINT16, "UINT16")                                   \
+  TOKEN(UINT32, "UINT32")                                   \
+  TOKEN(UINT64, "UINT64")                                   \
+  TOKEN(INT8, "INT8")                                       \
+  TOKEN(INT16, "INT16")                                     \
+  TOKEN(INT32, "INT32")                                     \
+  TOKEN(RUNE, "RUNE")                                       \
+  TOKEN(INT64, "INT64")                                     \
+  TOKEN(FLOAT32, "FLOAT32")                                 \
+  TOKEN(FLOAT64, "FLOAT64")                                 \
+  TOKEN(BOOL, "BOOL")                                       \
+  TOKEN(STRING, "STRING")                                   \
+  TOKEN(COMPLEX64, "COMPLEX64")                             \
+  TOKEN(COMPLEX128, "COMPLEX128")                           \
+  /* Type inference */                                      \
+  TOKEN(LET, "LET")                                         \
+  TOKEN(VAR, "VAR")
 
 typedef enum
 {
