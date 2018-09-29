@@ -65,6 +65,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
       continue;
     }
+
   }
 
   /* return the list of tokens */
@@ -553,7 +554,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   number->value = (char *)malloc(2);
   number->value[0] = *next_character;
   number->value[1] = '\0';
-  current_size = 1;
+  current_size = 2;
 
   if (*next_character == '0')
   {
@@ -584,9 +585,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
       }
     }
     else
-    {
       deallocate(peek_character);
-    }
   }
 
   while (1)

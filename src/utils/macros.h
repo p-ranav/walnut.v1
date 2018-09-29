@@ -18,6 +18,8 @@
 
 #define process_token_sequence(current_token_value, next_token_value, new_token_type) \
   if (check_and_update_token(current_token, current_token_value, CHECK_NEXT_TOKEN, next_token, next_token_value, new_token_type, current_token_value next_token_value)) { \
+    free(((struct token_t *)next_node->val)->value);\
+    free(((struct token_t *)next_node->val));\
     list_remove(tokens, next_node); \
     it->next = node->next; \
     continue; \
