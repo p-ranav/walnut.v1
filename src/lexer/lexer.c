@@ -72,11 +72,12 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
 void lexer_print(list_t *tokens)
 {
-  /* print tokens */
+  /* use list_iterator to iterate over list of tokens */
   list_node_t *node;
   list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it)))
   {
+    /* get pointer to token and print token type and value */
     struct token_t *token = ((struct token_t *)node->val);
     printf("%s: %s\n", token_strings[token->type], token->value);
   }
@@ -85,13 +86,18 @@ void lexer_print(list_t *tokens)
 
 void lexer_destroy(list_t *tokens)
 {
-  /* destroy tokens */
+  /* use list_iterator to iterate over list of tokens */
   list_node_t *node;
   list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it)))
   {
+    /* get pointer to token */
     struct token_t *token = ((struct token_t *)node->val);
+    
+    /* deallocate the char* value of the token */
     deallocate(token->value);
+
+    /* deallocate the token itself */
     deallocate(token);
   }
   list_destroy(tokens);
@@ -153,7 +159,7 @@ long peek(char *buffer, long *index, char *current_character, char **multi_byte_
   *index -= character_width;
   (*current_character) = buffer[*index];
 
-  /* return the width of the consumed multi-byte character */
+  /* return the width of the peek'd multi-byte character */
   return character_width;
 }
 
@@ -223,11 +229,14 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
         if (startswith(peek_character, peek_character_width, '/'))
         {
           deallocate(peek_character);
+
           consume(buffer, index, current_character, &peek_character);
           deallocate(peek_character);
+          
           consume(buffer, index, current_character, &peek_character);
           (*cursor) += 1;
           deallocate(peek_character);
+          
           return;
         }
         deallocate(peek_character);
