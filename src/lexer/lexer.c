@@ -84,7 +84,7 @@ void lexer_print(list_t *tokens)
 
     /* add spaces for pretty print */
     int length = strlen(token_string);
-    int num_spaces_to_add = 16 - length;
+    int num_spaces_to_add = 20 - length;
     char * spaces = (char *)malloc(num_spaces_to_add + 1);
     memset(spaces, ' ', num_spaces_to_add + 1);
     spaces[num_spaces_to_add] = '\0';
@@ -675,6 +675,8 @@ void lexer_post_process(list_t *tokens)
       (3) if it is, we need to reclassify this token as <third argument of process_value_token>
           e.g., if the current_token value is '>=', we re-classify this token as TOKEN_GREATER_EQUAL
       (4) DELETE the linked list node associated with next_token from tokens before continuing the loop
+
+      Both process_token and process_token_sequence 'continue' the loop if the check in step (2/3) passes
     */
 
     /* delimiters */
@@ -692,6 +694,14 @@ void lexer_post_process(list_t *tokens)
     process_token_sequence(">", "=", TOKEN_GREATER_EQUAL);
     process_token("<", TOKEN_LESSER);
     process_token_sequence("<", "=", TOKEN_LESSER_EQUAL);
+
+    /* paranthesis, curly braces and square brackets */
+    process_token("(", TOKEN_LEFT_PARANTHESIS);
+    process_token("{", TOKEN_LEFT_CURLY);
+    process_token("[", TOKEN_LEFT_BRACKETS);
+    process_token(")", TOKEN_RIGHT_PARANTHESIS);
+    process_token("}", TOKEN_RIGHT_CURLY);
+    process_token("]", TOKEN_RIGHT_BRACKETS);
 
     /* reclassify comparison operators */
   }
