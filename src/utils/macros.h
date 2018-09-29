@@ -1,6 +1,9 @@
 #ifndef MACROS_H
 #define MACROS_H
 
+#define allocate(structure, size) \
+  (structure *)malloc(sizeof(structure) * size)
+
 #define deallocate(pointer) \
   if (pointer)              \
     free(pointer);          \

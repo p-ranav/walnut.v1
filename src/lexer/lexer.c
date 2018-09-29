@@ -77,12 +77,12 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   }
 
   /* create a "end of file" token */
-  eof = (struct token_t *)malloc(sizeof(struct token_t));
+  eof = allocate(struct token_t, 1);
   eof->file_path = file_path;
   eof->line = line;
   eof->cursor = cursor;
   eof->type = TOKEN_END_OF_FILE;
-  eof->value = (char*)malloc(2);
+  eof->value = allocate(char, 2);
   eof->value[0] = ' ';
   eof->value[1] = '\0';
 
@@ -108,7 +108,7 @@ void lexer_print(list_t *tokens)
     /* add spaces for pretty print */
     int length = strlen(token_string);
     int num_spaces_to_add = 20 - length;
-    char * spaces = (char *)malloc(num_spaces_to_add + 1);
+    char * spaces = allocate(char, num_spaces_to_add + 1);
     memset(spaces, ' ', num_spaces_to_add + 1);
     spaces[num_spaces_to_add] = '\0';
 
@@ -152,7 +152,7 @@ long consume(char *buffer, long *index, char *current_character, char **multi_by
   character_width = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
-  *multi_byte_character = (char *)malloc(character_width + 1);
+  *multi_byte_character = allocate(char, character_width + 1);
   memset(*multi_byte_character, '\0', character_width);
 
   /* parse multi-byte unicode character */
@@ -179,7 +179,7 @@ long peek(char *buffer, long *index, char *current_character, char **multi_byte_
   character_width = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
-  *multi_byte_character = (char *)malloc(character_width + 1);
+  *multi_byte_character = allocate(char, character_width + 1);
   memset(*multi_byte_character, '\0', character_width);
 
   /* parse multi-byte unicode character */
@@ -314,14 +314,14 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
     return;
 
   /* create a "symbol" token */
-  symbol = (struct token_t *)malloc(sizeof(struct token_t));
+  symbol = allocate(struct token_t, 1);
   symbol->file_path = file_path;
   symbol->line = *line;
   symbol->cursor = *cursor;
   symbol->type = TOKEN_SYMBOL;
 
   /* allocate sufficient space for storing symbol value */
-  symbol->value = (char *)malloc(next_character_width + 1);
+  symbol->value = allocate(char, next_character_width + 1);
   for (i = 0; i < next_character_width; i++)
   { /* save one character at a time */
     symbol->value[i] = next_character[i];
@@ -469,7 +469,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
     return;
 
   /* create a "string" token */
-  string = (struct token_t *)malloc(sizeof(struct token_t));
+  string = allocate(struct token_t, 1);
   string->file_path = file_path;
   string->line = *line;
   string->cursor = *cursor;
@@ -578,12 +578,12 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
     return;
 
   /* create a "punctuation" token */
-  number = (struct token_t *)malloc(sizeof(struct token_t));
+  number = allocate(struct token_t, 1);
   number->file_path = file_path;
   number->line = *line;
   number->cursor = *cursor;
   number->type = TOKEN_NUMBER;
-  number->value = (char *)malloc(2);
+  number->value = allocate(char, 2);
   number->value[0] = *next_character;
   number->value[1] = '\0';
   current_size = 1;
@@ -652,12 +652,12 @@ void parse_punctuation(const char *file_path, unsigned int *line,
   if (ispunct(*current_character))
   {
     /* create a "punctuation" token */
-    struct token_t *punctuation = (struct token_t *)malloc(sizeof(struct token_t));
+    struct token_t *punctuation = allocate(struct token_t, 1);
     punctuation->file_path = file_path;
     punctuation->line = *line;
     punctuation->cursor = *cursor;
     punctuation->type = TOKEN_PUNCTUATION;
-    punctuation->value = (char *)malloc(2);
+    punctuation->value = allocate(char, 2);
 
     /* save current character in punctuation value */
     punctuation->value[0] = (*current_character);
