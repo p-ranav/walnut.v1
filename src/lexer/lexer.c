@@ -742,7 +742,7 @@ void lexer_post_process(list_t *tokens)
 }
 
 int check_and_update_token(struct token_t * current_token, char * current_token_value,
-  int check_next_token, // should next token be considered or is checking current_token enough?
+  int check_next_token, /* should next token be considered or is checking current_token enough? */
   struct token_t * next_token, char * next_token_value, token new_type, char * new_value)
 {
   /* declarations */
