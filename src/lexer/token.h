@@ -2,55 +2,55 @@
 #define LEXER_TOKEN
 
 #define TOKEN_LIST                                          \
-  TOKEN(WHITESPACE, "whitespace")                           \
-  TOKEN(END_OF_LINE, "eol")                                 \
-  TOKEN(END_OF_FILE, "eof")                                 \
-  TOKEN(SYMBOL, "symbol")                                   \
-  TOKEN(STRING_LITERAL, "string")                           \
-  TOKEN(PUNCTUATION, "punctuation")                         \
-  TOKEN(NUMBER, "number")                                   \
+  TOKEN(WHITESPACE, "WHITESPACE")                           \
+  TOKEN(END_OF_LINE, "END_OF_LINE")                         \
+  TOKEN(END_OF_FILE, "END_OF_FILE")                         \
+  TOKEN(SYMBOL, "SYMBOL")                                   \
+  TOKEN(STRING_LITERAL, "STRING_LITERAL")                   \
+  TOKEN(PUNCTUATION, "PUNCTUATION")                         \
+  TOKEN(NUMBER, "NUMBER")                                   \
   /* Delimiters */                                          \
-  TOKEN(DOT, "dot")                                         \
-  TOKEN(COMMA, "comma")                                     \
-  TOKEN(COLON, "colon")                                     \
-  TOKEN(SEMI_COLON, "semi_colon")                           \
-  TOKEN(EXCLAMATION, "exclamation")                         \
-  TOKEN(QUESTION, "question")                               \
+  TOKEN(DOT, "DOT")                                         \
+  TOKEN(COMMA, "COMMA")                                     \
+  TOKEN(COLON, "COLON")                                     \
+  TOKEN(SEMI_COLON, "SEMI_COLON")                           \
+  TOKEN(EXCLAMATION, "EXCLAMATION")                         \
+  TOKEN(QUESTION, "QUESTION")                               \
   /* Comparison Operators */                                \
-  TOKEN(EQUAL, "equal")                                     \
-  TOKEN(NOT_EQUAL, "not_equal")                             \
-  TOKEN(GREATER, "greater")                                 \
-  TOKEN(GREATER_EQUAL, "greater_than_or_equal")             \
-  TOKEN(LESSER, "less_than")                                \
-  TOKEN(LESSER_EQUAL, "less_than_or_equal")                 \
+  TOKEN(EQUAL, "EQUAL")                                     \
+  TOKEN(NOT_EQUAL, "NOT_EQUAL")                             \
+  TOKEN(GREATER, "GREATER")                                 \
+  TOKEN(GREATER_EQUAL, "GREATER_EQUAL")                     \
+  TOKEN(LESSER, "LESSER")                                   \
+  TOKEN(LESSER_EQUAL, "LESSER_EQUAL")                       \
   /* Paranthesis, Braces and Brackets */                    \
-  TOKEN(LEFT_PARANTHESIS, "left_paranthesis")               \
-  TOKEN(LEFT_CURLY, "left_curly")                           \
-  TOKEN(LEFT_BRACKETS, "left_brackets")                     \
-  TOKEN(RIGHT_PARANTHESIS, "right_paranthesis")             \
-  TOKEN(RIGHT_CURLY, "right_curly")                         \
-  TOKEN(RIGHT_BRACKETS, "right_brackets")                   \
+  TOKEN(LEFT_PARANTHESIS, "LEFT_PARANTHESIS")               \
+  TOKEN(LEFT_CURLY, "LEFT_CURLY")                           \
+  TOKEN(LEFT_BRACKETS, "LEFT_BRACKETS")                     \
+  TOKEN(RIGHT_PARANTHESIS, "RIGHT_PARANTHESIS")             \
+  TOKEN(RIGHT_CURLY, "RIGHT_CURLY")                         \
+  TOKEN(RIGHT_BRACKETS, "RIGHT_BRACKETS")                   \
   /* Arithmetic Operators */                                \
-  TOKEN(ADD, "add")                                         \
-  TOKEN(SUBTRACT, "subtract")                               \
-  TOKEN(MULTIPLY, "multiply")                               \
-  TOKEN(DIVIDE, "divide")                                   \
-  TOKEN(MODULUS, "modulus")                                 \
+  TOKEN(ADD, "ADD")                                         \
+  TOKEN(SUBTRACT, "SUBTRACT")                               \
+  TOKEN(MULTIPLY, "MULTIPLY")                               \
+  TOKEN(DIVIDE, "DIVIDE")                                   \
+  TOKEN(MODULUS, "MODULUS")                                 \
   /* Assignment Operators */                                \
-  TOKEN(ASSIGN, "assign")                                   \
-  TOKEN(ADD_ASSIGN, "add_assign")                           \
-  TOKEN(SUBTRACT_ASSIGN, "subtract_assign")                 \
-  TOKEN(MULTIPLY_ASSIGN, "multiply_assign")                 \
-  TOKEN(DIVIDE_ASSIGN, "divide_assign")                     \
-  TOKEN(MODULUS_ASSIGN, "modulus_assign")                   \
+  TOKEN(ASSIGN, "ASSIGN")                                   \
+  TOKEN(ADD_ASSIGN, "ADD_ASSIGN")                           \
+  TOKEN(SUBTRACT_ASSIGN, "SUBTRACT_ASSIGN")                 \
+  TOKEN(MULTIPLY_ASSIGN, "MULTIPLY_ASSIGN")                 \
+  TOKEN(DIVIDE_ASSIGN, "DIVIDE_ASSIGN")                     \
+  TOKEN(MODULUS_ASSIGN, "MODULUS_ASSIGN")                   \
   /* Bitwise Operators */                                   \
-  TOKEN(BITWISE_AND, "bitwise_and")                         \
-  TOKEN(BITWISE_OR, "bitwise_or")                           \
-  TOKEN(BITWISE_NOT, "bitwise_not")                         \
-  TOKEN(BITWISE_XOR, "bitwise_xor")                         \
-  TOKEN(BITWISE_ONES_COMPLEMENT, "bitwise_ones_complement") \
-  TOKEN(BITWISE_LEFT_SHIFT, "bitwise_left_shift")           \
-  TOKEN(BITWISE_RIGHT_SHIFT, "bitwise_right_shift")
+  TOKEN(BITWISE_AND, "BITWISE_AND")                         \
+  TOKEN(BITWISE_OR, "BITWISE_OR")                           \
+  TOKEN(BITWISE_NOT, "BITWISE_NOT")                         \
+  TOKEN(BITWISE_XOR, "BITWISE_XOR")                         \
+  TOKEN(BITWISE_ONES_COMPLEMENT, "BITWISE_ONES_COMPLEMENT") \
+  TOKEN(BITWISE_LEFT_SHIFT, "BITWISE_LEFT_SHIFT")           \
+  TOKEN(BITWISE_RIGHT_SHIFT, "BITWISE_RIGHT_SHIFT")
 
 typedef enum
 {
