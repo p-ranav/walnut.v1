@@ -142,19 +142,19 @@ void lexer_destroy(list_t *tokens)
 long consume(char *buffer, long *index, char *current_character, char **multi_byte_character)
 {
   /* declarations */
-  int character_width;
-  int sequence_index;
+  int sequence_length; /* length of UTF-8 sequence starting with current_character */
+  int sequence_index;  /* index in the range [0, sequence_length) */
 
   /* get the width of this unicode character */
-  character_width = u8_seqlen(current_character);
+  sequence_length = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
-  *multi_byte_character = allocate(char, character_width + 1);
-  memset(*multi_byte_character, '\0', character_width);
+  *multi_byte_character = allocate(char, sequence_length + 1);
+  memset(*multi_byte_character, '\0', sequence_length);
 
   /* parse multi-byte unicode character */
   sequence_index = 0;
-  while (sequence_index < character_width)
+  while (sequence_index < sequence_length)
   {
     *current_character = buffer[*index];
     *index += 1;
@@ -163,25 +163,25 @@ long consume(char *buffer, long *index, char *current_character, char **multi_by
   }
   (*multi_byte_character)[sequence_index] = '\0';
   /* return the width of the consumed multi-byte character */
-  return character_width;
+  return sequence_length;
 }
 
 long peek(char *buffer, long *index, char *current_character, char **multi_byte_character)
 {
   /* declarations */
-  int character_width;
-  int sequence_index;
+  int sequence_length; /* length of UTF-8 sequence starting with current_character */
+  int sequence_index;  /* index in the range [0, sequence_length) */
 
   /* get the width of this unicode character */
-  character_width = u8_seqlen(current_character);
+  sequence_length = u8_seqlen(current_character);
 
   /* prepare character array to hold multi-byte character */
-  *multi_byte_character = allocate(char, character_width + 1);
-  memset(*multi_byte_character, '\0', character_width);
+  *multi_byte_character = allocate(char, sequence_length + 1);
+  memset(*multi_byte_character, '\0', sequence_length);
 
   /* parse multi-byte unicode character */
   sequence_index = 0;
-  while (sequence_index < character_width)
+  while (sequence_index < sequence_length)
   {
     *current_character = buffer[*index];
     *index += 1;
@@ -191,16 +191,15 @@ long peek(char *buffer, long *index, char *current_character, char **multi_byte_
   (*multi_byte_character)[sequence_index] = '\0';
 
   /* undo changes to index and current_character */
-  *index -= character_width;
+  *index -= sequence_length;
   (*current_character) = buffer[*index];
 
   /* return the width of the peek'd multi-byte character */
-  return character_width;
+  return sequence_length;
 }
 
 int startswith(char *multi_byte_character, long character_width, char character)
 {
-
   /* if the multi-byte character is NULL for some reason, return false */
   if (!multi_byte_character || character_width == 0)
     return 0;
@@ -214,44 +213,44 @@ int startswith(char *multi_byte_character, long character_width, char character)
 
 void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned int *cursor, long *index, char *current_character)
 {
-  char *peek_character = NULL;
-  long peek_character_width;
+  char *next = NULL;
+  long next_width;
 
   increment_cursor;
-  peek_character_width = consume(buffer, index, current_character, &peek_character);
+  next_width = consume(buffer, index, current_character, &next);
   increment_cursor;
 
   /* check if next character starts with '/'
      if yes, treat this as the start of a line comment */
-  if (startswith(peek_character, peek_character_width, '/'))
+  if (startswith(next, next_width, '/'))
   {
     /* loop until end of line comment, i.e., end of line or end of file */
-    while (!startswith(peek_character, peek_character_width, 0x0A) && (*index < buffer_size))
+    while (!startswith(next, next_width, 0x0A) && (*index < buffer_size))
     {
-      deallocate(peek_character);
-      peek_character_width = consume(buffer, index, current_character, &peek_character);
+      deallocate(next);
+      next_width = consume(buffer, index, current_character, &next);
       increment_cursor;
     }
     increment_line;
     reset_cursor;
   }
-  if (startswith(peek_character, peek_character_width, '*'))
+  if (startswith(next, next_width, '*'))
   {
     /* this is a block comment
        consume characters till we encounter '*' followed by '/' */
     while (1)
     {
-      deallocate(peek_character);
-      peek_character_width = consume(buffer, index, current_character, &peek_character);
+      deallocate(next);
+      next_width = consume(buffer, index, current_character, &next);
       increment_cursor;
 
-      if (startswith(peek_character, peek_character_width, EOF))
+      if (startswith(next, next_width, EOF))
       {
         fprintf(stderr, "block comment not terminated before end of file\n");
         exit(EXIT_FAILURE);
       }
 
-      if (startswith(peek_character, peek_character_width, 0x0A))
+      if (startswith(next, next_width, 0x0A))
       {
         /* end of line. increment line, reset cursor, and continue */
         increment_line;
@@ -259,40 +258,40 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
         continue;
       }
 
-      if (startswith(peek_character, peek_character_width, '*'))
+      if (startswith(next, next_width, '*'))
       {
         /* peek into the next character. We're hoping for '/' to close out the block comment */
-        deallocate(peek_character);
-        peek_character_width = peek(buffer, index, current_character, &peek_character);
+        deallocate(next);
+        next_width = peek(buffer, index, current_character, &next);
 
         /* error condition: we reach EOF before the block comment is closed */
-        if (startswith(peek_character, peek_character_width, EOF))
+        if (startswith(next, next_width, EOF))
         {
           fprintf(stderr, "block comment not terminated before end of file\n");
           exit(EXIT_FAILURE);
         }
 
-        if (startswith(peek_character, peek_character_width, '/'))
+        if (startswith(next, next_width, '/'))
         {
           /* peek is a '/' - deallocate and then consume */
-          deallocate(peek_character);
+          deallocate(next);
 
           /* consume this character and return */
-          consume(buffer, index, current_character, &peek_character);
+          consume(buffer, index, current_character, &next);
           increment_cursor;
-          deallocate(peek_character);
+          deallocate(next);
 
-          consume(buffer, index, current_character, &peek_character);
+          consume(buffer, index, current_character, &next);
           increment_cursor;
-          deallocate(peek_character);
+          deallocate(next);
 
           return;
         }
-        deallocate(peek_character);
+        deallocate(next);
       }
     }
   }
-  deallocate(peek_character);
+  deallocate(next);
 }
 
 void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigned int *line,
@@ -302,8 +301,8 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   /* declarations */
   long i;
   long current_size;
-  char *peek_character;
-  long peek_character_width;
+  char *next;
+  long next_width;
   list_node_t *node;
   struct token_t *symbol;
 
@@ -328,15 +327,15 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   current_size = next_character_width;
   while (1)
   {
-    peek_character = NULL;
-    peek_character_width = peek(buffer, index, current_character, &peek_character);
+    next = NULL;
+    next_width = peek(buffer, index, current_character, &next);
 
-    if (valid_symbol(peek_character_width, peek_character))
+    if (valid_symbol(next_width, next))
     {
       /* consume peek_character_width bytes */
-      deallocate(peek_character);
+      deallocate(next);
 
-      peek_character_width = consume(buffer, index, current_character, &peek_character);
+      next_width = consume(buffer, index, current_character, &next);
 
       /* since we treat this as a single character, update cursor by 1 */
       increment_cursor;
@@ -344,15 +343,15 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
       /* reallocate space in symbol->value and copy this peek_character
          the way this is done here is probably not efficient
          I'm reallocating after each multi-byte character is consumed */
-      append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
+      append_to(&symbol->value, &current_size, &next, &next_width);
 
-      deallocate(peek_character);
+      deallocate(next);
 
       /* continue to next character */
       continue;
     }
 
-    deallocate(peek_character);
+    deallocate(next);
 
     break;
   }
