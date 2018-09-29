@@ -60,6 +60,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
       else if (ispunct(*next))
         parse_punctuation(file_path, &line, &cursor, &character, tokens);
 
+      /* we've made the most out of 'next' - deallocate it before looping again. */
       deallocate(next);
 
       continue;
@@ -223,13 +224,16 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
         deallocate(peek_character);
         peek_character_width = peek(buffer, index, current_character, &peek_character);
 
+        /* error condition: we reach EOF before the block comment is closed */
         if (startswith(peek_character, peek_character_width, EOF))
           fprintf(stderr, "block comment not terminated before end of file\n");
 
         if (startswith(peek_character, peek_character_width, '/'))
         {
+          /* peek is a '/' - deallocate and then consume */
           deallocate(peek_character);
 
+          /* consume this character and return */
           consume(buffer, index, current_character, &peek_character);
           deallocate(peek_character);
           
@@ -268,9 +272,10 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   symbol->cursor = *cursor;
   symbol->type = TOKEN_SYMBOL;
 
+  /* allocate sufficient space for storing symbol value */
   symbol->value = (char *)malloc(next_character_width + 1);
   for (i = 0; i < next_character_width; i++)
-  {
+  { /* save one character at a time */
     symbol->value[i] = next_character[i];
   }
   symbol->value[next_character_width] = '\0';
@@ -284,8 +289,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
     if (valid_symbol(peek_character_width, peek_character))
     {
       /* consume peek_character_width bytes */
-      if (peek_character)
-        free(peek_character);
+      deallocate(peek_character);
 
       peek_character_width = consume(buffer, index, current_character, &peek_character);
 
@@ -297,15 +301,13 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
          I'm reallocating after each multi-byte character is consumed */
       append_to(&symbol->value, &current_size, &peek_character, &peek_character_width);
 
-      if (peek_character)
-        free(peek_character);
+      deallocate(peek_character);
 
       /* continue to next character */
       continue;
     }
 
-    if (peek_character)
-      free(peek_character);
+    deallocate(peek_character);
 
     break;
   }
@@ -604,9 +606,12 @@ void parse_punctuation(const char *file_path, unsigned int *line,
     punctuation->cursor = *cursor;
     punctuation->type = TOKEN_PUNCTUATION;
     punctuation->value = (char *)malloc(2);
+
+    /* save current character in punctuation value */
     punctuation->value[0] = (*current_character);
     punctuation->value[1] = '\0';
 
+    /* save punctuation token in linked list */
     node = list_node_new(punctuation);
     list_rpush(tokens, node);
   }
