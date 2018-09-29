@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(CARBON)
 
 if (UNIX)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -std=c89 -pedantic")
 endif(UNIX)
 
 if(NOT CMAKE_BUILD_TYPE)
