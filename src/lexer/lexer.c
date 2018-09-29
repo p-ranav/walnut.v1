@@ -658,6 +658,25 @@ void lexer_post_process(list_t *tokens)
 
     /* at this point, both current and next token are pointing to something (even NULL) */
 
+    /* 
+      I'm going to use process_token and process_token_sequence macros to make this section more
+      readable and so I don't have a giant if-else ladder
+
+      process_token does the following:
+      (1) call check_and_update_token(...)
+      (2) check if the current_token->value is the same as the first argument to process_token
+      (3) if it is, we need to reclassify this token as <second argument of process_token>
+          e.g., if the current_token value is ',', we re-classify this token as TOKEN_COMMA
+
+      process_token_sequence does the following:
+      (1) call check_and_update_token(...)
+      (2) check if the current_token->value is the same as the first argument to process_token
+      (3) check if the next_token->value is the same as the second argument to process_value_sequence
+      (3) if it is, we need to reclassify this token as <third argument of process_value_token>
+          e.g., if the current_token value is '>=', we re-classify this token as TOKEN_GREATER_EQUAL
+      (4) DELETE the linked list node associated with next_token from tokens before continuing the loop
+    */
+
     /* delimiters */
     process_token(".", TOKEN_DOT);
     process_token(",", TOKEN_COMMA);
