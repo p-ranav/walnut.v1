@@ -235,8 +235,8 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
       peek_character_width = consume(buffer, index, current_character, &peek_character);
       increment_cursor;
     }
-    (*line) += 1;
-    (*cursor) = 1;
+    increment_line;
+    reset_cursor;
   }
   if (startswith(peek_character, peek_character_width, '*'))
   {
@@ -257,8 +257,8 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
       if (startswith(peek_character, peek_character_width, 0x0A))
       {
         /* end of line. increment line, reset cursor, and continue */
-        (*line) += 1;
-        (*cursor) = 1;
+        increment_line;
+        reset_cursor;
         continue;
       }
 
