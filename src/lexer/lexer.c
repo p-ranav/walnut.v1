@@ -77,7 +77,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   eof->cursor = cursor;
   eof->type = TOKEN_END_OF_FILE;
   eof->value = (char*)malloc(2);
-  eof->value[0] = EOF;
+  eof->value[0] = ' ';
   eof->value[1] = '\0';
 
   /* save eof token in linked list */
@@ -570,7 +570,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   number->value = (char *)malloc(2);
   number->value[0] = *next_character;
   number->value[1] = '\0';
-  current_size = 2;
+  current_size = 1;
 
   if (*next_character == '0')
   {
@@ -782,6 +782,28 @@ void lexer_post_process(list_t *tokens)
 
     /* assignment operator */
     process_token("=", TOKEN_ASSIGN);
+
+    /* keywords */
+    process_token("true", TOKEN_TRUE);
+    process_token("false", TOKEN_FALSE);
+    process_token_sequence("else", "if", TOKEN_ELSE_IF);
+    process_token("if", TOKEN_IF);
+    process_token("else", TOKEN_ELSE);
+    process_token("while", TOKEN_WHILE);
+    process_token("for", TOKEN_FOR);
+    process_token("function", TOKEN_FUNCTION);
+    process_token("return", TOKEN_RETURN);
+    process_token("is", TOKEN_IS);
+    process_token("in", TOKEN_IN);
+    process_token("with", TOKEN_WITH);
+    process_token("continue", TOKEN_CONTINUE);
+    process_token("break", TOKEN_BREAK);
+    process_token("try", TOKEN_TRY);
+    process_token("catch", TOKEN_CATCH);
+    process_token("finally", TOKEN_FINALLY);
+    process_token("pass", TOKEN_PASS);
+    process_token("from", TOKEN_FROM);
+    process_token("import", TOKEN_IMPORT);
 
   }
   deallocate(it);

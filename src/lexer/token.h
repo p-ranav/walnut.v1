@@ -73,7 +73,28 @@
   TOKEN(COMPLEX128, "COMPLEX128")                           \
   /* Type inference */                                      \
   TOKEN(LET, "LET")                                         \
-  TOKEN(VAR, "VAR")
+  TOKEN(VAR, "VAR")                                         \
+  /* Keywords */                                            \
+  TOKEN(TRUE, "TRUE")                                       \
+  TOKEN(FALSE, "FALSE")                                     \
+  TOKEN(IF, "IF")                                           \
+  TOKEN(ELSE, "ELSE")                                       \
+  TOKEN(ELSE_IF, "ELSE_IF")                                 \
+  TOKEN(WHILE, "WHILE")                                     \
+  TOKEN(FOR, "FOR")                                         \
+  TOKEN(FUNCTION, "FUNCTION")                               \
+  TOKEN(RETURN, "RETURN")                                   \
+  TOKEN(IS, "IS")                                           \
+  TOKEN(IN, "IN")                                           \
+  TOKEN(WITH, "WITH")                                       \
+  TOKEN(CONTINUE, "CONTINUE")                               \
+  TOKEN(BREAK, "BREAK")                                     \
+  TOKEN(TRY, "TRY")                                         \
+  TOKEN(CATCH, "CATCH")                                     \
+  TOKEN(FINALLY, "FINALLY")                                 \
+  TOKEN(PASS, "PASS")                                       \
+  TOKEN(FROM, "FROM")                                       \
+  TOKEN(IMPORT, "IMPORT")
 
 typedef enum
 {
