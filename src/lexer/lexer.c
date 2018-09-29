@@ -4,7 +4,7 @@ extern const char *const token_strings[]; /* used in lexer_print */
 
 list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 {
-  /* Declarations */
+  /* declarations */
   list_t *tokens;
   unsigned int line;
   unsigned int cursor;
@@ -12,8 +12,8 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   char character;
   char *next;
   long next_width;
-  struct token_t * eof;
-  list_node_t * node;
+  struct token_t *eof;
+  list_node_t *node;
 
   /* initialize the result */
   tokens = list_new();
@@ -63,7 +63,8 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
         parse_punctuation(file_path, &line, &cursor, &character, tokens);
 
       /* if newline is encountered, update line and reset cursor */
-      if (startswith(next, next_width, '\n')) {
+      if (startswith(next, next_width, '\n'))
+      {
         line += 1;
         cursor = 1;
       }
@@ -73,7 +74,6 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
       continue;
     }
-
   }
 
   /* create a "end of file" token */
@@ -103,18 +103,18 @@ void lexer_print(list_t *tokens)
   {
     /* get pointer to token and print token type and value */
     struct token_t *token = ((struct token_t *)node->val);
-    const char * token_string = token_strings[token->type];
+    const char *token_string = token_strings[token->type];
 
     /* add spaces for pretty print */
     int length = strlen(token_string);
     int num_spaces_to_add = 20 - length;
-    char * spaces = allocate(char, num_spaces_to_add + 1);
+    char *spaces = allocate(char, num_spaces_to_add + 1);
     memset(spaces, ' ', num_spaces_to_add + 1);
     spaces[num_spaces_to_add] = '\0';
 
     /* pretty print lexer tokens */
-    printf("%s%s: %s (line %d, cursor %d)\n", token_strings[token->type], spaces, 
-      token->value, token->line, token->cursor);
+    printf("%s%s: %s (line %d, cursor %d)\n", token_strings[token->type], spaces,
+           token->value, token->line, token->cursor);
 
     /* clean up */
     free(spaces);
@@ -662,7 +662,7 @@ void parse_punctuation(const char *file_path, unsigned int *line,
     /* save current character in punctuation value */
     punctuation->value[0] = (*current_character);
     punctuation->value[1] = '\0';
-    
+
     increment_cursor;
     /* save punctuation token in linked list */
     node = list_node_new(punctuation);
@@ -678,7 +678,7 @@ void lexer_post_process(list_t *tokens)
   list_iterator_t *it;
 
   /* use list_iterator to iterate over list of tokens */
-  
+
   it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it)))
   {
@@ -687,7 +687,8 @@ void lexer_post_process(list_t *tokens)
     struct token_t *next_token = NULL;
 
     list_node_t *next_node = node->next;
-    if (next_node) {
+    if (next_node)
+    {
       next_token = ((struct token_t *)next_node->val);
     }
 
@@ -776,7 +777,7 @@ void lexer_post_process(list_t *tokens)
     process_token("*", TOKEN_MULTIPLY);
     process_token("/", TOKEN_DIVIDE);
     process_token("%", TOKEN_MODULUS);
-    
+
     /* delimiters */
     process_token(".", TOKEN_DOT);
     process_token(",", TOKEN_COMMA);
@@ -821,20 +822,19 @@ void lexer_post_process(list_t *tokens)
     process_token("pass", TOKEN_PASS);
     process_token("from", TOKEN_FROM);
     process_token("import", TOKEN_IMPORT);
-
   }
   deallocate(it);
 }
 
-int check_and_update_token(struct token_t * current_token, char * current_token_value,
-  int check_next_token, /* should next token be considered or is checking current_token enough? */
-  struct token_t * next_token, char * next_token_value, token new_type, char * new_value)
+int check_and_update_token(struct token_t *current_token, char *current_token_value,
+                           int check_next_token, /* should next token be considered or is checking current_token enough? */
+                           struct token_t *next_token, char *next_token_value, token new_type, char *new_value)
 {
   /* declarations */
   int check_passed;
 
-  check_passed = strequal(current_token->value, current_token_value) && 
-                  (check_next_token ? strequal(next_token->value, next_token_value) : 1);
+  check_passed = strequal(current_token->value, current_token_value) &&
+                 (check_next_token ? strequal(next_token->value, next_token_value) : 1);
 
   if (check_passed)
   {
@@ -845,14 +845,14 @@ int check_and_update_token(struct token_t * current_token, char * current_token_
   return 0;
 }
 
-void update_token_type(struct token_t * current_token, token new_type)
+void update_token_type(struct token_t *current_token, token new_type)
 {
   if (!current_token)
     return;
   current_token->type = new_type;
 }
 
-void update_token_value(struct token_t * current_token, const char * new_value)
+void update_token_value(struct token_t *current_token, const char *new_value)
 {
   /* declarations */
   size_t i;
