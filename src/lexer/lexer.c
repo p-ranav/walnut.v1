@@ -91,6 +91,9 @@ void lexer_print(list_t *tokens)
 
     /* pretty print lexer tokens */
     printf("%s%s: %s\n", token_strings[token->type], spaces, token->value);
+
+    /* clean up */
+    free(spaces);
   }
   deallocate(it);
 }
@@ -761,6 +764,9 @@ void lexer_post_process(list_t *tokens)
     /* bitwise operators */
     process_token("^", TOKEN_BITWISE_XOR);
     process_token("~", TOKEN_BITWISE_ONES_COMPLEMENT);
+
+    /* assignment operator */
+    process_token("=", TOKEN_ASSIGN);
 
   }
   deallocate(it);
