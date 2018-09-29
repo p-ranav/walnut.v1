@@ -570,7 +570,8 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   {
     peek_character = NULL;
     peek_character_width = peek(buffer, index, current_character, &peek_character);
-    if (peek_character_width == 1 && (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f'))
+    if (peek_character_width == 1 && 
+      (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f' || *peek_character == 'i'))
     {
       deallocate(peek_character);
       character_in_string = NULL;
