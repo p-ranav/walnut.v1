@@ -392,13 +392,13 @@ void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
   long i;
 
   /* reallocate space in lhs and copy rhs */
-  char *realloc_lhs = realloc(*lhs, *lhs_size + *rhs_size + 1);
-  if (!realloc_lhs)
+  char *expanded_lhs = realloc(*lhs, *lhs_size + *rhs_size + 1);
+  if (!expanded_lhs)
   {
     fprintf(stderr, "realloc failed!\n");
     exit(EXIT_FAILURE);
   }
-  *lhs = realloc_lhs;
+  *lhs = expanded_lhs;
 
   /* save new multi-byte character */
   for (i = 0; i < (*rhs_size); i++)
@@ -412,6 +412,10 @@ void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
 void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
                       long *index, char *current_character)
 {
+  /* declarations */
+  char * next;
+  long next_width;
+
   increment_cursor; /* increment cursor since current_character = whitespace */
 
   if (buffer_size == 0)
@@ -420,17 +424,17 @@ void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
   while (1)
   {
     /* loop here until we stop encountering 'space' characters */
-    char *peek_character = NULL;
-    long peek_character_width = peek(buffer, index, current_character, &peek_character);
-    if (whitespace(peek_character_width, peek_character))
+    next = NULL;
+    next_width = peek(buffer, index, current_character, &next);
+    if (whitespace(next_width, next))
     {
-      deallocate(peek_character);
-      peek_character_width = consume(buffer, index, current_character, &peek_character);
-      deallocate(peek_character);
+      deallocate(next);
+      next_width = consume(buffer, index, current_character, &next);
+      deallocate(next);
       increment_cursor;
       continue;
     }
-    deallocate(peek_character);
+    deallocate(next);
     return; /* break out of this loop */
   }
   /* we don't need to store whitespace tokens in the result */
