@@ -60,8 +60,6 @@ typedef enum
   TOKEN_INVALID
 } token;
 
-char *token_strings[44];
-
 struct token_t
 {
   token type;
