@@ -103,4 +103,27 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
 void parse_punctuation(const char *file_path, unsigned int *line,
                        unsigned int *cursor, char *current_character, list_t *tokens);
 
+/* lexer_post_process 
+   This function takes token classification to the next level
+   lexer_tokenize returns a list of tokens. one of the following types:
+   (1) symbol, (2) number, (3) punctuation, (4) string, (5) comments, and (6) whitespace
+
+   this post-processing function is responsible for:
+   classifying a symbol token as either: (1) identifier, or (2) keyword
+   classifying punctuations as concrete tokens, e.g., ';' as TOKEN_SEMICOLON
+   (maybe) classifying number as INTEGER or FLOAT or DOUBLE
+
+   these concrete classifications instead of SYMBOL, PUNCTUATION etc., are to 
+   make the parser stage easier
+*/
+void lexer_post_process(list_t *tokens);
+
+/* Helper function to reclassify delimiters, e.g., 
+   classify ',' as TOKEN_COMMA instead of TOKEN_PUNCTUATION */
+void lexer_classify_delimiter(struct token_t *token);
+
+/* Helper function to reclassify comparison operators, e.g.,
+   classify '==' as TOKEN_EQUAL instead of [TOKEN_PUNCTUATION, TOKEN_PUNCTUATION]*/
+// void lexer_classify_comparison_operator(struct token_t * current_token, struct token_t * next_token);
+
 #endif

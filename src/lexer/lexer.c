@@ -1,16 +1,16 @@
 #include <lexer.h>
 
-extern const char * const token_strings[];
+extern const char *const token_strings[];
 
 list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 {
   /* Declarations */
-  list_t * tokens;
+  list_t *tokens;
   unsigned int line;
   unsigned int cursor;
   long index;
   char character;
-  char * next;
+  char *next;
   long next_width;
 
   /* initialize the result */
@@ -41,17 +41,17 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
       /* now check if the next character is the start of symbol - identifier or keyword */
       if (valid_symbol(next_width, next))
-        parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index, 
-          &character, next_width, next, tokens);
-      
+        parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index,
+                     &character, next_width, next, tokens);
+
       /* consume all whitespace */
       else if (whitespace(next_width, next))
         parse_whitespace(buffer_size, buffer, &cursor, &index, &character);
-      
+
       /* check if the next character is the start of a string literal, e.g., "Hello World" */
       else if (startswith(next, next_width, '\"'))
         parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character, tokens);
-      
+
       /* check if the next character is the start of a number. Consume till end of number */
       else if (isdigit(*next))
         parse_number(buffer_size, buffer, file_path, &line, &cursor, &index, &character, next, tokens);
@@ -80,7 +80,16 @@ void lexer_print(list_t *tokens)
   {
     /* get pointer to token and print token type and value */
     struct token_t *token = ((struct token_t *)node->val);
-    printf("%s: %s\n", token_strings[token->type], token->value);
+    const char * token_string = token_strings[token->type];
+
+    /* add spaces for pretty print */
+    int length = strlen(token_string);
+    int num_spaces_to_add = 16 - strlen(token_string);
+    char * spaces = (char *)malloc(num_spaces_to_add + 1);
+    memset(spaces, ' ', num_spaces_to_add + 1);
+    spaces[num_spaces_to_add] = '\0';
+
+    printf("%s%s: %s\n", token_strings[token->type], spaces, token->value);
   }
   deallocate(it);
 }
@@ -94,7 +103,7 @@ void lexer_destroy(list_t *tokens)
   {
     /* get pointer to token */
     struct token_t *token = ((struct token_t *)node->val);
-    
+
     /* deallocate the char* value of the token */
     deallocate(token->value);
 
@@ -182,7 +191,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
 {
   char *peek_character = NULL;
   long peek_character_width;
-  
+
   peek_character_width = consume(buffer, index, current_character, &peek_character);
 
   /* check if next character starts with '/'
@@ -208,7 +217,10 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
       (*cursor) += 1;
 
       if (startswith(peek_character, peek_character_width, EOF))
+      {
         fprintf(stderr, "block comment not terminated before end of file\n");
+        exit(EXIT_FAILURE);
+      }
 
       if (startswith(peek_character, peek_character_width, 0x0A))
       {
@@ -226,7 +238,10 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
 
         /* error condition: we reach EOF before the block comment is closed */
         if (startswith(peek_character, peek_character_width, EOF))
+        {
           fprintf(stderr, "block comment not terminated before end of file\n");
+          exit(EXIT_FAILURE);
+        }
 
         if (startswith(peek_character, peek_character_width, '/'))
         {
@@ -236,11 +251,11 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
           /* consume this character and return */
           consume(buffer, index, current_character, &peek_character);
           deallocate(peek_character);
-          
+
           consume(buffer, index, current_character, &peek_character);
           (*cursor) += 1;
           deallocate(peek_character);
-          
+
           return;
         }
         deallocate(peek_character);
@@ -257,7 +272,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   /* declarations */
   long i;
   long current_size;
-  char * peek_character;
+  char *peek_character;
   long peek_character_width;
   list_node_t *node;
   struct token_t *symbol;
@@ -463,6 +478,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
         deallocate(peek_character);
         /* TODO: report this error a little better */
         fprintf(stderr, "EOL/EOF encountered before closing literal quotes\n");
+        exit(EXIT_FAILURE);
       }
 
       /* realloc and add peek_character to string->value */
@@ -493,6 +509,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
     {
       /* TODO: report this error a little better */
       fprintf(stderr, "EOL/EOF encountered before closing literal quotes\n");
+      exit(EXIT_FAILURE);
     }
     /* consume the closing double quotes */
     deallocate(character_in_string);
@@ -572,8 +589,8 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   {
     peek_character = NULL;
     peek_character_width = peek(buffer, index, current_character, &peek_character);
-    if (peek_character_width == 1 && 
-      (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f' || *peek_character == 'i'))
+    if (peek_character_width == 1 &&
+        (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f' || *peek_character == 'i'))
     {
       deallocate(peek_character);
       character_in_string = NULL;
@@ -614,5 +631,65 @@ void parse_punctuation(const char *file_path, unsigned int *line,
     /* save punctuation token in linked list */
     node = list_node_new(punctuation);
     list_rpush(tokens, node);
+  }
+}
+
+/* the main lexer post-processing function */
+void lexer_post_process(list_t *tokens)
+{
+  /* use list_iterator to iterate over list of tokens */
+  list_node_t *node;
+  list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
+  while ((node = list_iterator_next(it)))
+  {
+    /* Keep pointers to two consecutive tokens - current and next */
+    struct token_t *current_token = ((struct token_t *)node->val);
+    struct token_t *next_token = NULL;
+
+    list_node_t *next_node = node->next;
+    if (next_node)
+      next_token = ((struct token_t *)next_node);
+
+    /* at this point, both current and next token are pointing to something (even NULL) */
+
+    /* reclassify delimiters */
+    lexer_classify_delimiter(current_token);
+
+    /* reclassify comparison operators */
+  }
+  deallocate(it);
+}
+
+void lexer_classify_delimiter(struct token_t *token)
+{
+  if (!token)
+    return;
+
+  char *value = token->value;
+
+  /* if-else ladder for delimiters */
+  if (strcmp(value, ".") == 0)
+  {
+    token->type = TOKEN_DOT;
+  }
+  else if (strcmp(value, ",") == 0)
+  {
+    token->type = TOKEN_COMMA;
+  }
+  else if (strcmp(value, ":") == 0)
+  {
+    token->type = TOKEN_COLON;
+  }
+  else if (strcmp(value, ";") == 0)
+  {
+    token->type = TOKEN_SEMI_COLON;
+  }
+  else if (strcmp(value, "!") == 0)
+  {
+    token->type = TOKEN_EXCLAMATION;
+  }
+  else if (strcmp(value, "?") == 0)
+  {
+    token->type = TOKEN_QUESTION;
   }
 }

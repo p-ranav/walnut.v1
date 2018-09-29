@@ -55,7 +55,7 @@ list_node_t *list_rpush(list_t *self, list_node_t *node)
 
 list_node_t *list_rpop(list_t *self)
 {
-  list_node_t * node;
+  list_node_t *node;
 
   if (!self->len)
     return NULL;
