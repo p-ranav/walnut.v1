@@ -16,15 +16,15 @@
 (3) tokenize the stream of characters (build a list of tokens)
 (4) return the list of tokens
 Tokens can be of different categories (see token.h)*/
-list_t *tokenize(const char *file_path, long buffer_size, char *buffer);
+list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer);
 
 /*Print tokens returned by tokenize(...)
 <token_type>: <token_value>*/
-void print_tokens(list_t *tokens);
+void lexer_print(list_t *tokens);
 
 /*Call free(token) for each token in tokens
 Clean up memory consumed by token->value*/
-void delete_tokens(list_t *tokens);
+void lexer_destroy(list_t *tokens);
 
 /*Consumes 1 unicode character
 buffer is the input buffer of characters (originally read from file)

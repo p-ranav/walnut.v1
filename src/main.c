@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 
   if (argc == 1) {
     /* TODO: implement REPL */
-    trace("Usage: ./carbon <filename>");
+    fprintf(stderr, "Usage: ./carbon <filename>");
   }
   else if (argc == 2) {
 
@@ -31,16 +31,15 @@ int main(int argc, char *argv[]) {
     /* Read from file and retrieve buffer of characters */
     buffer = NULL;
     file_size = read_file(file_path, &buffer);
-    trace("%s (%ld bytes)\n", file_path, file_size);
 
     /* Tokenize the buffer of characters */
-    tokens = tokenize(file_path, file_size, buffer);
+    tokens = lexer_tokenize(file_path, file_size, buffer);
 
     /* Print lexer tokens */
-    print_tokens(tokens);
+    lexer_print(tokens);
 
     /* Delete lexer tokens */
-    delete_tokens(tokens);
+    lexer_destroy(tokens);
 
     /* Delete original file buffer */
     free(buffer);
