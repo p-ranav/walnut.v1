@@ -233,7 +233,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
     {
       deallocate(peek_character);
       peek_character_width = consume(buffer, index, current_character, &peek_character);
-      (*cursor) += 1;
+      increment_cursor;
     }
     (*line) += 1;
     (*cursor) = 1;
@@ -246,7 +246,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
     {
       deallocate(peek_character);
       peek_character_width = consume(buffer, index, current_character, &peek_character);
-      (*cursor) += 1;
+      increment_cursor;
 
       if (startswith(peek_character, peek_character_width, EOF))
       {
@@ -342,7 +342,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
       peek_character_width = consume(buffer, index, current_character, &peek_character);
 
       /* since we treat this as a single character, update cursor by 1 */
-      (*cursor) += 1;
+      increment_cursor;
 
       /* reallocate space in symbol->value and copy this peek_character
          the way this is done here is probably not efficient
@@ -482,7 +482,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
     /* loop till we encounter the closing double quotes */
     character_in_string = NULL;
     character_in_string_width = peek(buffer, index, current_character, &character_in_string);
-    (*cursor) += 1;
+    increment_cursor;
 
     if (startswith(character_in_string, character_in_string_width, '\\'))
     {
@@ -497,7 +497,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
         deallocate(peek_character);
 
         peek_character_width = consume(buffer, index, current_character, &peek_character);
-        (*cursor) += 1;
+        increment_cursor;
 
         /* realloc and add peek_character to string->value */
         append_to(&string->value, &current_size, &peek_character, &peek_character_width);
@@ -597,7 +597,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
       deallocate(peek_character);
       character_in_string = NULL;
       character_in_string_width = consume(buffer, index, current_character, &character_in_string);
-      (*cursor) += 1;
+      increment_cursor;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
       deallocate(character_in_string);
 
@@ -605,7 +605,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
       {
         character_in_string = NULL;
         character_in_string_width = consume(buffer, index, current_character, &character_in_string);
-        (*cursor) += 1;
+        increment_cursor;
         if (isxdigit(*character_in_string))
         {
           append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
