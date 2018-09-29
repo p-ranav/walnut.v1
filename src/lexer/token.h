@@ -50,7 +50,10 @@
   TOKEN(BITWISE_XOR, "BITWISE_XOR")                         \
   TOKEN(BITWISE_ONES_COMPLEMENT, "BITWISE_ONES_COMPLEMENT") \
   TOKEN(BITWISE_LEFT_SHIFT, "BITWISE_LEFT_SHIFT")           \
-  TOKEN(BITWISE_RIGHT_SHIFT, "BITWISE_RIGHT_SHIFT")
+  TOKEN(BITWISE_RIGHT_SHIFT, "BITWISE_RIGHT_SHIFT")         \
+  /* Logical Operators */                                   \
+  TOKEN(LOGICAL_AND, "LOGICAL_AND")                         \
+  TOKEN(LOGICAL_OR, "LOGICAL_OR")
 
 typedef enum
 {
