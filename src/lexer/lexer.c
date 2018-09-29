@@ -1,6 +1,6 @@
 #include <lexer.h>
 
-extern const char *const token_strings[];
+extern const char *const token_strings[]; /* used in lexer_print */
 
 list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 {
@@ -62,6 +62,12 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
       else if (ispunct(*next))
         parse_punctuation(file_path, &line, &cursor, &character, tokens);
 
+      /* if newline is encountered, update line and reset cursor */
+      if (startswith(next, next_width, '\n')) {
+        line += 1;
+        cursor = 1;
+      }
+
       /* we've made the most out of 'next' - deallocate it before looping again. */
       deallocate(next);
 
@@ -107,7 +113,8 @@ void lexer_print(list_t *tokens)
     spaces[num_spaces_to_add] = '\0';
 
     /* pretty print lexer tokens */
-    printf("%s%s: %s\n", token_strings[token->type], spaces, token->value);
+    printf("%s%s: %s (line %d, cursor %d)\n", token_strings[token->type], spaces, 
+      token->value, token->line, token->cursor);
 
     /* clean up */
     free(spaces);
@@ -213,7 +220,9 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
   char *peek_character = NULL;
   long peek_character_width;
 
+  increment_cursor;
   peek_character_width = consume(buffer, index, current_character, &peek_character);
+  increment_cursor;
 
   /* check if next character starts with '/'
      if yes, treat this as the start of a line comment */
@@ -226,6 +235,8 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
       peek_character_width = consume(buffer, index, current_character, &peek_character);
       (*cursor) += 1;
     }
+    (*line) += 1;
+    (*cursor) = 1;
   }
   if (startswith(peek_character, peek_character_width, '*'))
   {
@@ -271,10 +282,11 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
 
           /* consume this character and return */
           consume(buffer, index, current_character, &peek_character);
+          increment_cursor;
           deallocate(peek_character);
 
           consume(buffer, index, current_character, &peek_character);
-          (*cursor) += 1;
+          increment_cursor;
           deallocate(peek_character);
 
           return;
@@ -330,7 +342,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
       peek_character_width = consume(buffer, index, current_character, &peek_character);
 
       /* since we treat this as a single character, update cursor by 1 */
-      cursor += 1;
+      (*cursor) += 1;
 
       /* reallocate space in symbol->value and copy this peek_character
          the way this is done here is probably not efficient
@@ -347,6 +359,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
 
     break;
   }
+  increment_cursor;
   node = list_node_new(symbol);
   list_rpush(tokens, node);
 }
@@ -404,6 +417,8 @@ void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
 void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
                       long *index, char *current_character)
 {
+  increment_cursor; /* increment cursor since current_character = whitespace */
+
   if (buffer_size == 0)
     return;
 
@@ -417,7 +432,7 @@ void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
       deallocate(peek_character);
       peek_character_width = consume(buffer, index, current_character, &peek_character);
       deallocate(peek_character);
-      (*cursor) += 1;
+      increment_cursor;
       continue;
     }
     deallocate(peek_character);
@@ -541,6 +556,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
     deallocate(character_in_string);
     break;
   }
+  increment_cursor;
   node = list_node_new(string);
   list_rpush(tokens, node);
 }
@@ -614,7 +630,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
       deallocate(peek_character);
       character_in_string = NULL;
       character_in_string_width = consume(buffer, index, current_character, &character_in_string);
-      *cursor += 1;
+      increment_cursor;
       append_to(&number->value, &current_size, &character_in_string, &character_in_string_width);
       deallocate(character_in_string);
       continue;
@@ -622,7 +638,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
     deallocate(peek_character);
     break;
   }
-
+  increment_cursor;
   node = list_node_new(number);
   list_rpush(tokens, node);
 }
@@ -646,7 +662,8 @@ void parse_punctuation(const char *file_path, unsigned int *line,
     /* save current character in punctuation value */
     punctuation->value[0] = (*current_character);
     punctuation->value[1] = '\0';
-
+    
+    increment_cursor;
     /* save punctuation token in linked list */
     node = list_node_new(punctuation);
     list_rpush(tokens, node);

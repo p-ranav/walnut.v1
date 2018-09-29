@@ -7,6 +7,7 @@
   pointer = NULL;
 
 /* Lexer macros */
+#define increment_cursor (*cursor) += 1
 #define strequal(lhs, rhs) (strcmp(lhs, rhs) == 0)
 
 /* used in lexer_post_process(...) */
