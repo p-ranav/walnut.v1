@@ -43,18 +43,6 @@ int u8_seqlen(char *s);
    input characters processed */
 int u8_read_escape_sequence(char *src, u_int32_t *dest);
 
-/* given a wide character, convert it to an ASCII escape sequence stored in
-   buf, where buf is "sz" bytes. returns the number of characters output. */
-int u8_escape_wchar(char *buf, int sz, u_int32_t ch);
-
-/* convert a string "src" containing escape sequences to UTF-8 */
-int u8_unescape(char *buf, int sz, char *src);
-
-/* convert UTF-8 "src" to ASCII with escape sequences.
-   if escape_quotes is nonzero, quote characters will be preceded by
-   backslashes as well. */
-int u8_escape(char *buf, int sz, char *src, int escape_quotes);
-
 /* utility predicates used by the above */
 int octal_digit(char c);
 int hex_digit(char c);

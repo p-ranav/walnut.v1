@@ -60,12 +60,7 @@ typedef enum
   TOKEN_INVALID
 } token;
 
-static char *token_strings[] = {
-#define TOKEN(label, string) string,
-    TOKEN_LIST
-#undef TOKEN
-  "invalid"
-};
+char *token_strings[44];
 
 struct token_t
 {

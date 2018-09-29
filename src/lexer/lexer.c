@@ -39,16 +39,15 @@ list_t *tokenize(const char *file_path, long buffer_size, char *buffer)
         parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
                      next_character_width, next_character, tokens);
       else if (whitespace(next_character_width, next_character))
-        parse_whitespace(buffer_size, buffer, &line, &cursor, &index, &character);
+        parse_whitespace(buffer_size, buffer, &cursor, &index, &character);
       else if (startswith(next_character, next_character_width, '\"'))
         parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
-                             next_character_width, next_character, tokens);
+                             tokens);
       else if (isdigit(*next_character))
         parse_number(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
-                     next_character_width, next_character, tokens);
+                     next_character, tokens);
       else if (ispunct(*next_character))
-        parse_punctuation(buffer_size, buffer, file_path, &line, &cursor, &index, &character,
-                          next_character_width, next_character, tokens);
+        parse_punctuation(file_path, &line, &cursor, &character, tokens);
 
       if (next_character)
         free(next_character);
@@ -152,7 +151,7 @@ int startswith(char *multi_byte_character, long character_width, char character)
 {
 
   /* if the multi-byte character is NULL for some reason, return false */
-  if (!multi_byte_character)
+  if (!multi_byte_character || character_width == 0)
     return 0;
 
   /* compare the first byte of the multi-byte character with input character */
@@ -243,11 +242,13 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   /* declarations */
   long i;
   long current_size;
-  long current_index;
   char * peek_character;
   long peek_character_width;
   list_node_t *node;
   struct token_t *symbol;
+
+  if (buffer_size == 0)
+    return;
 
   /* create a "symbol" token */
   symbol = (struct token_t *)malloc(sizeof(struct token_t));
@@ -264,7 +265,6 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
   symbol->value[next_character_width] = '\0';
 
   current_size = next_character_width;
-  current_index = next_character_width;
   while (1)
   {
     peek_character = NULL;
@@ -352,9 +352,12 @@ void append_to(char **lhs, long *lhs_size, char **rhs, long *rhs_size)
   (*lhs)[(*lhs_size)] = '\0'; /* null terminate the updated LHS */
 }
 
-void parse_whitespace(long buffer_size, char *buffer, unsigned int *line, unsigned int *cursor,
+void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
                       long *index, char *current_character)
 {
+  if (buffer_size == 0)
+    return;
+
   while (1)
   {
     /* loop here until we stop encountering 'space' characters */
@@ -390,8 +393,7 @@ int whitespace(long character_width, char *multi_byte_character)
 }
 
 void parse_string_literal(long buffer_size, char *buffer, const char *file_path, unsigned int *line,
-                          unsigned int *cursor, long *index, char *current_character, long next_character_width,
-                          char *next_character, list_t *tokens)
+                          unsigned int *cursor, long *index, char *current_character, list_t *tokens)
 {
   /* declarations */
   long current_size;
@@ -400,9 +402,13 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
   char *peek_character;
   long peek_character_width;
   list_node_t *node;
+  struct token_t *string;
+
+  if (buffer_size == 0)
+    return;
 
   /* create a "string" token */
-  struct token_t *string = (struct token_t *)malloc(sizeof(struct token_t));
+  string = (struct token_t *)malloc(sizeof(struct token_t));
   string->file_path = file_path;
   string->line = *line;
   string->cursor = *cursor;
@@ -501,7 +507,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
 }
 
 void parse_number(long buffer_size, char *buffer, const char *file_path, unsigned int *line,
-                  unsigned int *cursor, long *index, char *current_character, long next_character_width,
+                  unsigned int *cursor, long *index, char *current_character,
                   char *next_character, list_t *tokens)
 {
   /* declarations */
@@ -511,9 +517,13 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   char *character_in_string;
   long character_in_string_width;
   list_node_t *node;
+  struct token_t *number;
+
+  if (buffer_size == 0)
+    return;
 
   /* create a "punctuation" token */
-  struct token_t *number = (struct token_t *)malloc(sizeof(struct token_t));
+  number = (struct token_t *)malloc(sizeof(struct token_t));
   number->file_path = file_path;
   number->line = *line;
   number->cursor = *cursor;
@@ -587,9 +597,8 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
   list_rpush(tokens, node);
 }
 
-void parse_punctuation(long buffer_size, char *buffer, const char *file_path, unsigned int *line,
-                       unsigned int *cursor, long *index, char *current_character, long next_character_width,
-                       char *next_character, list_t *tokens)
+void parse_punctuation(const char *file_path, unsigned int *line,
+                       unsigned int *cursor, char *current_character, list_t *tokens)
 {
   /* declarations */
   list_node_t *node;

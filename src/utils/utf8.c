@@ -67,14 +67,18 @@ int u8_toucs(u_int32_t *dest, int sz, char *src, int srcsz)
     case 3:
       ch += (unsigned char)*src++;
       ch <<= 6;
+      /* fall through */
     case 2:
       ch += (unsigned char)*src++;
       ch <<= 6;
+      /* fall through */
     case 1:
       ch += (unsigned char)*src++;
       ch <<= 6;
+      /* fall through */
     case 0:
       ch += (unsigned char)*src++;
+      /* fall through */
     }
     ch -= offsetsFromUTF8[nb];
     dest[i++] = ch;
@@ -316,90 +320,6 @@ int u8_read_escape_sequence(char *str, u_int32_t *dest)
   *dest = ch;
 
   return i;
-}
-
-/* convert a string with literal \uxxxx or \Uxxxxxxxx characters to UTF-8
-   example: u8_unescape(mybuf, 256, "hello\\u220e")
-   note the double backslash is needed if called on a C string literal */
-int u8_unescape(char *buf, int sz, char *src)
-{
-  int c = 0, amt;
-  u_int32_t ch;
-  char temp[4];
-
-  while (*src && c < sz)
-  {
-    if (*src == '\\')
-    {
-      src++;
-      amt = u8_read_escape_sequence(src, &ch);
-    }
-    else
-    {
-      ch = (u_int32_t)*src;
-      amt = 1;
-    }
-    src += amt;
-    amt = u8_wc_toutf8(temp, ch);
-    if (amt > sz - c)
-      break;
-    memcpy(&buf[c], temp, amt);
-    c += amt;
-  }
-  if (c < sz)
-    buf[c] = '\0';
-  return c;
-}
-
-int u8_escape_wchar(char *buf, int sz, u_int32_t ch)
-{
-  if (ch == L'\n')
-    return snprintf(buf, sz, "\\n");
-  else if (ch == L'\t')
-    return snprintf(buf, sz, "\\t");
-  else if (ch == L'\r')
-    return snprintf(buf, sz, "\\r");
-  else if (ch == L'\b')
-    return snprintf(buf, sz, "\\b");
-  else if (ch == L'\f')
-    return snprintf(buf, sz, "\\f");
-  else if (ch == L'\v')
-    return snprintf(buf, sz, "\\v");
-  else if (ch == L'\a')
-    return snprintf(buf, sz, "\\a");
-  else if (ch == L'\\')
-    return snprintf(buf, sz, "\\\\");
-  else if (ch < 32 || ch == 0x7f)
-    return snprintf(buf, sz, "\\x%hhX", (unsigned char)ch);
-  else if (ch > 0xFFFF)
-    return snprintf(buf, sz, "\\U%.8X", (u_int32_t)ch);
-  else if (ch >= 0x80 && ch <= 0xFFFF)
-    return snprintf(buf, sz, "\\u%.4hX", (unsigned short)ch);
-
-  return snprintf(buf, sz, "%c", (char)ch);
-}
-
-int u8_escape(char *buf, int sz, char *src, int escape_quotes)
-{
-  int c = 0, i = 0, amt;
-
-  while (src[i] && c < sz)
-  {
-    if (escape_quotes && src[i] == '"')
-    {
-      amt = snprintf(buf, sz - c, "\\\"");
-      i++;
-    }
-    else
-    {
-      amt = u8_escape_wchar(buf, sz - c, u8_nextchar(src, &i));
-    }
-    c += amt;
-    buf += amt;
-  }
-  if (c < sz)
-    *buf = '\0';
-  return c;
 }
 
 char *u8_strchr(char *s, u_int32_t ch, int *charn)

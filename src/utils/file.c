@@ -14,6 +14,7 @@ long read_file(const char *file_path, char **buffer)
 
   *buffer = (char *)malloc((file_size + 1) * sizeof(char)); /* enough memory for file + \0 */
   bytes = fread(*buffer, file_size, 1, file);               /* read in the entire file */
+  printf("%s (%ld bytes)\n", file_path, bytes * file_size);
   fclose(file);                                             /* close the file */
 
   return file_size;
