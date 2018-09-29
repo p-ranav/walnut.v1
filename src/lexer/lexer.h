@@ -118,12 +118,11 @@ void parse_punctuation(const char *file_path, unsigned int *line,
 */
 void lexer_post_process(list_t *tokens);
 
-/* Helper function to reclassify delimiters, e.g., 
-   classify ',' as TOKEN_COMMA instead of TOKEN_PUNCTUATION */
-void lexer_classify_delimiter(struct token_t *token);
-
-/* Helper function to reclassify comparison operators, e.g.,
-   classify '==' as TOKEN_EQUAL instead of [TOKEN_PUNCTUATION, TOKEN_PUNCTUATION]*/
-// void lexer_classify_comparison_operator(struct token_t * current_token, struct token_t * next_token);
+/* Helper functions used by lexer_post_process(...) to update the token value */
+int check_and_update_token(struct token_t * current_token, char * current_token_value,
+  int check_next_token, // should next token be considered or is checking current_token enough?
+  struct token_t * next_token, char * next_token_value, token new_type, char * new_value);
+void update_token_type(struct token_t * current_token, token new_type);
+void update_token_value(struct token_t * current_token, const char * new_value);
 
 #endif

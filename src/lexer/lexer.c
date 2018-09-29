@@ -84,11 +84,12 @@ void lexer_print(list_t *tokens)
 
     /* add spaces for pretty print */
     int length = strlen(token_string);
-    int num_spaces_to_add = 16 - strlen(token_string);
+    int num_spaces_to_add = 16 - length;
     char * spaces = (char *)malloc(num_spaces_to_add + 1);
     memset(spaces, ' ', num_spaces_to_add + 1);
     spaces[num_spaces_to_add] = '\0';
 
+    /* pretty print lexer tokens */
     printf("%s%s: %s\n", token_strings[token->type], spaces, token->value);
   }
   deallocate(it);
@@ -637,9 +638,13 @@ void parse_punctuation(const char *file_path, unsigned int *line,
 /* the main lexer post-processing function */
 void lexer_post_process(list_t *tokens)
 {
-  /* use list_iterator to iterate over list of tokens */
+  /* declarations */
   list_node_t *node;
-  list_iterator_t *it = list_iterator_new(tokens, LIST_HEAD);
+  list_iterator_t *it;
+
+  /* use list_iterator to iterate over list of tokens */
+  
+  it = list_iterator_new(tokens, LIST_HEAD);
   while ((node = list_iterator_next(it)))
   {
     /* Keep pointers to two consecutive tokens - current and next */
@@ -647,49 +652,86 @@ void lexer_post_process(list_t *tokens)
     struct token_t *next_token = NULL;
 
     list_node_t *next_node = node->next;
-    if (next_node)
-      next_token = ((struct token_t *)next_node);
+    if (next_node) {
+      next_token = ((struct token_t *)next_node->val);
+    }
 
     /* at this point, both current and next token are pointing to something (even NULL) */
 
-    /* reclassify delimiters */
-    lexer_classify_delimiter(current_token);
+    /* delimiters */
+    process_token(".", TOKEN_DOT);
+    process_token(",", TOKEN_COMMA);
+    process_token(":", TOKEN_COLON);
+    process_token(";", TOKEN_SEMI_COLON);
+    process_token("!", TOKEN_EXCLAMATION);
+    process_token("?", TOKEN_QUESTION);
+
+    /* comparison operators */
+    process_token_sequence("=", "=", TOKEN_EQUAL);
+    process_token_sequence("!", "=", TOKEN_NOT_EQUAL);
+    process_token(">", TOKEN_GREATER);
+    process_token_sequence(">", "=", TOKEN_GREATER_EQUAL);
+    process_token("<", TOKEN_LESSER);
+    process_token_sequence("<", "=", TOKEN_LESSER_EQUAL);
 
     /* reclassify comparison operators */
   }
   deallocate(it);
 }
 
-void lexer_classify_delimiter(struct token_t *token)
+int check_and_update_token(struct token_t * current_token, char * current_token_value,
+  int check_next_token, // should next token be considered or is checking current_token enough?
+  struct token_t * next_token, char * next_token_value, token new_type, char * new_value)
 {
-  if (!token)
+  /* declarations */
+  int check_passed;
+
+  check_passed = strequal(current_token->value, current_token_value) && 
+                  (check_next_token ? strequal(next_token->value, next_token_value) : 1);
+
+  if (check_passed)
+  {
+    update_token_type(current_token, new_type);
+    update_token_value(current_token, new_value);
+    return 1;
+  }
+  return 0;
+}
+
+void update_token_type(struct token_t * current_token, token new_type)
+{
+  if (!current_token)
+    return;
+  current_token->type = new_type;
+}
+
+void update_token_value(struct token_t * current_token, const char * new_value)
+{
+  /* declarations */
+  size_t i;
+  size_t new_value_size;
+  char *realloc_token;
+
+  if (!current_token)
     return;
 
-  char *value = token->value;
+  if (strequal(current_token->value, new_value))
+    return;
 
-  /* if-else ladder for delimiters */
-  if (strcmp(value, ".") == 0)
+  new_value_size = strlen(new_value);
+
+  /* reallocate space in current_token->value and copy "==" into it */
+  realloc_token = realloc(current_token->value, new_value_size + 1);
+  if (!realloc_token)
   {
-    token->type = TOKEN_DOT;
+    fprintf(stderr, "realloc failed!\n");
+    exit(EXIT_FAILURE);
   }
-  else if (strcmp(value, ",") == 0)
-  {
-    token->type = TOKEN_COMMA;
-  }
-  else if (strcmp(value, ":") == 0)
-  {
-    token->type = TOKEN_COLON;
-  }
-  else if (strcmp(value, ";") == 0)
-  {
-    token->type = TOKEN_SEMI_COLON;
-  }
-  else if (strcmp(value, "!") == 0)
-  {
-    token->type = TOKEN_EXCLAMATION;
-  }
-  else if (strcmp(value, "?") == 0)
-  {
-    token->type = TOKEN_QUESTION;
-  }
+  /* reallocation successful */
+  current_token->value = realloc_token;
+
+  /* copy value into current_token->value from new_value */
+  for (i = 0; i < new_value_size; i++)
+    current_token->value[i] = new_value[i];
+  current_token->value[new_value_size] = '\0';
 }
