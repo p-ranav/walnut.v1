@@ -332,7 +332,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
 
     if (valid_symbol(next_width, next))
     {
-      /* consume peek_character_width bytes */
+      /* consume next_width bytes */
       deallocate(next);
 
       next_width = consume(buffer, index, current_character, &next);
@@ -340,7 +340,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
       /* since we treat this as a single character, update cursor by 1 */
       increment_cursor;
 
-      /* reallocate space in symbol->value and copy this peek_character
+      /* reallocate space in symbol->value and copy this next
          the way this is done here is probably not efficient
          I'm reallocating after each multi-byte character is consumed */
       append_to(&symbol->value, &current_size, &next, &next_width);
@@ -457,10 +457,8 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
 {
   /* declarations */
   long current_size;
-  char *consume_character;
-  long consume_character_width;
-  char *peek_character;
-  long peek_character_width;
+  char *next;
+  long next_width;
   list_node_t *node;
   struct token_t *string;
 
@@ -479,80 +477,80 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
   while (1)
   {
     /* loop till we encounter the closing double quotes */
-    consume_character = NULL;
-    consume_character_width = peek(buffer, index, current_character, &consume_character);
+    next = NULL;
+    next_width = peek(buffer, index, current_character, &next);
     increment_cursor;
 
-    if (startswith(consume_character, consume_character_width, '\\'))
+    if (startswith(next, next_width, '\\'))
     {
-      deallocate(consume_character);
+      deallocate(next);
 
       /* escape sequence */
-      peek_character = NULL;
-      peek_character_width = consume(buffer, index, current_character, &peek_character);
-      if (startswith(peek_character, peek_character_width, '\"') ||
-          startswith(peek_character, peek_character_width, '\\'))
+      next = NULL;
+      next_width = consume(buffer, index, current_character, &next);
+      if (startswith(next, next_width, '\"') ||
+          startswith(next, next_width, '\\'))
       {
-        deallocate(peek_character);
+        deallocate(next);
 
-        peek_character_width = consume(buffer, index, current_character, &peek_character);
+        next_width = consume(buffer, index, current_character, &next);
         increment_cursor;
 
-        /* realloc and add peek_character to string->value */
-        append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+        /* realloc and add next to string->value */
+        append_to(&string->value, &current_size, &next, &next_width);
 
-        deallocate(peek_character);
+        deallocate(next);
 
         continue;
       }
 
       /* end of line or end of file before the closing quotes */
-      if (startswith(peek_character, peek_character_width, 0x0A) ||
-          startswith(peek_character, peek_character_width, EOF))
+      if (startswith(next, next_width, 0x0A) ||
+          startswith(next, next_width, EOF))
       {
-        deallocate(peek_character);
+        deallocate(next);
         /* TODO: report this error a little better */
         fprintf(stderr, "EOL/EOF encountered before closing literal quotes\n");
         exit(EXIT_FAILURE);
       }
 
-      /* realloc and add peek_character to string->value */
-      append_to(&string->value, &current_size, &peek_character, &peek_character_width);
+      /* realloc and add next to string->value */
+      append_to(&string->value, &current_size, &next, &next_width);
 
-      deallocate(peek_character);
+      deallocate(next);
       continue;
     }
 
     /* Add to string literal if not closing quotes or end of file */
-    if (!startswith(consume_character, consume_character_width, '\"') &&
-        !startswith(consume_character, consume_character_width, EOF))
+    if (!startswith(next, next_width, '\"') &&
+        !startswith(next, next_width, EOF))
     {
-      deallocate(consume_character);
+      deallocate(next);
 
-      /* realloc and add consume_character to string->value */
-      consume_character = NULL;
-      consume_character_width = consume(buffer, index, current_character, &consume_character);
-      append_to(&string->value, &current_size, &consume_character, &consume_character_width);
+      /* realloc and add next to string->value */
+      next = NULL;
+      next_width = consume(buffer, index, current_character, &next);
+      append_to(&string->value, &current_size, &next, &next_width);
 
-      deallocate(consume_character);
+      deallocate(next);
       continue;
     }
 
     /* end of line or end of file before the closing quotes */
-    if (startswith(consume_character, consume_character_width, 0x0A) ||
-        startswith(consume_character, consume_character_width, EOF))
+    if (startswith(next, next_width, 0x0A) ||
+        startswith(next, next_width, EOF))
     {
       /* TODO: report this error a little better */
       fprintf(stderr, "EOL/EOF encountered before closing literal quotes\n");
       exit(EXIT_FAILURE);
     }
     /* consume the closing double quotes */
-    deallocate(consume_character);
+    deallocate(next);
 
-    consume_character = NULL;
-    consume(buffer, index, current_character, &consume_character);
+    next = NULL;
+    consume(buffer, index, current_character, &next);
 
-    deallocate(consume_character);
+    deallocate(next);
     break;
   }
   increment_cursor;
@@ -565,10 +563,8 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
 {
   /* declarations */
   long current_size;
-  char *peek_character;
-  long peek_character_width;
-  char *consume_character;
-  long consume_character_width;
+  char *next;
+  long next_width;
   list_node_t *node;
   struct token_t *number;
 
@@ -588,52 +584,52 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
 
   if (*next_character == '0')
   {
-    peek_character = NULL;
-    peek_character_width = peek(buffer, index, current_character, &peek_character);
-    if (*peek_character == 'X' || *peek_character == 'x')
+    next = NULL;
+    next_width = peek(buffer, index, current_character, &next);
+    if (*next == 'X' || *next == 'x')
     {
-      deallocate(peek_character);
-      consume_character = NULL;
-      consume_character_width = consume(buffer, index, current_character, &consume_character);
+      deallocate(next);
+      next = NULL;
+      next_width = consume(buffer, index, current_character, &next);
       increment_cursor;
-      append_to(&number->value, &current_size, &consume_character, &consume_character_width);
-      deallocate(consume_character);
+      append_to(&number->value, &current_size, &next, &next_width);
+      deallocate(next);
 
       while (1)
       {
-        consume_character = NULL;
-        consume_character_width = consume(buffer, index, current_character, &consume_character);
+        next = NULL;
+        next_width = consume(buffer, index, current_character, &next);
         increment_cursor;
-        if (isxdigit(*consume_character))
+        if (isxdigit(*next))
         {
-          append_to(&number->value, &current_size, &consume_character, &consume_character_width);
-          deallocate(consume_character);
+          append_to(&number->value, &current_size, &next, &next_width);
+          deallocate(next);
           continue;
         }
-        deallocate(consume_character);
+        deallocate(next);
         break;
       }
     }
     else
-      deallocate(peek_character);
+      deallocate(next);
   }
 
   while (1)
   {
-    peek_character = NULL;
-    peek_character_width = peek(buffer, index, current_character, &peek_character);
-    if (peek_character_width == 1 &&
-        (isdigit(*peek_character) || *peek_character == '.' || *peek_character == 'f' || *peek_character == 'i'))
+    next = NULL;
+    next_width = peek(buffer, index, current_character, &next);
+    if (next_width == 1 &&
+        (isdigit(*next) || *next == '.' || *next == 'f' || *next == 'i'))
     {
-      deallocate(peek_character);
-      consume_character = NULL;
-      consume_character_width = consume(buffer, index, current_character, &consume_character);
+      deallocate(next);
+      next = NULL;
+      next_width = consume(buffer, index, current_character, &next);
       increment_cursor;
-      append_to(&number->value, &current_size, &consume_character, &consume_character_width);
-      deallocate(consume_character);
+      append_to(&number->value, &current_size, &next, &next_width);
+      deallocate(next);
       continue;
     }
-    deallocate(peek_character);
+    deallocate(next);
     break;
   }
   increment_cursor;
