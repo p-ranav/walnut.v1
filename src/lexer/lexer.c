@@ -679,6 +679,44 @@ void lexer_post_process(list_t *tokens)
       Both process_token and process_token_sequence 'continue' the loop if the check in step (2/3) passes
     */
 
+    /* handle two-character operators first */
+
+    /* comparison operators */
+    process_token_sequence("=", "=", TOKEN_EQUAL);
+    process_token_sequence("!", "=", TOKEN_NOT_EQUAL);
+    process_token_sequence(">", "=", TOKEN_GREATER_EQUAL);
+    process_token_sequence("<", "=", TOKEN_LESSER_EQUAL);
+
+    /* assignment operators */
+    process_token_sequence("+", "=", TOKEN_ADD_ASSIGN);
+    process_token_sequence("-", "=", TOKEN_SUBTRACT_ASSIGN);
+    process_token_sequence("*", "=", TOKEN_MULTIPLY_ASSIGN);
+    process_token_sequence("/", "=", TOKEN_DIVIDE_ASSIGN);
+    process_token_sequence("-", "=", TOKEN_MODULUS_ASSIGN);
+
+    /* logical operators */
+    process_token_sequence("&", "&", TOKEN_LOGICAL_AND);
+    process_token_sequence("!", "!", TOKEN_LOGICAL_OR);
+
+    /* bitwise operators */
+    process_token_sequence("<", "<", TOKEN_BITWISE_LEFT_SHIFT);
+    process_token_sequence(">", ">", TOKEN_BITWISE_RIGHT_SHIFT);
+
+    /* handle one-character operators */
+
+    /* if the compound versions of the following tokens fail on check, save as follows:*/
+    process_token(">", TOKEN_GREATER);
+    process_token("<", TOKEN_LESSER);
+    process_token("&", TOKEN_BITWISE_AND);
+    process_token("|", TOKEN_BITWISE_OR);
+
+    /* arithmetic operators */
+    process_token("+", TOKEN_ADD);
+    process_token("-", TOKEN_SUBTRACT);
+    process_token("*", TOKEN_MULTIPLY);
+    process_token("/", TOKEN_DIVIDE);
+    process_token("%", TOKEN_MODULUS);
+    
     /* delimiters */
     process_token(".", TOKEN_DOT);
     process_token(",", TOKEN_COMMA);
@@ -686,14 +724,6 @@ void lexer_post_process(list_t *tokens)
     process_token(";", TOKEN_SEMI_COLON);
     process_token("!", TOKEN_EXCLAMATION);
     process_token("?", TOKEN_QUESTION);
-
-    /* comparison operators */
-    process_token_sequence("=", "=", TOKEN_EQUAL);
-    process_token_sequence("!", "=", TOKEN_NOT_EQUAL);
-    process_token(">", TOKEN_GREATER);
-    process_token_sequence(">", "=", TOKEN_GREATER_EQUAL);
-    process_token("<", TOKEN_LESSER);
-    process_token_sequence("<", "=", TOKEN_LESSER_EQUAL);
 
     /* paranthesis, curly braces and square brackets */
     process_token("(", TOKEN_LEFT_PARANTHESIS);
@@ -703,7 +733,10 @@ void lexer_post_process(list_t *tokens)
     process_token("}", TOKEN_RIGHT_CURLY);
     process_token("]", TOKEN_RIGHT_BRACKETS);
 
-    /* reclassify comparison operators */
+    /* bitwise operators */
+    process_token("^", TOKEN_BITWISE_XOR);
+    process_token("~", TOKEN_BITWISE_ONES_COMPLEMENT);
+
   }
   deallocate(it);
 }
