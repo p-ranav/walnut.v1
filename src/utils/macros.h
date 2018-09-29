@@ -15,6 +15,10 @@
 #define increment_line (*line) += 1
 #define strequal(lhs, rhs) (strcmp(lhs, rhs) == 0)
 
+#define save_token(token_to_save) \
+  node = list_node_new(token_to_save); \
+  list_rpush(tokens, node);
+
 /* used in lexer_post_process(...) */
 #define IGNORE_NEXT_TOKEN 0
 #define CHECK_NEXT_TOKEN 1

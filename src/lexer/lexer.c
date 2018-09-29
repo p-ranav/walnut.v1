@@ -76,7 +76,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
     }
   }
 
-  /* create a "end of file" token */
+  /* create and save "end of file" token */
   eof = allocate(struct token_t, 1);
   eof->file_path = file_path;
   eof->line = line;
@@ -85,10 +85,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   eof->value = allocate(char, 2);
   eof->value[0] = ' ';
   eof->value[1] = '\0';
-
-  /* save eof token in linked list */
-  node = list_node_new(eof);
-  list_rpush(tokens, node);
+  save_token(eof);
 
   /* return the list of tokens */
   return tokens;
@@ -360,8 +357,7 @@ void parse_symbol(long buffer_size, char *buffer, const char *file_path, unsigne
     break;
   }
   increment_cursor;
-  node = list_node_new(symbol);
-  list_rpush(tokens, node);
+  save_token(symbol);
 }
 
 int valid_symbol(long character_width, char *multi_byte_character)
@@ -557,8 +553,7 @@ void parse_string_literal(long buffer_size, char *buffer, const char *file_path,
     break;
   }
   increment_cursor;
-  node = list_node_new(string);
-  list_rpush(tokens, node);
+  save_token(string);
 }
 
 void parse_number(long buffer_size, char *buffer, const char *file_path, unsigned int *line,
@@ -639,8 +634,7 @@ void parse_number(long buffer_size, char *buffer, const char *file_path, unsigne
     break;
   }
   increment_cursor;
-  node = list_node_new(number);
-  list_rpush(tokens, node);
+  save_token(number);
 }
 
 void parse_punctuation(const char *file_path, unsigned int *line,
@@ -664,9 +658,7 @@ void parse_punctuation(const char *file_path, unsigned int *line,
     punctuation->value[1] = '\0';
 
     increment_cursor;
-    /* save punctuation token in linked list */
-    node = list_node_new(punctuation);
-    list_rpush(tokens, node);
+    save_token(punctuation);
   }
 }
 
