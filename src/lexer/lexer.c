@@ -729,6 +729,9 @@ void lexer_post_process(list_t *tokens)
     process_token_sequence("<", "<", TOKEN_BITWISE_LEFT_SHIFT);
     process_token_sequence(">", ">", TOKEN_BITWISE_RIGHT_SHIFT);
 
+    /* arrow operator */
+    process_token_sequence("-", ">", TOKEN_ARROW);
+
     /* basic data types */
     process_token_sequence("uint", "8", TOKEN_UINT8);
     process_token_sequence("uint", "16", TOKEN_UINT16);
@@ -800,6 +803,7 @@ void lexer_post_process(list_t *tokens)
     process_token("else", TOKEN_ELSE);
     process_token("while", TOKEN_WHILE);
     process_token("for", TOKEN_FOR);
+    process_token("λ", TOKEN_FUNCTION);
     process_token("function", TOKEN_FUNCTION);
     process_token("return", TOKEN_RETURN);
     process_token("is", TOKEN_IS);

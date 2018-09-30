@@ -27,6 +27,6 @@ complex64 i = -5 + 12i;
 complex128 j = complex(5, 7);
 
 // Type inference
-var k = /* int */ 42;           // int
+var k = 42;           // int
 var l = 3.142;        // float64
 var m = 0.867 + 0.5i; // complex128

@@ -83,6 +83,7 @@
   TOKEN(WHILE, "WHILE")                                     \
   TOKEN(FOR, "FOR")                                         \
   TOKEN(FUNCTION, "FUNCTION")                               \
+  TOKEN(ARROW, "ARROW")                                     \
   TOKEN(RETURN, "RETURN")                                   \
   TOKEN(IS, "IS")                                           \
   TOKEN(IN, "IN")                                           \
