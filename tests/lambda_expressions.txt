@@ -1,0 +1,7 @@
+var square = λ(int32 a) -> int32 {
+  return a * a;
+}
+
+var output = map(square, [1, 2, 3, 4, 5]);
+print(output); // [1, 4, 9, 16, 25]
+
