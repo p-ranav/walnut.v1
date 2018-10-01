@@ -1,0 +1,12 @@
+/* Arrays */
+int32 n[5] = [1, 2, 3, 4, 5]; 
+float64 o[2] = [1.0, 2.0];
+
+/* Maps */
+string :> int32 p = { "a": 3, "b": 5 };
+
+int32 :> bool q;
+q[0] = true;
+q[1] = false;
+
+

@@ -1,0 +1,19 @@
+product: λ(x, y) ↦ int32 | x, y ∈ int32 {
+  return x * y;
+}
+
+c ∈ int32;
+c = product(5, 10); // 50
+
+d ∈ {int32, float32, string};
+d = 5;
+d = 3.14;
+d = "message"; 
+
+e ∈ bool;
+e = true;
+
+quotient: λ(x, y) ↦ float32 | x, y ∈ int32 {
+  return x / y;
+}
+

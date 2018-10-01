@@ -1,7 +1,7 @@
-var square = λ(int32 a) -> int32 {
-  return a * a;
+λ product = (int32 a, int32 b) -> int32 {
+  return a * b;
 }
 
-var output = map(square, [1, 2, 3, 4, 5]);
-print(output); // [1, 4, 9, 16, 25]
-
+int32 x = 5;
+int32 y = 10;
+int32 z = product(x, y);
