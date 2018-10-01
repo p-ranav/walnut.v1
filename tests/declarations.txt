@@ -1,11 +1,11 @@
-product: λ(x, y) ↦ int32 | x, y ∈ int32 {
-  return x * y;
+product: (x, y) ↦ z | x, y, z ∈ int {
+  z = x * y;
 }
 
-c ∈ int32;
-c = product(5, 10); // 50
+c ∈ int;
+c = product(5, 10);
 
-d ∈ {int32, float32, string};
+d ∈ {int, float, string};
 d = 5;
 d = 3.14;
 d = "message"; 
@@ -13,7 +13,29 @@ d = "message";
 e ∈ bool;
 e = true;
 
-quotient: λ(x, y) ↦ float32 | x, y ∈ int32 {
-  return x / y;
+f, g ∈ [int];
+f = [1, 2, 3, 4, 5];
+g = map(λ: x ↦ x * x, f);
+
+//------------------------------------------
+// ASCII-only variant:
+//------------------------------------------
+
+product: (x, y) -> z | x, y, z :: int {
+  z = x * y;
 }
 
+c :: int;
+c = product(5, 10);
+
+d :: {int, float, string};
+d = 5;
+d = 3.14;
+d = "message"; 
+
+e :: bool;
+e = true;
+
+f, g :: [int];
+f = [1, 2, 3, 4, 5];
+g = map(lambda: x -> x * x, f);
