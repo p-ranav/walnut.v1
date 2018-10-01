@@ -1,0 +1,9 @@
+for (int32 i = 0; i < 10; i++) {
+  print(i);
+}
+
+int32 j = 0;
+while(j < 11) {
+  print(j);
+  j = j + 1;
+}
