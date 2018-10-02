@@ -1,0 +1,9 @@
+/* Implicit Typing */
+var a = 5;            // int32 
+var b = 3.14;         // float64
+var c = "message";    // string
+var d = true;         // bool
+
+/* Explicit Typing */
+var e = uint16(5);         // uint16
+var f = float32(2.185);    // float32

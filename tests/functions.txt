@@ -1,11 +1,5 @@
-function product = (int32 a, int32 b) -> int32 {
+var product = function(a, b) {
   return a * b;
 }
 
-int32 x = 5;
-int32 y = 10;
-int32 z = product(x, y);
-printf("%d\n", z);
-
-int32 (a, b) = (5, 10);
-
+var z = product(5, 10); // z is int32
