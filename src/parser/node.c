@@ -3,26 +3,26 @@
 
 #include <stdlib.h>
 
-struct node_t * node_construct(void * instance, node_interface * interface)
+node * node_construct(void * instance, node_interface * interface)
 {
-  struct node_t * node = allocate(struct node_t, 1);
-  node->instance = instance;
-  node->interface = interface;
-  return node;
+  node * ast_node = allocate(node, 1);
+  ast_node->instance = instance;
+  ast_node->interface = interface;
+  return ast_node;
 }
 
-enum node_type_t node_type(struct node_t * node)
+enum node_type_t node_type(node * object)
 {
-  return (node->interface->type)(node->instance);
+  return (object->interface->type)(object->instance);
 }
 
-void node_print(struct node_t * node)
+void node_print(node * object)
 {
-  (node->interface->print)(node->instance);
+  (object->interface->print)(object->instance);
 }
 
-void node_destruct(struct node_t * node)
+void node_destruct(node * object)
 {
-  (node->interface->destruct)(node->instance);
-  free(node);
+  (object->interface->destruct)(object->instance);
+  free(object);
 }

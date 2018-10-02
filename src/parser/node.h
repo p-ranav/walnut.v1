@@ -11,20 +11,20 @@ typedef struct {
 } node_interface;
 
 /* "Base class" for all AST nodes */
-struct node_t {
+typedef struct {
   /* pointer to the derived AST node type */
   void * instance; 
 
   /* pointer to the interface - to facilitate polymorphism */
   node_interface * interface;
-};
+} node;
 
 /* construct an AST node */
-struct node_t * node_construct(void * instance, node_interface * interface);
+node * node_construct(void * instance, node_interface * interface);
 
 /* interface functions */
-enum node_type_t node_type(struct node_t * node);
-void node_print(struct node_t * node);
-void node_destruct(struct node_t * node);
+enum node_type_t node_type(node * object);
+void node_print(node * object);
+void node_destruct(node * object);
 
 #endif
