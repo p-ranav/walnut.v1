@@ -2,36 +2,45 @@
 
 list_t * parse(list_t * tokens)
 {
-  /* declarations */
-  list_t * statements = NULL;         /* This is the parser result */
-  list_iterator_t * tokens_iterator;  /* iterator for lexer tokens */
-  token * current_token;              /* current lexer token under examination */
-  token * peek_token;                 /* the token after current_token */
-  size_t current_token_index;         /* current index into lexer->tokens */
+  struct parser_t * parser = allocate(struct parser_t, 1);
+  parser->statements = NULL;
 
   /* initialize token iterator */
-  tokens_iterator = list_iterator_new(tokens, LIST_HEAD);
+  parser->tokens_iterator = list_iterator_new(tokens, LIST_HEAD);
 
   /* initialize current_token and peek_token */
-  current_token = NULL;
-  peek_token = NULL;
-  current_token_index = 0;
+  parser->current_token = NULL;
+  parser->peek_token = NULL;
+  parser->current_token_index = 0;
 
   /* make sure current_token and peek_token are initialized */
-  next_token(current_token, peek_token, tokens_iterator);
-  next_token(current_token, peek_token, tokens_iterator);
+  next_token(parser);
+  next_token(parser);
 
   /* start parsing statements */
-  while (current_token != NULL && *current_token != TOKEN_END_OF_FILE)
+  while (parser->current_token != NULL && *parser->current_token != TOKEN_END_OF_FILE)
   {
     /* node * statement = parse_statement(..); */
   }
 
-  return statements;
+  return parser->statements;
 }
 
-void next_token(token * current_token, token * peek_token, list_iterator_t * iterator)
+void next_token(struct parser_t * parser)
 {
-  current_token = peek_token;
-  peek_token = list_iterator_next(iterator);
+  parser->current_token = parser->peek_token;
+  parser->peek_token = list_iterator_next(parser->tokens_iterator);
+}
+
+node * parse_statement(struct parser_t * parser)
+{
+  switch (*parser->current_token)
+  {
+  case TOKEN_VAR: 
+    return parse_variable_declaration(parser);
+    break;
+  default:
+    return NULL;
+    break;
+  }
 }
