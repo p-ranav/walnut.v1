@@ -30,7 +30,7 @@ list_t * parse(list_t * tokens)
   pratt_table_init();
 
   /* start parsing statements */
-  while (!peek_token_is(parser, TOKEN_END_OF_FILE))
+  while (parser->peek_token && !peek_token_is(parser, TOKEN_END_OF_FILE))
   {
     node * statement = parse_statement(parser);
     if (statement) {
@@ -45,21 +45,30 @@ list_t * parse(list_t * tokens)
 void pratt_table_init()
 {
   insert(TOKEN_SYMBOL, parse_variable_declaration, NULL);
+  insert(TOKEN_INTEGER, parse_integer_literal, NULL);
 }
 
 void next_token(struct parser_t * parser)
 {
   parser->current_token = parser->peek_token;
-  parser->peek_token = list_iterator_next(parser->tokens_iterator)->val;
+  list_node_t * peek_node = list_iterator_next(parser->tokens_iterator);
+  if (peek_node)
+    parser->peek_token = peek_node->val;
+  else
+    parser->peek_token = NULL;
 }
 
 int current_token_is(struct parser_t * parser, token value)
 {
+  if (!parser->current_token)
+    return 0;
   return parser->current_token->type == value;
 }
 
 int peek_token_is(struct parser_t * parser, token value)
 {
+  if (!parser->peek_token)
+    return 0;
   return parser->peek_token->type == value;
 }
 
@@ -85,6 +94,9 @@ int expect_peek(struct parser_t * parser, token value)
 
 node * parse_statement(struct parser_t * parser)
 {
+  if (!parser->current_token)
+    return NULL;
+
   switch (parser->current_token->type)
   {
   case TOKEN_VAR: 
