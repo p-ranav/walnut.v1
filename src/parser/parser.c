@@ -3,10 +3,12 @@
 #include <identifier_node.h>
 #include <var_node.h>
 #include <return_node.h>
+#include <integer_node.h>
 
 extern const char *const token_strings[]; /* used in expect_peek */
 extern node_interface *VAR_AS_NODE;
 extern node_interface *RETURN_AS_NODE;
+extern node_interface *INTEGER_AS_NODE;
 
 list_t * parse(list_t * tokens)
 {
@@ -186,4 +188,13 @@ enum precedence_t current_precedence(struct parser_t * parser)
 {
   token current_token_type = parser->current_token->type;
   return_precedence(current_token_type);
+}
+
+node * parse_integer_literal(struct parser_t * parser)
+{
+  char * current_token_value = parser->current_token->value;
+  int value;
+  sscanf(current_token_value, "%d", &value);
+  integer_node * integer = integer_construct(value);
+  return node_construct(integer, INTEGER_AS_NODE);
 }

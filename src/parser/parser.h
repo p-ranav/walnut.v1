@@ -52,4 +52,6 @@ node * parse_expression(struct parser_t * parser, enum precedence_t precedence);
 enum precedence_t peek_precedence(struct parser_t * parser);
 enum precedence_t current_precedence(struct parser_t * parser);
 
+node * parse_integer_literal(struct parser_t * parser);
+
 #endif
