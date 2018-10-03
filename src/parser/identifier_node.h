@@ -7,7 +7,7 @@
 typedef struct 
 {
   enum node_type type; /* type = IDENTIFIER */
-  char * value;        /* name = array of multi-byte characters */
+  char * value;        /* value = array of multi-byte characters */
 } identifier_node;
 
 identifier_node * identifier_construct(char * name);

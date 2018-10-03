@@ -33,4 +33,23 @@ node * parse_statement(struct parser_t * parser);
 node * parse_variable_declaration(struct parser_t * parser);
 node * parse_return_statement(struct parser_t * parser);
 
+void pratt_table_init();
+node * parse_expression_statement(struct parser_t * parser);
+
+enum precedence_t {
+  LOWEST,
+  EQUAL,        /* == */
+  LESSGREATER,  /* > or < */
+  SUM,          /* + */
+  PRODUCT,      /* * */
+  PREFIX,       /* -X or !X */
+  CALL          /* my_function(X) */
+};
+
+node * parse_expression(struct parser_t * parser, enum precedence_t precedence);
+
+// Infix operator helper functions
+enum precedence_t peek_precedence(struct parser_t * parser);
+enum precedence_t current_precedence(struct parser_t * parser);
+
 #endif

@@ -1,4 +1,5 @@
 #include <parser.h>
+#include <pratt_table.h>
 #include <identifier_node.h>
 #include <var_node.h>
 #include <return_node.h>
@@ -24,6 +25,8 @@ list_t * parse(list_t * tokens)
   next_token(parser);
   next_token(parser);
 
+  pratt_table_init();
+
   /* start parsing statements */
   while (!peek_token_is(parser, TOKEN_END_OF_FILE))
   {
@@ -35,6 +38,11 @@ list_t * parse(list_t * tokens)
   }
 
   return parser->statements;
+}
+
+void pratt_table_init()
+{
+  insert(TOKEN_SYMBOL, parse_variable_declaration, NULL);
 }
 
 void next_token(struct parser_t * parser)
@@ -84,7 +92,7 @@ node * parse_statement(struct parser_t * parser)
     return parse_return_statement(parser);
     break;
   default:
-    return NULL;
+    return parse_expression_statement(parser);
     break;
   }
 }
@@ -125,4 +133,57 @@ node * parse_return_statement(struct parser_t * parser)
   }
 
   return node_construct(return_, RETURN_AS_NODE);
+}
+
+node * parse_expression_statement(struct parser_t * parser)
+{
+  node * expression = parse_expression(parser, LOWEST);
+
+  if (peek_token_is(parser, TOKEN_SEMI_COLON))
+    next_token(parser);
+
+  return expression;
+}
+
+node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
+{
+  pratt_function * function = search(parser->current_token->type);
+  if (!function)
+    return NULL;
+
+  node *(*prefix)(struct parser_t *) = function->prefix_function;
+
+  if (prefix == NULL)
+    return NULL;
+
+  node * left = prefix(parser);
+
+  while (!peek_token_is(parser, TOKEN_SEMI_COLON) && precedence < peek_precedence(parser))
+  {
+    pratt_function * peek_function = search(parser->peek_token->type);
+    if (!peek_function)
+      return NULL;
+
+    node *(*infix)(struct parser_t *, node *) = peek_function->infix_function;
+    if (!infix)
+      return left;
+
+    next_token(parser);
+
+    left = infix(parser, left);
+  }
+
+  return left;
+}
+
+enum precedence_t peek_precedence(struct parser_t * parser)
+{
+  token peek_token_type = parser->peek_token->type;
+  return_precedence(peek_token_type);
+}
+
+enum precedence_t current_precedence(struct parser_t * parser)
+{
+  token current_token_type = parser->current_token->type;
+  return_precedence(current_token_type);
 }

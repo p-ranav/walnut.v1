@@ -5,6 +5,8 @@
 enum node_type_t
 {
   IDENTIFIER,
+  INTEGER,
+  DOUBLE,
 
   VAR_STATEMENT,
   RETURN_STATEMENT

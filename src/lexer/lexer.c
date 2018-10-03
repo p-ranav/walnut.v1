@@ -732,31 +732,9 @@ void lexer_post_process(list_t *tokens)
     /* arrow operator */
     process_token_sequence("-", ">", TOKEN_ARROW);
 
-    /* basic data types */
-    process_token_sequence("uint", "8", TOKEN_UINT8);
-    process_token_sequence("uint", "16", TOKEN_UINT16);
-    process_token_sequence("uint", "32", TOKEN_UINT32);
-    process_token_sequence("uint", "64", TOKEN_UINT64);
-    process_token_sequence("int", "8", TOKEN_INT8);
-    process_token_sequence("int", "16", TOKEN_INT16);
-    process_token_sequence("int", "32", TOKEN_INT32);
-    process_token_sequence("int", "64", TOKEN_INT64);
-    process_token_sequence("float", "32", TOKEN_FLOAT32);
-    process_token_sequence("float", "64", TOKEN_FLOAT64);
-    process_token_sequence("complex", "64", TOKEN_COMPLEX64);
-    process_token_sequence("complex", "128", TOKEN_COMPLEX128);
-
     /* handle one-character operators */
 
-    /* basic data types */
-    process_token("bool", TOKEN_BOOL);
-
-    /* aliases to basic data tyoes */
-    process_token("byte", TOKEN_BYTE);
-    process_token("rune", TOKEN_RUNE);
-
     /* keywords and operators for type inference */
-    process_token("let", TOKEN_LET);
     process_token("var", TOKEN_VAR);
 
     /* if the compound versions of the following tokens fail on check, save as follows:*/
@@ -817,6 +795,19 @@ void lexer_post_process(list_t *tokens)
     process_token("pass", TOKEN_PASS);
     process_token("from", TOKEN_FROM);
     process_token("import", TOKEN_IMPORT);
+
+    /* handle numbers */
+    if (current_token->type == TOKEN_NUMBER)
+    {
+      if (strstr(current_token->value, ".") != NULL && strstr(current_token->value, "f") != NULL) {
+        current_token->type = TOKEN_FLOAT;
+      }
+      else if (strstr(current_token->value, ".") != NULL) {
+        current_token->type = TOKEN_DOUBLE;
+      }
+      else
+        current_token->type = TOKEN_INTEGER;
+    }
   }
   deallocate(it);
 }
