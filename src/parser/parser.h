@@ -10,10 +10,10 @@
 
 struct parser_t 
 {
-  list_t * statements = NULL;         /* This is the parser result */
+  list_t * statements;                /* This is the parser result */
   list_iterator_t * tokens_iterator;  /* iterator for lexer tokens */
-  token * current_token;              /* current lexer token under examination */
-  token * peek_token;                 /* the token after current_token */
+  struct token_t * current_token;     /* current lexer token under examination */
+  struct token_t * peek_token;        /* the token after current_token */
   size_t current_token_index;         /* current index into lexer->tokens */
 };
 
@@ -25,6 +25,9 @@ list_t * parse(list_t * tokens);
 
 /* Helper functions for parsing */
 void next_token(struct parser_t * parser);
+int current_token_is(struct parser_t * parser, token value);
+int peek_token_is(struct parser_t * parser, token value);
+int expect_peek(struct parser_t * parser, token value);
 
 node * parse_statement(struct parser_t * parser);
 node * parse_variable_declaration(struct parser_t * parser);

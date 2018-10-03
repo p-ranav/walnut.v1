@@ -4,7 +4,9 @@
 /* Each node in the AST can be one of the following types */
 enum node_type_t
 {
-  IDENTIFIER
+  IDENTIFIER,
+
+  VAR_STATEMENT
 };
 
 #endif
