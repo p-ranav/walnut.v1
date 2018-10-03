@@ -7,7 +7,7 @@ extern node_interface *VAR_AS_NODE;
 list_t * parse(list_t * tokens)
 {
   struct parser_t * parser = allocate(struct parser_t, 1);
-  parser->statements = NULL;
+  parser->statements = list_new();
 
   /* initialize token iterator */
   parser->tokens_iterator = list_iterator_new(tokens, LIST_HEAD);
@@ -24,7 +24,11 @@ list_t * parse(list_t * tokens)
   /* start parsing statements */
   while (!peek_token_is(parser, TOKEN_END_OF_FILE))
   {
-    /* node * statement = parse_statement(..); */
+    node * statement = parse_statement(parser);
+    if (statement) {
+      list_rpush(parser->statements, statement);
+    }
+    next_token(parser);
   }
 
   return parser->statements;
@@ -77,7 +81,7 @@ node * parse_variable_declaration(struct parser_t * parser)
 {
   var_node * var = var_node_construct();
 
-  if (!expect_peek(parser, IDENTIFIER)) {
+  if (!expect_peek(parser, TOKEN_SYMBOL)) {
     return NULL;
   }
 

@@ -1,6 +1,7 @@
 #include <file.h>
 #include <macros.h>
 #include <lexer.h>
+#include <parser.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -44,6 +45,9 @@ int main(int argc, char *argv[])
 
     /* Print lexer tokens */
     lexer_print(tokens);
+
+    /* Parse program */
+    parse(tokens);
 
     /* Delete lexer tokens */
     lexer_destroy(tokens);
