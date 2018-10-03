@@ -1,4 +1,6 @@
 #include <var_node.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 node_interface *VAR_AS_NODE = &(node_interface)
 {

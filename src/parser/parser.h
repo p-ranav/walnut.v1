@@ -31,5 +31,6 @@ int expect_peek(struct parser_t * parser, token value);
 
 node * parse_statement(struct parser_t * parser);
 node * parse_variable_declaration(struct parser_t * parser);
+node * parse_return_statement(struct parser_t * parser);
 
 #endif

@@ -4,9 +4,6 @@
 #include <node.h>
 #include <macros.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct 
 {
   enum node_type type; /* type = IDENTIFIER */

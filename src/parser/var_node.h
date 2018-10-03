@@ -1,5 +1,5 @@
-#ifndef VARIABLE_DECLARATION_NODE_H
-#define VARIABLE_DECLARATION_NODE_H
+#ifndef VAR_NODE_H
+#define VAR_NODE_H
 #include <node_type.h>
 #include <node.h>
 #include <identifier_node.h>

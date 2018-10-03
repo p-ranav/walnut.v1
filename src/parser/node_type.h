@@ -6,7 +6,8 @@ enum node_type_t
 {
   IDENTIFIER,
 
-  VAR_STATEMENT
+  VAR_STATEMENT,
+  RETURN_STATEMENT
 };
 
 #endif
