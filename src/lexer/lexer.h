@@ -55,8 +55,9 @@ int startswith(char *multi_byte_character, long character_width, char character)
 /*Parse and remove comments
 checks both comments ' ...' and block comments / ... /
 we're not creating tokens for these characters. consume and move on.*/
-void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned int *cursor,
-                    long *index, char *current_character);
+void parse_comments(long buffer_size, char *buffer, const char *file_path, unsigned int *line, unsigned int *cursor,
+                    long *index, char *current_character, long next_character_width, 
+                    char *next_character, list_t *tokens);
 
 /*Parse and save symbols - symbols include identifiers and keywords
 this function DOES NOT try to separate identifiers from keywords. Both are legally symbols.

@@ -39,7 +39,8 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
       /* check first if this is the start of a comment section */
       if (startswith(next, next_width, '/'))
-        parse_comments(buffer_size, buffer, &line, &cursor, &index, &character);
+        parse_comments(buffer_size, buffer, file_path, &line, &cursor, &index, &character, 
+          next_width, next, tokens);
 
       /* now check if the next character is the start of symbol - identifier or keyword */
       if (valid_symbol(next_width, next))
@@ -211,10 +212,13 @@ int startswith(char *multi_byte_character, long character_width, char character)
     return 0;
 }
 
-void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned int *cursor, long *index, char *current_character)
+void parse_comments(long buffer_size, char *buffer, const char *file_path, unsigned int *line, unsigned int *cursor, long *index, char *current_character, long next_character_width,
+  char *next_character, list_t *tokens)
 {
+  /* declarations */
   char *next = NULL;
   long next_width;
+  list_node_t *node;
 
   increment_cursor;
   next_width = consume(buffer, index, current_character, &next);
@@ -234,7 +238,7 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
     increment_line;
     reset_cursor;
   }
-  if (startswith(next, next_width, '*'))
+  else if (startswith(next, next_width, '*'))
   {
     /* this is a block comment
        consume characters till we encounter '*' followed by '/' */
@@ -290,6 +294,22 @@ void parse_comments(long buffer_size, char *buffer, unsigned int *line, unsigned
         deallocate(next);
       }
     }
+  }
+  else {
+    /* create a "punctuation" token */
+    struct token_t *punctuation = allocate(struct token_t, 1);
+    punctuation->file_path = file_path;
+    punctuation->line = *line;
+    punctuation->cursor = *cursor;
+    punctuation->type = TOKEN_DIVIDE;
+    punctuation->value = allocate(char, 2);
+
+    /* save current character in punctuation value */
+    punctuation->value[0] = '/';
+    punctuation->value[1] = '\0';
+
+    increment_cursor;
+    save_token(punctuation);
   }
   deallocate(next);
 }
