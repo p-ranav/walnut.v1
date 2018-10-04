@@ -4,11 +4,16 @@
 #include <var_node.h>
 #include <return_node.h>
 #include <integer_node.h>
+#include <prefix_expression_node.h>
+#include <infix_expression_node.h>
 
 extern const char *const token_strings[]; /* used in expect_peek */
 extern node_interface *VAR_AS_NODE;
 extern node_interface *RETURN_AS_NODE;
+extern node_interface *IDENTIFIER_AS_NODE;
 extern node_interface *INTEGER_AS_NODE;
+extern node_interface *PREFIX_EXPRESSION_AS_NODE;
+extern node_interface *INFIX_EXPRESSION_AS_NODE;
 
 list_t * parse(list_t * tokens)
 {
@@ -39,13 +44,48 @@ list_t * parse(list_t * tokens)
     next_token(parser);
   }
 
+  /* print statements */
+  parser_print(parser);
+
   return parser->statements;
+}
+
+void parser_print(struct parser_t * parser)
+{
+  /* use list_iterator to iterate over list of tokens */
+  list_node_t * statement;
+  list_iterator_t *it = list_iterator_new(parser->statements, LIST_HEAD);
+  while ((statement = list_iterator_next(it)))
+  {
+    /* get pointer to token and print token type and value */
+    node * ast_node = ((node *)statement->val);
+
+    /* print parser AST nodes */
+    node_print(ast_node);
+    printf("\n");
+  }
+  deallocate(it);
 }
 
 void pratt_table_init()
 {
-  insert(TOKEN_SYMBOL, parse_variable_declaration, NULL);
+  /* prefix operators */
+  insert(TOKEN_SYMBOL, parse_identifier, NULL);
   insert(TOKEN_INTEGER, parse_integer_literal, NULL);
+  insert(TOKEN_EXCLAMATION, parse_prefix_expression, NULL);
+
+  /* infix operators */
+  insert(TOKEN_ADD, NULL, parse_infix_expression);
+  insert(TOKEN_SUBTRACT, parse_prefix_expression, parse_infix_expression);
+  insert(TOKEN_MULTIPLY, NULL, parse_infix_expression);
+  insert(TOKEN_DIVIDE, NULL, parse_infix_expression);
+  insert(TOKEN_MODULUS, NULL, parse_infix_expression);
+  insert(TOKEN_EQUAL, NULL, parse_infix_expression);
+  insert(TOKEN_NOT_EQUAL, NULL, parse_infix_expression);
+  insert(TOKEN_LESSER, NULL, parse_infix_expression);
+  insert(TOKEN_LESSER_EQUAL, NULL, parse_infix_expression);
+  insert(TOKEN_GREATER, NULL, parse_infix_expression);
+  insert(TOKEN_GREATER_EQUAL, NULL, parse_infix_expression);
 }
 
 void next_token(struct parser_t * parser)
@@ -115,11 +155,13 @@ node * parse_variable_declaration(struct parser_t * parser)
 {
   var_node * var = var_node_construct();
 
+  char * identifier_name = parser->peek_token->value;
+  identifier_node * identifier = identifier_construct(identifier_name);
+  var->name = identifier;
+
   if (!expect_peek(parser, TOKEN_SYMBOL)) {
     return NULL;
   }
-
-  identifier_node * identifier = identifier_construct(parser->current_token->value);
 
   if (!expect_peek(parser, TOKEN_ASSIGN)) {
     return NULL;
@@ -161,11 +203,11 @@ node * parse_expression_statement(struct parser_t * parser)
 
 node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
 {
-  pratt_function * function = search(parser->current_token->type);
-  if (!function)
+  pratt_function * current_function = search(parser->current_token->type);
+  if (!current_function)
     return NULL;
 
-  node *(*prefix)(struct parser_t *) = function->prefix_function;
+  node *(*prefix)(struct parser_t *) = current_function->prefix_function;
 
   if (prefix == NULL)
     return NULL;
@@ -202,6 +244,13 @@ enum precedence_t current_precedence(struct parser_t * parser)
   return_precedence(current_token_type);
 }
 
+node * parse_identifier(struct parser_t * parser)
+{
+  char * current_token_value = parser->current_token->value;
+  identifier_node * identifier = identifier_construct(current_token_value);
+  return node_construct(identifier, IDENTIFIER_AS_NODE);
+}
+
 node * parse_integer_literal(struct parser_t * parser)
 {
   char * current_token_value = parser->current_token->value;
@@ -209,4 +258,29 @@ node * parse_integer_literal(struct parser_t * parser)
   sscanf(current_token_value, "%d", &value);
   integer_node * integer = integer_construct(value);
   return node_construct(integer, INTEGER_AS_NODE);
+}
+
+node * parse_prefix_expression(struct parser_t * parser)
+{
+  prefix_expression_node * expression = prefix_expression_construct();
+  expression->type = PREFIX_EXPRESSION;
+  expression->operator = parser->current_token->value;
+
+  next_token(parser);
+
+  expression->right = parse_expression(parser, PREFIX);
+
+  return node_construct(expression, PREFIX_EXPRESSION_AS_NODE);
+}
+
+node * parse_infix_expression(struct parser_t * parser, node * left)
+{
+  infix_expression_node * expression = infix_expression_construct();
+  expression->type = INFIX_EXPRESSION;
+  expression->operator = parser->current_token->value;
+  expression->left = left;
+  enum precedence_t precedence = current_precedence(parser);
+  next_token(parser);
+  expression->right = parse_expression(parser, precedence);
+  return node_construct(expression, INFIX_EXPRESSION_AS_NODE);
 }

@@ -23,6 +23,9 @@ struct parser_t
    each of which is an AST node. */
 list_t * parse(list_t * tokens);
 
+/* Print nodes in AST */
+void parser_print(struct parser_t * parser);
+
 /* Helper functions for parsing */
 void next_token(struct parser_t * parser);
 int current_token_is(struct parser_t * parser, token value);
@@ -52,6 +55,9 @@ node * parse_expression(struct parser_t * parser, enum precedence_t precedence);
 enum precedence_t peek_precedence(struct parser_t * parser);
 enum precedence_t current_precedence(struct parser_t * parser);
 
+node * parse_identifier(struct parser_t * parser);
 node * parse_integer_literal(struct parser_t * parser);
+node * parse_prefix_expression(struct parser_t * parser);
+node * parse_infix_expression(struct parser_t * parser, node * left);
 
 #endif

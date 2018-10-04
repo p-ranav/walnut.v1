@@ -26,7 +26,10 @@ enum node_type_t var_node_type(var_node * object)
 
 void var_node_print(var_node * object)
 {
-
+  printf("var ");
+  identifier_print(object->name);
+  printf(" = ");
+  // TODO: print RHS expression
 }
 
 void var_node_destruct(var_node * object)
