@@ -6,7 +6,7 @@
 
 typedef struct
 {
-  enum node_type type; /* type = INTEGER */
+  enum node_type_t type; /* type = INTEGER */
   int value;           /* value = int32 value */
 } integer_node;
 

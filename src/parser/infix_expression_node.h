@@ -6,7 +6,7 @@
 
 typedef struct
 {
-  enum node_type type;    /* type = INFIX_EXPRESSION */
+  enum node_type_t type;    /* type = INFIX_EXPRESSION */
   node * left;
   char * operator;
   node * right;

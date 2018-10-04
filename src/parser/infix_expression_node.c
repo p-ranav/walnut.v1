@@ -25,7 +25,7 @@ void infix_expression_print(infix_expression_node * object)
 {
   printf("(");
   node_print(object->left);
-  printf("%s", object->operator);
+  printf(" %s ", object->operator);
   node_print(object->right);
   printf(")");
 }

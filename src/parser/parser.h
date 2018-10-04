@@ -4,6 +4,7 @@
 #include <token.h>
 #include <node.h>
 #include <macros.h>
+#include <block_node.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,7 +52,7 @@ enum precedence_t {
 
 node * parse_expression(struct parser_t * parser, enum precedence_t precedence);
 
-// Infix operator helper functions
+/* Infix operator helper functions */
 enum precedence_t peek_precedence(struct parser_t * parser);
 enum precedence_t current_precedence(struct parser_t * parser);
 
@@ -59,5 +60,9 @@ node * parse_identifier(struct parser_t * parser);
 node * parse_integer_literal(struct parser_t * parser);
 node * parse_prefix_expression(struct parser_t * parser);
 node * parse_infix_expression(struct parser_t * parser, node * left);
+node * parse_grouped_expression(struct parser_t * parser);
+node * parse_boolean(struct parser_t * parser);
+node * parse_if_expression(struct parser_t * parser);
+block_node * parse_block_statement(struct parser_t * parser);
 
 #endif

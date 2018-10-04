@@ -39,8 +39,7 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
 
       /* check first if this is the start of a comment section */
       if (startswith(next, next_width, '/'))
-        parse_comments(buffer_size, buffer, file_path, &line, &cursor, &index, &character, 
-          next_width, next, tokens);
+        parse_comments(buffer_size, buffer, file_path, &line, &cursor, &index, &character, tokens);
 
       /* now check if the next character is the start of symbol - identifier or keyword */
       if (valid_symbol(next_width, next))
@@ -212,8 +211,7 @@ int startswith(char *multi_byte_character, long character_width, char character)
     return 0;
 }
 
-void parse_comments(long buffer_size, char *buffer, const char *file_path, unsigned int *line, unsigned int *cursor, long *index, char *current_character, long next_character_width,
-  char *next_character, list_t *tokens)
+void parse_comments(long buffer_size, char *buffer, const char *file_path, unsigned int *line, unsigned int *cursor, long *index, char *current_character, list_t *tokens)
 {
   /* declarations */
   char *next = NULL;

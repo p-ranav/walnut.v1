@@ -6,6 +6,9 @@
 #include <integer_node.h>
 #include <prefix_expression_node.h>
 #include <infix_expression_node.h>
+#include <bool_node.h>
+#include <block_node.h>
+#include <if_expression_node.h>
 
 extern const char *const token_strings[]; /* used in expect_peek */
 extern node_interface *VAR_AS_NODE;
@@ -73,6 +76,10 @@ void pratt_table_init()
   insert(TOKEN_SYMBOL, parse_identifier, NULL);
   insert(TOKEN_INTEGER, parse_integer_literal, NULL);
   insert(TOKEN_EXCLAMATION, parse_prefix_expression, NULL);
+  insert(TOKEN_TRUE, parse_boolean, NULL);
+  insert(TOKEN_FALSE, parse_boolean, NULL);
+  insert(TOKEN_LEFT_PARANTHESIS, parse_grouped_expression, NULL);
+  insert(TOKEN_IF, parse_if_expression, NULL);
 
   /* infix operators */
   insert(TOKEN_ADD, NULL, parse_infix_expression);
@@ -167,7 +174,7 @@ node * parse_variable_declaration(struct parser_t * parser)
     return NULL;
   }
 
-  // TODO: we're skipping expressions until we encounter a semicolon
+  /* TODO: we're skipping expressions until we encounter a semicolon */
 
   while (!current_token_is(parser, TOKEN_SEMI_COLON)) {
     next_token(parser);
@@ -182,7 +189,7 @@ node * parse_return_statement(struct parser_t * parser)
 
   next_token(parser);
 
-  // TODO: we're skipping expressions until we encounter a semicolon
+  /* TODO: we're skipping expressions until we encounter a semicolon */
 
   while (!current_token_is(parser, TOKEN_SEMI_COLON)) {
     next_token(parser);
@@ -283,4 +290,81 @@ node * parse_infix_expression(struct parser_t * parser, node * left)
   next_token(parser);
   expression->right = parse_expression(parser, precedence);
   return node_construct(expression, INFIX_EXPRESSION_AS_NODE);
+}
+
+node * parse_boolean(struct parser_t * parser)
+{
+  bool_node * boolean = bool_construct(current_token_is(parser, TOKEN_TRUE));
+
+  node_interface *BOOLEAN_AS_NODE = allocate(node_interface, 1);
+  BOOLEAN_AS_NODE->type = (enum node_type_t(*)(void *)) bool_type;
+  BOOLEAN_AS_NODE->print = (void(*)(void*)) bool_print;
+  BOOLEAN_AS_NODE->destruct = (void(*)(void *)) bool_destruct;
+
+  return node_construct(boolean, BOOLEAN_AS_NODE);
+}
+
+node * parse_grouped_expression(struct parser_t * parser)
+{
+  next_token(parser);
+
+  node * expression = parse_expression(parser, LOWEST);
+
+  if (!expect_peek(parser, TOKEN_RIGHT_PARANTHESIS))
+    return NULL;
+
+  return expression;
+}
+
+node * parse_if_expression(struct parser_t * parser)
+{
+  if_expression_node * if_expression = if_expression_construct();
+
+  if (!expect_peek(parser, TOKEN_LEFT_PARANTHESIS))
+    return NULL;
+
+  next_token(parser);
+  if_expression->condition = parse_expression(parser, LOWEST);
+
+  if (!expect_peek(parser, TOKEN_RIGHT_PARANTHESIS))
+    return NULL;
+
+  if (!expect_peek(parser, TOKEN_LEFT_CURLY))
+    return NULL;
+
+  if_expression->consequence = parse_block_statement(parser);
+
+  if (peek_token_is(parser, TOKEN_ELSE))
+  {
+    next_token(parser);
+
+    if (!expect_peek(parser, TOKEN_LEFT_CURLY))
+      return NULL;
+
+    if_expression->alternative = parse_block_statement(parser);
+  }
+
+  node_interface *IF_EXPRESSION_AS_NODE = allocate(node_interface, 1);
+  IF_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) if_expression_type;
+  IF_EXPRESSION_AS_NODE->print = (void(*)(void*)) if_expression_print;
+  IF_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) if_expression_destruct;
+  return node_construct(if_expression, IF_EXPRESSION_AS_NODE);
+}
+
+block_node * parse_block_statement(struct parser_t * parser)
+{
+  block_node * block = block_construct();
+
+  next_token(parser);
+
+  while (parser->current_token && !current_token_is(parser, TOKEN_RIGHT_CURLY) && !current_token_is(parser, TOKEN_END_OF_FILE))
+  {
+    node * statement = parse_statement(parser);
+    if (statement) {
+      list_rpush(block->statements, list_node_new(statement));
+    }
+    next_token(parser);
+  }
+
+  return block;
 }

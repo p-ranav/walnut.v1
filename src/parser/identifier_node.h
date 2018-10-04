@@ -6,7 +6,7 @@
 
 typedef struct 
 {
-  enum node_type type; /* type = IDENTIFIER */
+  enum node_type_t type; /* type = IDENTIFIER */
   char * value;        /* value = array of multi-byte characters */
 } identifier_node;
 
