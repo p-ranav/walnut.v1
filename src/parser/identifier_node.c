@@ -5,9 +5,12 @@
 
 identifier_node * identifier_construct(char * name)
 {
+  /* declarations */
+  int name_length;
+
   identifier_node * object = allocate(identifier_node, 1);
   object->type = IDENTIFIER;
-  int name_length = strlen(name);
+  name_length = strlen(name);
   object->value = allocate(char, name_length);
   strcpy(object->value, name);
   return object;
@@ -15,7 +18,7 @@ identifier_node * identifier_construct(char * name)
 
 enum node_type_t identifier_type(identifier_node * object)
 {
-  return IDENTIFIER;
+  return object->type;
 }
 
 void identifier_print(identifier_node * object)

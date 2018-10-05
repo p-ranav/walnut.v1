@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-block_node * block_construct(int value)
+block_node * block_construct()
 {
   block_node * object = allocate(block_node, 1);
   object->type = BLOCK;
@@ -12,7 +12,7 @@ block_node * block_construct(int value)
 
 enum node_type_t block_type(block_node * object)
 {
-  return BLOCK;
+  return object->type;
 }
 
 void block_print(block_node * object)

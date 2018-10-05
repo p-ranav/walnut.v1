@@ -12,7 +12,7 @@ bool_node * bool_construct(int value)
 
 enum node_type_t bool_type(bool_node * object)
 {
-  return BOOLEAN;
+  return object->type;
 }
 
 void bool_print(bool_node * object)

@@ -397,6 +397,7 @@ int valid_symbol(long character_width, char *multi_byte_character)
     char character = multi_byte_character[0];
     result *= ((character >= 'A' && character <= 'Z') ||
                (character >= 'a' && character <= 'z') ||
+               (character >= '0' && character <= '9') ||
                (character == '_') ||
                ((unsigned char)character >= 0xC0) ||
                ((unsigned char)character >= 0x80));

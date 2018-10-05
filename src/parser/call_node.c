@@ -13,22 +13,26 @@ call_node * call_construct()
 
 enum node_type_t call_type(call_node * object)
 {
-  return CALL_EXPRESSION;
+  return object->type;
 }
 
 void call_print(call_node * object)
 {
+  /* declarations */
+  list_node_t * argument;
+  list_iterator_t *it;
+  node * argument_node;
+
   if (object->function)
     node_print(object->function);
   printf(" (");
   
   /* use list_iterator to iterate over list of tokens */
-  list_node_t * argument;
-  list_iterator_t *it = list_iterator_new(object->arguments, LIST_HEAD);
+  it = list_iterator_new(object->arguments, LIST_HEAD);
   while ((argument = list_iterator_next(it)))
   {
     /* get pointer to token and print token type and value */
-    node * argument_node = ((node *)argument->val);
+    argument_node = ((node *)argument->val);
 
     /* print statements */
     node_print(argument_node);

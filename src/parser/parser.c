@@ -13,10 +13,6 @@
 #include <call_node.h>
 
 extern const char *const token_strings[]; /* used in expect_peek */
-extern node_interface *RETURN_AS_NODE;
-extern node_interface *INTEGER_AS_NODE;
-extern node_interface *PREFIX_EXPRESSION_AS_NODE;
-extern node_interface *INFIX_EXPRESSION_AS_NODE;
 
 list_t * parse(list_t * tokens)
 {
@@ -98,8 +94,11 @@ void pratt_table_init()
 
 void next_token(struct parser_t * parser)
 {
+  /* declarations */
+  list_node_t * peek_node;
+
   parser->current_token = parser->peek_token;
-  list_node_t * peek_node = list_iterator_next(parser->tokens_iterator);
+  peek_node = list_iterator_next(parser->tokens_iterator);
   if (peek_node)
     parser->peek_token = peek_node->val;
   else
@@ -161,10 +160,16 @@ node * parse_statement(struct parser_t * parser)
 
 node * parse_variable_declaration(struct parser_t * parser)
 {
-  var_node * var = var_node_construct();
+  /* declarations */
+  var_node * var;
+  char * identifier_name;
+  identifier_node * identifier;
+  node_interface *VAR_AS_NODE;
 
-  char * identifier_name = parser->peek_token->value;
-  identifier_node * identifier = identifier_construct(identifier_name);
+  var = var_node_construct();
+
+  identifier_name = parser->peek_token->value;
+  identifier = identifier_construct(identifier_name);
   var->name = identifier;
 
   if (!expect_peek(parser, TOKEN_SYMBOL)) {
@@ -182,7 +187,7 @@ node * parse_variable_declaration(struct parser_t * parser)
   if (peek_token_is(parser, TOKEN_SEMI_COLON))
     next_token(parser);
 
-  node_interface *VAR_AS_NODE = allocate(node_interface, 1);
+  VAR_AS_NODE = allocate(node_interface, 1);
   VAR_AS_NODE->type = (enum node_type_t(*)(void *)) var_node_type;
   VAR_AS_NODE->print = (void(*)(void*)) var_node_print;
   VAR_AS_NODE->destruct = (void(*)(void *)) var_node_destruct;
@@ -191,21 +196,30 @@ node * parse_variable_declaration(struct parser_t * parser)
 
 node * parse_return_statement(struct parser_t * parser)
 {
-  return_node * return_ = return_node_construct();
+  /* declarations */
+  return_node * return_;
+  node_interface *RETURN_AS_NODE;
 
+  return_ = return_node_construct();
   next_token(parser);
-
   return_->expression = parse_expression(parser, LOWEST);
 
   if (peek_token_is(parser, TOKEN_SEMI_COLON))
     next_token(parser);
 
+  RETURN_AS_NODE = allocate(node_interface, 1);
+  RETURN_AS_NODE->type = (enum node_type_t(*)(void *)) return_node_type;
+  RETURN_AS_NODE->print = (void(*)(void*)) return_node_print;
+  RETURN_AS_NODE->destruct = (void(*)(void *)) return_node_destruct;
   return node_construct(return_, RETURN_AS_NODE);
 }
 
 node * parse_expression_statement(struct parser_t * parser)
 {
-  node * expression = parse_expression(parser, LOWEST);
+  /* declaratiosn */
+  node * expression;
+
+  expression = parse_expression(parser, LOWEST);
 
   if (peek_token_is(parser, TOKEN_SEMI_COLON))
     next_token(parser);
@@ -215,24 +229,31 @@ node * parse_expression_statement(struct parser_t * parser)
 
 node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
 {
-  pratt_function * current_function = search(parser->current_token->type);
+  /* declarations */
+  pratt_function * current_function;
+  node *(*prefix)(struct parser_t *);
+  node * left;
+  pratt_function * peek_function;
+  node *(*infix)(struct parser_t *, node *);
+
+  current_function = search(parser->current_token->type);
   if (!current_function)
     return NULL;
 
-  node *(*prefix)(struct parser_t *) = current_function->prefix_function;
+  prefix = current_function->prefix_function;
 
   if (prefix == NULL)
     return NULL;
 
-  node * left = prefix(parser);
+  left = prefix(parser);
 
   while (!peek_token_is(parser, TOKEN_SEMI_COLON) && precedence < peek_precedence(parser))
   {
-    pratt_function * peek_function = search(parser->peek_token->type);
+    peek_function = search(parser->peek_token->type);
     if (!peek_function)
       return NULL;
 
-    node *(*infix)(struct parser_t *, node *) = peek_function->infix_function;
+    infix = peek_function->infix_function;
     if (!infix)
       return left;
 
@@ -246,13 +267,19 @@ node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
 
 enum precedence_t peek_precedence(struct parser_t * parser)
 {
-  token peek_token_type = parser->peek_token->type;
+  /* declarations */
+  token peek_token_type;
+
+  peek_token_type = parser->peek_token->type;
   return_precedence(peek_token_type);
 }
 
 enum precedence_t current_precedence(struct parser_t * parser)
 {
-  token current_token_type = parser->current_token->type;
+  /* declarations */
+  token current_token_type;
+
+  current_token_type = parser->current_token->type;
   return_precedence(current_token_type);
 }
 
@@ -270,16 +297,30 @@ node * parse_identifier(struct parser_t * parser)
 
 node * parse_integer_literal(struct parser_t * parser)
 {
-  char * current_token_value = parser->current_token->value;
+  /* declarations */
+  char * current_token_value;
   int value;
+  integer_node * integer;
+  node_interface * INTEGER_AS_NODE;
+
+  current_token_value = parser->current_token->value;
   sscanf(current_token_value, "%d", &value);
-  integer_node * integer = integer_construct(value);
+  integer = integer_construct(value);
+
+  INTEGER_AS_NODE = allocate(node_interface, 1);
+  INTEGER_AS_NODE->type = (enum node_type_t(*)(void *)) integer_type;
+  INTEGER_AS_NODE->print = (void(*)(void*)) integer_print;
+  INTEGER_AS_NODE->destruct = (void(*)(void *)) integer_destruct;
   return node_construct(integer, INTEGER_AS_NODE);
 }
 
 node * parse_prefix_expression(struct parser_t * parser)
 {
-  prefix_expression_node * expression = prefix_expression_construct();
+  /* declarations */
+  prefix_expression_node * expression;
+  node_interface * PREFIX_EXPRESSION_AS_NODE;
+
+  expression = prefix_expression_construct();
   expression->type = PREFIX_EXPRESSION;
   expression->operator = parser->current_token->value;
 
@@ -287,26 +328,44 @@ node * parse_prefix_expression(struct parser_t * parser)
 
   expression->right = parse_expression(parser, PREFIX);
 
+  PREFIX_EXPRESSION_AS_NODE = allocate(node_interface, 1);
+  PREFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) prefix_expression_type;
+  PREFIX_EXPRESSION_AS_NODE->print = (void(*)(void*)) prefix_expression_print;
+  PREFIX_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) prefix_expression_destruct;
   return node_construct(expression, PREFIX_EXPRESSION_AS_NODE);
 }
 
 node * parse_infix_expression(struct parser_t * parser, node * left)
 {
-  infix_expression_node * expression = infix_expression_construct();
+  /* declarations */
+  infix_expression_node * expression;
+  enum precedence_t precedence;
+  node_interface * INFIX_EXPRESSION_AS_NODE;
+
+  expression = infix_expression_construct();
   expression->type = INFIX_EXPRESSION;
   expression->operator = parser->current_token->value;
   expression->left = left;
-  enum precedence_t precedence = current_precedence(parser);
+  precedence = current_precedence(parser);
   next_token(parser);
   expression->right = parse_expression(parser, precedence);
+
+  INFIX_EXPRESSION_AS_NODE = allocate(node_interface, 1);
+  INFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) infix_expression_type;
+  INFIX_EXPRESSION_AS_NODE->print = (void(*)(void*)) infix_expression_print;
+  INFIX_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) infix_expression_destruct;
   return node_construct(expression, INFIX_EXPRESSION_AS_NODE);
 }
 
 node * parse_boolean(struct parser_t * parser)
 {
-  bool_node * boolean = bool_construct(current_token_is(parser, TOKEN_TRUE));
+  /* declarations */
+  bool_node * boolean;
+  node_interface * BOOLEAN_AS_NODE;
 
-  node_interface *BOOLEAN_AS_NODE = allocate(node_interface, 1);
+  boolean = bool_construct(current_token_is(parser, TOKEN_TRUE));
+
+  BOOLEAN_AS_NODE = allocate(node_interface, 1);
   BOOLEAN_AS_NODE->type = (enum node_type_t(*)(void *)) bool_type;
   BOOLEAN_AS_NODE->print = (void(*)(void*)) bool_print;
   BOOLEAN_AS_NODE->destruct = (void(*)(void *)) bool_destruct;
@@ -316,10 +375,11 @@ node * parse_boolean(struct parser_t * parser)
 
 node * parse_grouped_expression(struct parser_t * parser)
 {
+  /* declarations */
+  node * expression;
+
   next_token(parser);
-
-  node * expression = parse_expression(parser, LOWEST);
-
+  expression = parse_expression(parser, LOWEST);
   if (!expect_peek(parser, TOKEN_RIGHT_PARANTHESIS))
     return NULL;
 
@@ -328,7 +388,11 @@ node * parse_grouped_expression(struct parser_t * parser)
 
 node * parse_if_expression(struct parser_t * parser)
 {
-  if_expression_node * if_expression = if_expression_construct();
+  /* declarations */
+  if_expression_node * if_expression;
+  node_interface * IF_EXPRESSION_AS_NODE;
+
+  if_expression = if_expression_construct();
 
   if (!expect_peek(parser, TOKEN_LEFT_PARANTHESIS))
     return NULL;
@@ -354,7 +418,7 @@ node * parse_if_expression(struct parser_t * parser)
     if_expression->alternative = parse_block_statement(parser);
   }
 
-  node_interface *IF_EXPRESSION_AS_NODE = allocate(node_interface, 1);
+  IF_EXPRESSION_AS_NODE = allocate(node_interface, 1);
   IF_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) if_expression_type;
   IF_EXPRESSION_AS_NODE->print = (void(*)(void*)) if_expression_print;
   IF_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) if_expression_destruct;
@@ -363,13 +427,17 @@ node * parse_if_expression(struct parser_t * parser)
 
 block_node * parse_block_statement(struct parser_t * parser)
 {
-  block_node * block = block_construct();
+  /* declarations */
+  block_node * block;
+  node * statement;
+
+  block = block_construct();
 
   next_token(parser);
 
   while (parser->current_token && !current_token_is(parser, TOKEN_RIGHT_CURLY) && !current_token_is(parser, TOKEN_END_OF_FILE))
   {
-    node * statement = parse_statement(parser);
+    statement = parse_statement(parser);
     if (statement) {
       list_rpush(block->statements, list_node_new(statement));
     }
@@ -381,12 +449,14 @@ block_node * parse_block_statement(struct parser_t * parser)
 
 node * parse_function(struct parser_t * parser)
 {
-  function_node * function = function_construct();
+  /* declarations */
+  function_node * function;
+  node_interface * FUNCTION_AS_NODE;
+
+  function = function_construct();
   
   if (!expect_peek(parser, TOKEN_LEFT_PARANTHESIS))
-  {
     return NULL;
-  }
 
   parse_function_parameters(parser, function->parameters);
 
@@ -396,14 +466,18 @@ node * parse_function(struct parser_t * parser)
 
   function->body = parse_block_statement(parser);
 
-  node_interface *FUNCTION_AS_NODE = allocate(node_interface, 1);
+  FUNCTION_AS_NODE = allocate(node_interface, 1);
   FUNCTION_AS_NODE->type = (enum node_type_t(*)(void *)) function_type;
   FUNCTION_AS_NODE->print = (void(*)(void*)) function_print;
   FUNCTION_AS_NODE->destruct = (void(*)(void *)) function_destruct;
   return node_construct(function, FUNCTION_AS_NODE);
 }
 
-void parse_function_parameters(struct parser_t * parser, list_t * parameters) {
+void parse_function_parameters(struct parser_t * parser, list_t * parameters) 
+{
+  /* declarations */
+  identifier_node * parameter;
+
   if (parser->peek_token && peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS)) {
     next_token(parser);
     return;
@@ -411,13 +485,13 @@ void parse_function_parameters(struct parser_t * parser, list_t * parameters) {
 
   next_token(parser);
 
-  identifier_node * parameter = identifier_construct(parser->current_token->value);
+  parameter = identifier_construct(parser->current_token->value);
   list_rpush(parameters, list_node_new(parameter));
 
   while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA)) {
     next_token(parser);
     next_token(parser);
-    identifier_node * parameter = identifier_construct(parser->current_token->value);
+    parameter = identifier_construct(parser->current_token->value);
     list_rpush(parameters, list_node_new(parameter));
   }
 
@@ -427,11 +501,15 @@ void parse_function_parameters(struct parser_t * parser, list_t * parameters) {
 
 node * parse_call(struct parser_t * parser, node * function)
 {
-  call_node * call = call_construct();
+  /* declarations */
+  call_node * call;
+  node_interface * CALL_AS_NODE;
+
+  call = call_construct();
   call->function = function;
   parse_call_arguments(parser, call->arguments);
 
-  node_interface *CALL_AS_NODE = allocate(node_interface, 1);
+  CALL_AS_NODE = allocate(node_interface, 1);
   CALL_AS_NODE->type = (enum node_type_t(*)(void *)) call_type;
   CALL_AS_NODE->print = (void(*)(void*)) call_print;
   CALL_AS_NODE->destruct = (void(*)(void *)) call_destruct;

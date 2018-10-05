@@ -13,20 +13,24 @@ function_node * function_construct()
 
 enum node_type_t function_type(function_node * object)
 {
-  return FUNCTION;
+  return object->type;
 }
 
 void function_print(function_node * object)
 {
+  /* declarations */
+  list_node_t * parameter;
+  list_iterator_t *it;
+  identifier_node * identifier;
+
   printf("function (");
 
   /* use list_iterator to iterate over list of tokens */
-  list_node_t * parameter;
-  list_iterator_t *it = list_iterator_new(object->parameters, LIST_HEAD);
+  it = list_iterator_new(object->parameters, LIST_HEAD);
   while ((parameter = list_iterator_next(it)))
   {
     /* get pointer to token and print token type and value */
-    identifier_node * identifier = ((identifier_node *)parameter->val);
+    identifier = ((identifier_node *)parameter->val);
 
     /* print statements */
     identifier_print(identifier);

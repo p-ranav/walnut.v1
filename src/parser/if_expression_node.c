@@ -14,7 +14,7 @@ if_expression_node * if_expression_construct()
 
 enum node_type_t if_expression_type(if_expression_node * object)
 {
-  return IF_EXPRESSION;
+  return object->type;
 }
 
 void if_expression_print(if_expression_node * object)

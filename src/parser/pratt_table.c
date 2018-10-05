@@ -25,18 +25,23 @@ pratt_function * search(token key) {
   return NULL;
 }
 
-void insert(token key, node *(*prefix_function)(struct parser_t *), node *(*infix_function)(struct parser_t *, node *)) {
+void insert(token key, node *(*prefix_function)(struct parser_t *), 
+  node *(*infix_function)(struct parser_t *, node *)) 
+{
+  /* declarations */
+  pratt_function * item;
+  token hash_index;
 
-  pratt_function * item = allocate(pratt_function, 1);
+  item = allocate(pratt_function, 1);
   item->key = key;
   item->prefix_function = prefix_function;
   item->infix_function = infix_function;
 
   /* get the hash */
-  token hash_index = hash_code(key);
+  hash_index = hash_code(key);
 
   /* move in array until an empty or deleted cell */
-  while (hash_array[hash_index] != NULL && hash_array[hash_index]->key != -1) {
+  while (hash_array[hash_index] != NULL && hash_array[hash_index]->key != TOKEN_INVALID) {
     /* go to next cell */
     ++hash_index;
 

@@ -13,7 +13,7 @@ var_node * var_node_construct()
 
 enum node_type_t var_node_type(var_node * object)
 {
-  return VAR_STATEMENT;
+  return object->type;
 }
 
 void var_node_print(var_node * object)
@@ -26,5 +26,5 @@ void var_node_print(var_node * object)
 
 void var_node_destruct(var_node * object)
 {
-
+  free(object);
 }
