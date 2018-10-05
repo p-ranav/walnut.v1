@@ -41,8 +41,12 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
       if (startswith(next, next_width, '/'))
         parse_comments(buffer_size, buffer, file_path, &line, &cursor, &index, &character, tokens);
 
+      /* check if the next character is the start of a number. Consume till end of number */
+      if (isdigit(*next))
+        parse_number(buffer_size, buffer, file_path, &line, &cursor, &index, &character, next, tokens);
+
       /* now check if the next character is the start of symbol - identifier or keyword */
-      if (valid_symbol(next_width, next))
+      else if (valid_symbol(next_width, next))
         parse_symbol(buffer_size, buffer, file_path, &line, &cursor, &index,
                      &character, next_width, next, tokens);
 
@@ -53,10 +57,6 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
       /* check if the next character is the start of a string literal, e.g., "Hello World" */
       else if (startswith(next, next_width, '\"'))
         parse_string_literal(buffer_size, buffer, file_path, &line, &cursor, &index, &character, tokens);
-
-      /* check if the next character is the start of a number. Consume till end of number */
-      else if (isdigit(*next))
-        parse_number(buffer_size, buffer, file_path, &line, &cursor, &index, &character, next, tokens);
 
       /* check if next character is a punctuation. if so, consume 1 character and move on */
       else if (ispunct(*next))
