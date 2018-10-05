@@ -6,6 +6,7 @@ enum node_type_t
 {
   IDENTIFIER,
   INTEGER,
+  FLOAT,
   DOUBLE,
   BOOLEAN,
   VAR_STATEMENT,
