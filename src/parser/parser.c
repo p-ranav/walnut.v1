@@ -6,6 +6,7 @@
 #include <integer_node.h>
 #include <float_node.h>
 #include <double_node.h>
+#include <string_node.h>
 #include <prefix_expression_node.h>
 #include <infix_expression_node.h>
 #include <bool_node.h>
@@ -75,6 +76,7 @@ void pratt_table_init()
   insert(TOKEN_INTEGER, parse_integer_literal, NULL);
   insert(TOKEN_FLOAT, parse_float_literal, NULL);
   insert(TOKEN_DOUBLE, parse_double_literal, NULL);
+  insert(TOKEN_STRING_LITERAL, parse_string, NULL);
   insert(TOKEN_EXCLAMATION, parse_prefix_expression, NULL);
   insert(TOKEN_TRUE, parse_boolean, NULL);
   insert(TOKEN_FALSE, parse_boolean, NULL);
@@ -354,6 +356,23 @@ node * parse_double_literal(struct parser_t * parser)
   DOUBLE_AS_NODE->print = (void(*)(void*)) double_print;
   DOUBLE_AS_NODE->destruct = (void(*)(void *)) double_destruct;
   return node_construct(double_, DOUBLE_AS_NODE);
+}
+
+node * parse_string(struct parser_t * parser)
+{
+  /* declarations */
+  char * current_token_value;
+  string_node * string;
+  node_interface * STRING_AS_NODE;
+
+  current_token_value = parser->current_token->value;
+  string = string_construct(current_token_value);
+
+  STRING_AS_NODE = allocate(node_interface, 1);
+  STRING_AS_NODE->type = (enum node_type_t(*)(void *)) string_type;
+  STRING_AS_NODE->print = (void(*)(void*)) string_print;
+  STRING_AS_NODE->destruct = (void(*)(void *)) string_destruct;
+  return node_construct(string, STRING_AS_NODE);
 }
 
 node * parse_prefix_expression(struct parser_t * parser)

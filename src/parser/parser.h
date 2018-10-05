@@ -60,7 +60,7 @@ node * parse_identifier(struct parser_t * parser);
 node * parse_integer_literal(struct parser_t * parser);
 node * parse_float_literal(struct parser_t * parser);
 node * parse_double_literal(struct parser_t * parser);
-
+node * parse_string(struct parser_t * parser);
 node * parse_prefix_expression(struct parser_t * parser);
 node * parse_infix_expression(struct parser_t * parser, node * left);
 node * parse_grouped_expression(struct parser_t * parser);
