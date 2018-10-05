@@ -2,7 +2,7 @@
 var a = 5;                    // int32 (int) 
 var b = 3.14f;                // float32 (float)
 var c = 2.718281828459;       // float64 (double)
-// var d = "message";            // string
+var d = "message";            // string
 var e = true;                 // bool
 
 /* Explicit Typing */
