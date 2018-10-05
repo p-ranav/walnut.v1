@@ -1,6 +1,12 @@
 #ifndef LEXER_TOKEN
 #define LEXER_TOKEN
 
+/* List of all lexer tokens
+   When an input string is parsed by the lexer, our job is 
+   to look at this string of text and categorize it as one 
+   of the following tokens, e.g., "Hello" as STRING_LITERAL, 
+   3.14f as FLOAT, and ';' as SEMI_COLON.
+*/
 #define TOKEN_LIST                                          \
   TOKEN(WHITESPACE, "WHITESPACE")                           \
   TOKEN(END_OF_LINE, "END_OF_LINE")                         \
@@ -83,6 +89,7 @@
   TOKEN(FROM, "FROM")                                       \
   TOKEN(IMPORT, "IMPORT")
 
+/* Enum of tokens */
 typedef enum
 {
 #define TOKEN(label, string) TOKEN_##label,
@@ -91,6 +98,17 @@ typedef enum
       TOKEN_INVALID
 } token;
 
+/* Perhaps not the best name for this struct but here we are.
+   The lexer needs to return a list of tokens. Its gonna 
+   return a list of token_t pointers. 
+
+   Each token stores
+   (1) type (e.g., TOKEN_SEMICOLON), 
+   (2) value (e.g., 3.14 or "Hello")
+   (3) file path
+   (4) line number in file
+   (5) cursor/character number in line
+   */
 struct token_t
 {
   token type;

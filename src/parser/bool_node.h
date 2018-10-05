@@ -12,7 +12,7 @@
    The boolean value true is represented as:
    bool_node { .type = BOOLEAN, .value = 1 }
 
-  */
+*/
 typedef struct
 {
   enum node_type_t type; /* type = BOOLEAN */

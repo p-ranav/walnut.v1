@@ -15,8 +15,9 @@
    }
 
    The above code is a block_node with 2 statements:
-   a variable declaration and a function call
-   */
+   a variable declaration and a function call.
+
+*/
 typedef struct
 {
   enum node_type_t type;    /* type = BLOCK */
