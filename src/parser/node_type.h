@@ -8,6 +8,7 @@ enum node_type_t
   INTEGER,
   FLOAT,
   DOUBLE,
+  STRING,
   BOOLEAN,
   VAR_STATEMENT,
   RETURN_STATEMENT,
