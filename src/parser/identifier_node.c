@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-node_interface *IDENTIFIER_AS_NODE = &(node_interface)
-{
-  .type = (enum node_type_t(*)(void *)) identifier_type,
-  .print = (void(*)(void*)) identifier_print,
-  .destruct = (void(*)(void *)) identifier_destruct
-};
-
 identifier_node * identifier_construct(char * name)
 {
   identifier_node * object = allocate(identifier_node, 1);

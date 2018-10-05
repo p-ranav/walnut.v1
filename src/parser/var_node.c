@@ -2,19 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-node_interface *VAR_AS_NODE = &(node_interface)
-{
-  .type = (enum node_type_t(*)(void *)) var_node_type,
-  .print = (void(*)(void*)) var_node_print,
-  .destruct = (void(*)(void *)) var_node_destruct
-};
-
-
 var_node * var_node_construct()
 {
   var_node * object = allocate(var_node, 1);
   object->name = NULL;
-  /* TODO: Initialize object->value */
+  object->expression = NULL;
   object->type = VAR_STATEMENT;
   return object;
 }
@@ -29,7 +21,7 @@ void var_node_print(var_node * object)
   printf("var ");
   identifier_print(object->name);
   printf(" = ");
-  /* TODO: print RHS expression */
+  node_print(object->expression);
 }
 
 void var_node_destruct(var_node * object)

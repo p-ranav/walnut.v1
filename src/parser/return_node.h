@@ -8,7 +8,7 @@
 typedef struct
 {
   enum node_type_t type;
-  /* TODO: add expression node for value */
+  node * expression;
 } return_node;
 
 return_node * return_node_construct();

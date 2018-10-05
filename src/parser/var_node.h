@@ -10,7 +10,7 @@ typedef struct
 {
   enum node_type_t type;
   identifier_node * name;
-  /* TODO: add expression node for value */
+  node * expression;
 } var_node;
 
 var_node * var_node_construct();

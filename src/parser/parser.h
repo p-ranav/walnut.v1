@@ -64,5 +64,9 @@ node * parse_grouped_expression(struct parser_t * parser);
 node * parse_boolean(struct parser_t * parser);
 node * parse_if_expression(struct parser_t * parser);
 block_node * parse_block_statement(struct parser_t * parser);
+node * parse_function(struct parser_t * parser);
+void parse_function_parameters(struct parser_t * parser, list_t * parameters);
+node * parse_call(struct parser_t * parser, node * function);
+void parse_call_arguments(struct parser_t * parser, list_t * arguments);
 
 #endif

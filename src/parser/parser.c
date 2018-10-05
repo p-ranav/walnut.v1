@@ -9,11 +9,11 @@
 #include <bool_node.h>
 #include <block_node.h>
 #include <if_expression_node.h>
+#include <function_node.h>
+#include <call_node.h>
 
 extern const char *const token_strings[]; /* used in expect_peek */
-extern node_interface *VAR_AS_NODE;
 extern node_interface *RETURN_AS_NODE;
-extern node_interface *IDENTIFIER_AS_NODE;
 extern node_interface *INTEGER_AS_NODE;
 extern node_interface *PREFIX_EXPRESSION_AS_NODE;
 extern node_interface *INFIX_EXPRESSION_AS_NODE;
@@ -78,8 +78,9 @@ void pratt_table_init()
   insert(TOKEN_EXCLAMATION, parse_prefix_expression, NULL);
   insert(TOKEN_TRUE, parse_boolean, NULL);
   insert(TOKEN_FALSE, parse_boolean, NULL);
-  insert(TOKEN_LEFT_PARANTHESIS, parse_grouped_expression, NULL);
+  insert(TOKEN_LEFT_PARANTHESIS, parse_grouped_expression, parse_call);
   insert(TOKEN_IF, parse_if_expression, NULL);
+  insert(TOKEN_FUNCTION, parse_function, NULL);
 
   /* infix operators */
   insert(TOKEN_ADD, NULL, parse_infix_expression);
@@ -174,12 +175,17 @@ node * parse_variable_declaration(struct parser_t * parser)
     return NULL;
   }
 
-  /* TODO: we're skipping expressions until we encounter a semicolon */
+  next_token(parser);
 
-  while (!current_token_is(parser, TOKEN_SEMI_COLON)) {
+  var->expression = parse_expression(parser, LOWEST);
+
+  if (peek_token_is(parser, TOKEN_SEMI_COLON))
     next_token(parser);
-  }
 
+  node_interface *VAR_AS_NODE = allocate(node_interface, 1);
+  VAR_AS_NODE->type = (enum node_type_t(*)(void *)) var_node_type;
+  VAR_AS_NODE->print = (void(*)(void*)) var_node_print;
+  VAR_AS_NODE->destruct = (void(*)(void *)) var_node_destruct;
   return node_construct(var, VAR_AS_NODE);
 }
 
@@ -189,11 +195,10 @@ node * parse_return_statement(struct parser_t * parser)
 
   next_token(parser);
 
-  /* TODO: we're skipping expressions until we encounter a semicolon */
+  return_->expression = parse_expression(parser, LOWEST);
 
-  while (!current_token_is(parser, TOKEN_SEMI_COLON)) {
+  if (peek_token_is(parser, TOKEN_SEMI_COLON))
     next_token(parser);
-  }
 
   return node_construct(return_, RETURN_AS_NODE);
 }
@@ -255,6 +260,11 @@ node * parse_identifier(struct parser_t * parser)
 {
   char * current_token_value = parser->current_token->value;
   identifier_node * identifier = identifier_construct(current_token_value);
+
+  node_interface *IDENTIFIER_AS_NODE = allocate(node_interface, 1);
+  IDENTIFIER_AS_NODE->type = (enum node_type_t(*)(void *)) identifier_type;
+  IDENTIFIER_AS_NODE->print = (void(*)(void*)) identifier_print;
+  IDENTIFIER_AS_NODE->destruct = (void(*)(void *)) identifier_destruct;
   return node_construct(identifier, IDENTIFIER_AS_NODE);
 }
 
@@ -367,4 +377,83 @@ block_node * parse_block_statement(struct parser_t * parser)
   }
 
   return block;
+}
+
+node * parse_function(struct parser_t * parser)
+{
+  function_node * function = function_construct();
+  
+  if (!expect_peek(parser, TOKEN_LEFT_PARANTHESIS))
+  {
+    return NULL;
+  }
+
+  parse_function_parameters(parser, function->parameters);
+
+  if (!expect_peek(parser, TOKEN_LEFT_CURLY)) {
+    return NULL;
+  }
+
+  function->body = parse_block_statement(parser);
+
+  node_interface *FUNCTION_AS_NODE = allocate(node_interface, 1);
+  FUNCTION_AS_NODE->type = (enum node_type_t(*)(void *)) function_type;
+  FUNCTION_AS_NODE->print = (void(*)(void*)) function_print;
+  FUNCTION_AS_NODE->destruct = (void(*)(void *)) function_destruct;
+  return node_construct(function, FUNCTION_AS_NODE);
+}
+
+void parse_function_parameters(struct parser_t * parser, list_t * parameters) {
+  if (parser->peek_token && peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS)) {
+    next_token(parser);
+    return;
+  }
+
+  next_token(parser);
+
+  identifier_node * parameter = identifier_construct(parser->current_token->value);
+  list_rpush(parameters, list_node_new(parameter));
+
+  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA)) {
+    next_token(parser);
+    next_token(parser);
+    identifier_node * parameter = identifier_construct(parser->current_token->value);
+    list_rpush(parameters, list_node_new(parameter));
+  }
+
+  if (!expect_peek(parser, TOKEN_RIGHT_PARANTHESIS))
+    return;
+}
+
+node * parse_call(struct parser_t * parser, node * function)
+{
+  call_node * call = call_construct();
+  call->function = function;
+  parse_call_arguments(parser, call->arguments);
+
+  node_interface *CALL_AS_NODE = allocate(node_interface, 1);
+  CALL_AS_NODE->type = (enum node_type_t(*)(void *)) call_type;
+  CALL_AS_NODE->print = (void(*)(void*)) call_print;
+  CALL_AS_NODE->destruct = (void(*)(void *)) call_destruct;
+  return node_construct(call, CALL_AS_NODE);
+}
+
+void parse_call_arguments(struct parser_t * parser, list_t * arguments)
+{
+  if (peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS)) {
+    next_token(parser);
+    return;
+  }
+
+  next_token(parser);
+  list_rpush(arguments, list_node_new(parse_expression(parser, LOWEST)));
+
+  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA)) {
+    next_token(parser);
+    next_token(parser);
+    list_rpush(arguments, list_node_new(parse_expression(parser, LOWEST)));
+  }
+
+  if (!expect_peek(parser, TOKEN_RIGHT_PARANTHESIS))
+    return;
 }
