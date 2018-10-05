@@ -24,5 +24,6 @@ void prefix_expression_print(prefix_expression_node * object)
 
 void prefix_expression_destruct(prefix_expression_node * object)
 {
+  node_destruct(object->right);
   free(object);
 }

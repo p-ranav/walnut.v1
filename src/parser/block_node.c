@@ -33,5 +33,22 @@ void block_print(block_node * object)
 
 void block_destruct(block_node * object)
 {
+  /* declarations */
+  list_node_t * statement;
+  list_iterator_t * it;
+  node * block_node;
+
+  /* use list_iterator to iterate over list of tokens */
+  it = list_iterator_new(object->statements, LIST_HEAD);
+  while ((statement = list_iterator_next(it)))
+  {
+    /* get pointer to token and free */
+    block_node = ((node *)statement->val);
+
+    /* free AST nodes */
+    node_destruct(block_node);
+  }
+  deallocate(it);
+  list_destroy(object->statements);
   free(object);
 }

@@ -11,8 +11,9 @@ string_node * string_construct(char * value)
   string_node * object = allocate(string_node, 1);
   object->type = STRING;
   value_length = strlen(value);
-  object->value = allocate(char, value_length);
+  object->value = allocate(char, value_length + 1);
   strcpy(object->value, value);
+  object->value[value_length] = '\0';
   return object;
 }
 
@@ -28,5 +29,6 @@ void string_print(string_node * object)
 
 void string_destruct(string_node * object)
 {
+  free(object->value);
   free(object);
 }

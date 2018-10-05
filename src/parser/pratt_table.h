@@ -27,4 +27,7 @@ void insert(token key, node *(*prefix_function)(struct parser_t *), node *(*infi
 /* loopup functions in pratt table */
 pratt_function * search(token key);
 
+/* delete entry in hash table */
+void delete_item(token key);
+
 #endif

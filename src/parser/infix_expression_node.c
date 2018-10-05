@@ -25,5 +25,7 @@ void infix_expression_print(infix_expression_node * object)
 
 void infix_expression_destruct(infix_expression_node * object)
 {
+  node_destruct(object->left);
+  node_destruct(object->right);
   free(object);
 }

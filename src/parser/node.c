@@ -24,5 +24,6 @@ void node_print(node * object)
 void node_destruct(node * object)
 {
   (object->interface->destruct)(object->instance);
+  free(object->interface);
   free(object);
 }

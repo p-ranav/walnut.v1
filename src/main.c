@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     list_t *tokens;
     char *buffer;
     long file_size;
+    struct parser_t * parser;
 
     /* set single locale for all purposes */
     setlocale(LC_ALL, "");
@@ -47,7 +48,10 @@ int main(int argc, char *argv[])
     lexer_print(tokens);
 
     /* Parse program */
-    parse(tokens);
+    parser = parse(tokens);
+
+    /* Delete parsed AST nodes */
+    parser_destruct(parser);
 
     /* Delete lexer tokens */
     lexer_destroy(tokens);

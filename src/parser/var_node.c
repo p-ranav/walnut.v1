@@ -26,5 +26,7 @@ void var_node_print(var_node * object)
 
 void var_node_destruct(var_node * object)
 {
+  identifier_destruct(object->name);
+  node_destruct(object->expression);
   free(object);
 }

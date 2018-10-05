@@ -23,5 +23,6 @@ void return_node_print(return_node * object)
 
 void return_node_destruct(return_node * object)
 {
+  node_destruct(object->expression);
   free(object);
 }

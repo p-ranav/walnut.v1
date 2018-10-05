@@ -33,5 +33,9 @@ void if_expression_print(if_expression_node * object)
 
 void if_expression_destruct(if_expression_node * object)
 {
+  node_destruct(object->condition);
+  block_destruct(object->consequence);
+  if (object->alternative)
+    block_destruct(object->alternative);
   free(object);
 }

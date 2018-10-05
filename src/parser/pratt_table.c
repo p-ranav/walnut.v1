@@ -51,3 +51,30 @@ void insert(token key, node *(*prefix_function)(struct parser_t *),
 
   hash_array[hash_index] = item;
 }
+
+void delete_item(token key)
+{
+  /* declarations */
+  int hash_index;
+
+  /* get the hash */
+  hash_index = hash_code(key);
+
+  /* move in array until an empty */
+  while (hash_array[hash_index] != NULL) {
+
+    if (hash_array[hash_index]->key == key) {
+
+      pratt_function * item_to_delete = hash_array[hash_index];
+      free(item_to_delete);
+      break;
+    }
+
+    /* go to next cell */
+    ++hash_index;
+
+    /* wrap around the table */
+    hash_index %= SIZE;
+  }
+
+}

@@ -17,7 +17,7 @@
 
 extern const char *const token_strings[]; /* used in expect_peek */
 
-list_t * parse(list_t * tokens)
+struct parser_t * parse(list_t * tokens)
 {
   struct parser_t * parser = allocate(struct parser_t, 1);
   parser->statements = list_new();
@@ -49,7 +49,7 @@ list_t * parse(list_t * tokens)
   /* print statements */
   parser_print(parser);
 
-  return parser->statements;
+  return parser;
 }
 
 void parser_print(struct parser_t * parser)
@@ -67,6 +67,31 @@ void parser_print(struct parser_t * parser)
     printf("\n");
   }
   deallocate(it);
+}
+
+void parser_destruct(struct parser_t * parser)
+{
+  /* declarations */
+  list_node_t * statement;
+  list_iterator_t * it;
+  node * ast_node;
+
+  pratt_table_destroy();
+
+  /* use list_iterator to iterate over list of tokens */
+  it = list_iterator_new(parser->statements, LIST_HEAD);
+  while ((statement = list_iterator_next(it)))
+  {
+    /* get pointer to token and free */
+    ast_node = ((node *)statement->val);
+
+    /* free AST nodes */
+    node_destruct(ast_node);
+  }
+  deallocate(it);
+  free(parser->tokens_iterator);
+  list_destroy(parser->statements);
+  free(parser);
 }
 
 void pratt_table_init()
@@ -96,6 +121,35 @@ void pratt_table_init()
   insert(TOKEN_LESSER_EQUAL, NULL, parse_infix_expression);
   insert(TOKEN_GREATER, NULL, parse_infix_expression);
   insert(TOKEN_GREATER_EQUAL, NULL, parse_infix_expression);
+}
+
+void pratt_table_destroy()
+{
+  /* prefix operators */
+  delete_item(TOKEN_SYMBOL);
+  delete_item(TOKEN_INTEGER);
+  delete_item(TOKEN_FLOAT);
+  delete_item(TOKEN_DOUBLE);
+  delete_item(TOKEN_STRING_LITERAL);
+  delete_item(TOKEN_EXCLAMATION);
+  delete_item(TOKEN_TRUE);
+  delete_item(TOKEN_FALSE);
+  delete_item(TOKEN_LEFT_PARANTHESIS);
+  delete_item(TOKEN_IF);
+  delete_item(TOKEN_FUNCTION);
+
+  /* infix operators */
+  delete_item(TOKEN_ADD);
+  delete_item(TOKEN_SUBTRACT);
+  delete_item(TOKEN_MULTIPLY);
+  delete_item(TOKEN_DIVIDE);
+  delete_item(TOKEN_MODULUS);
+  delete_item(TOKEN_EQUAL);
+  delete_item(TOKEN_NOT_EQUAL);
+  delete_item(TOKEN_LESSER);
+  delete_item(TOKEN_LESSER_EQUAL);
+  delete_item(TOKEN_GREATER);
+  delete_item(TOKEN_GREATER_EQUAL);
 }
 
 void next_token(struct parser_t * parser)

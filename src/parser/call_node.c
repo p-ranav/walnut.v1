@@ -47,5 +47,23 @@ void call_print(call_node * object)
 
 void call_destruct(call_node * object)
 {
+  /* declarations */
+  list_node_t * argument;
+  list_iterator_t * it;
+
+  /* use list_iterator to iterate over list of tokens */
+  it = list_iterator_new(object->arguments, LIST_HEAD);
+  while ((argument = list_iterator_next(it)))
+  {
+    /* get pointer to token and free */
+    node * argument_node = ((node *)argument->val);
+
+    /* free function parameters */
+    node_destruct(argument_node);
+  }
+  deallocate(it);
+
+  node_destruct(object->function);
+  list_destroy(object->arguments);
   free(object);
 }

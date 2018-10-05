@@ -22,7 +22,9 @@ struct parser_t
    This function takes lexer tokens as inputs
    and returns a list of 'statements', 
    each of which is an AST node. */
-list_t * parse(list_t * tokens);
+struct parser_t * parse(list_t * tokens);
+
+void parser_destruct(struct parser_t * parser);
 
 /* Print nodes in AST */
 void parser_print(struct parser_t * parser);
@@ -38,6 +40,7 @@ node * parse_variable_declaration(struct parser_t * parser);
 node * parse_return_statement(struct parser_t * parser);
 
 void pratt_table_init();
+void pratt_table_destroy();
 node * parse_expression_statement(struct parser_t * parser);
 
 enum precedence_t {
