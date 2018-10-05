@@ -4,6 +4,8 @@
 #include <var_node.h>
 #include <return_node.h>
 #include <integer_node.h>
+#include <float_node.h>
+#include <double_node.h>
 #include <prefix_expression_node.h>
 #include <infix_expression_node.h>
 #include <bool_node.h>
@@ -71,6 +73,8 @@ void pratt_table_init()
   /* prefix operators */
   insert(TOKEN_SYMBOL, parse_identifier, NULL);
   insert(TOKEN_INTEGER, parse_integer_literal, NULL);
+  insert(TOKEN_FLOAT, parse_float_literal, NULL);
+  insert(TOKEN_DOUBLE, parse_double_literal, NULL);
   insert(TOKEN_EXCLAMATION, parse_prefix_expression, NULL);
   insert(TOKEN_TRUE, parse_boolean, NULL);
   insert(TOKEN_FALSE, parse_boolean, NULL);
@@ -312,6 +316,44 @@ node * parse_integer_literal(struct parser_t * parser)
   INTEGER_AS_NODE->print = (void(*)(void*)) integer_print;
   INTEGER_AS_NODE->destruct = (void(*)(void *)) integer_destruct;
   return node_construct(integer, INTEGER_AS_NODE);
+}
+
+node * parse_float_literal(struct parser_t * parser)
+{
+  /* declarations */
+  char * current_token_value;
+  float value;
+  float_node * float_;
+  node_interface * FLOAT_AS_NODE;
+
+  current_token_value = parser->current_token->value;
+  sscanf(current_token_value, "%f", &value);
+  float_ = float_construct(value);
+
+  FLOAT_AS_NODE = allocate(node_interface, 1);
+  FLOAT_AS_NODE->type = (enum node_type_t(*)(void *)) float_type;
+  FLOAT_AS_NODE->print = (void(*)(void*)) float_print;
+  FLOAT_AS_NODE->destruct = (void(*)(void *)) float_destruct;
+  return node_construct(float_, FLOAT_AS_NODE);
+}
+
+node * parse_double_literal(struct parser_t * parser)
+{
+  /* declarations */
+  char * current_token_value;
+  double value;
+  double_node * double_;
+  node_interface * DOUBLE_AS_NODE;
+
+  current_token_value = parser->current_token->value;
+  sscanf(current_token_value, "%lf", &value);
+  double_ = double_construct(value);
+
+  DOUBLE_AS_NODE = allocate(node_interface, 1);
+  DOUBLE_AS_NODE->type = (enum node_type_t(*)(void *)) double_type;
+  DOUBLE_AS_NODE->print = (void(*)(void*)) double_print;
+  DOUBLE_AS_NODE->destruct = (void(*)(void *)) double_destruct;
+  return node_construct(double_, DOUBLE_AS_NODE);
 }
 
 node * parse_prefix_expression(struct parser_t * parser)
