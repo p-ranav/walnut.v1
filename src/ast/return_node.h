@@ -12,20 +12,20 @@
 */
 typedef struct
 {
-  enum node_type_t type;      /* type = RETURN_STATEMENT */
-  node * expression;          /* expression being returned */
+  enum node_type_t type; /* type = RETURN_STATEMENT */
+  node *expression;      /* expression being returned */
 } return_node;
 
 /* Construct return node - initialize return expression */
-return_node * return_node_construct();
+return_node *return_node_construct();
 
 /* return the 'RETURN' node type */
-enum node_type_t return_node_type(return_node * object);
+enum node_type_t return_node_type(return_node *object);
 
 /* print the return expression */
-void return_node_print(return_node * object);
+void return_node_print(return_node *object);
 
 /* call node_destruct on the return expression and free return expression node */
-void return_node_destruct(return_node * object);
+void return_node_destruct(return_node *object);
 
 #endif

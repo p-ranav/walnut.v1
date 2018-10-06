@@ -26,22 +26,22 @@
 */
 typedef struct
 {
-  enum node_type_t type;        /* type = VAR_STATEMENT */
-  identifier_node * name;       /* name (identifier) of the variable*/
-  node * expression;            /* expression to the right of the '=' sign */
+  enum node_type_t type; /* type = VAR_STATEMENT */
+  identifier_node *name; /* name (identifier) of the variable*/
+  node *expression;      /* expression to the right of the '=' sign */
 } var_node;
 
 /* construct a variable node - initialize identifier name and expression */
-var_node * var_node_construct();
+var_node *var_node_construct();
 
 /* return 'VAR_STATEMENT' node type */
-enum node_type_t var_node_type(var_node * object);
+enum node_type_t var_node_type(var_node *object);
 
 /* print variable declaration - var <name> = <expression> */
-void var_node_print(var_node * object);
+void var_node_print(var_node *object);
 
 /* clean up variable declration
    identifier_destruct(name) and node_destruct(expression) */
-void var_node_destruct(var_node * object);
+void var_node_destruct(var_node *object);
 
 #endif

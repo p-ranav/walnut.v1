@@ -15,22 +15,22 @@
 */
 typedef struct
 {
-  enum node_type_t type;    /* type = INFIX_EXPRESSION */
-  node * left;              /* expression node to the left of the infix operator */
-  char * operator;          /* character buffer of the infix operator */
-  node * right;             /* expression node to the right of the infix operator */
+  enum node_type_t type; /* type = INFIX_EXPRESSION */
+  node *left;            /* expression node to the left of the infix operator */
+  char *operator;        /* character buffer of the infix operator */
+  node *right;           /* expression node to the right of the infix operator */
 } infix_expression_node;
 
 /* initialize left and right of infix expression. String copy the operator string */
-infix_expression_node * infix_expression_construct(char * operator);
+infix_expression_node *infix_expression_construct(char *operator);
 
 /* return the type 'INFIX_EXPRESSION' */
-enum node_type_t infix_expression_type(infix_expression_node * object);
+enum node_type_t infix_expression_type(infix_expression_node *object);
 
 /* print infix expression (<left> <operator> <right>) */
-void infix_expression_print(infix_expression_node * object);
+void infix_expression_print(infix_expression_node *object);
 
 /* free up the operator character buffer, left and right expressions */
-void infix_expression_destruct(infix_expression_node * object);
+void infix_expression_destruct(infix_expression_node *object);
 
 #endif

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     list_t *tokens;
     char *buffer;
     long file_size;
-    struct parser_t * parser;
+    struct parser_t *parser;
 
     /* set single locale for all purposes */
     setlocale(LC_ALL, "");

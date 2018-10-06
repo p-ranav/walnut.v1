@@ -14,21 +14,21 @@
 */
 typedef struct
 {
-  enum node_type_t type;    /* type = PREFIX_EXPRESSION */
-  char * operator;          /* prefix oeprator. Either '-' or '!' */
-  node * right;             /* expression to the right of the prefix operator */
+  enum node_type_t type; /* type = PREFIX_EXPRESSION */
+  char *operator;        /* prefix oeprator. Either '-' or '!' */
+  node *right;           /* expression to the right of the prefix operator */
 } prefix_expression_node;
 
 /* Construct prefix expression node. Initialize right expression and save operator */
-prefix_expression_node * prefix_expression_construct(char * operator);
+prefix_expression_node *prefix_expression_construct(char *operator);
 
 /* return prefix expression node type 'PREFIX_EXPRESSION' */
-enum node_type_t prefix_expression_type(prefix_expression_node * object);
+enum node_type_t prefix_expression_type(prefix_expression_node *object);
 
 /* print prefix expression <operator> <right_expression> */
-void prefix_expression_print(prefix_expression_node * object);
+void prefix_expression_print(prefix_expression_node *object);
 
 /* clean up prefix expression node. Free up the right expression */
-void prefix_expression_destruct(prefix_expression_node * object);
+void prefix_expression_destruct(prefix_expression_node *object);
 
 #endif

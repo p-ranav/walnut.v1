@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-if_expression_node * if_expression_construct()
+if_expression_node *if_expression_construct()
 {
   /* declarations */
-  if_expression_node * object;
+  if_expression_node *object;
 
   object = allocate(if_expression_node, 1);
   object->type = IF_EXPRESSION;
@@ -15,12 +15,12 @@ if_expression_node * if_expression_construct()
   return object;
 }
 
-enum node_type_t if_expression_type(if_expression_node * object)
+enum node_type_t if_expression_type(if_expression_node *object)
 {
   return object->type;
 }
 
-void if_expression_print(if_expression_node * object)
+void if_expression_print(if_expression_node *object)
 {
   printf("if ");
   node_print(object->condition);
@@ -36,7 +36,7 @@ void if_expression_print(if_expression_node * object)
   printf(" }");
 }
 
-void if_expression_destruct(if_expression_node * object)
+void if_expression_destruct(if_expression_node *object)
 {
   /* free up condition expression */
   node_destruct(object->condition);

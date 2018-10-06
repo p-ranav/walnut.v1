@@ -21,22 +21,22 @@
 */
 typedef struct
 {
-  enum node_type_t type;       /* type = IF_EXPRESSION */
-  node * condition;            /* condition expression */
-  block_node * consequence;    /* block of code following the if expression */
-  block_node * alternative;    /* block of code following the else expression. Could be NULL */
+  enum node_type_t type;   /* type = IF_EXPRESSION */
+  node *condition;         /* condition expression */
+  block_node *consequence; /* block of code following the if expression */
+  block_node *alternative; /* block of code following the else expression. Could be NULL */
 } if_expression_node;
 
 /* Construct an if expression - initialize condition, consequence and alternative nodes */
-if_expression_node * if_expression_construct();
+if_expression_node *if_expression_construct();
 
 /* return IF_EXPRESSION node type */
-enum node_type_t if_expression_type(if_expression_node * object);
+enum node_type_t if_expression_type(if_expression_node *object);
 
 /* print an if expression, e.g., if (...) { ... } else { ... } */
-void if_expression_print(if_expression_node * object);
+void if_expression_print(if_expression_node *object);
 
 /* free an if expression node - clean up block nodes and condition expression */
-void if_expression_destruct(if_expression_node * object);
+void if_expression_destruct(if_expression_node *object);
 
 #endif

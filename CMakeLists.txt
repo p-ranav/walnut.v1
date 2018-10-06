@@ -28,22 +28,25 @@ if (WIN32)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
+# Utilities library
 ADD_SUBLIBRARY(UTILS src/utils)
 set_target_properties(UTILS PROPERTIES OUTPUT_NAME utils) # utils.lib
 
+# Lexer library
 ADD_SUBLIBRARY(LEXER src/lexer)
 set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
-
 TARGET_LINK_LIBRARIES(LEXER UTILS)
 
+# Abstract Syntax Tree (AST) library
 ADD_SUBLIBRARY(AST src/ast)
 set_target_properties(AST PROPERTIES OUTPUT_NAME ast) # ast.lib
 
+# Parser library
 ADD_SUBLIBRARY(PARSER src/parser)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
-
 TARGET_LINK_LIBRARIES(PARSER LEXER UTILS AST)
 
+# Main executable
 file(GLOB EXECUTABLE_SOURCES 
     "src/main.c" 
 )

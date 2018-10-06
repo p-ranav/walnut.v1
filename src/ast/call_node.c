@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-call_node * call_construct()
+call_node *call_construct()
 {
   /* declarations */
-  call_node * object;
+  call_node *object;
 
   object = allocate(call_node, 1);
   object->type = CALL_EXPRESSION;
@@ -14,22 +14,22 @@ call_node * call_construct()
   return object;
 }
 
-enum node_type_t call_type(call_node * object)
+enum node_type_t call_type(call_node *object)
 {
   return object->type;
 }
 
-void call_print(call_node * object)
+void call_print(call_node *object)
 {
   /* declarations */
-  list_node_t * argument;
+  list_node_t *argument;
   list_iterator_t *it;
-  node * argument_node;
+  node *argument_node;
 
   if (object->function)
     node_print(object->function);
   printf(" (");
-  
+
   /* use list_iterator to iterate over list of tokens */
   it = list_iterator_new(object->arguments, LIST_HEAD);
   while ((argument = list_iterator_next(it)))
@@ -48,18 +48,18 @@ void call_print(call_node * object)
   printf(")");
 }
 
-void call_destruct(call_node * object)
+void call_destruct(call_node *object)
 {
   /* declarations */
-  list_node_t * argument;
-  list_iterator_t * it;
+  list_node_t *argument;
+  list_iterator_t *it;
 
   /* use list_iterator to iterate over list of tokens */
   it = list_iterator_new(object->arguments, LIST_HEAD);
   while ((argument = list_iterator_next(it)))
   {
     /* get pointer to token and free */
-    node * argument_node = ((node *)argument->val);
+    node *argument_node = ((node *)argument->val);
 
     /* free function parameters */
     node_destruct(argument_node);

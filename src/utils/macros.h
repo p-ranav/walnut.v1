@@ -1,6 +1,8 @@
 #ifndef MACROS_H
 #define MACROS_H
 
+#define arrlen(list) sizeof(list) / sizeof(list[0])
+
 #define allocate(structure, size) \
   (structure *)malloc(sizeof(structure) * size)
 
@@ -15,7 +17,7 @@
 #define increment_line (*line) += 1
 #define strequal(lhs, rhs) (strcmp(lhs, rhs) == 0)
 
-#define save_token(token_to_save) \
+#define save_token(token_to_save)      \
   node = list_node_new(token_to_save); \
   list_rpush(tokens, node);
 
@@ -37,19 +39,19 @@
   }
 
 /* Parser macros */
-#define return_precedence(token) \
-  if (token == TOKEN_LEFT_PARANTHESIS) \
-    return CALL; \
-  else if (token == TOKEN_EQUAL || token == TOKEN_NOT_EQUAL) \
-    return EQUAL; \
+#define return_precedence(token)                                                             \
+  if (token == TOKEN_LEFT_PARANTHESIS)                                                       \
+    return CALL;                                                                             \
+  else if (token == TOKEN_EQUAL || token == TOKEN_NOT_EQUAL)                                 \
+    return EQUAL;                                                                            \
   else if (token == TOKEN_LESSER || token == TOKEN_GREATER || token == TOKEN_LESSER_EQUAL || \
-    token == TOKEN_GREATER_EQUAL) \
-    return LESSGREATER; \
-  else if (token == TOKEN_ADD || token == TOKEN_SUBTRACT) \
-    return SUM; \
-  else if (token == TOKEN_MULTIPLY || token == TOKEN_DIVIDE || token == TOKEN_MODULUS) \
-    return PRODUCT; \
-  else \
+           token == TOKEN_GREATER_EQUAL)                                                     \
+    return LESSGREATER;                                                                      \
+  else if (token == TOKEN_ADD || token == TOKEN_SUBTRACT)                                    \
+    return SUM;                                                                              \
+  else if (token == TOKEN_MULTIPLY || token == TOKEN_DIVIDE || token == TOKEN_MODULUS)       \
+    return PRODUCT;                                                                          \
+  else                                                                                       \
     return LOWEST;
 
 #endif

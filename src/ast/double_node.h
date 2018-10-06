@@ -10,20 +10,20 @@
 */
 typedef struct
 {
-  enum node_type_t type;  /* type = DOUBLE */
-  double value;           /* value = double value */
+  enum node_type_t type; /* type = DOUBLE */
+  double value;          /* value = double value */
 } double_node;
 
 /* Construct a double_node and set its type to DOUBLE */
-double_node * double_construct(double value);
+double_node *double_construct(double value);
 
 /* Overriding method that returns the DOUBLE node_type value */
-enum node_type_t double_type(double_node * object);
+enum node_type_t double_type(double_node *object);
 
 /* Overriding method that prints the value of the double with printf */
-void double_print(double_node * object);
+void double_print(double_node *object);
 
 /* Free double_node pointer - simple since it has no contained pointers */
-void double_destruct(double_node * object);
+void double_destruct(double_node *object);
 
 #endif

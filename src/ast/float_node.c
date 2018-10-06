@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-float_node * float_construct(float value)
+float_node *float_construct(float value)
 {
   /* declarations */
-  float_node * object;
+  float_node *object;
 
   object = allocate(float_node, 1);
   object->type = FLOAT;
@@ -13,17 +13,17 @@ float_node * float_construct(float value)
   return object;
 }
 
-enum node_type_t float_type(float_node * object)
+enum node_type_t float_type(float_node *object)
 {
   return object->type;
 }
 
-void float_print(float_node * object)
+void float_print(float_node *object)
 {
   printf("%f", object->value);
 }
 
-void float_destruct(float_node * object)
+void float_destruct(float_node *object)
 {
   /* simply free up float_node pointer */
   free(object);

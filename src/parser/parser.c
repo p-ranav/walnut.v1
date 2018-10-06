@@ -17,9 +17,9 @@
 
 extern const char *const token_strings[]; /* used in expect_peek */
 
-struct parser_t * parse(list_t * tokens)
+struct parser_t *parse(list_t *tokens)
 {
-  struct parser_t * parser = allocate(struct parser_t, 1);
+  struct parser_t *parser = allocate(struct parser_t, 1);
   parser->statements = list_new();
 
   /* initialize token iterator */
@@ -38,8 +38,9 @@ struct parser_t * parse(list_t * tokens)
   /* start parsing statements */
   while (parser->peek_token && !peek_token_is(parser, TOKEN_END_OF_FILE))
   {
-    node * statement = parse_statement(parser);
-    if (statement) {
+    node *statement = parse_statement(parser);
+    if (statement)
+    {
       list_rpush(parser->statements, list_node_new(statement));
     }
     next_token(parser);
@@ -48,15 +49,15 @@ struct parser_t * parse(list_t * tokens)
   return parser;
 }
 
-void parser_print(struct parser_t * parser)
+void parser_print(struct parser_t *parser)
 {
   /* use list_iterator to iterate over list of tokens */
-  list_node_t * statement;
+  list_node_t *statement;
   list_iterator_t *it = list_iterator_new(parser->statements, LIST_HEAD);
   while ((statement = list_iterator_next(it)))
   {
     /* get pointer to token and print token type and value */
-    node * ast_node = ((node *)statement->val);
+    node *ast_node = ((node *)statement->val);
 
     /* print parser AST nodes */
     node_print(ast_node);
@@ -65,12 +66,12 @@ void parser_print(struct parser_t * parser)
   deallocate(it);
 }
 
-void parser_destruct(struct parser_t * parser)
+void parser_destruct(struct parser_t *parser)
 {
   /* declarations */
-  list_node_t * statement;
-  list_iterator_t * it;
-  node * ast_node;
+  list_node_t *statement;
+  list_iterator_t *it;
+  node *ast_node;
 
   pratt_table_destroy();
 
@@ -148,10 +149,10 @@ void pratt_table_destroy()
   delete_item(TOKEN_GREATER_EQUAL);
 }
 
-void next_token(struct parser_t * parser)
+void next_token(struct parser_t *parser)
 {
   /* declarations */
-  list_node_t * peek_node;
+  list_node_t *peek_node;
 
   parser->current_token = parser->peek_token;
   peek_node = list_iterator_next(parser->tokens_iterator);
@@ -161,21 +162,21 @@ void next_token(struct parser_t * parser)
     parser->peek_token = NULL;
 }
 
-int current_token_is(struct parser_t * parser, token value)
+int current_token_is(struct parser_t *parser, token value)
 {
   if (!parser->current_token)
     return 0;
   return parser->current_token->type == value;
 }
 
-int peek_token_is(struct parser_t * parser, token value)
+int peek_token_is(struct parser_t *parser, token value)
 {
   if (!parser->peek_token)
     return 0;
   return parser->peek_token->type == value;
 }
 
-int expect_peek(struct parser_t * parser, token value)
+int expect_peek(struct parser_t *parser, token value)
 {
   if (peek_token_is(parser, value))
   {
@@ -185,17 +186,17 @@ int expect_peek(struct parser_t * parser, token value)
   else
   {
     printf("error in %s, line %d, cursor %d: expected token %s, instead got %s\n",
-      parser->peek_token->file_path, 
-      parser->peek_token->line, 
-      parser->peek_token->cursor,
-      token_strings[value],
-      token_strings[parser->peek_token->type]);
+           parser->peek_token->file_path,
+           parser->peek_token->line,
+           parser->peek_token->cursor,
+           token_strings[value],
+           token_strings[parser->peek_token->type]);
     exit(0);
     return 0;
   }
 }
 
-node * parse_statement(struct parser_t * parser)
+node *parse_statement(struct parser_t *parser)
 {
   /* if current token is NULL, there's nothing to parse */
   if (!parser->current_token)
@@ -204,7 +205,7 @@ node * parse_statement(struct parser_t * parser)
   /* check if current token is X and call parse_X appropriately */
   switch (parser->current_token->type)
   {
-  case TOKEN_VAR: 
+  case TOKEN_VAR:
     /* parse variable declarations */
     return parse_variable_declaration(parser);
     break;
@@ -219,12 +220,12 @@ node * parse_statement(struct parser_t * parser)
   }
 }
 
-node * parse_variable_declaration(struct parser_t * parser)
+node *parse_variable_declaration(struct parser_t *parser)
 {
   /* declarations */
-  var_node * var;
-  char * identifier_name;
-  identifier_node * identifier;
+  var_node *var;
+  char *identifier_name;
+  identifier_node *identifier;
   node_interface *VAR_AS_NODE;
 
   /* construct a var_node */
@@ -236,12 +237,14 @@ node * parse_variable_declaration(struct parser_t * parser)
   var->name = identifier;
 
   /* peek (which we just saved above) is a SYMBOL. Confirm this */
-  if (!expect_peek(parser, TOKEN_SYMBOL)) {
+  if (!expect_peek(parser, TOKEN_SYMBOL))
+  {
     return NULL;
   }
 
   /* after the identifier comes the '=' token */
-  if (!expect_peek(parser, TOKEN_ASSIGN)) {
+  if (!expect_peek(parser, TOKEN_ASSIGN))
+  {
     return NULL;
   }
 
@@ -260,21 +263,21 @@ node * parse_variable_declaration(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed variable declaration 
   */
   VAR_AS_NODE = allocate(node_interface, 1);
-  VAR_AS_NODE->type = (enum node_type_t(*)(void *)) var_node_type;
-  VAR_AS_NODE->print = (void(*)(void*)) var_node_print;
-  VAR_AS_NODE->destruct = (void(*)(void *)) var_node_destruct;
+  VAR_AS_NODE->type = (enum node_type_t(*)(void *))var_node_type;
+  VAR_AS_NODE->print = (void (*)(void *))var_node_print;
+  VAR_AS_NODE->destruct = (void (*)(void *))var_node_destruct;
   return node_construct(var, VAR_AS_NODE);
 }
 
-node * parse_return_statement(struct parser_t * parser)
+node *parse_return_statement(struct parser_t *parser)
 {
   /* declarations */
-  return_node * return_;
+  return_node *return_;
   node_interface *RETURN_AS_NODE;
 
   /* construct a return_node object */
   return_ = return_node_construct();
-  
+
   /* we're here because the current_token is KEYWORD_RETURN. Move up 1 token */
   next_token(parser);
 
@@ -290,16 +293,16 @@ node * parse_return_statement(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed return statement
   */
   RETURN_AS_NODE = allocate(node_interface, 1);
-  RETURN_AS_NODE->type = (enum node_type_t(*)(void *)) return_node_type;
-  RETURN_AS_NODE->print = (void(*)(void*)) return_node_print;
-  RETURN_AS_NODE->destruct = (void(*)(void *)) return_node_destruct;
+  RETURN_AS_NODE->type = (enum node_type_t(*)(void *))return_node_type;
+  RETURN_AS_NODE->print = (void (*)(void *))return_node_print;
+  RETURN_AS_NODE->destruct = (void (*)(void *))return_node_destruct;
   return node_construct(return_, RETURN_AS_NODE);
 }
 
-node * parse_expression_statement(struct parser_t * parser)
+node *parse_expression_statement(struct parser_t *parser)
 {
   /* declaratiosn */
-  node * expression;
+  node *expression;
 
   /* parse general expression. Typical Pratt parsing here */
   expression = parse_expression(parser, LOWEST);
@@ -311,13 +314,13 @@ node * parse_expression_statement(struct parser_t * parser)
   return expression;
 }
 
-node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
+node *parse_expression(struct parser_t *parser, enum precedence_t precedence)
 {
   /* declarations */
-  pratt_function * current_function;
+  pratt_function *current_function;
   node *(*prefix)(struct parser_t *);
-  node * left;
-  pratt_function * peek_function;
+  node *left;
+  pratt_function *peek_function;
   node *(*infix)(struct parser_t *, node *);
 
   /* get the prefix parse function for the current token. pratt_table lookup */
@@ -355,7 +358,7 @@ node * parse_expression(struct parser_t * parser, enum precedence_t precedence)
   return left;
 }
 
-enum precedence_t peek_precedence(struct parser_t * parser)
+enum precedence_t peek_precedence(struct parser_t *parser)
 {
   /* declarations */
   token peek_token_type;
@@ -365,7 +368,7 @@ enum precedence_t peek_precedence(struct parser_t * parser)
   return_precedence(peek_token_type);
 }
 
-enum precedence_t current_precedence(struct parser_t * parser)
+enum precedence_t current_precedence(struct parser_t *parser)
 {
   /* declarations */
   token current_token_type;
@@ -375,12 +378,12 @@ enum precedence_t current_precedence(struct parser_t * parser)
   return_precedence(current_token_type);
 }
 
-node * parse_identifier(struct parser_t * parser)
+node *parse_identifier(struct parser_t *parser)
 {
   /* declarations */
-  char * current_token_value;
-  identifier_node * identifier;
-  node_interface * IDENTIFIER_AS_NODE;
+  char *current_token_value;
+  identifier_node *identifier;
+  node_interface *IDENTIFIER_AS_NODE;
 
   current_token_value = parser->current_token->value;
   identifier = identifier_construct(current_token_value);
@@ -390,19 +393,19 @@ node * parse_identifier(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed identifier
   */
   IDENTIFIER_AS_NODE = allocate(node_interface, 1);
-  IDENTIFIER_AS_NODE->type = (enum node_type_t(*)(void *)) identifier_type;
-  IDENTIFIER_AS_NODE->print = (void(*)(void*)) identifier_print;
-  IDENTIFIER_AS_NODE->destruct = (void(*)(void *)) identifier_destruct;
+  IDENTIFIER_AS_NODE->type = (enum node_type_t(*)(void *))identifier_type;
+  IDENTIFIER_AS_NODE->print = (void (*)(void *))identifier_print;
+  IDENTIFIER_AS_NODE->destruct = (void (*)(void *))identifier_destruct;
   return node_construct(identifier, IDENTIFIER_AS_NODE);
 }
 
-node * parse_integer_literal(struct parser_t * parser)
+node *parse_integer_literal(struct parser_t *parser)
 {
   /* declarations */
-  char * current_token_value;
+  char *current_token_value;
   int value;
-  integer_node * integer;
-  node_interface * INTEGER_AS_NODE;
+  integer_node *integer;
+  node_interface *INTEGER_AS_NODE;
 
   /* Convert string value to integer with sscanf */
   current_token_value = parser->current_token->value;
@@ -416,19 +419,19 @@ node * parse_integer_literal(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed integer
   */
   INTEGER_AS_NODE = allocate(node_interface, 1);
-  INTEGER_AS_NODE->type = (enum node_type_t(*)(void *)) integer_type;
-  INTEGER_AS_NODE->print = (void(*)(void*)) integer_print;
-  INTEGER_AS_NODE->destruct = (void(*)(void *)) integer_destruct;
+  INTEGER_AS_NODE->type = (enum node_type_t(*)(void *))integer_type;
+  INTEGER_AS_NODE->print = (void (*)(void *))integer_print;
+  INTEGER_AS_NODE->destruct = (void (*)(void *))integer_destruct;
   return node_construct(integer, INTEGER_AS_NODE);
 }
 
-node * parse_float_literal(struct parser_t * parser)
+node *parse_float_literal(struct parser_t *parser)
 {
   /* declarations */
-  char * current_token_value;
+  char *current_token_value;
   float value;
-  float_node * float_;
-  node_interface * FLOAT_AS_NODE;
+  float_node *float_;
+  node_interface *FLOAT_AS_NODE;
 
   /* Use sscanf to convert parsed string to float value */
   current_token_value = parser->current_token->value;
@@ -440,19 +443,19 @@ node * parse_float_literal(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed float
   */
   FLOAT_AS_NODE = allocate(node_interface, 1);
-  FLOAT_AS_NODE->type = (enum node_type_t(*)(void *)) float_type;
-  FLOAT_AS_NODE->print = (void(*)(void*)) float_print;
-  FLOAT_AS_NODE->destruct = (void(*)(void *)) float_destruct;
+  FLOAT_AS_NODE->type = (enum node_type_t(*)(void *))float_type;
+  FLOAT_AS_NODE->print = (void (*)(void *))float_print;
+  FLOAT_AS_NODE->destruct = (void (*)(void *))float_destruct;
   return node_construct(float_, FLOAT_AS_NODE);
 }
 
-node * parse_double_literal(struct parser_t * parser)
+node *parse_double_literal(struct parser_t *parser)
 {
   /* declarations */
-  char * current_token_value;
+  char *current_token_value;
   double value;
-  double_node * double_;
-  node_interface * DOUBLE_AS_NODE;
+  double_node *double_;
+  node_interface *DOUBLE_AS_NODE;
 
   /* Use sscanf to convert parsed string to double value
      Unlike printf, %f does not promote to double in sscanf. Hence %lf
@@ -466,18 +469,18 @@ node * parse_double_literal(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed double
   */
   DOUBLE_AS_NODE = allocate(node_interface, 1);
-  DOUBLE_AS_NODE->type = (enum node_type_t(*)(void *)) double_type;
-  DOUBLE_AS_NODE->print = (void(*)(void*)) double_print;
-  DOUBLE_AS_NODE->destruct = (void(*)(void *)) double_destruct;
+  DOUBLE_AS_NODE->type = (enum node_type_t(*)(void *))double_type;
+  DOUBLE_AS_NODE->print = (void (*)(void *))double_print;
+  DOUBLE_AS_NODE->destruct = (void (*)(void *))double_destruct;
   return node_construct(double_, DOUBLE_AS_NODE);
 }
 
-node * parse_string(struct parser_t * parser)
+node *parse_string(struct parser_t *parser)
 {
   /* declarations */
-  char * current_token_value;
-  string_node * string;
-  node_interface * STRING_AS_NODE;
+  char *current_token_value;
+  string_node *string;
+  node_interface *STRING_AS_NODE;
 
   /* Pass current_token->value to string construct and build a string node */
   current_token_value = parser->current_token->value;
@@ -488,17 +491,17 @@ node * parse_string(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed string literal
   */
   STRING_AS_NODE = allocate(node_interface, 1);
-  STRING_AS_NODE->type = (enum node_type_t(*)(void *)) string_type;
-  STRING_AS_NODE->print = (void(*)(void*)) string_print;
-  STRING_AS_NODE->destruct = (void(*)(void *)) string_destruct;
+  STRING_AS_NODE->type = (enum node_type_t(*)(void *))string_type;
+  STRING_AS_NODE->print = (void (*)(void *))string_print;
+  STRING_AS_NODE->destruct = (void (*)(void *))string_destruct;
   return node_construct(string, STRING_AS_NODE);
 }
 
-node * parse_prefix_expression(struct parser_t * parser)
+node *parse_prefix_expression(struct parser_t *parser)
 {
   /* declarations */
-  prefix_expression_node * expression;
-  node_interface * PREFIX_EXPRESSION_AS_NODE;
+  prefix_expression_node *expression;
+  node_interface *PREFIX_EXPRESSION_AS_NODE;
 
   /* construct a prefix expression */
   expression = prefix_expression_construct(parser->current_token->value);
@@ -514,18 +517,18 @@ node * parse_prefix_expression(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed prefix expression
   */
   PREFIX_EXPRESSION_AS_NODE = allocate(node_interface, 1);
-  PREFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) prefix_expression_type;
-  PREFIX_EXPRESSION_AS_NODE->print = (void(*)(void*)) prefix_expression_print;
-  PREFIX_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) prefix_expression_destruct;
+  PREFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *))prefix_expression_type;
+  PREFIX_EXPRESSION_AS_NODE->print = (void (*)(void *))prefix_expression_print;
+  PREFIX_EXPRESSION_AS_NODE->destruct = (void (*)(void *))prefix_expression_destruct;
   return node_construct(expression, PREFIX_EXPRESSION_AS_NODE);
 }
 
-node * parse_infix_expression(struct parser_t * parser, node * left)
+node *parse_infix_expression(struct parser_t *parser, node *left)
 {
   /* declarations */
-  infix_expression_node * expression;
+  infix_expression_node *expression;
   enum precedence_t precedence;
-  node_interface * INFIX_EXPRESSION_AS_NODE;
+  node_interface *INFIX_EXPRESSION_AS_NODE;
 
   /* When parsing an infix operator, the expression to the right of the operator
      if passed as argument (this is what left represents). Construct a new
@@ -548,17 +551,17 @@ node * parse_infix_expression(struct parser_t * parser, node * left)
      we're constructing a node pointer and wrapping the parsed infix expression
   */
   INFIX_EXPRESSION_AS_NODE = allocate(node_interface, 1);
-  INFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) infix_expression_type;
-  INFIX_EXPRESSION_AS_NODE->print = (void(*)(void*)) infix_expression_print;
-  INFIX_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) infix_expression_destruct;
+  INFIX_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *))infix_expression_type;
+  INFIX_EXPRESSION_AS_NODE->print = (void (*)(void *))infix_expression_print;
+  INFIX_EXPRESSION_AS_NODE->destruct = (void (*)(void *))infix_expression_destruct;
   return node_construct(expression, INFIX_EXPRESSION_AS_NODE);
 }
 
-node * parse_boolean(struct parser_t * parser)
+node *parse_boolean(struct parser_t *parser)
 {
   /* declarations */
-  bool_node * boolean;
-  node_interface * BOOLEAN_AS_NODE;
+  bool_node *boolean;
+  node_interface *BOOLEAN_AS_NODE;
 
   /* construct boolean and set it to true if current token is TOKEN_TRUE */
   boolean = bool_construct(current_token_is(parser, TOKEN_TRUE));
@@ -568,18 +571,18 @@ node * parse_boolean(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed boolean
   */
   BOOLEAN_AS_NODE = allocate(node_interface, 1);
-  BOOLEAN_AS_NODE->type = (enum node_type_t(*)(void *)) bool_type;
-  BOOLEAN_AS_NODE->print = (void(*)(void*)) bool_print;
-  BOOLEAN_AS_NODE->destruct = (void(*)(void *)) bool_destruct;
+  BOOLEAN_AS_NODE->type = (enum node_type_t(*)(void *))bool_type;
+  BOOLEAN_AS_NODE->print = (void (*)(void *))bool_print;
+  BOOLEAN_AS_NODE->destruct = (void (*)(void *))bool_destruct;
 
   return node_construct(boolean, BOOLEAN_AS_NODE);
 }
 
-node * parse_grouped_expression(struct parser_t * parser)
+node *parse_grouped_expression(struct parser_t *parser)
 {
   /* declarations */
-  node * expression;
-  
+  node *expression;
+
   /* expressions are grouped with '('. Get past this and start parsing */
   next_token(parser);
 
@@ -593,11 +596,11 @@ node * parse_grouped_expression(struct parser_t * parser)
   return expression;
 }
 
-node * parse_if_expression(struct parser_t * parser)
+node *parse_if_expression(struct parser_t *parser)
 {
   /* declarations */
-  if_expression_node * if_expression;
-  node_interface * IF_EXPRESSION_AS_NODE;
+  if_expression_node *if_expression;
+  node_interface *IF_EXPRESSION_AS_NODE;
 
   if_expression = if_expression_construct();
 
@@ -648,18 +651,18 @@ node * parse_if_expression(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed if expression
   */
   IF_EXPRESSION_AS_NODE = allocate(node_interface, 1);
-  IF_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *)) if_expression_type;
-  IF_EXPRESSION_AS_NODE->print = (void(*)(void*)) if_expression_print;
-  IF_EXPRESSION_AS_NODE->destruct = (void(*)(void *)) if_expression_destruct;
+  IF_EXPRESSION_AS_NODE->type = (enum node_type_t(*)(void *))if_expression_type;
+  IF_EXPRESSION_AS_NODE->print = (void (*)(void *))if_expression_print;
+  IF_EXPRESSION_AS_NODE->destruct = (void (*)(void *))if_expression_destruct;
   return node_construct(if_expression, IF_EXPRESSION_AS_NODE);
 }
 
-block_node * parse_block_statement(struct parser_t * parser)
+block_node *parse_block_statement(struct parser_t *parser)
 {
   /* declarations */
-  block_node * block;
-  node * statement;
-  
+  block_node *block;
+  node *statement;
+
   /* initialize block_node to be returned */
   block = block_construct();
 
@@ -671,7 +674,8 @@ block_node * parse_block_statement(struct parser_t * parser)
   {
     /* parse_statement(...) already exists and does a great job. Lets use it. */
     statement = parse_statement(parser);
-    if (statement) {
+    if (statement)
+    {
       list_rpush(block->statements, list_node_new(statement));
     }
     /* get past semi_colon */
@@ -681,15 +685,15 @@ block_node * parse_block_statement(struct parser_t * parser)
   return block;
 }
 
-node * parse_function(struct parser_t * parser)
+node *parse_function(struct parser_t *parser)
 {
   /* declarations */
-  function_node * function;
-  node_interface * FUNCTION_AS_NODE;
+  function_node *function;
+  node_interface *FUNCTION_AS_NODE;
 
   /* initialize function node */
   function = function_construct();
-  
+
   /* we're at the keyword 'function' (TOKEN_FUNCTION). Now we expect to see '(' */
   if (!expect_peek(parser, TOKEN_LEFT_PARANTHESIS))
     return NULL;
@@ -698,7 +702,8 @@ node * parse_function(struct parser_t * parser)
   parse_function_parameters(parser, function->parameters);
 
   /* We're done parsing our list of function parameters. Now we expect to see '{' */
-  if (!expect_peek(parser, TOKEN_LEFT_CURLY)) {
+  if (!expect_peek(parser, TOKEN_LEFT_CURLY))
+  {
     return NULL;
   }
 
@@ -710,19 +715,20 @@ node * parse_function(struct parser_t * parser)
      we're constructing a node pointer and wrapping the parsed function
   */
   FUNCTION_AS_NODE = allocate(node_interface, 1);
-  FUNCTION_AS_NODE->type = (enum node_type_t(*)(void *)) function_type;
-  FUNCTION_AS_NODE->print = (void(*)(void*)) function_print;
-  FUNCTION_AS_NODE->destruct = (void(*)(void *)) function_destruct;
+  FUNCTION_AS_NODE->type = (enum node_type_t(*)(void *))function_type;
+  FUNCTION_AS_NODE->print = (void (*)(void *))function_print;
+  FUNCTION_AS_NODE->destruct = (void (*)(void *))function_destruct;
   return node_construct(function, FUNCTION_AS_NODE);
 }
 
-void parse_function_parameters(struct parser_t * parser, list_t * parameters) 
+void parse_function_parameters(struct parser_t *parser, list_t *parameters)
 {
   /* declarations */
-  identifier_node * parameter;
+  identifier_node *parameter;
 
   /* if the next token is ')', this function has no parameters. Move up and return */
-  if (parser->peek_token && peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS)) {
+  if (parser->peek_token && peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS))
+  {
     next_token(parser);
     return;
   }
@@ -735,13 +741,14 @@ void parse_function_parameters(struct parser_t * parser, list_t * parameters)
   list_rpush(parameters, list_node_new(parameter));
 
   /* if the next token is a ',' there are more identifiers (parameters) to parse. LOOP! */
-  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA)) {
+  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA))
+  {
     /* get past current identifier*/
     next_token(parser);
-    
+
     /* get past the comma ',' */
     next_token(parser);
-    
+
     /* parse next identifier */
     parameter = identifier_construct(parser->current_token->value);
     list_rpush(parameters, list_node_new(parameter));
@@ -752,7 +759,7 @@ void parse_function_parameters(struct parser_t * parser, list_t * parameters)
     return;
 }
 
-node * parse_call(struct parser_t * parser, node * function)
+node *parse_call(struct parser_t *parser, node *function)
 {
   /* parsing a call is actually an infix expression - <function_name> ( <arguments> ...
      Here, the open paranthesis '(' is the infix operator and the argument
@@ -760,8 +767,8 @@ node * parse_call(struct parser_t * parser, node * function)
   */
 
   /* declarations */
-  call_node * call;
-  node_interface * CALL_AS_NODE;
+  call_node *call;
+  node_interface *CALL_AS_NODE;
 
   /* Construct a call_node and save the left expression as the function */
   call = call_construct();
@@ -777,18 +784,19 @@ node * parse_call(struct parser_t * parser, node * function)
      we're constructing a node pointer and wrapping the parsed function call
   */
   CALL_AS_NODE = allocate(node_interface, 1);
-  CALL_AS_NODE->type = (enum node_type_t(*)(void *)) call_type;
-  CALL_AS_NODE->print = (void(*)(void*)) call_print;
-  CALL_AS_NODE->destruct = (void(*)(void *)) call_destruct;
+  CALL_AS_NODE->type = (enum node_type_t(*)(void *))call_type;
+  CALL_AS_NODE->print = (void (*)(void *))call_print;
+  CALL_AS_NODE->destruct = (void (*)(void *))call_destruct;
   return node_construct(call, CALL_AS_NODE);
 }
 
-void parse_call_arguments(struct parser_t * parser, list_t * arguments)
+void parse_call_arguments(struct parser_t *parser, list_t *arguments)
 {
   /* we're here because there was a function and we need to parse the arguments
      if the next token is the closed paranthesis ')' then the call takes no arguments
   */
-  if (peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS)) {
+  if (peek_token_is(parser, TOKEN_RIGHT_PARANTHESIS))
+  {
     next_token(parser);
     return;
   }
@@ -800,7 +808,8 @@ void parse_call_arguments(struct parser_t * parser, list_t * arguments)
   list_rpush(arguments, list_node_new(parse_expression(parser, LOWEST)));
 
   /* check if there's a comma. If so, there are more arguments to parse */
-  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA)) {
+  while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA))
+  {
 
     /* get past current argument */
     next_token(parser);

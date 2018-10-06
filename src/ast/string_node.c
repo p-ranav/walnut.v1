@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-string_node * string_construct(char * value)
+string_node *string_construct(char *value)
 {
   /* declarations */
   int value_length;
-  string_node * object;
+  string_node *object;
 
   object = allocate(string_node, 1);
   object->type = STRING;
@@ -21,18 +21,18 @@ string_node * string_construct(char * value)
   return object;
 }
 
-enum node_type_t string_type(string_node * object)
+enum node_type_t string_type(string_node *object)
 {
   return object->type;
 }
 
-void string_print(string_node * object)
+void string_print(string_node *object)
 {
   /* print string with double quotes */
   printf("\"%s\"", object->value);
 }
 
-void string_destruct(string_node * object)
+void string_destruct(string_node *object)
 {
   /* free up character array in object */
   free(object->value);

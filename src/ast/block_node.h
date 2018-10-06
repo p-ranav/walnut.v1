@@ -20,21 +20,21 @@
 */
 typedef struct
 {
-  enum node_type_t type;    /* type = BLOCK */
-  list_t * statements;      /* list of statements in block of code {...} */
+  enum node_type_t type; /* type = BLOCK */
+  list_t *statements;    /* list of statements in block of code {...} */
 } block_node;
 
 /* Construct a block node.
    Makes sure that block_node->statements is not NULL by calling list_new() */
-block_node * block_construct();
+block_node *block_construct();
 
 /* Overriding method that returns the BLOCK node_type value */
-enum node_type_t block_type(block_node * object);
+enum node_type_t block_type(block_node *object);
 
 /* Overriding method that prints all statements in a block_node */
-void block_print(block_node * object);
+void block_print(block_node *object);
 
 /* Clean up block node - Free each statement in block_node->statements */
-void block_destruct(block_node * object);
+void block_destruct(block_node *object);
 
 #endif

@@ -22,17 +22,17 @@ typedef struct
 /* Construct a boolean node.
    sets bool_node->type to BOOLEAN and 
    sets bool_node->value to value */
-bool_node * bool_construct(int value);
+bool_node *bool_construct(int value);
 
 /* Overriding method that returns the BOOLEAN node_type value */
-enum node_type_t bool_type(bool_node * object);
+enum node_type_t bool_type(bool_node *object);
 
 /* Overriding method that prints "true" if bool_node->value > 0
    else, prints "false" */
-void bool_print(bool_node * object);
+void bool_print(bool_node *object);
 
 /* Free bool_node
    This is simple because a bool_node doesn't contain pointers */
-void bool_destruct(bool_node * object);
+void bool_destruct(bool_node *object);
 
 #endif

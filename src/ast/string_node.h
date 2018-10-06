@@ -10,20 +10,20 @@
 */
 typedef struct
 {
-  enum node_type_t type;  /* type = STRING */
-  char * value;           /* value = buffer of multi-byte characters */
+  enum node_type_t type; /* type = STRING */
+  char *value;           /* value = buffer of multi-byte characters */
 } string_node;
 
 /* string copy input argument value */
-string_node * string_construct(char * value);
+string_node *string_construct(char *value);
 
 /* return 'STRING' node type */
-enum node_type_t string_type(string_node * object);
+enum node_type_t string_type(string_node *object);
 
 /* print string value with double quotes */
-void string_print(string_node * object);
+void string_print(string_node *object);
 
 /* clean up string->value char array */
-void string_destruct(string_node * object);
+void string_destruct(string_node *object);
 
 #endif

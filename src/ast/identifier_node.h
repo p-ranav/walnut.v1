@@ -13,23 +13,23 @@
    var 信息_01 = "secret"; // 信息_01 is the identifier here
    
 */
-typedef struct 
+typedef struct
 {
   enum node_type_t type; /* type = IDENTIFIER */
-  char * value;          /* value = array of multi-byte characters */
+  char *value;           /* value = array of multi-byte characters */
 } identifier_node;
 
 /* String copy the input sequence of multi-byte characters and construct
    an identifier node */
-identifier_node * identifier_construct(char * name);
+identifier_node *identifier_construct(char *name);
 
 /* Returns 'IDENTIFIER' node_type assuming object was constructed correctly */
-enum node_type_t identifier_type(identifier_node * object);
+enum node_type_t identifier_type(identifier_node *object);
 
 /* Print the identifier name, e.g., a or 信息_01 */
-void identifier_print(identifier_node * object);
+void identifier_print(identifier_node *object);
 
 /* Clean up identifier name - free object->value */
-void identifier_destruct(identifier_node * object);
+void identifier_destruct(identifier_node *object);
 
 #endif

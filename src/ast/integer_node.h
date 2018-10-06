@@ -13,20 +13,20 @@
 */
 typedef struct
 {
-  enum node_type_t type;    /* type = INTEGER */
-  int value;                /* value = int32 value */
+  enum node_type_t type; /* type = INTEGER */
+  int value;             /* value = int32 value */
 } integer_node;
 
 /* construct an integer_node and assign node->value to input value */
-integer_node * integer_construct(int value);
+integer_node *integer_construct(int value);
 
 /* returns the type 'INTEGER' */
-enum node_type_t integer_type(integer_node * object);
+enum node_type_t integer_type(integer_node *object);
 
 /* prints the integer value with printf */
-void integer_print(integer_node * object);
+void integer_print(integer_node *object);
 
 /* Simply free integer_node object pointer */
-void integer_destruct(integer_node * object);
+void integer_destruct(integer_node *object);
 
 #endif

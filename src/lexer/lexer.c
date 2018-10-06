@@ -293,7 +293,8 @@ void parse_comments(long buffer_size, char *buffer, const char *file_path, unsig
       }
     }
   }
-  else {
+  else
+  {
     /* create a "punctuation" token */
     struct token_t *punctuation = allocate(struct token_t, 1);
     punctuation->file_path = file_path;
@@ -432,7 +433,7 @@ void parse_whitespace(long buffer_size, char *buffer, unsigned int *cursor,
                       long *index, char *current_character)
 {
   /* declarations */
-  char * next;
+  char *next;
   long next_width;
 
   increment_cursor; /* increment cursor since current_character = whitespace */
@@ -818,10 +819,12 @@ void lexer_post_process(list_t *tokens)
     /* handle numbers */
     if (current_token->type == TOKEN_NUMBER)
     {
-      if (strstr(current_token->value, ".") != NULL && strstr(current_token->value, "f") != NULL) {
+      if (strstr(current_token->value, ".") != NULL && strstr(current_token->value, "f") != NULL)
+      {
         current_token->type = TOKEN_FLOAT;
       }
-      else if (strstr(current_token->value, ".") != NULL) {
+      else if (strstr(current_token->value, ".") != NULL)
+      {
         current_token->type = TOKEN_DOUBLE;
       }
       else
