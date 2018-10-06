@@ -431,9 +431,8 @@ node * parse_prefix_expression(struct parser_t * parser)
   prefix_expression_node * expression;
   node_interface * PREFIX_EXPRESSION_AS_NODE;
 
-  expression = prefix_expression_construct();
+  expression = prefix_expression_construct(parser->current_token->value);
   expression->type = PREFIX_EXPRESSION;
-  expression->operator = parser->current_token->value;
 
   next_token(parser);
 
@@ -453,9 +452,8 @@ node * parse_infix_expression(struct parser_t * parser, node * left)
   enum precedence_t precedence;
   node_interface * INFIX_EXPRESSION_AS_NODE;
 
-  expression = infix_expression_construct();
+  expression = infix_expression_construct(parser->current_token->value);
   expression->type = INFIX_EXPRESSION;
-  expression->operator = parser->current_token->value;
   expression->left = left;
   precedence = current_precedence(parser);
   next_token(parser);
