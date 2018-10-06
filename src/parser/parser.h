@@ -83,7 +83,11 @@ enum precedence_t
 };
 
 /* pratt parse expression
-   TODO: detailed description */
+   get the prefix parser function for current token (pratt_table lookup)
+   call the prefix parse function if one exists, the result is the 'left'
+   of our expression. Check if the current operator is an infix operator. 
+   If so, an infix parse function must exist. Find it in the pratt_table
+   and updated left by calling this parse function. */
 node *parse_expression(struct parser_t *parser, enum precedence_t precedence);
 
 /* check the precedence of the peek_token */
