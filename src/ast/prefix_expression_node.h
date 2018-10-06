@@ -19,7 +19,7 @@ typedef struct
   node * right;             /* expression to the right of the prefix operator */
 } prefix_expression_node;
 
-/* Construct prefix expression node. Initialize right expression */
+/* Construct prefix expression node. Initialize right expression and save operator */
 prefix_expression_node * prefix_expression_construct(char * operator);
 
 /* return prefix expression node type 'PREFIX_EXPRESSION' */
