@@ -4,7 +4,10 @@
 
 bool_node * bool_construct(int value)
 {
-  bool_node * object = allocate(bool_node, 1);
+  /* declarations */
+  bool_node * object;
+
+  object = allocate(bool_node, 1);
   object->type = BOOLEAN;
   object->value = value;
   return object;
@@ -17,6 +20,7 @@ enum node_type_t bool_type(bool_node * object)
 
 void bool_print(bool_node * object)
 {
+  /* Print "true" if value > 0, "false" otherwise */
   if (object->value)
     printf("true");
   else
@@ -25,5 +29,6 @@ void bool_print(bool_node * object)
 
 void bool_destruct(bool_node * object)
 {
+  /* simply free bool_node pointer */
   free(object);
 }

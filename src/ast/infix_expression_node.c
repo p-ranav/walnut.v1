@@ -37,8 +37,15 @@ void infix_expression_print(infix_expression_node * object)
 
 void infix_expression_destruct(infix_expression_node * object)
 {
+  /* free up operator string */
   free(object->operator);
+
+  /* free up expression to the left of infix operator */
   node_destruct(object->left);
+
+  /* free up expression to the right of infix operator */
   node_destruct(object->right);
+
+  /* free up infix_expression_node pointer */
   free(object);
 }

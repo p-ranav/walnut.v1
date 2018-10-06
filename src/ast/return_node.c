@@ -4,7 +4,10 @@
 
 return_node * return_node_construct()
 {
-  return_node * object = allocate(return_node, 1);
+  /* declarations */
+  return_node * object;
+
+  object = allocate(return_node, 1);
   object->expression = NULL;
   object->type = RETURN_STATEMENT;
   return object;
@@ -23,6 +26,9 @@ void return_node_print(return_node * object)
 
 void return_node_destruct(return_node * object)
 {
+  /* clean up return expression */
   node_destruct(object->expression);
+
+  /* finally, free up return_node pointer */
   free(object);
 }

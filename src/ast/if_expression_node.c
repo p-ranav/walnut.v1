@@ -4,11 +4,14 @@
 
 if_expression_node * if_expression_construct()
 {
-  if_expression_node * object = allocate(if_expression_node, 1);
+  /* declarations */
+  if_expression_node * object;
+
+  object = allocate(if_expression_node, 1);
   object->type = IF_EXPRESSION;
-  object->condition = NULL;
-  object->consequence = NULL;
-  object->alternative = NULL;
+  object->condition = NULL;   /* lets hope this points to an expression */
+  object->consequence = NULL; /* lets hope this points to a block node eventually */
+  object->alternative = NULL; /* this can be NULL. If there's an else block, this should point to it */
   return object;
 }
 
@@ -21,6 +24,8 @@ void if_expression_print(if_expression_node * object)
 {
   printf("if ");
   node_print(object->condition);
+
+  /* maybe the curly braces should be part of block_print? */
   printf(" { ");
   block_print(object->consequence);
   if (object->alternative)
@@ -33,9 +38,16 @@ void if_expression_print(if_expression_node * object)
 
 void if_expression_destruct(if_expression_node * object)
 {
+  /* free up condition expression */
   node_destruct(object->condition);
+
+  /* clean up if consequence block_node */
   block_destruct(object->consequence);
+
+  /* if an alternative is provided, i.e., the else block, then free it up */
   if (object->alternative)
     block_destruct(object->alternative);
+
+  /* lastly, free up the if_expression_node pointer */
   free(object);
 }

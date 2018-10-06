@@ -4,7 +4,10 @@
 
 call_node * call_construct()
 {
-  call_node * object = allocate(call_node, 1);
+  /* declarations */
+  call_node * object;
+
+  object = allocate(call_node, 1);
   object->type = CALL_EXPRESSION;
   object->arguments = list_new();
   object->function = NULL;
@@ -63,7 +66,12 @@ void call_destruct(call_node * object)
   }
   deallocate(it);
 
+  /* free function node (identifier or expression) */
   node_destruct(object->function);
+
+  /* clean up arguments list */
   list_destroy(object->arguments);
+
+  /* free call_node pointer */
   free(object);
 }

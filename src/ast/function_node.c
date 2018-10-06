@@ -4,10 +4,13 @@
 
 function_node * function_construct()
 {
-  function_node * object = allocate(function_node, 1);
+  /* declarations */
+  function_node * object;
+
+  object = allocate(function_node, 1);
   object->type = FUNCTION;
-  object->parameters = list_new();
-  object->body = NULL;
+  object->parameters = list_new(); /* This might be an empty list */
+  object->body = NULL; /* Lets hope this points to something eventually */
   return object;
 }
 
@@ -40,6 +43,7 @@ void function_print(function_node * object)
   }
   deallocate(it);
 
+  /* maybe the curly braces should be part of block_print? */
   printf(") { ");
 
   block_print(object->body);
@@ -65,7 +69,12 @@ void function_destruct(function_node * object)
   }
   deallocate(it);
 
+  /* destroy list of parameters (each of which is an identifier) */
   list_destroy(object->parameters);
+
+  /* clean up function body */
   block_destruct(object->body);
+
+  /* lastly, free up function_node pointer */
   free(object);
 }

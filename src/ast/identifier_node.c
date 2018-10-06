@@ -10,10 +10,13 @@ identifier_node * identifier_construct(char * name)
 
   identifier_node * object = allocate(identifier_node, 1);
   object->type = IDENTIFIER;
+
+  /* string copy from input argument to identifier->name */
   name_length = strlen(name);
   object->value = allocate(char, name_length + 1);
   strcpy(object->value, name);
-  object->value[name_length] = '\0';
+  object->value[name_length] = '\0'; /* null terminate */
+
   return object;
 }
 
@@ -29,6 +32,9 @@ void identifier_print(identifier_node * object)
 
 void identifier_destruct(identifier_node * object)
 {
+  /* free character array - identifier name */
   free(object->value);
+
+  /* free up identifier_node pointer allocated in identifier_construct(...) */
   free(object);
 }

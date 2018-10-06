@@ -36,7 +36,12 @@ void prefix_expression_print(prefix_expression_node * object)
 
 void prefix_expression_destruct(prefix_expression_node * object)
 {
+  /* free up operator character array */
   free(object->operator);
+
+  /* free up expression to the right of the operator */
   node_destruct(object->right);
+
+  /* lastly, free up prefix_expression_node pointer */
   free(object);
 }

@@ -4,7 +4,10 @@
 
 float_node * float_construct(float value)
 {
-  float_node * object = allocate(float_node, 1);
+  /* declarations */
+  float_node * object;
+
+  object = allocate(float_node, 1);
   object->type = FLOAT;
   object->value = value;
   return object;
@@ -22,5 +25,6 @@ void float_print(float_node * object)
 
 void float_destruct(float_node * object)
 {
+  /* simply free up float_node pointer */
   free(object);
 }
