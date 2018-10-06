@@ -28,7 +28,6 @@ struct parser_t * parse(list_t * tokens)
   /* initialize current_token and peek_token */
   parser->current_token = NULL;
   parser->peek_token = NULL;
-  parser->current_token_index = 0;
 
   /* make sure current_token and peek_token are initialized */
   next_token(parser);

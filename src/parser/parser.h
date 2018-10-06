@@ -9,13 +9,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* This is the main parser struct. A collection of fields/properties that I need
+   to get Pratt parsing working. This parser receives a list of tokens from 
+   the lexer and tries to generate a list of 'statements'. These statements are 
+   the first children of the root node of the abstract syntax tree. The lexer
+   tokens can be iterated using tokens_iterator, an iterator that is initialized
+   in parse(...). current_token and peek_token keep track of the current and nex
+   tokens in the iteration process. 
+
+*/
 struct parser_t 
 {
   list_t * statements;                /* This is the parser result */
   list_iterator_t * tokens_iterator;  /* iterator for lexer tokens */
   struct token_t * current_token;     /* current lexer token under examination */
   struct token_t * peek_token;        /* the token after current_token */
-  size_t current_token_index;         /* current index into lexer->tokens */
 };
 
 /* Entry point for the parser. 
