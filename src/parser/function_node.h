@@ -8,10 +8,10 @@
 
 /* function_node is an AST node type to represent a function
    declaration. Function declarations start with the keyword
-   function (or the symbol λ) followed by the open paranthesis '('
-   then a list of parameters (each of which is an identifier)
+   'function' (or the symbol 'λ') followed by the open paranthesis '('
+   then a comma-separated list of parameters (each of which is an identifier)
    and finally a closing paranthesis ')'. After this, we have
-   a block_node (see block_node.h), a list of statements that
+   a block_node (see block_node.h) - a list of statements that
    are semi_colon delimited. For example:
 
    var sum = function(a, b) { return a + b; }
