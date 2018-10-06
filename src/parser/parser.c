@@ -45,9 +45,6 @@ struct parser_t * parse(list_t * tokens)
     next_token(parser);
   }
 
-  /* print statements */
-  parser_print(parser);
-
   return parser;
 }
 

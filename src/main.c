@@ -50,6 +50,9 @@ int main(int argc, char *argv[])
     /* Parse program */
     parser = parse(tokens);
 
+    /* print statements */
+    parser_print(parser);
+
     /* Delete parsed AST nodes */
     parser_destruct(parser);
 

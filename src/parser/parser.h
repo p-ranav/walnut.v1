@@ -26,15 +26,16 @@ struct parser_t
   struct token_t * peek_token;        /* the token after current_token */
 };
 
-/* Entry point for the parser. 
-   This function takes lexer tokens as inputs
-   and returns a list of 'statements', 
+/* Entry point for the parser. We call this right after lexical analysis.
+   This function takes lexer tokens as inputs and returns a list of 'statements', 
    each of which is an AST node. */
 struct parser_t * parse(list_t * tokens);
 
+/* Clean up the parser. Free up every single parsed statement, including
+   sub-expressions and low-level AST nodes. */
 void parser_destruct(struct parser_t * parser);
 
-/* Print nodes in AST */
+/* Print nodes in AST as statements */
 void parser_print(struct parser_t * parser);
 
 /* Helper functions for parsing */
@@ -43,7 +44,14 @@ int current_token_is(struct parser_t * parser, token value);
 int peek_token_is(struct parser_t * parser, token value);
 int expect_peek(struct parser_t * parser, token value);
 
+/* Main switch case where we call either parse_variable_declaration, 
+   parse_return_statement or parse_expression_statement depending
+   on the context */
 node * parse_statement(struct parser_t * parser);
+
+/* Parse variable declaration statements, e.g., var x = 5;
+   Build a var_node and return a node wrapper to this pointer
+*/
 node * parse_variable_declaration(struct parser_t * parser);
 node * parse_return_statement(struct parser_t * parser);
 
