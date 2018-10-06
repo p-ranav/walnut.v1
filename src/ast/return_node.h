@@ -12,8 +12,8 @@
 */
 typedef struct
 {
-  enum node_type_t type;
-  node * expression;
+  enum node_type_t type;      /* type = RETURN_STATEMENT */
+  node * expression;          /* expression being returned */
 } return_node;
 
 /* Construct return node - initialize return expression */
