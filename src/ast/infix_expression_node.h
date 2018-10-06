@@ -22,7 +22,7 @@ typedef struct
 } infix_expression_node;
 
 /* initialize left and right of infix expression. String copy the operator string */
-infix_expression_node * infix_expression_construct();
+infix_expression_node * infix_expression_construct(char * operator);
 
 /* return the type 'INFIX_EXPRESSION' */
 enum node_type_t infix_expression_type(infix_expression_node * object);

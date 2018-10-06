@@ -1,11 +1,23 @@
 #include <prefix_expression_node.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-prefix_expression_node * prefix_expression_construct()
+prefix_expression_node * prefix_expression_construct(char * operator)
 {
-  prefix_expression_node * object = allocate(prefix_expression_node, 1);
+  /* declarations */
+  int operator_length;
+  prefix_expression_node * object;
+
+  object = allocate(prefix_expression_node, 1);
   object->type = PREFIX_EXPRESSION;
+
+  /* save prefix operator */
+  operator_length = strlen(operator);
+  object->operator = allocate(char, operator_length + 1);
+  strcpy(object->operator, operator);
+  object->operator[operator_length] = '\0';
+
   return object;
 }
 
@@ -24,6 +36,7 @@ void prefix_expression_print(prefix_expression_node * object)
 
 void prefix_expression_destruct(prefix_expression_node * object)
 {
+  free(object->operator);
   node_destruct(object->right);
   free(object);
 }
