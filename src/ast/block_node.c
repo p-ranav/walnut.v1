@@ -4,7 +4,10 @@
 
 block_node * block_construct()
 {
-  block_node * object = allocate(block_node, 1);
+  /* declarations */
+  block_node * object;
+
+  object = allocate(block_node, 1);
   object->type = BLOCK;
   object->statements = list_new();
   return object;
@@ -49,6 +52,10 @@ void block_destruct(block_node * object)
     node_destruct(block_node);
   }
   deallocate(it);
+
+  /* destroy statements list */
   list_destroy(object->statements);
+
+  /* finally, free block_node pointer */
   free(object);
 }
