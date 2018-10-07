@@ -8,6 +8,7 @@
 #include <test_lexer_token_assignment.h>
 #include <test_lexer_token_bitwise.h>
 #include <test_lexer_token_keyword.h>
+#include <test_lexer_token_string.h>
 
 TEST_MAIN
 {
@@ -97,6 +98,10 @@ TEST_MAIN
   TEST_RUN(lexer_token_keyword_pass);
   TEST_RUN(lexer_token_keyword_from);
   TEST_RUN(lexer_token_keyword_import);
+
+  /* String literal */
+  TEST_RUN(lexer_token_string_literal_ascii);
+  TEST_RUN(lexer_token_string_literal_unicode);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();

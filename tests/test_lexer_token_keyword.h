@@ -4,6 +4,12 @@
 #include <lexer.h>
 #include <macros.h>
 #include <list.h>
+#include <utf8.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <locale.h>
 
 TEST_CASE(lexer_token_keyword_var)
 {
@@ -323,6 +329,9 @@ TEST_CASE(lexer_token_keyword_lambda)
   size_t i;
   token expected_tokens[2] = { TOKEN_FUNCTION, TOKEN_END_OF_FILE };
   const char * test_label;
+
+  /* set single locale for all purposes */
+  setlocale(LC_ALL, "");
 
   /* Initialization */
   file_path = __FILE__;
