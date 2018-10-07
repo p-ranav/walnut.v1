@@ -58,22 +58,24 @@
     return LOWEST;
 
 /* Tests */
-#define TEST_CASE(test_name) int test_name (int * test_count, int * number_of_successful_tests, int * number_of_successful_assertions)
+#define TEST_CASE(test_name) int test_name (int * test_count, int * number_of_successful_tests, int * assertion_count, int * number_of_successful_assertions)
 #define DECLARE_TEST(test_name) test_label = test_name; (*test_count)++; printf("%s...", test_label);
 #define RETURN_TEST_SUCCESS() { printf(" [OK]\n"); (*number_of_successful_tests) += 1; return 1; }
 
 #define TEST_CHECK(condition) \
+  (*assertion_count)++;\
   if (!(condition)) \
   {\
     printf(" [FAILED]\n"); \
-    printf(" * [CHECK FAILED] %s, line %d: %s\n", __FILE__, __LINE__, #condition);\
+    printf(" * [ASSERTION FAILED] %s, line %d: %s\n", __FILE__, __LINE__, #condition);\
     return 0; \
   }\
   else \
     (*number_of_successful_assertions)++;
 
-#define TEST_LIST \
+#define TEST_MAIN \
   int test_count = 0;\
+  int assertion_count = 0;\
   int number_of_successful_tests = 0;\
   int number_of_successful_assertions = 0;\
   int main(void)
@@ -81,13 +83,13 @@
   if (test_count == 0)\
     printf("--------------------------------------------------------------------------------\n");\
   printf("[TEST %d] ", (test_count + 1)); \
-  test_name(&test_count, &number_of_successful_tests, &number_of_successful_assertions);
+  test_name(&test_count, &number_of_successful_tests, &assertion_count, &number_of_successful_assertions);
 
 #define GENERATE_TEST_REPORT() \
   printf("--------------------------------------------------------------------------------\n");\
-  printf("%d ASSERTIONS ACROSS %d TESTS HAVE PASSED\n", number_of_successful_assertions, test_count);\
-  printf("%d/%d TESTS HAVE PASSED\n", number_of_successful_tests, test_count); \
-  printf("TEST SUCCESS RATE: %.2f%%\n", (double)(number_of_successful_tests / test_count * 100));\
+  printf("%d/%d ASSERTIONS ACROSS %d TEST CASES HAVE PASSED\n", number_of_successful_assertions, assertion_count, test_count);\
+  printf("%d/%d TEST CASES HAVE PASSED\n", number_of_successful_tests, test_count); \
+  printf("TEST SUCCESS RATE: %.2f%%\n", (double)(number_of_successful_tests) / (double)test_count * (double)100.0);\
   printf("--------------------------------------------------------------------------------\n");\
   return 0;
 
