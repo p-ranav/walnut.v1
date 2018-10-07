@@ -9,6 +9,7 @@
 #include <test_lexer_token_bitwise.h>
 #include <test_lexer_token_keyword.h>
 #include <test_lexer_token_string.h>
+#include <test_lexer_token_identifier.h>
 
 TEST_MAIN
 {
@@ -101,7 +102,12 @@ TEST_MAIN
 
   /* String literal */
   TEST_RUN(lexer_token_string_literal_ascii);
-  TEST_RUN(lexer_token_string_literal_unicode);
+  TEST_RUN(lexer_token_string_literal_unicode_chinese);
+
+  /* Identifiers */
+  TEST_RUN(lexer_token_identifier_ascii);
+  TEST_RUN(lexer_token_identifier_unicode_tamil);
+  TEST_RUN(lexer_token_identifier_unicode_smiley);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();
