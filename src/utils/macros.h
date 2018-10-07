@@ -82,7 +82,7 @@
 #define TEST_RUN(test_name) \
   if (test_count == 0)\
     printf("--------------------------------------------------------------------------------\n");\
-  printf("[TEST %d] ", (test_count + 1)); \
+  printf("[TEST %3d] ", (test_count + 1)); \
   test_name(&test_count, &number_of_successful_tests, &assertion_count, &number_of_successful_assertions);
 
 #define GENERATE_TEST_REPORT() \
