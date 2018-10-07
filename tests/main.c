@@ -6,6 +6,8 @@
 #include <test_lexer_token_brackets.h>
 #include <test_lexer_token_arithmetic.h>
 #include <test_lexer_token_assignment.h>
+#include <test_lexer_token_bitwise.h>
+#include <test_lexer_token_keyword.h>
 
 TEST_MAIN
 {
@@ -64,6 +66,37 @@ TEST_MAIN
   TEST_RUN(lexer_token_assignment_multiply_assign);
   TEST_RUN(lexer_token_assignment_divide_assign);
   TEST_RUN(lexer_token_assignment_modulus_assign);
+
+  /* Bitwise operators */
+  TEST_RUN(lexer_token_bitwise_and);
+  TEST_RUN(lexer_token_bitwise_or);
+  TEST_RUN(lexer_token_bitwise_xor);
+  TEST_RUN(lexer_token_bitwise_ones_complement);
+  TEST_RUN(lexer_token_bitwise_left_shift);
+  TEST_RUN(lexer_token_bitwise_right_shift);
+
+  /* Keywords */
+  TEST_RUN(lexer_token_keyword_var);
+  TEST_RUN(lexer_token_keyword_if);
+  TEST_RUN(lexer_token_keyword_else);
+  TEST_RUN(lexer_token_keyword_else_if);
+  TEST_RUN(lexer_token_keyword_while);
+  TEST_RUN(lexer_token_keyword_for);
+  TEST_RUN(lexer_token_keyword_function);
+  TEST_RUN(lexer_token_keyword_lambda);
+  TEST_RUN(lexer_token_keyword_arrow);
+  TEST_RUN(lexer_token_keyword_return);
+  TEST_RUN(lexer_token_keyword_is);
+  TEST_RUN(lexer_token_keyword_in);
+  TEST_RUN(lexer_token_keyword_with);
+  TEST_RUN(lexer_token_keyword_continue);
+  TEST_RUN(lexer_token_keyword_break);
+  TEST_RUN(lexer_token_keyword_try);
+  TEST_RUN(lexer_token_keyword_catch);
+  TEST_RUN(lexer_token_keyword_finally);
+  TEST_RUN(lexer_token_keyword_pass);
+  TEST_RUN(lexer_token_keyword_from);
+  TEST_RUN(lexer_token_keyword_import);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();

@@ -52,7 +52,6 @@
   /* Bitwise Operators */                                   \
   TOKEN(BITWISE_AND, "BITWISE_AND")                         \
   TOKEN(BITWISE_OR, "BITWISE_OR")                           \
-  TOKEN(BITWISE_NOT, "BITWISE_NOT")                         \
   TOKEN(BITWISE_XOR, "BITWISE_XOR")                         \
   TOKEN(BITWISE_ONES_COMPLEMENT, "BITWISE_ONES_COMPLEMENT") \
   TOKEN(BITWISE_LEFT_SHIFT, "BITWISE_LEFT_SHIFT")           \
