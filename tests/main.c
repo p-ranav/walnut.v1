@@ -3,6 +3,7 @@
 #include <test_lexer_token_number.h>
 #include <test_lexer_token_delimiters.h>
 #include <test_lexer_token_comparison.h>
+#include <test_lexer_token_brackets.h>
 
 TEST_MAIN
 {
@@ -38,6 +39,14 @@ TEST_MAIN
   TEST_RUN(lexer_token_comparison_greater_equal);
   TEST_RUN(lexer_token_comparison_lesser);
   TEST_RUN(lexer_token_comparison_lesser_equal);
+
+  /* Brackets, braces and paranthesis */
+  TEST_RUN(lexer_token_brackets_left_paranthesis);
+  TEST_RUN(lexer_token_brackets_left_curly_braces);
+  TEST_RUN(lexer_token_brackets_left_square_brackets);
+  TEST_RUN(lexer_token_brackets_right_paranthesis);
+  TEST_RUN(lexer_token_brackets_right_curly_braces);
+  TEST_RUN(lexer_token_brackets_right_square_brackets);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();
