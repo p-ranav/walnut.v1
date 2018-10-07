@@ -2,6 +2,7 @@
 #include <test_lexer_token_boolean.h>
 #include <test_lexer_token_number.h>
 #include <test_lexer_token_delimiters.h>
+#include <test_lexer_token_comparison.h>
 
 TEST_MAIN
 {
@@ -10,10 +11,10 @@ TEST_MAIN
      that the right tokens are returned by the lexer when 
      encountering specific input character buffers. 
   */
-  /* Test end of file */
+  /* End of file */
   TEST_RUN(lexer_token_eof);
 
-  /* Test boolean */
+  /* Boolean */
   TEST_RUN(lexer_token_boolean_true);
   TEST_RUN(lexer_token_boolean_false);
 
@@ -22,13 +23,21 @@ TEST_MAIN
   TEST_RUN(lexer_token_float);
   TEST_RUN(lexer_token_double);
 
-  /* Test delimiters */
+  /* Delimiters */
   TEST_RUN(lexer_token_dot);
   TEST_RUN(lexer_token_comma);
   TEST_RUN(lexer_token_colon);
   TEST_RUN(lexer_token_semi_colon);
   TEST_RUN(lexer_token_exclamation);
   TEST_RUN(lexer_token_question);
+
+  /* Comparison operators */
+  TEST_RUN(lexer_token_comparison_equal);
+  TEST_RUN(lexer_token_comparison_not_equal);
+  TEST_RUN(lexer_token_comparison_greater);
+  TEST_RUN(lexer_token_comparison_greater_equal);
+  TEST_RUN(lexer_token_comparison_lesser);
+  TEST_RUN(lexer_token_comparison_lesser_equal);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();

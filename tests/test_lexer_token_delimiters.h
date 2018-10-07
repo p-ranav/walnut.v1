@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_dot)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \".\" as {TOKEN_DOT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \".\" as {TOKEN_DOT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_comma)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \",\" as {TOKEN_COMMA, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \",\" as {TOKEN_COMMA, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_colon)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \":\" as {TOKEN_COLON, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \":\" as {TOKEN_COLON, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_semi_colon)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \";\" as {TOKEN_SEMI_COLON, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \";\" as {TOKEN_SEMI_COLON, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_exclamation)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \"!\" as {TOKEN_EXCLAMATION, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \"!\" as {TOKEN_EXCLAMATION, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -243,7 +243,7 @@ TEST_CASE(lexer_token_question)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the input \"?\" as {TOKEN_QUESTION, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes the input \"?\" as {TOKEN_QUESTION, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
