@@ -1,7 +1,0 @@
-print("Hello, 世界");
-
-var product = λ(a, b) {
-  return a * b;
-}
-
-var z = product(5, 10); // z is int32
