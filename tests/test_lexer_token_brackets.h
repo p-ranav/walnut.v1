@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_brackets_left_paranthesis)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"(\" as {TOKEN_LEFT_PARANTHESIS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"(\" as {TOKEN_LEFT_PARANTHESIS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_brackets_left_curly_braces)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"{\" as {TOKEN_LEFT_CURLY, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"{\" as {TOKEN_LEFT_CURLY, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_brackets_left_square_brackets)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"[\" as {TOKEN_LEFT_BRACKETS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"[\" as {TOKEN_LEFT_BRACKETS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_brackets_right_paranthesis)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \")\" as {TOKEN_RIGHT_PARANTHESIS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \")\" as {TOKEN_RIGHT_PARANTHESIS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_brackets_right_curly_braces)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"}\" as {TOKEN_RIGHT_CURLY, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"}\" as {TOKEN_RIGHT_CURLY, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -243,7 +243,7 @@ TEST_CASE(lexer_token_brackets_right_square_brackets)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"]\" as {TOKEN_RIGHT_BRACKETS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"]\" as {TOKEN_RIGHT_BRACKETS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

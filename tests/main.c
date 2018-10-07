@@ -10,10 +10,11 @@
 #include <test_lexer_token_keyword.h>
 #include <test_lexer_token_string.h>
 #include <test_lexer_token_identifier.h>
+#include <test_lexer_variable_declaration.h>
 
 TEST_MAIN
 {
-  /* Lexer Tests 
+  /* Lexer Unit Tests 
      The following tests check lexer.tokenize and confirm
      that the right tokens are returned by the lexer when 
      encountering specific input character buffers. 
@@ -108,6 +109,18 @@ TEST_MAIN
   TEST_RUN(lexer_token_identifier_ascii);
   TEST_RUN(lexer_token_identifier_unicode_tamil);
   TEST_RUN(lexer_token_identifier_unicode_smiley);
+
+  /* Lexer Compound Tests */
+
+  /* Variable Declaration */
+  TEST_RUN(lexer_integer_variable_declaration);
+  TEST_RUN(lexer_float_variable_declaration);
+  TEST_RUN(lexer_double_variable_declaration);
+  TEST_RUN(lexer_bool_variable_declaration);
+
+  /* Parser Tests
+  */
+
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();

@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_comparison_equal)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"==\" as {TOKEN_EQUAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"==\" as {TOKEN_EQUAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_comparison_not_equal)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"!=\" as {TOKEN_NOT_EQUAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"!=\" as {TOKEN_NOT_EQUAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_comparison_greater)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \">\" as {TOKEN_GREATER, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \">\" as {TOKEN_GREATER, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_comparison_greater_equal)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \">=\" as {TOKEN_GREATER_EQUAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \">=\" as {TOKEN_GREATER_EQUAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_comparison_lesser)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"<\" as {TOKEN_LESSER, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"<\" as {TOKEN_LESSER, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -243,7 +243,7 @@ TEST_CASE(lexer_token_comparison_lesser_equal)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"<=\" as {TOKEN_LESSER_EQUAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"<=\" as {TOKEN_LESSER_EQUAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

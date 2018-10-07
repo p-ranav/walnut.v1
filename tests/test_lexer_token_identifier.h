@@ -29,7 +29,7 @@ TEST_CASE(lexer_token_identifier_ascii)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"x\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"x\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -76,7 +76,7 @@ TEST_CASE(lexer_token_identifier_unicode_tamil)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"வாழ்த்து\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"வாழ்த்து\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -123,7 +123,7 @@ TEST_CASE(lexer_token_identifier_unicode_smiley)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"😀\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"😀\" as {TOKEN_SYMBOL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

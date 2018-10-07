@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_arithmetic_add)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"+\" as {TOKEN_ADD, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"+\" as {TOKEN_ADD, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_arithmetic_subtract)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"-\" as {TOKEN_SUBTRACT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"-\" as {TOKEN_SUBTRACT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_arithmetic_multiply)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"*\" as {TOKEN_MULTIPLY, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"*\" as {TOKEN_MULTIPLY, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_arithmetic_divide)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"/\" as {TOKEN_DIVIDE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"/\" as {TOKEN_DIVIDE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_arithmetic_modulus)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"%\" as {TOKEN_MODULUS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"%\" as {TOKEN_MODULUS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

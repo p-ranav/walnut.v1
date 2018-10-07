@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_integer)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"15\" as {TOKEN_INTEGER, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"15\" as {TOKEN_INTEGER, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_float)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"3.14f\" as {TOKEN_FLOAT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"3.14f\" as {TOKEN_FLOAT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_double)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"2.71828\" as {TOKEN_DOUBLE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"2.71828\" as {TOKEN_DOUBLE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

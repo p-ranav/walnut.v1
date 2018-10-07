@@ -29,7 +29,7 @@ TEST_CASE(lexer_token_string_literal_ascii)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"\"Hello World\"\" as {TOKEN_STRING_LITERAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"\"Hello World\"\" as {TOKEN_STRING_LITERAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -76,7 +76,7 @@ TEST_CASE(lexer_token_string_literal_unicode_chinese)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"\"Hello, 世界\"\" as {TOKEN_STRING_LITERAL, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"\"Hello, 世界\"\" as {TOKEN_STRING_LITERAL, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

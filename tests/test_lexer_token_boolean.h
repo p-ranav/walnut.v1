@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_boolean_true)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"true\" as {TOKEN_TRUE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"true\" as {TOKEN_TRUE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_boolean_false)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"false\" as {TOKEN_FALSE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"false\" as {TOKEN_FALSE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

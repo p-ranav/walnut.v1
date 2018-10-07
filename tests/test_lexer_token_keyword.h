@@ -29,7 +29,7 @@ TEST_CASE(lexer_token_keyword_var)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"var\" as {TOKEN_VAR, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"var\" as {TOKEN_VAR, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -73,7 +73,7 @@ TEST_CASE(lexer_token_keyword_if)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"if\" as {TOKEN_IF, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"if\" as {TOKEN_IF, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -117,7 +117,7 @@ TEST_CASE(lexer_token_keyword_else)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"else\" as {TOKEN_ELSE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"else\" as {TOKEN_ELSE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -161,7 +161,7 @@ TEST_CASE(lexer_token_keyword_else_if)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"else if\" as {TOKEN_ELSE_IF, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"else if\" as {TOKEN_ELSE_IF, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -205,7 +205,7 @@ TEST_CASE(lexer_token_keyword_while)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"while\" as {TOKEN_WHILE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"while\" as {TOKEN_WHILE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -249,7 +249,7 @@ TEST_CASE(lexer_token_keyword_for)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"for\" as {TOKEN_FOR, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"for\" as {TOKEN_FOR, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -293,7 +293,7 @@ TEST_CASE(lexer_token_keyword_function)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"function\" as {TOKEN_FUNCTION, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"function\" as {TOKEN_FUNCTION, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -340,7 +340,7 @@ TEST_CASE(lexer_token_keyword_lambda)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"λ\" as {TOKEN_FUNCTION, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"λ\" as {TOKEN_FUNCTION, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -384,7 +384,7 @@ TEST_CASE(lexer_token_keyword_arrow)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"->\" as {TOKEN_ARROW, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"->\" as {TOKEN_ARROW, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -428,7 +428,7 @@ TEST_CASE(lexer_token_keyword_return)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"return\" as {TOKEN_RETURN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"return\" as {TOKEN_RETURN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -472,7 +472,7 @@ TEST_CASE(lexer_token_keyword_is)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"is\" as {TOKEN_IS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"is\" as {TOKEN_IS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -516,7 +516,7 @@ TEST_CASE(lexer_token_keyword_in)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"in\" as {TOKEN_IN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"in\" as {TOKEN_IN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -560,7 +560,7 @@ TEST_CASE(lexer_token_keyword_with)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"with\" as {TOKEN_WITH, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"with\" as {TOKEN_WITH, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -604,7 +604,7 @@ TEST_CASE(lexer_token_keyword_try)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"try\" as {TOKEN_TRY, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"try\" as {TOKEN_TRY, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -648,7 +648,7 @@ TEST_CASE(lexer_token_keyword_catch)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"catch\" as {TOKEN_CATCH, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"catch\" as {TOKEN_CATCH, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -692,7 +692,7 @@ TEST_CASE(lexer_token_keyword_finally)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"finally\" as {TOKEN_FINALLY, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"finally\" as {TOKEN_FINALLY, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -736,7 +736,7 @@ TEST_CASE(lexer_token_keyword_pass)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"pass\" as {TOKEN_PASS, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"pass\" as {TOKEN_PASS, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -780,7 +780,7 @@ TEST_CASE(lexer_token_keyword_from)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"from\" as {TOKEN_FROM, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"from\" as {TOKEN_FROM, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -824,7 +824,7 @@ TEST_CASE(lexer_token_keyword_import)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"import\" as {TOKEN_IMPORT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"import\" as {TOKEN_IMPORT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -868,7 +868,7 @@ TEST_CASE(lexer_token_keyword_break)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"break\" as {TOKEN_BREAK, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"break\" as {TOKEN_BREAK, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -912,7 +912,7 @@ TEST_CASE(lexer_token_keyword_continue)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"continue\" as {TOKEN_CONTINUE, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"continue\" as {TOKEN_CONTINUE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

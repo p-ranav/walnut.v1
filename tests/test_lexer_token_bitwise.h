@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_bitwise_and)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"&\" as {TOKEN_BITWISE_AND, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"&\" as {TOKEN_BITWISE_AND, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_bitwise_or)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"|\" as {TOKEN_BITWISE_OR, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"|\" as {TOKEN_BITWISE_OR, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_bitwise_xor)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"^\" as {TOKEN_BITWISE_XOR, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"^\" as {TOKEN_BITWISE_XOR, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_bitwise_ones_complement)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"~\" as {TOKEN_BITWISE_ONES_COMPLEMENT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"~\" as {TOKEN_BITWISE_ONES_COMPLEMENT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_bitwise_left_shift)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"<<\" as {TOKEN_BITWISE_LEFT_SHIFT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"<<\" as {TOKEN_BITWISE_LEFT_SHIFT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -243,7 +243,7 @@ TEST_CASE(lexer_token_bitwise_right_shift)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \">>\" as {TOKEN_BITWISE_RIGHT_SHIFT, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \">>\" as {TOKEN_BITWISE_RIGHT_SHIFT, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);

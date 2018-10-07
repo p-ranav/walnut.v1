@@ -23,7 +23,7 @@ TEST_CASE(lexer_token_assignment)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"=\" as {TOKEN_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"=\" as {TOKEN_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -67,7 +67,7 @@ TEST_CASE(lexer_token_assignment_add_assign)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"+=\" as {TOKEN_ADD_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"+=\" as {TOKEN_ADD_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -111,7 +111,7 @@ TEST_CASE(lexer_token_assignment_subtract_assign)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"-=\" as {TOKEN_SUBTRACT_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"-=\" as {TOKEN_SUBTRACT_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -155,7 +155,7 @@ TEST_CASE(lexer_token_assignment_multiply_assign)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"*=\" as {TOKEN_MULTIPLY_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"*=\" as {TOKEN_MULTIPLY_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -199,7 +199,7 @@ TEST_CASE(lexer_token_assignment_divide_assign)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"/=\" as {TOKEN_DIVIDE_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"/=\" as {TOKEN_DIVIDE_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -243,7 +243,7 @@ TEST_CASE(lexer_token_assignment_modulus_assign)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer tokenizes the input \"%=\" as {TOKEN_MODULUS_ASSIGN, TOKEN_END_OF_FILE}");
+  DECLARE_TEST("Lexer tokenizes \"%=\" as {TOKEN_MODULUS_ASSIGN, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
