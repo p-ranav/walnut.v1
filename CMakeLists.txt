@@ -69,11 +69,5 @@ ADD_EXECUTABLE(TESTS ${TESTS_SOURCES})
 set_target_properties(TESTS PROPERTIES OUTPUT_NAME tests) # tests.exe
 TARGET_LINK_LIBRARIES(TESTS UTILS LEXER PARSER)
 
-enable_testing ()
-add_test (NAME UNIT_TESTS COMMAND tests)
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
-    --force-new-ctest-process
-    --verbose
-    --output-on-failure
-    DEPENDS tests
-)
+# make check - runs unit tests
+add_custom_target(check COMMAND ./tests)
