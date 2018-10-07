@@ -4,6 +4,8 @@
 #include <test_lexer_token_delimiters.h>
 #include <test_lexer_token_comparison.h>
 #include <test_lexer_token_brackets.h>
+#include <test_lexer_token_arithmetic.h>
+#include <test_lexer_token_assignment.h>
 
 TEST_MAIN
 {
@@ -47,6 +49,21 @@ TEST_MAIN
   TEST_RUN(lexer_token_brackets_right_paranthesis);
   TEST_RUN(lexer_token_brackets_right_curly_braces);
   TEST_RUN(lexer_token_brackets_right_square_brackets);
+
+  /* Arithmetic operators */
+  TEST_RUN(lexer_token_arithmetic_add);
+  TEST_RUN(lexer_token_arithmetic_subtract);
+  TEST_RUN(lexer_token_arithmetic_multiply);
+  TEST_RUN(lexer_token_arithmetic_divide);
+  TEST_RUN(lexer_token_arithmetic_modulus);
+
+  /* Assignment operators */
+  TEST_RUN(lexer_token_assignment);
+  TEST_RUN(lexer_token_assignment_add_assign);
+  TEST_RUN(lexer_token_assignment_subtract_assign);
+  TEST_RUN(lexer_token_assignment_multiply_assign);
+  TEST_RUN(lexer_token_assignment_divide_assign);
+  TEST_RUN(lexer_token_assignment_modulus_assign);
 
   /* Done with testing. Generate report */
   GENERATE_TEST_REPORT();

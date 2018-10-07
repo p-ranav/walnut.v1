@@ -739,7 +739,7 @@ void lexer_post_process(list_t *tokens)
     process_token_sequence("-", "=", TOKEN_SUBTRACT_ASSIGN);
     process_token_sequence("*", "=", TOKEN_MULTIPLY_ASSIGN);
     process_token_sequence("/", "=", TOKEN_DIVIDE_ASSIGN);
-    process_token_sequence("-", "=", TOKEN_MODULUS_ASSIGN);
+    process_token_sequence("%", "=", TOKEN_MODULUS_ASSIGN);
 
     /* logical operators */
     process_token_sequence("&", "&", TOKEN_LOGICAL_AND);
