@@ -70,4 +70,6 @@ set_target_properties(TESTS PROPERTIES OUTPUT_NAME tests) # tests.exe
 TARGET_LINK_LIBRARIES(TESTS UTILS LEXER PARSER)
 
 # make check - runs unit tests
+if (UNIX)
 add_custom_target(check COMMAND ./tests)
+endif(UNIX)
