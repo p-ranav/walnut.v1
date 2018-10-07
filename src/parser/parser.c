@@ -810,7 +810,6 @@ void parse_call_arguments(struct parser_t *parser, list_t *arguments)
   /* check if there's a comma. If so, there are more arguments to parse */
   while (parser->peek_token && peek_token_is(parser, TOKEN_COMMA))
   {
-
     /* get past current argument */
     next_token(parser);
 

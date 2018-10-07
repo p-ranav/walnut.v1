@@ -1,5 +1,8 @@
 #ifndef MACROS_H
 #define MACROS_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define arrlen(list) sizeof(list) / sizeof(list[0])
 
@@ -53,5 +56,39 @@
     return PRODUCT;                                                                          \
   else                                                                                       \
     return LOWEST;
+
+/* Tests */
+#define TEST_CASE(test_name) int test_name (int * test_count, int * number_of_successful_tests, int * number_of_successful_assertions)
+#define DECLARE_TEST(test_name) test_label = test_name; (*test_count)++; printf("%s...", test_label);
+#define RETURN_TEST_SUCCESS() { printf(" [OK]\n"); (*number_of_successful_tests) += 1; return 1; }
+
+#define TEST_CHECK(condition) \
+  if (!(condition)) \
+  {\
+    printf(" [FAILED]\n"); \
+    printf(" * [CHECK FAILED] %s, line %d: %s\n", __FILE__, __LINE__, #condition);\
+    return 0; \
+  }\
+  else \
+    (*number_of_successful_assertions)++;
+
+#define TEST_LIST \
+  int test_count = 0;\
+  int number_of_successful_tests = 0;\
+  int number_of_successful_assertions = 0;\
+  int main(void)
+#define TEST_RUN(test_name) \
+  if (test_count == 0)\
+    printf("--------------------------------------------------------------------------------\n");\
+  printf("[TEST %d] ", (test_count + 1)); \
+  test_name(&test_count, &number_of_successful_tests, &number_of_successful_assertions);
+
+#define GENERATE_TEST_REPORT() \
+  printf("--------------------------------------------------------------------------------\n");\
+  printf("%d ASSERTIONS ACROSS %d TESTS HAVE PASSED\n", number_of_successful_assertions, test_count);\
+  printf("%d/%d TESTS HAVE PASSED\n", number_of_successful_tests, test_count); \
+  printf("TEST SUCCESS RATE: %.2f%%\n", (double)(number_of_successful_tests / test_count * 100));\
+  printf("--------------------------------------------------------------------------------\n");\
+  return 0;
 
 #endif
