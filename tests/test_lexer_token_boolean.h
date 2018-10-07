@@ -1,3 +1,6 @@
+#ifndef TEST_LEXER_TOKEN_BOOLEAN
+#define TEST_LEXER_TOKEN_BOOLEAN
+
 #include <lexer.h>
 #include <macros.h>
 #include <list.h>
@@ -20,7 +23,7 @@ TEST_CASE(lexer_token_boolean_true)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the string \"true\" as TOKEN_TRUE");
+  DECLARE_TEST("Lexer recognizes the input \"true\" as {TOKEN_TRUE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -64,7 +67,7 @@ TEST_CASE(lexer_token_boolean_false)
   i = 0;
 
   /* Log test name */
-  DECLARE_TEST("Lexer recognizes the string \"false\" as TOKEN_FALSE");
+  DECLARE_TEST("Lexer recognizes the input \"false\" as {TOKEN_FALSE, TOKEN_END_OF_FILE}");
 
   /* Tokenize the buffer of characters */
   tokens = lexer_tokenize(file_path, file_size, buffer);
@@ -89,3 +92,5 @@ TEST_CASE(lexer_token_boolean_false)
 
   RETURN_TEST_SUCCESS();
 }
+
+#endif
