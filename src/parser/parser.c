@@ -15,7 +15,7 @@
 #include <function_node.h>
 #include <call_node.h>
 
-extern const char *const token_strings[]; /* used in expect_peek */
+extern const char *const token_values[]; /* used in expect_peek */
 
 struct parser_t *parse(list_t *tokens)
 {
@@ -189,8 +189,8 @@ int expect_peek(struct parser_t *parser, token value)
            parser->peek_token->file_path,
            parser->peek_token->line,
            parser->peek_token->cursor,
-           token_strings[value],
-           token_strings[parser->peek_token->type]);
+           token_values[value],
+           token_values[parser->peek_token->type]);
     exit(0);
     return 0;
   }

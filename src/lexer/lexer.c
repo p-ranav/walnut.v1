@@ -82,9 +82,8 @@ list_t *lexer_tokenize(const char *file_path, long buffer_size, char *buffer)
   eof->line = line;
   eof->cursor = cursor;
   eof->type = TOKEN_END_OF_FILE;
-  eof->value = allocate(char, 2);
-  eof->value[0] = ' ';
-  eof->value[1] = '\0';
+  eof->value = allocate(char, 1);
+  eof->value[0] = '\0';
   save_token(eof);
 
   /* return the list of tokens */
@@ -102,19 +101,20 @@ void lexer_print(list_t *tokens)
     struct token_t *token = ((struct token_t *)node->val);
     const char *token_string = token_strings[token->type];
 
-    /* add spaces for pretty print */
-    int length = strlen(token_string);
-    int num_spaces_to_add = 20 - length;
-    char *spaces = allocate(char, num_spaces_to_add + 1);
-    memset(spaces, ' ', num_spaces_to_add + 1);
-    spaces[num_spaces_to_add] = '\0';
-
-    /* pretty print lexer tokens */
-    printf("%s%s: %s (line %d, cursor %d)\n", token_strings[token->type], spaces,
-           token->value, token->line, token->cursor);
-
-    /* clean up */
-    free(spaces);
+    /* Log lexer token as JSON */
+    printf(
+        "{"
+        "\"file\": \"%s\","
+        "\"line\": %d,"
+        "\"cursor\": %d,"
+        "\"input\": \"%s\","
+        "\"token\": \"%s\""
+        "}\n",
+        token->file_path,
+        token->line,
+        token->cursor,
+        token->value,
+        token_string);
   }
   deallocate(it);
 }
@@ -825,7 +825,6 @@ void lexer_post_process(list_t *tokens)
     process_token("⋅", TOKEN_MULTIPLY);      /* "⋅" (U+22C5) Middle-dot */
     process_token("•", TOKEN_MULTIPLY);      /* "•" (U+2022) Bullet */
     process_token("×", TOKEN_MULTIPLY);      /* "×" (U+00D7) Multiplication */
-
 
     /* handle numbers */
     if (current_token->type == TOKEN_NUMBER)
