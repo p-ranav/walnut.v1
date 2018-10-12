@@ -185,7 +185,7 @@ int expect_peek(struct parser_t *parser, token value)
   }
   else
   {
-    printf("error in %s, line %d, cursor %d: expected token %s, instead got %s\n",
+    printf("parser error in %s, line %d, cursor %d: expected \"%s\", instead got \"%s\"\n",
            parser->peek_token->file_path,
            parser->peek_token->line,
            parser->peek_token->cursor,
