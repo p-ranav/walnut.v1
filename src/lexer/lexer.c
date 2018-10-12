@@ -801,7 +801,6 @@ void lexer_post_process(list_t *tokens)
     process_token("else", TOKEN_ELSE);
     process_token("while", TOKEN_WHILE);
     process_token("for", TOKEN_FOR);
-    process_token("λ", TOKEN_FUNCTION);
     process_token("function", TOKEN_FUNCTION);
     process_token("return", TOKEN_RETURN);
     process_token("is", TOKEN_IS);
@@ -815,6 +814,18 @@ void lexer_post_process(list_t *tokens)
     process_token("pass", TOKEN_PASS);
     process_token("from", TOKEN_FROM);
     process_token("import", TOKEN_IMPORT);
+
+    /* Unicode characters */
+    process_token("ƒ", TOKEN_FUNCTION);      /* "ƒ" (U+0192) */
+    process_token("𝑓", TOKEN_FUNCTION);      /* "𝑓" (U+1D453) */
+    process_token("＝", TOKEN_EQUAL);        /* "＝" (U+FF1D) */
+    process_token("≥", TOKEN_GREATER_EQUAL); /* "≥" (U+2265) */
+    process_token("≤", TOKEN_LESSER_EQUAL);  /* "≤" (U+2264) */
+    process_token("≠", TOKEN_NOT_EQUAL);     /* "≠" (U+2260) */
+    process_token("⋅", TOKEN_MULTIPLY);      /* "⋅" (U+22C5) Middle-dot */
+    process_token("•", TOKEN_MULTIPLY);      /* "•" (U+2022) Bullet */
+    process_token("×", TOKEN_MULTIPLY);      /* "×" (U+00D7) Multiplication */
+
 
     /* handle numbers */
     if (current_token->type == TOKEN_NUMBER)

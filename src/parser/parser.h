@@ -74,10 +74,10 @@ node *parse_expression_statement(struct parser_t *parser);
 enum precedence_t
 {
   LOWEST,
-  EQUAL,       /* == */
-  LESSGREATER, /* > or < */
-  SUM,         /* + */
-  PRODUCT,     /* * */
+  EQUAL,       /* ==, != */
+  LESSGREATER, /* >, >=, < and <= */
+  SUM,         /* +, - */
+  PRODUCT,     /* *, /, % */
   PREFIX,      /* -X or !X */
   CALL         /* my_function(X) */
 };
