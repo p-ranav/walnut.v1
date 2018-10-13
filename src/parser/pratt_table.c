@@ -73,6 +73,7 @@ void delete_item(token key)
 
       pratt_function *item_to_delete = hash_array[hash_index];
       free(item_to_delete);
+      hash_array[hash_index] = NULL;
       break;
     }
 
