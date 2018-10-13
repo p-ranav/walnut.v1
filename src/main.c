@@ -2,6 +2,7 @@
 #include <macros.h>
 #include <lexer.h>
 #include <parser.h>
+#include <evaluator.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
     char *buffer;
     long file_size;
     struct parser_t *parser;
+    list_node_t *statement;
+    list_iterator_t *it;
 
     /* set single locale for all purposes */
     setlocale(LC_ALL, "");
@@ -52,6 +55,18 @@ int main(int argc, char *argv[])
 
     /* print statements */
     parser_print(parser);
+
+    /* eval parsed statements */
+    it = list_iterator_new(parser->statements, LIST_HEAD);
+    while ((statement = list_iterator_next(it)))
+    {
+      /* get pointer to token and print token type and value */
+      node *ast_node = ((node *)statement->val);
+
+      /* eval AST node */
+      eval(ast_node);
+    }
+    deallocate(it);
 
     /* Delete parsed AST nodes */
     parser_destruct(parser);
