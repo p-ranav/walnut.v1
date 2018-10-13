@@ -46,6 +46,10 @@ ADD_SUBLIBRARY(PARSER src/parser)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
 TARGET_LINK_LIBRARIES(PARSER LEXER UTILS AST)
 
+# Object Model library
+ADD_SUBLIBRARY(OBJECT src/object)
+set_target_properties(OBJECT PROPERTIES OUTPUT_NAME object) # object.lib
+
 # Main executable
 file(GLOB EXECUTABLE_SOURCES 
     "src/main.c" 
