@@ -9,7 +9,7 @@ boolean_object *boolean_object_construct(int value)
 
   obj = allocate(boolean_object, 1);
   obj->type = OBJECT_BOOLEAN;
-  obj->value = (value > 1) ? 1 : 0;
+  obj->value = (value > 0) ? 1 : 0;
   return obj;
 }
 

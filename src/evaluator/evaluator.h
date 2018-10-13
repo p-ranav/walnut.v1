@@ -11,5 +11,7 @@ object * eval_boolean(node * ast_node);
 
 object * eval_prefix_expression(node * ast_node);
 object * eval_bang_operator(object * right);
+object * eval_unary_minus_operator(object * right);
+object * eval_negate_integer(object * right);
 
 #endif

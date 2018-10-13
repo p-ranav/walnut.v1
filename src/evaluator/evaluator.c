@@ -75,6 +75,10 @@ object * eval_prefix_expression(node * ast_node)
   {
     return eval_bang_operator(right);
   }
+  else if (strcmp(operator, "-") == 0)
+  {
+    return eval_unary_minus_operator(right);
+  }
   else
   {
     return NULL;
@@ -106,4 +110,35 @@ object * eval_bang_operator(object * right)
   }
 
   return object_construct(obj, BOOLEAN_AS_OBJECT);
+}
+
+object * eval_unary_minus_operator(object * right)
+{
+  /* TODO: support INTEGER, FLOAT and DOUBLE types */
+  if (object_type(right) == OBJECT_INTEGER)
+  {
+    return eval_negate_integer(right);
+  }
+  else
+  {
+    return NULL;
+  }
+}
+
+object * eval_negate_integer(object * right)
+{
+  /* TODO: delete right before returning result? */
+
+  /* declarations */
+  integer_object * obj;
+  object_interface * INTEGER_AS_OBJECT;
+
+  obj = integer_object_construct(-1 * ((integer_object *)right->instance)->value);
+
+  INTEGER_AS_OBJECT = allocate(object_interface, 1);
+  INTEGER_AS_OBJECT->type = (enum object_type_t(*)(void *))integer_object_type;
+  INTEGER_AS_OBJECT->inspect = (const char *(*)(void *))integer_object_inspect;
+  INTEGER_AS_OBJECT->destruct = (void(*)(void *))integer_object_destruct;
+
+  return object_construct(obj, INTEGER_AS_OBJECT);
 }
