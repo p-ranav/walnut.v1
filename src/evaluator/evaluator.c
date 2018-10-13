@@ -35,5 +35,5 @@ object * eval_integer(node * ast_node)
   INTEGER_AS_OBJECT->type = (enum object_type_t(*)(void *))integer_object_type;
   INTEGER_AS_OBJECT->inspect = (const char *(*)(void *))integer_object_inspect;
   INTEGER_AS_OBJECT->destruct = (void(*)(void *))integer_object_destruct;
-  return object_construct(obj, NULL);
+  return object_construct(obj, INTEGER_AS_OBJECT);
 }
