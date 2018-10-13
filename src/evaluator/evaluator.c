@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern const char *const token_values[]; /* used in print */
+
 object * eval(node * ast_node)
 {
   /* declarations */
@@ -91,16 +93,16 @@ object * eval_prefix_expression(node * ast_node)
 {
   /* declarations */
   object * right;
-  char * operator;
+  token operator;
 
   right = eval(((prefix_expression_node *)ast_node->instance)->right);
   operator = ((prefix_expression_node *)ast_node->instance)->operator;
   
-  if (strcmp(operator, "!") == 0)
+  if (operator == TOKEN_EXCLAMATION)
   {
     return eval_bang_operator(right);
   }
-  else if (strcmp(operator, "-") == 0)
+  else if (operator == TOKEN_SUBTRACT)
   {
     return eval_unary_minus_operator(right);
   }
@@ -172,7 +174,7 @@ object * eval_infix_expression(node * ast_node)
   /* declarations */
   object * left;
   object * right;
-  char * operator;
+  token operator;
 
   left = eval(((infix_expression_node *)ast_node->instance)->left);
   right = eval(((infix_expression_node *)ast_node->instance)->right);
@@ -194,7 +196,7 @@ object * eval_infix_expression(node * ast_node)
   }
 }
 
-object * eval_integer_infix_expression(char * operator, object * left, object * right)
+object * eval_integer_infix_expression(token operator, object * left, object * right)
 {
   /* declarations */
   int result;
@@ -222,67 +224,67 @@ object * eval_integer_infix_expression(char * operator, object * left, object * 
   BOOLEAN_AS_OBJECT->inspect = (const char *(*)(void *))boolean_object_inspect;
   BOOLEAN_AS_OBJECT->destruct = (void(*)(void *))boolean_object_destruct;
   
-  if (strcmp(operator, "+") == 0)
+  if (operator == TOKEN_ADD)
   {
     result = left_value + right_value;
     obj = integer_object_construct(result);
     return object_construct(obj, INTEGER_AS_OBJECT);
   }
-  else if (strcmp(operator, "-") == 0)
+  else if (operator == TOKEN_SUBTRACT)
   {
     result = left_value - right_value;
     obj = integer_object_construct(result);
     return object_construct(obj, INTEGER_AS_OBJECT);
   }
-  else if (strcmp(operator, "*") == 0)
+  else if (operator == TOKEN_MULTIPLY)
   {
     result = left_value * right_value;
     obj = integer_object_construct(result);
     return object_construct(obj, INTEGER_AS_OBJECT);
   }
-  else if (strcmp(operator, "/") == 0)
+  else if (operator == TOKEN_DIVIDE)
   {
     result = left_value / right_value;
     obj = integer_object_construct(result);
     return object_construct(obj, INTEGER_AS_OBJECT);
   }
-  else if (strcmp(operator, "%") == 0)
+  else if (operator == TOKEN_MODULUS)
   {
     result = left_value % right_value;
     obj = integer_object_construct(result);
     return object_construct(obj, INTEGER_AS_OBJECT);
   }
-  else if (strcmp(operator, ">") == 0)
+  else if (operator == TOKEN_GREATER)
   {
     result = (left_value > right_value);
     bool_obj = boolean_object_construct(result);
     return object_construct(bool_obj, BOOLEAN_AS_OBJECT);
   }
-  else if (strcmp(operator, ">=") == 0)
+  else if (operator == TOKEN_GREATER_EQUAL)
   {
     result = (left_value >= right_value);
     bool_obj = boolean_object_construct(result);
     return object_construct(bool_obj, BOOLEAN_AS_OBJECT);
   }
-  else if (strcmp(operator, "<") == 0)
+  else if (operator == TOKEN_LESSER)
   {
     result = (left_value < right_value);
     bool_obj = boolean_object_construct(result);
     return object_construct(bool_obj, BOOLEAN_AS_OBJECT);
   }
-  else if (strcmp(operator, "<=") == 0)
+  else if (operator == TOKEN_LESSER_EQUAL)
   {
     result = (left_value > right_value);
     bool_obj = boolean_object_construct(result);
     return object_construct(bool_obj, BOOLEAN_AS_OBJECT);
   }
-  else if (strcmp(operator, "==") == 0)
+  else if (operator == TOKEN_EQUAL)
   {
     result = (left_value == right_value);
     bool_obj = boolean_object_construct(result);
     return object_construct(bool_obj, BOOLEAN_AS_OBJECT);
   }
-  else if (strcmp(operator, "!=") == 0)
+  else if (operator == TOKEN_NOT_EQUAL)
   {
     result = (left_value != right_value);
     bool_obj = boolean_object_construct(result);
@@ -295,7 +297,7 @@ object * eval_integer_infix_expression(char * operator, object * left, object * 
 
 }
 
-object * eval_boolean_infix_expression(char * operator, object * left, object * right)
+object * eval_boolean_infix_expression(token operator, object * left, object * right)
 {
   /* declarations */
   int result;
@@ -309,11 +311,11 @@ object * eval_boolean_infix_expression(char * operator, object * left, object * 
   left_value = ((boolean_object *)left->instance)->value;
   right_value = ((boolean_object *)right->instance)->value;
 
-  if (strcmp(operator, "==") == 0)
+  if (operator == TOKEN_EQUAL)
   {
     result = (left_value == right_value);
   }
-  else if (strcmp(operator, "!=") == 0)
+  else if (operator == TOKEN_NOT_EQUAL)
   {
     result = (left_value != right_value);
   }

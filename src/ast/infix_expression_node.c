@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-infix_expression_node *infix_expression_construct(char *operator)
+extern const char *const token_values[]; /* used in print */
+
+infix_expression_node *infix_expression_construct(token operator)
 {
   /* declarations */
   int operator_length;
@@ -11,12 +13,7 @@ infix_expression_node *infix_expression_construct(char *operator)
 
   object = allocate(infix_expression_node, 1);
   object->type = INFIX_EXPRESSION;
-
-  /* save prefix operator */
-  operator_length = strlen(operator);
-  object->operator= allocate(char, operator_length + 1);
-  strcpy(object->operator, operator);
-  object->operator[operator_length] = '\0';
+  object->operator = operator;
 
   return object;
 }
@@ -30,16 +27,13 @@ void infix_expression_print(infix_expression_node *object)
 {
   printf("(");
   node_print(object->left);
-  printf(" %s ", object->operator);
+  printf(" %s ", token_values[object->operator]);
   node_print(object->right);
   printf(")");
 }
 
 void infix_expression_destruct(infix_expression_node *object)
 {
-  /* free up operator string */
-  free(object->operator);
-
   /* free up expression to the left of infix operator */
   node_destruct(object->left);
 

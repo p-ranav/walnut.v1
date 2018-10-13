@@ -1,6 +1,7 @@
 #ifndef INFIX_EXPRESSION_NODE_H
 #define INFIX_EXPRESSION_NODE_H
 #include <node_type.h>
+#include <token.h>
 #include <node.h>
 #include <macros.h>
 
@@ -17,12 +18,12 @@ typedef struct
 {
   enum node_type_t type; /* type = INFIX_EXPRESSION */
   node *left;            /* expression node to the left of the infix operator */
-  char *operator;        /* character buffer of the infix operator */
+  token operator;        /* infix operator */
   node *right;           /* expression node to the right of the infix operator */
 } infix_expression_node;
 
 /* initialize left and right of infix expression. String copy the operator string */
-infix_expression_node *infix_expression_construct(char *operator);
+infix_expression_node *infix_expression_construct(token operator);
 
 /* return the type 'INFIX_EXPRESSION' */
 enum node_type_t infix_expression_type(infix_expression_node *object);

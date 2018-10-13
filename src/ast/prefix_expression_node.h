@@ -1,6 +1,7 @@
 #ifndef PREFIX_EXPRESSION_NODE_H
 #define PREFIX_EXPRESSION_NODE_H
 #include <node_type.h>
+#include <token.h>
 #include <node.h>
 #include <macros.h>
 
@@ -15,12 +16,12 @@
 typedef struct
 {
   enum node_type_t type; /* type = PREFIX_EXPRESSION */
-  char *operator;        /* prefix oeprator. Either '-' or '!' */
+  token operator;        /* prefix operator. Either '-' or '!' */
   node *right;           /* expression to the right of the prefix operator */
 } prefix_expression_node;
 
 /* Construct prefix expression node. Initialize right expression and save operator */
-prefix_expression_node *prefix_expression_construct(char *operator);
+prefix_expression_node *prefix_expression_construct(token operator);
 
 /* return prefix expression node type 'PREFIX_EXPRESSION' */
 enum node_type_t prefix_expression_type(prefix_expression_node *object);

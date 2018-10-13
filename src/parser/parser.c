@@ -504,7 +504,7 @@ node *parse_prefix_expression(struct parser_t *parser)
   node_interface *PREFIX_EXPRESSION_AS_NODE;
 
   /* construct a prefix expression */
-  expression = prefix_expression_construct(parser->current_token->value);
+  expression = prefix_expression_construct(parser->current_token->type);
   expression->type = PREFIX_EXPRESSION;
 
   next_token(parser);
@@ -534,7 +534,7 @@ node *parse_infix_expression(struct parser_t *parser, node *left)
      if passed as argument (this is what left represents). Construct a new
      infix expression node and save this 'left'. 
   */
-  expression = infix_expression_construct(parser->current_token->value);
+  expression = infix_expression_construct(parser->current_token->type);
   expression->type = INFIX_EXPRESSION;
   /* save left */
   expression->left = left;
