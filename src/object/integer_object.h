@@ -13,7 +13,7 @@ typedef struct
 integer_object *integer_object_construct(int obj);
 
 enum object_type_t integer_object_type(integer_object *obj);
-char * integer_object_inspect(integer_object *obj);
+const char * integer_object_inspect(integer_object *obj);
 void integer_object_destruct(integer_object *obj);
 
 #endif

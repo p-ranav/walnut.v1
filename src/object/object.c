@@ -20,7 +20,7 @@ enum object_type_t object_type(object *obj)
   return (obj->interface->type)(obj->instance);
 }
 
-char * object_inspect(object *obj)
+const char * object_inspect(object *obj)
 {
   /* call the *_inspect(...) of the derived type */
   return (obj->interface->inspect)(obj->instance);

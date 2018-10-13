@@ -18,7 +18,7 @@ enum object_type_t boolean_object_type(boolean_object *obj)
   return obj->type;
 }
 
-char * boolean_object_inspect(boolean_object *obj)
+const char * boolean_object_inspect(boolean_object *obj)
 {
   return (obj->value > 0) ? "true" : "false";
 }

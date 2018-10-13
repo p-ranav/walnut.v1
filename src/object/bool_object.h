@@ -13,7 +13,7 @@ typedef struct
 boolean_object *boolean_object_construct(int obj);
 
 enum object_type_t boolean_object_type(boolean_object *obj);
-char * boolean_object_inspect(boolean_object *obj);
+const char * boolean_object_inspect(boolean_object *obj);
 void boolean_object_destruct(boolean_object *obj);
 
 #endif

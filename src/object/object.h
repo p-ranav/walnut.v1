@@ -7,7 +7,7 @@
 typedef struct
 {
   enum object_type_t(*type)(void *object);
-  char *(*inspect)(void *object);
+  const char *(*inspect)(void *object);
   void(*destruct)(void *object);
 } object_interface;
 
@@ -26,7 +26,7 @@ object *object_construct(void *instance, object_interface *interface);
 
 /* interface functions */
 enum object_type_t object_type(object *obj);
-char * object_inspect(object *obj);
+const char * object_inspect(object *obj);
 void object_destruct(object *obj);
 
 #endif
