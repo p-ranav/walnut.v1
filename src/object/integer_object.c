@@ -13,7 +13,7 @@ integer_object *integer_object_construct(int value)
   return obj;
 }
 
-enum node_type_t integer_object_type(integer_object *obj)
+enum object_type_t integer_object_type(integer_object *obj)
 {
   return obj->type;
 }
@@ -27,6 +27,5 @@ char * integer_object_inspect(integer_object *obj)
 
 void integer_object_destruct(integer_object *obj)
 {
-  /* simply free up integer_object pointer */
   free(obj);
 }
