@@ -3,7 +3,7 @@
 
 /* List of all object types in the interpreter object model */
 #define OBJECT_LIST \
-  OBJECT(INTEGER, "integer") \
+  OBJECT(INTEGER, "integer")
 
 /* Enum of tokens */
 enum object_type_t
