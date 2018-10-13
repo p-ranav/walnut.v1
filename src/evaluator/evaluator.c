@@ -8,6 +8,7 @@
 /* Object model headers */
 #include <integer_object.h>
 #include <bool_object.h>
+#include <null_object.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +28,7 @@ object * eval(node * ast_node)
     return eval_prefix_expression(ast_node);
     break;
   default:
-    return NULL;
+    return eval_null();
     break;
   }
 }
@@ -62,6 +63,21 @@ object * eval_boolean(node * ast_node)
   return object_construct(obj, BOOLEAN_AS_OBJECT);
 }
 
+object * eval_null()
+{
+  /* declarations */
+  null_object * obj;
+  object_interface * NULL_AS_OBJECT;
+
+  obj = null_object_construct();
+
+  NULL_AS_OBJECT = allocate(object_interface, 1);
+  NULL_AS_OBJECT->type = (enum object_type_t(*)(void *))null_object_type;
+  NULL_AS_OBJECT->inspect = (const char *(*)(void *))null_object_inspect;
+  NULL_AS_OBJECT->destruct = (void(*)(void *))null_object_destruct;
+  return object_construct(obj, NULL_AS_OBJECT);
+}
+
 object * eval_prefix_expression(node * ast_node)
 {
   /* declarations */
@@ -81,7 +97,7 @@ object * eval_prefix_expression(node * ast_node)
   }
   else
   {
-    return NULL;
+    return eval_null();
   }
 }
 
@@ -121,7 +137,7 @@ object * eval_unary_minus_operator(object * right)
   }
   else
   {
-    return NULL;
+    return eval_null();
   }
 }
 
