@@ -9,7 +9,7 @@ bool_node *bool_construct(int value)
 
   object = allocate(bool_node, 1);
   object->type = BOOLEAN;
-  object->value = value;
+  object->value = (value > 0) ? 1 : 0;
   return object;
 }
 

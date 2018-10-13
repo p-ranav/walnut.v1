@@ -9,4 +9,7 @@ object * eval(node * ast_node);
 object * eval_integer(node * ast_node);
 object * eval_boolean(node * ast_node);
 
+object * eval_prefix_expression(node * ast_node);
+object * eval_bang_operator(object * right);
+
 #endif
