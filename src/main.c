@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     struct parser_t *parser;
     list_node_t *statement;
     list_iterator_t *it;
+    object * eval_result;
 
     /* set single locale for all purposes */
     setlocale(LC_ALL, "");
@@ -53,9 +54,6 @@ int main(int argc, char *argv[])
     /* Parse program */
     parser = parse(tokens);
 
-    /* print statements */
-    parser_print(parser);
-
     /* eval parsed statements */
     it = list_iterator_new(parser->statements, LIST_HEAD);
     while ((statement = list_iterator_next(it)))
@@ -63,8 +61,15 @@ int main(int argc, char *argv[])
       /* get pointer to token and print token type and value */
       node *ast_node = ((node *)statement->val);
 
+      /* print AST node */
+      node_print(ast_node);
+
       /* eval AST node */
-      eval(ast_node);
+      eval_result = eval(ast_node);
+
+      /* print result after evaluation */
+      printf(" = %s\n", object_inspect(eval_result));
+
     }
     deallocate(it);
 
