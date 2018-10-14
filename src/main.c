@@ -70,6 +70,9 @@ int main(int argc, char *argv[])
       /* print result after evaluation */
       printf(" = %s\n", object_inspect(eval_result));
 
+      /* check if return is of type OBJECT_RETURN */
+      if (object_type(eval_result) == OBJECT_RETURN)
+        break;
     }
     deallocate(it);
 
