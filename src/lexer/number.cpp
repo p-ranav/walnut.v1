@@ -13,7 +13,7 @@ void lexer::number(std::string &character)
   {
     character = peek();
     if (character.size() == 1 &&
-        (starts_with(character, '.') || isdigit(character[0])))
+        (character[0] == '.' || isdigit(character[0])))
     {
       character = next();
       result.value += character;

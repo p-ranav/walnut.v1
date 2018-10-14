@@ -11,19 +11,17 @@ void lexer::string_literal(std::string &character)
   {
     character = peek();
 
-    if (starts_with(character, '\\'))
+    if (character[0] == '\\')
     {
       character = next();
-      if (starts_with(character, '\"') ||
-          starts_with(character, '\\'))
+      if (character[0] == '\"' || character[0] == '\\')
       {
         character = next();
         result.value += character;
         continue;
       }
 
-      if (starts_with(character, 0x0A) ||
-          starts_with(character, EOF))
+      if (character[0] == 0x0A || character[0] == EOF)
       {
         throw std::runtime_error("unterminated string literal");
       }
@@ -32,16 +30,14 @@ void lexer::string_literal(std::string &character)
       continue;
     }
 
-    if (!starts_with(character, '\"') &&
-        !starts_with(character, EOF))
+    if (character[0] != '\"' && character[0] != EOF)
     {
       character = next();
       result.value += character;
       continue;
     }
 
-    if (starts_with(character, 0x0A) ||
-        starts_with(character, EOF))
+    if (character[0] == 0x0A || character[0] == EOF)
     {
       throw std::runtime_error("unterminated string literal");
     }

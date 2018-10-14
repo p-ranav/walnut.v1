@@ -38,6 +38,26 @@ void lexer::symbol(std::string &character)
     }
     break;
   }
+
+  if (result.value == "var")
+    result.type = KEYWORD_VAR;
+  else if (result.value == "true")
+    result.type = KEYWORD_TRUE;
+  else if (result.value == "false")
+    result.type = KEYWORD_FALSE;
+  else if (result.value == "if")
+    result.type = KEYWORD_IF;
+  else if (result.value == "else")
+    result.type = KEYWORD_ELSE;
+  else if (result.value == "while")
+    result.type = KEYWORD_WHILE;
+  else if (result.value == "for")
+    result.type = KEYWORD_FOR;
+  else if (result.value == "function")
+    result.type = KEYWORD_FUNCTION;
+  else if (result.value == "return")
+    result.type = KEYWORD_RETURN;
+
   tokens.push_back(result);
 }
 

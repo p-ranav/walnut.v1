@@ -8,23 +8,25 @@ void lexer::comment()
 {
   std::string character = next();
 
-  if (starts_with(character, '/'))
+  if (character[0] == '/')
   {
     line_comment(character);
   }
-  else if (starts_with(character, '*'))
+  else if (character[0] == '*')
   {
     block_comment(character);
   }
   else
   {
-    // TODO: save as TOKEN_DIVIDE
+    token result(file, line, cursor, DIVISION_OPERATOR);
+    result.value += character;
+    tokens.push_back(result);
   }
 }
 
 void lexer::line_comment(std::string &character)
 {
-  while (!starts_with(character, 0x0A) && index < buffer.size())
+  while (character[0] != 0x0A && index < buffer.size())
   {
     character = next();
   }
@@ -37,28 +39,28 @@ void lexer::block_comment(std::string &character)
   while (true)
   {
     character = next();
-    if (starts_with(character, EOF))
+    if (character[0] == EOF)
     {
       throw std::runtime_error("unterminated block comment");
     }
 
-    if (starts_with(character, 0x0A))
+    if (character[0] == 0x0A)
     {
       line += 1;
       cursor = 0;
       continue;
     }
 
-    if (starts_with(character, '*'))
+    if (character[0] == '*')
     {
       character = peek();
 
-      if (starts_with(character, EOF))
+      if (character[0] == EOF)
       {
         throw std::runtime_error("unterminated block comment");
       }
 
-      if (starts_with(character, '/'))
+      if (character[0] == '/')
       {
         next();
         next();

@@ -22,7 +22,7 @@ void lexer::tokenize(const std::string &file_path)
     if (isutf(buffer[index]))
     {
       std::string character = next();
-      if (starts_with(character, '/'))
+      if (character[0] == '/')
         comment();
       else if (isdigit(character[0]))
         number(character);
@@ -30,13 +30,13 @@ void lexer::tokenize(const std::string &file_path)
         symbol(character);
       else if (valid_whitespace(character))
         whitespace(character);
-      else if (starts_with(character, '"'))
+      else if (character[0] == '"')
         string_literal(character);
       else if (ispunct(character[0]))
         punctuation(character);
 
       /* if newline is encountered, update line and reset cursor */
-      if (starts_with(character, '\n'))
+      if (character[0] == '\n')
       {
         line += 1;
         cursor = 0;
@@ -69,21 +69,6 @@ std::string lexer::next(bool update_index)
 std::string lexer::peek()
 {
   return next(false);
-}
-
-bool lexer::starts_with(const std::string &current, char character)
-{
-  return (current[0] == character);
-}
-
-void lexer::print(const token &token, const std::string &type)
-{
-  std::cout << "{ \"file\": \"" << token.file << "\""
-            << ", \"line\": \"" << token.line << "\""
-            << ", \"cursor\": \"" << token.cursor << "\""
-            << ", \"type\": \"" << type << "\""
-            << ", \"value\": \"" << token.value << "\""
-            << std::endl;
 }
 
 } // namespace lexer
