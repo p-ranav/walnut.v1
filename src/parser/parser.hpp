@@ -29,6 +29,8 @@ namespace parser
     bool expect_peek(lexer::token_type value);
 
     std::shared_ptr<node> parse_statement();
+    std::shared_ptr<node> parse_var_statement();
+    std::shared_ptr<node> parse_return_statement();
   };
 
 }

@@ -45,4 +45,14 @@ namespace parser
       std::cout << "\"" << value << "\"" << std::endl;
     }
   };
+
+  struct identifier_node : node
+  {
+    std::string value;
+    explicit identifier_node(std::string value) : node(IDENTIFIER), value(value) {}
+
+    void print() override {
+      std::cout << value << std::endl;
+    }
+  };
 }
