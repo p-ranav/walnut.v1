@@ -4,9 +4,10 @@
 
 namespace lexer
 {
+
 void lexer::number(std::string &character)
 {
-  token result(file, line, cursor, character);
+  token result(file, line, cursor, INTEGER, character);
 
   while (true)
   {
@@ -28,10 +29,10 @@ void lexer::number(std::string &character)
   }
   else
   {
-    result.type = INTEGER;
     print(result, "integer");
   }
 
   tokens.push_back(result);
 }
+
 } // namespace lexer

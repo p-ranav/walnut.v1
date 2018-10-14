@@ -3,6 +3,7 @@
 
 namespace lexer
 {
+
 void lexer::comment()
 {
   std::string character = next();
@@ -66,4 +67,5 @@ void lexer::block_comment(std::string &character)
     }
   }
 }
+
 } // namespace lexer

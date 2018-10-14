@@ -25,7 +25,7 @@ bool lexer::valid_symbol(std::string &character)
 
 void lexer::symbol(std::string &character)
 {
-  token result(file, line, cursor, character);
+  token result(file, line, cursor, SYMBOL, character);
 
   while (true)
   {
@@ -42,4 +42,5 @@ void lexer::symbol(std::string &character)
   print(result, "symbol");
   tokens.push_back(result);
 }
+
 } // namespace lexer

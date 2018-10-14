@@ -2,6 +2,7 @@
 
 namespace lexer
 {
+
 bool lexer::valid_whitespace(std::string &character)
 {
   return (

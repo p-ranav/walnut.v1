@@ -3,10 +3,10 @@
 
 namespace lexer
 {
+
 void lexer::string_literal(std::string &character)
 {
-  token result(file, line, cursor);
-
+  token result(file, line, cursor, STRING_LITERAL);
   while (true)
   {
     character = peek();
@@ -53,4 +53,5 @@ void lexer::string_literal(std::string &character)
   print(result, "string");
   tokens.push_back(result);
 }
+
 } // namespace lexer
