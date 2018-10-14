@@ -58,6 +58,12 @@ void lexer::symbol(std::string &character)
   else if (result.value == "return")
     result.type = KEYWORD_RETURN;
 
+  /* unicode keywords */
+  else if (result.value == "ƒ")      // "ƒ" (U+0192)
+    result.type = KEYWORD_FUNCTION;
+  else if (result.value == "𝑓")      // "𝑓" (U+1D453)
+    result.type = KEYWORD_FUNCTION;
+
   tokens.push_back(result);
 }
 

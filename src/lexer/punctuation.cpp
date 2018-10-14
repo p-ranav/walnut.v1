@@ -69,6 +69,22 @@ void lexer::punctuation(std::string &character)
   else if (result.value == "!")
     result.type = LOGICAL_NOT_OPERATOR;
 
+  /* unicode operators */
+  else if (result.value == "＝")
+    result.type = ASSIGNMENT_OPERATOR;     
+  else if (result.value == "≥")
+    result.type = GREATER_THAN_OR_EQUAL_OPERATOR; 
+  else if (result.value == "≤")
+    result.type = LESSER_THAN_OR_EQUAL_OPERATOR;
+  else if (result.value == "≠")
+    result.type = INEQUALITY_OPERATOR;     
+  else if (result.value == "⋅")
+    result.type = MULTIPLICATION_OPERATOR; 
+  else if (result.value == "•")
+    result.type = MULTIPLICATION_OPERATOR;
+  else if (result.value == "×")
+    result.type = MULTIPLICATION_OPERATOR;
+
   tokens.push_back(result);
 }
 
