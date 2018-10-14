@@ -18,11 +18,16 @@ struct token
   token_type type;
   std::string value;
 
-  explicit token(std::string file, unsigned int line, unsigned int cursor, std::string initial_value = "") : file(file),
-                                                                                                             line(line),
-                                                                                                             cursor(cursor)
+  explicit token(const std::string &file,
+                 unsigned int line,
+                 unsigned int cursor,
+                 const std::string &initial_value = "")
+      : file(file),
+        line(line),
+        cursor(cursor),
+        type(INVALID),
+        value("")
   {
-    value = "";
     value += initial_value;
   }
 };

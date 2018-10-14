@@ -7,13 +7,12 @@
 namespace lexer
 {
 
+lexer::lexer() : file(""), line(1), cursor(1), buffer(""), index(0)
+{
+}
+
 void lexer::tokenize(const std::string &file_path)
 {
-  /* initialize context */
-  file = file_path;
-  line = 1;
-  cursor = 1;
-
   /* read file into buffer */
   std::ifstream file_stream(file);
   buffer = std::string((std::istreambuf_iterator<char>(file_stream)),
@@ -70,7 +69,7 @@ bool lexer::starts_with(const std::string &current, char character)
   return (current[0] == character);
 }
 
-void lexer::print(token token, std::string type)
+void lexer::print(const token &token, const std::string &type)
 {
   std::cout << "{ \"file\": \"" << token.file << "\""
             << ", \"line\": \"" << token.line << "\""

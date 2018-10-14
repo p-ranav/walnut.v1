@@ -11,7 +11,6 @@ bool lexer::valid_symbol(std::string &character)
         (c >= 'a' && c <= 'z') ||
         (c >= '0' && c <= '9') ||
         (c == '_') ||
-        ((unsigned char)c >= 0xC0) ||
         ((unsigned char)c >= 0x80))
     {
       continue;

@@ -10,11 +10,12 @@ namespace lexer
 class lexer
 {
 public:
+  lexer();
   std::vector<token> tokens;
   void tokenize(const std::string &file_path);
 
 private:
-  void print(token value, std::string type);
+  void print(const token &value, const std::string &type);
 
   std::string next(bool update_index = true);
   std::string peek();
