@@ -7,7 +7,7 @@
 namespace lexer
 {
 
-  std::vector<token> lexer::tokenize(std::string file)
+  std::vector<lexer::token> lexer::tokenize(std::string file)
   {
     std::vector<token> result;
 
