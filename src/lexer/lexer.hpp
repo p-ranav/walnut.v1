@@ -19,7 +19,7 @@ namespace lexer
     std::string buffer;
     size_t index;
 
-    std::vector<token> tokenize(std::string file);
+    std::vector<token> tokenize(const std::string& file_path);
 
   private:
 
@@ -27,7 +27,9 @@ namespace lexer
     std::string peek();
     bool starts_with(const std::string& current, char character);
 
-    void tokenize_comment();
+    void consume_comment();
+    void consume_line_comment(std::string& character);
+    void consume_block_comment(std::string& character);
 
   };
 }

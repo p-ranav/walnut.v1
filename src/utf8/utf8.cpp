@@ -102,13 +102,12 @@ done_toucs:
 */
 int u8_toutf8(char *dest, int sz, u_int32_t *src, int srcsz)
 {
-  u_int32_t ch;
   int i = 0;
   char *dest_end = dest + sz;
 
   while (srcsz < 0 ? src[i] != 0 : i < srcsz)
   {
-    ch = src[i];
+    u_int32_t ch = src[i];
     if (ch < 0x80)
     {
       if (dest >= dest_end)
@@ -325,12 +324,11 @@ int u8_read_escape_sequence(char *str, u_int32_t *dest)
 char *u8_strchr(char *s, u_int32_t ch, int *charn)
 {
   int i = 0, lasti = 0;
-  u_int32_t c;
 
   *charn = 0;
   while (s[i])
   {
-    c = u8_nextchar(s, &i);
+    u_int32_t c = u8_nextchar(s, &i);
     if (c == ch)
     {
       return &s[lasti];
@@ -344,13 +342,12 @@ char *u8_strchr(char *s, u_int32_t ch, int *charn)
 char *u8_memchr(char *s, u_int32_t ch, size_t sz, int *charn)
 {
   size_t i = 0, lasti = 0;
-  u_int32_t c;
-  int csz;
 
   *charn = 0;
   while (i < sz)
   {
-    c = csz = 0;
+    int csz = 0;
+    u_int32_t c = 0;
     do
     {
       c <<= 6;
