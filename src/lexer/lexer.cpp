@@ -26,12 +26,10 @@ namespace lexer
       if (isutf(buffer[index]))
       {
         std::string character = next();
-
         if (starts_with(character, '/'))
-          consume_comment();
-
-        std::cout << index << " " << buffer[index] << std::endl;
-
+          comment();
+        else if (isdigit(character[0]))
+          number();
       }
     }
 
@@ -59,68 +57,6 @@ namespace lexer
   bool lexer::starts_with(const std::string& current, char character)
   {
     return (current[0] == character);
-  }
-
-  void lexer::consume_comment()
-  {
-    std::string character = next();
-    cursor += 2;
-
-    if (starts_with(character, '/')) {
-      consume_line_comment(character);
-    }
-    else if (starts_with(character, '*')) {
-      consume_block_comment(character);
-    }
-    else {
-      // TODO: save as TOKEN_DIVIDE
-    }
-
-  }
-
-  void lexer::consume_line_comment(std::string& character) {
-    while (!starts_with(character, 0x0A) && index < buffer.size())
-    {
-      character = next();
-      cursor += 1;
-    }
-    line += 1;
-    cursor = 1;
-  }
-
-  void lexer::consume_block_comment(std::string& character) {
-    while (true)
-    {
-      character = next();
-      cursor += 1;
-      if (starts_with(character, EOF)) {
-        std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
-        abort();
-      }
-
-      if (starts_with(character, 0x0A)) {
-        line += 1;
-        cursor = 1;
-        continue;
-      }
-
-      if (starts_with(character, '*')) {
-        character = peek();
-
-        if (starts_with(character, EOF)) {
-          std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
-          abort();
-        }
-
-        if (starts_with(character, '/')) {
-          next();
-          cursor += 1;
-          next();
-          cursor += 1;
-          return;
-        }
-      }
-    }
   }
 
 }
