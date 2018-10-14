@@ -4,7 +4,7 @@
 
 namespace lexer 
 {
-  token lexer::number(std::string& character)
+  void lexer::number(std::string& character)
   {
     token result;
     result.file = file;
@@ -28,11 +28,13 @@ namespace lexer
 
     if (result.value.find(".") != std::string::npos) {
       result.type = DOUBLE;
+      print(result, "double");
     }
     else {
       result.type = INTEGER;
+      print(result, "integer");
     }
 
-    return result;
+    tokens.push_back(result);
   }
 }

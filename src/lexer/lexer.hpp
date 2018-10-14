@@ -15,6 +15,8 @@ namespace lexer
 
   private:
 
+    void print(token value, std::string type);
+
     std::string next(bool update_index = true);
     std::string peek();
     bool starts_with(const std::string& current, char character);
@@ -23,7 +25,9 @@ namespace lexer
     void line_comment(std::string& character);
     void block_comment(std::string& character);
 
-    token number(std::string& character);
+    void number(std::string& character);
+    bool valid_symbol(std::string& character);
+    void symbol(std::string& character);
 
     std::string file;
     unsigned int line;

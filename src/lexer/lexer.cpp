@@ -27,12 +27,19 @@ namespace lexer
         if (starts_with(character, '/'))
           comment();
         else if (isdigit(character[0]))
-          tokens.push_back(number(character));
+          number(character);
+        else if (valid_symbol(character))
+          symbol(character);
+
+        /* if newline is encountered, update line and reset cursor */
+        if (starts_with(character, '\n'))
+        {
+          line += 1;
+          cursor = 1;
+        }
+
       }
     }
-
-    for (auto& tok : tokens)
-      std::cout << "TOKEN[" << tok.type << ", " << tok.value << "]" << std::endl;
   }
 
   std::string lexer::next(bool update_index)
@@ -56,6 +63,16 @@ namespace lexer
   bool lexer::starts_with(const std::string& current, char character)
   {
     return (current[0] == character);
+  }
+
+  void lexer::print(token token, std::string type)
+  {
+    std::cout << "{ \"file\": \"" << token.file << "\""
+      << ", \"line\": \"" << token.line << "\""
+      << ", \"cursor\": \"" << token.cursor << "\""
+      << ", \"type\": \"" << type << "\""
+      << ", \"value\": \"" << token.value << "\""
+      << std::endl;
   }
 
 }
