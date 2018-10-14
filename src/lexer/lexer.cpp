@@ -32,6 +32,8 @@ void lexer::tokenize(const std::string &file_path)
         whitespace(character);
       else if (starts_with(character, '"'))
         string_literal(character);
+      else if (ispunct(character[0]))
+        punctuation(character);
 
       /* if newline is encountered, update line and reset cursor */
       if (starts_with(character, '\n'))
@@ -57,7 +59,7 @@ std::string lexer::next(bool update_index)
   }
   else
   {
-    cursor += 1;
+    cursor += length;
   }
   return result;
 }

@@ -34,6 +34,7 @@ private:
   void whitespace(std::string& character);
 
   void string_literal(std::string& character);
+  void punctuation(std::string& character);
 
   std::string file;
   unsigned int line;

@@ -30,18 +30,13 @@ void lexer::symbol(std::string &character)
   while (true)
   {
     character = peek();
-
     if (valid_symbol(character))
     {
       character = next();
-
       result.value += character;
       continue;
     }
-    else
-    {
-      break;
-    }
+    break;
   }
 
   print(result, "symbol");
