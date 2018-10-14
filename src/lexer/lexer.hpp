@@ -13,21 +13,20 @@ namespace lexer
       INVALID
     };
 
-    struct lexer_context
-    {
-      std::string file;
-      unsigned int line;
-      unsigned int cursor;
-    };
-    lexer_context context;
+    std::string file;
+    unsigned int line;
+    unsigned int cursor;
+    std::string buffer;
+    size_t index;
 
     std::vector<token> tokenize(std::string file);
 
   private:
 
-    std::string next(std::string& buffer, size_t& index);
+    std::string next();
+    bool starts_with(const std::string& current, char character);
 
-    bool starts_with(const std::string& buffer, char character);
+    void tokenize_comment();
 
   };
 }

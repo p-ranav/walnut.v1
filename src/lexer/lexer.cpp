@@ -7,26 +7,29 @@
 namespace lexer
 {
 
-  std::vector<lexer::token> lexer::tokenize(std::string file)
+  std::vector<lexer::token> lexer::tokenize(std::string file_path)
   {
     std::vector<token> result;
 
     /* initialize context */
-    context.file = file;
-    context.line = 1;
-    context.cursor = 1;
+    file = file_path;
+    line = 1;
+    cursor = 1;
 
     /* read file into buffer */
     std::ifstream file_stream(file);
-    std::string buffer((std::istreambuf_iterator<char>(file_stream)),
+    buffer = std::string((std::istreambuf_iterator<char>(file_stream)),
       std::istreambuf_iterator<char>());
 
-    for (size_t index = 0; index < buffer.size();)
+    for (index = 0; index < buffer.size();)
     {
       if (isutf(buffer[index]))
       {
-        std::string current = next(buffer, index);
+        std::string current = next();
         std::cout << index << " " << current << std::endl;
+
+        if (starts_with(current, '/'))
+          tokenize_comment();
 
       }
     }
@@ -34,7 +37,7 @@ namespace lexer
     return result;
   }
 
-  std::string lexer::next(std::string& buffer, size_t& index)
+  std::string lexer::next()
   {
     std::string result = "";
     int length = u8_seqlen(&(buffer[index]));
@@ -45,9 +48,26 @@ namespace lexer
     return result;
   }
 
-  bool starts_with(const std::string& buffer, char character)
+  bool lexer::starts_with(const std::string& current, char character)
   {
-    return (buffer[0] == character);
+    return (current[0] == character);
+  }
+
+  void lexer::tokenize_comment()
+  {
+    std::string character = next();
+    cursor += 2;
+
+    if (starts_with(character, '/')) {
+      while (!starts_with(character, 0x0A) && index < buffer.size())
+      {
+        character = next();
+        cursor += 1;
+      }
+      line += 1;
+      cursor = 1;
+    }
+
   }
 
 }
