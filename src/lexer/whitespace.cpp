@@ -24,4 +24,4 @@ void lexer::whitespace(std::string &character)
   }
 }
 
-} // namespace lexer
+} 

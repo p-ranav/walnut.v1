@@ -66,4 +66,4 @@ void lexer::block_comment(std::string &character)
   }
 }
 
-} // namespace lexer
+} 

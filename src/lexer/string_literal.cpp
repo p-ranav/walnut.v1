@@ -44,4 +44,4 @@ void lexer::string_literal(std::string &character)
   tokens.push_back(result);
 }
 
-} // namespace lexer
+} 

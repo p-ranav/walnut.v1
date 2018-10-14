@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
   else if (argc == 2)
   {
     setlocale(LC_ALL, "");
-    
+
     std::string filename = argv[1];
     lexer::lexer lexer;
     lexer.tokenize(filename);

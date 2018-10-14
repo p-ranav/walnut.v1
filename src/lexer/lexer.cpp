@@ -105,4 +105,4 @@ void lexer::token_pair(size_t &index, token_type first, token_type second, token
   }
 }
 
-} // namespace lexer
+} 

@@ -28,4 +28,4 @@ void lexer::number(std::string &character)
   tokens.push_back(result);
 }
 
-} // namespace lexer
+} 

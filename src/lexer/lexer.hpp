@@ -41,4 +41,4 @@ private:
   std::string buffer;
   size_t index;
 };
-} // namespace lexer
+} 
