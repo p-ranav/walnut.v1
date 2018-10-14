@@ -23,14 +23,7 @@ void lexer::number(std::string &character)
   }
 
   if (result.value.find(".") != std::string::npos)
-  {
     result.type = DOUBLE;
-    print(result, "double");
-  }
-  else
-  {
-    print(result, "integer");
-  }
 
   tokens.push_back(result);
 }

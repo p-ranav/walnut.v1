@@ -10,7 +10,6 @@ void lexer::punctuation(std::string &character)
   if (ispunct(character[0]))
   {
     result.value += character;
-    print(result, "punctuation");
     tokens.push_back(result);
   }
 }

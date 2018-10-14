@@ -38,8 +38,6 @@ void lexer::symbol(std::string &character)
     }
     break;
   }
-
-  print(result, "symbol");
   tokens.push_back(result);
 }
 

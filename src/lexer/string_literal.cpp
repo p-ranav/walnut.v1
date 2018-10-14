@@ -49,8 +49,6 @@ void lexer::string_literal(std::string &character)
     next();
     break;
   }
-
-  print(result, "string");
   tokens.push_back(result);
 }
 
