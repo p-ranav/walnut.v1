@@ -7,9 +7,14 @@
 namespace lexer
 {
 
-  std::vector<token> tokenize(std::string file)
+  std::vector<token> lexer::tokenize(std::string file)
   {
     std::vector<token> result;
+
+    /* initialize context */
+    context.file = file;
+    context.line = 1;
+    context.cursor = 1;
 
     /* read file into buffer */
     std::ifstream file_stream(file);
@@ -30,7 +35,7 @@ namespace lexer
     return result;
   }
 
-  std::string get_character(std::string& buffer, size_t& index)
+  std::string lexer::get_character(std::string& buffer, size_t& index)
   {
     std::string result;
 

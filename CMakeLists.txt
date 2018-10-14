@@ -3,10 +3,6 @@ set(PROJECT_NAME ULANG)
 set(PROJECT_NAME_LOWERCASE ulang)
 project(${PROJECT_NAME})
 
-if (UNIX)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -std=c89 -pedantic")
-endif(UNIX)
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()

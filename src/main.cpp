@@ -23,8 +23,10 @@ int main(int argc, char *argv[])
     /* e.g., filename with multi-byte chinese characters */
     std::string file_path = argv[1];
 
+    lexer::lexer lexer; /* lol */
+
     /* Tokenize the buffer of characters */
-    lexer::tokenize(file_path);
+    lexer.tokenize(file_path);
 
   }
 

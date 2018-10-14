@@ -7,13 +7,23 @@
 
 namespace lexer
 {
-  struct lexer_context
-  {
-    std::string file;
-    unsigned int line;
-    unsigned int cursor;
-  };
+  class lexer {
+  public:
+    
+    std::vector<token> tokenize(std::string file);
 
-  std::vector<token> tokenize(std::string file);
-  std::string get_character(std::string& buffer, size_t& index);
+  private:
+
+    std::string get_character(std::string& buffer, size_t& index);
+
+    struct lexer_context
+    {
+      std::string file;
+      unsigned int line;
+      unsigned int cursor;
+    };
+
+    lexer_context context;
+
+  };
 }
