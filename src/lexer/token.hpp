@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 
-/* List of all lexer tokens
+namespace lexer
+{
+  /* List of all lexer tokens
    When an input string is parsed by the lexer, our job is
    to look at this string of text and categorize it as one
    of the following tokens, e.g., "Hello" as STRING_LITERAL,
@@ -89,26 +91,27 @@
   TOKEN(IMPORT, "IMPORT", "import")
 
 /* Enum of tokens */
-typedef enum
-{
+  typedef enum
+  {
 #define TOKEN(label, string, value) TOKEN_##label,
-  TOKEN_LIST
+    TOKEN_LIST
 #undef TOKEN
-  TOKEN_INVALID
-} token_type;
+    TOKEN_INVALID
+  } token_type;
 
-/* Each token stores
-   (1) type (e.g., TOKEN_SEMICOLON),
-   (2) value (e.g., 3.14 or "Hello")
-   (3) file path
-   (4) line number in file
-   (5) cursor/character number in line
-   */
-struct token
-{
-  token_type type;
-  std::string value;
-  std::string file_path;
-  unsigned int line;
-  unsigned int cursor;
-};
+  /* Each token stores
+     (1) type (e.g., TOKEN_SEMICOLON),
+     (2) value (e.g., 3.14 or "Hello")
+     (3) file path
+     (4) line number in file
+     (5) cursor/character number in line
+     */
+  struct token
+  {
+    token_type type;
+    std::string value;
+    std::string file_path;
+    unsigned int line;
+    unsigned int cursor;
+  };
+}
