@@ -5,7 +5,8 @@
 #define OBJECT_LIST \
   OBJECT(INTEGER, "integer") \
   OBJECT(BOOLEAN, "bool")\
-  OBJECT(NULL, "null")
+  OBJECT(NULL, "null") \
+  OBJECT(RETURN, "return")
 
 /* Enum of tokens */
 enum object_type_t
