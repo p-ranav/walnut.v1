@@ -45,6 +45,33 @@ void lexer::tokenize(const std::string &file_path)
       continue;
     }
   }
+
+  /* update token type for 2-character operator sequences */
+  std::vector<size_t> indices;
+  for (size_t i = 0; i < tokens.size(); i++)
+  {
+    /* assignment operators */
+    token_pair(i, ADDITION_OPERATOR, ASSIGNMENT_OPERATOR, ADD_AND_ASSIGN_OPERATOR, "+=");
+    token_pair(i, SUBTRACTION_OPERATOR, ASSIGNMENT_OPERATOR, SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
+    token_pair(i, MULTIPLICATION_OPERATOR, ASSIGNMENT_OPERATOR, MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
+    token_pair(i, DIVISION_OPERATOR, ASSIGNMENT_OPERATOR, DIVIDE_AND_ASSIGN_OPERATOR, "/=");
+    token_pair(i, MODULUS_OPERATOR, ASSIGNMENT_OPERATOR, MODULUS_AND_ASSIGN_OPERATOR, "%=");
+
+    /* comparison operators */
+    token_pair(i, ASSIGNMENT_OPERATOR, ASSIGNMENT_OPERATOR, EQUALITY_OPERATOR, "==");
+    token_pair(i, LOGICAL_NOT_OPERATOR, ASSIGNMENT_OPERATOR, INEQUALITY_OPERATOR, "!=");
+    token_pair(i, GREATER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
+    token_pair(i, LESSER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
+
+    /* bitwise operators */
+    token_pair(i, LESSER_THAN_OPERATOR, LESSER_THAN_OPERATOR, BITWISE_LEFT_SHIFT_OPERATOR, "<<");
+    token_pair(i, GREATER_THAN_OPERATOR, GREATER_THAN_OPERATOR, BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
+
+    /* logical operators */
+    token_pair(i, BITWISE_AND_OPERATOR, BITWISE_AND_OPERATOR, LOGICAL_AND_OPERATOR, "&&");
+    token_pair(i, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, "||");
+  }
+
 }
 
 std::string lexer::next(bool update_index)
@@ -69,6 +96,22 @@ std::string lexer::next(bool update_index)
 std::string lexer::peek()
 {
   return next(false);
+}
+
+void lexer::token_pair(size_t& index, 
+  token_type first, 
+  token_type second, 
+  token_type result,
+  std::string result_value)
+{
+  auto& current = tokens[index].type;
+  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : INVALID;
+
+  if (current == first && next == second) {
+    current = result;
+    tokens[index].value = result_value;
+    tokens.erase(tokens.begin() + index + 1);
+  }
 }
 
 } // namespace lexer
