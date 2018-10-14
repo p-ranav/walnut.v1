@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 
     /* Tokenize the buffer of characters */
     lexer.tokenize(file_path);
-
   }
 
   return 0;

@@ -2,35 +2,36 @@
 #include <iostream>
 #include <string>
 
-namespace lexer 
+namespace lexer
 {
-  void lexer::number(std::string& character)
+void lexer::number(std::string &character)
+{
+  token result(file, line, cursor, std::to_string(character[0]));
+
+  while (true)
   {
-    token result(file, line, cursor, std::to_string(character[0]));
-
-    while (true)
-    {
-      character = peek();
-      if (character.size() == 1 &&
+    character = peek();
+    if (character.size() == 1 &&
         (starts_with(character, '.') || isdigit(character[0])))
-      {
-        character = next();
-        cursor += 1;
-        result.value += character;
-        continue;
-      }
-      break;
+    {
+      character = next();
+      result.value += character;
+      continue;
     }
-
-    if (result.value.find(".") != std::string::npos) {
-      result.type = DOUBLE;
-      print(result, "double");
-    }
-    else {
-      result.type = INTEGER;
-      print(result, "integer");
-    }
-
-    tokens.push_back(result);
+    break;
   }
+
+  if (result.value.find(".") != std::string::npos)
+  {
+    result.type = DOUBLE;
+    print(result, "double");
+  }
+  else
+  {
+    result.type = INTEGER;
+    print(result, "integer");
+  }
+
+  tokens.push_back(result);
 }
+} // namespace lexer
