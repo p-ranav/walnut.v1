@@ -41,6 +41,9 @@ void lexer::tokenize(const std::string &file_path)
         line += 1;
         cursor = 0;
       }
+
+      continue;
+
     }
   }
 }
@@ -59,7 +62,7 @@ std::string lexer::next(bool update_index)
   }
   else
   {
-    cursor += length;
+    cursor += 1;
   }
   return result;
 }
