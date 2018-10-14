@@ -8,7 +8,6 @@ extern const char *const token_values[]; /* used in print */
 prefix_expression_node *prefix_expression_construct(token operator)
 {
   /* declarations */
-  int operator_length;
   prefix_expression_node *object;
 
   object = allocate(prefix_expression_node, 1);

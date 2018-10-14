@@ -24,7 +24,6 @@ void if_expression_print(if_expression_node *object)
 {
   printf("if ");
   node_print(object->condition);
-
   /* maybe the curly braces should be part of block_print? */
   printf(" { ");
   block_print(object->consequence);

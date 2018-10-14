@@ -8,7 +8,6 @@ extern const char *const token_values[]; /* used in print */
 infix_expression_node *infix_expression_construct(token operator)
 {
   /* declarations */
-  int operator_length;
   infix_expression_node *object;
 
   object = allocate(infix_expression_node, 1);

@@ -5,6 +5,8 @@
 #include <bool_node.h>
 #include <prefix_expression_node.h>
 #include <infix_expression_node.h>
+#include <if_expression_node.h>
+#include <block_node.h>
 
 /* Object model headers */
 #include <integer_object.h>
@@ -35,6 +37,12 @@ object * eval(node * ast_node)
     break;
   case INFIX_EXPRESSION:
     result = eval_infix_expression(ast_node);
+    break;
+  case IF_EXPRESSION:
+    result = eval_if_expression(ast_node);
+    break;
+  case BLOCK:
+    result = eval_block(ast_node);
     break;
   default:
     result = eval_null();
@@ -331,4 +339,84 @@ object * eval_boolean_infix_expression(token operator, object * left, object * r
   BOOLEAN_AS_OBJECT->inspect = (const char *(*)(void *))boolean_object_inspect;
   BOOLEAN_AS_OBJECT->destruct = (void(*)(void *))boolean_object_destruct;
   return object_construct(obj, BOOLEAN_AS_OBJECT);
+}
+
+object * eval_block(node * ast_node)
+{
+  /* declarations */
+  object * result = NULL;
+  list_node_t *statement;
+  list_iterator_t *it;
+
+  /* use list_iterator to iterate over list of tokens */
+  it = list_iterator_new(((block_node *)(ast_node->instance))->statements, LIST_HEAD);
+  while ((statement = list_iterator_next(it)))
+  {
+    /* get pointer to token and print token type and value */
+    node *statement_node = ((node *)statement->val);
+
+    /* eval each statement */
+    result = eval(statement_node);
+  }
+  deallocate(it);
+
+  if (result == NULL)
+    result = eval_null();
+
+  return result;
+}
+
+object * eval_if_expression(node * ast_node)
+{
+  object * condition = eval(((if_expression_node *)ast_node->instance)->condition);
+
+  if (is_condition_true(condition))
+  {
+    block_node * consequence = ((if_expression_node *)ast_node->instance)->consequence;
+    node_interface * BLOCK_AS_NODE;
+    BLOCK_AS_NODE = allocate(node_interface, 1);
+    BLOCK_AS_NODE->type = (enum node_type_t(*)(void *))block_type;
+    BLOCK_AS_NODE->print = (void(*)(void *))block_print;
+    BLOCK_AS_NODE->destruct = (void(*)(void *))block_destruct;
+    return eval(node_construct(consequence, BLOCK_AS_NODE));
+  }
+  else if (((if_expression_node *)ast_node->instance)->alternative != NULL)
+  {
+    block_node * alternative = ((if_expression_node *)ast_node->instance)->alternative;
+    node_interface * BLOCK_AS_NODE;
+    BLOCK_AS_NODE = allocate(node_interface, 1);
+    BLOCK_AS_NODE->type = (enum node_type_t(*)(void *))block_type;
+    BLOCK_AS_NODE->print = (void(*)(void *))block_print;
+    BLOCK_AS_NODE->destruct = (void(*)(void *))block_destruct;
+    return eval(node_construct(alternative, BLOCK_AS_NODE));
+  }
+  else
+  {
+    return eval_null();
+  }
+}
+
+int is_condition_true(object * obj)
+{
+  if (object_type(obj) == OBJECT_BOOLEAN)
+  {
+    boolean_object * bool_obj = (boolean_object *)(obj->instance);
+    int value = bool_obj->value;
+    if (value > 0)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else if (object_type(obj) == OBJECT_NULL)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
 }

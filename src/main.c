@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     lexer_post_process(tokens);
 
     /* Print lexer tokens */
-    lexer_print(tokens);
+    /* lexer_print(tokens); */
 
     /* Parse program */
     parser = parse(tokens);
