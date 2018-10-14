@@ -7,13 +7,13 @@
 
 namespace lexer
 {
-  /*
-    The lexer needs to do the following:
-    (1) Take the sequence of bytes in the input buffer
-    (2) correctly parsing unicode characters (UTF-8 encoding)
-    (3) tokenize the stream of characters (build a list of tokens)
-    (4) return the list of tokens
-    Tokens can be of different categories (see token.hpp)
-  */
-  std::vector<token> tokenize(std::string file_path);
+  struct lexer_context
+  {
+    std::string file;
+    unsigned int line;
+    unsigned int cursor;
+  };
+
+  std::vector<token> tokenize(std::string file);
+  std::string get_character(std::string& buffer, size_t& index);
 }
