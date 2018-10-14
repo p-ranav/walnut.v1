@@ -7,10 +7,8 @@
 namespace lexer
 {
 
-  std::vector<lexer::token> lexer::tokenize(const std::string& file_path)
+  void lexer::tokenize(const std::string& file_path)
   {
-    std::vector<token> result;
-
     /* initialize context */
     file = file_path;
     line = 1;
@@ -29,11 +27,12 @@ namespace lexer
         if (starts_with(character, '/'))
           comment();
         else if (isdigit(character[0]))
-          number();
+          tokens.push_back(number(character));
       }
     }
 
-    return result;
+    for (auto& tok : tokens)
+      std::cout << "TOKEN[" << tok.type << ", " << tok.value << "]" << std::endl;
   }
 
   std::string lexer::next(bool update_index)

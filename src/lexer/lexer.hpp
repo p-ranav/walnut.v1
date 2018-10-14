@@ -1,5 +1,6 @@
 #pragma once
 #include <utf8.hpp>
+#include <token.hpp>
 
 #include <vector>
 #include <stdlib.h>
@@ -9,11 +10,8 @@ namespace lexer
   class lexer {
   public:
 
-    enum token {
-      INVALID
-    };
-
-    std::vector<token> tokenize(const std::string& file_path);
+    std::vector<token> tokens;
+    void tokenize(const std::string& file_path);
 
   private:
 
@@ -25,14 +23,13 @@ namespace lexer
     void line_comment(std::string& character);
     void block_comment(std::string& character);
 
-    void number() {}
+    token number(std::string& character);
 
     std::string file;
     unsigned int line;
     unsigned int cursor;
     std::string buffer;
     size_t index;
-    std::vector<token> tokens;
 
   };
 }
