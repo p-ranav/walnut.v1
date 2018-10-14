@@ -73,6 +73,7 @@ enum token_type
   KEYWORD_FUNCTION,
   KEYWORD_RETURN,
 
+  END_OF_FILE,
   INVALID
 };
 
@@ -83,6 +84,8 @@ struct token
   unsigned int cursor;
   token_type type;
   std::string value;
+
+  token() : file(""), line(1), cursor(0), type(INVALID), value("") {}
 
   explicit token(const std::string &file,
                  unsigned int line,

@@ -69,6 +69,9 @@ void lexer::tokenize(const std::string &file_path)
     token_pair(i, BITWISE_AND_OPERATOR, BITWISE_AND_OPERATOR, LOGICAL_AND_OPERATOR, "&&");
     token_pair(i, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, "||");
   }
+
+  token eof(file, line, cursor, END_OF_FILE, "EOF");
+  tokens.push_back(eof);
 }
 
 std::string lexer::next(bool update_index)

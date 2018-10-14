@@ -1,4 +1,5 @@
 #include <lexer.hpp>
+#include <parser.hpp>
 
 #include <iostream>
 #include <string>
@@ -18,6 +19,8 @@ int main(int argc, char *argv[])
     std::string filename = argv[1];
     lexer::lexer lexer;
     lexer.tokenize(filename);
+    parser::parser parser(lexer.tokens);
+
   }
   return 0;
 }
