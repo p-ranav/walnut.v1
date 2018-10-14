@@ -23,7 +23,8 @@ namespace lexer
 
   private:
 
-    std::string next();
+    std::string next(bool update_index = true);
+    std::string peek();
     bool starts_with(const std::string& current, char character);
 
     void tokenize_comment();

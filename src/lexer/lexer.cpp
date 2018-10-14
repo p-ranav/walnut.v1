@@ -25,11 +25,12 @@ namespace lexer
     {
       if (isutf(buffer[index]))
       {
-        std::string current = next();
-        std::cout << index << " " << current << std::endl;
+        std::string character = next();
 
-        if (starts_with(current, '/'))
+        if (starts_with(character, '/'))
           tokenize_comment();
+
+        std::cout << index << " " << buffer[index] << std::endl;
 
       }
     }
@@ -37,7 +38,7 @@ namespace lexer
     return result;
   }
 
-  std::string lexer::next()
+  std::string lexer::next(bool update_index)
   {
     std::string result = "";
     int length = u8_seqlen(&(buffer[index]));
@@ -45,7 +46,14 @@ namespace lexer
     {
       result += buffer[index];
     }
+    if (!update_index) {
+      index -= length;
+    }
     return result;
+  }
+
+  std::string lexer::peek() {
+    return next(false);
   }
 
   bool lexer::starts_with(const std::string& current, char character)
@@ -66,6 +74,46 @@ namespace lexer
       }
       line += 1;
       cursor = 1;
+    }
+    else if (starts_with(character, '*')) {
+
+      while (true)
+      {
+        character = next();
+        cursor += 1;
+        if (starts_with(character, EOF)) {
+          std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
+          abort();
+        }
+
+        if (starts_with(character, 0x0A)) {
+          line += 1;
+          cursor = 1;
+          continue;
+        }
+
+        if (starts_with(character, '*')) {
+          character = peek();
+
+          if (starts_with(character, EOF)) {
+            std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
+            abort();
+          }
+
+          if (starts_with(character, '/')) {
+            next();
+            cursor += 1;
+            next();
+            cursor += 1;
+            return;
+          }
+        }
+      }
+
+
+    }
+    else {
+      // TODO: save as TOKEN_DIVIDE
     }
 
   }
