@@ -11,7 +11,7 @@ lexer::lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
 
 void lexer::tokenize(const std::string &file_path)
 {
-  /* read file into buffer */
+  // read file into buffer
   file = file_path;
   std::ifstream file_stream(file);
   buffer = std::string((std::istreambuf_iterator<char>(file_stream)),
@@ -35,7 +35,6 @@ void lexer::tokenize(const std::string &file_path)
       else if (ispunct(character[0]))
         punctuation(character);
 
-      /* if newline is encountered, update line and reset cursor */
       if (character[0] == '\n')
       {
         line += 1;
@@ -46,27 +45,27 @@ void lexer::tokenize(const std::string &file_path)
     }
   }
 
-  /* update token type for 2-character operator sequences */
+  // update token type for 2-character operator sequences
   for (size_t i = 0; i < tokens.size(); i++)
   {
-    /* assignment operators */
+    // assignment operators
     token_pair(i, ADDITION_OPERATOR, ASSIGNMENT_OPERATOR, ADD_AND_ASSIGN_OPERATOR, "+=");
     token_pair(i, SUBTRACTION_OPERATOR, ASSIGNMENT_OPERATOR, SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
     token_pair(i, MULTIPLICATION_OPERATOR, ASSIGNMENT_OPERATOR, MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
     token_pair(i, DIVISION_OPERATOR, ASSIGNMENT_OPERATOR, DIVIDE_AND_ASSIGN_OPERATOR, "/=");
     token_pair(i, MODULUS_OPERATOR, ASSIGNMENT_OPERATOR, MODULUS_AND_ASSIGN_OPERATOR, "%=");
 
-    /* comparison operators */
+    // comparison operators
     token_pair(i, ASSIGNMENT_OPERATOR, ASSIGNMENT_OPERATOR, EQUALITY_OPERATOR, "==");
     token_pair(i, LOGICAL_NOT_OPERATOR, ASSIGNMENT_OPERATOR, INEQUALITY_OPERATOR, "!=");
     token_pair(i, GREATER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
     token_pair(i, LESSER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
 
-    /* bitwise operators */
+    // bitwise operators
     token_pair(i, LESSER_THAN_OPERATOR, LESSER_THAN_OPERATOR, BITWISE_LEFT_SHIFT_OPERATOR, "<<");
     token_pair(i, GREATER_THAN_OPERATOR, GREATER_THAN_OPERATOR, BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
 
-    /* logical operators */
+    // logical operators
     token_pair(i, BITWISE_AND_OPERATOR, BITWISE_AND_OPERATOR, LOGICAL_AND_OPERATOR, "&&");
     token_pair(i, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, "||");
   }
@@ -76,18 +75,15 @@ std::string lexer::next(bool update_index)
 {
   std::string result = "";
   int length = u8_seqlen(&(buffer[index]));
+
   for (int i = 0; i < length; i++, index++)
-  {
     result += buffer[index];
-  }
+
   if (!update_index)
-  {
     index -= length;
-  }
   else
-  {
     cursor += 1;
-  }
+
   return result;
 }
 

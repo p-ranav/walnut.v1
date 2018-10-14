@@ -40,9 +40,7 @@ void lexer::block_comment(std::string &character)
   {
     character = next();
     if (character[0] == EOF)
-    {
       throw std::runtime_error("unterminated block comment");
-    }
 
     if (character[0] == 0x0A)
     {
@@ -56,9 +54,7 @@ void lexer::block_comment(std::string &character)
       character = peek();
 
       if (character[0] == EOF)
-      {
         throw std::runtime_error("unterminated block comment");
-      }
 
       if (character[0] == '/')
       {

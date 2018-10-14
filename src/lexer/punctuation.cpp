@@ -9,7 +9,7 @@ void lexer::punctuation(std::string &character)
   token result(file, line, cursor, PUNCTUATION);
   result.value += character;
 
-  /* delimiters */
+  // delimiters
   if (result.value == ".")
     result.type = DOT_OPERATOR;
   else if (result.value == ",")
@@ -19,13 +19,13 @@ void lexer::punctuation(std::string &character)
   else if (result.value == ";")
     result.type = SEMI_COLON_OPERATOR;
 
-  /* comparison operators */
+  // comparison operators
   else if (result.value == ">")
     result.type = GREATER_THAN_OPERATOR;
   else if (result.value == "<")
     result.type = LESSER_THAN_OPERATOR;
 
-  /* arithmetic operators */
+  // arithmetic operators
   else if (result.value == "+")
     result.type = ADDITION_OPERATOR;
   else if (result.value == "-")
@@ -37,11 +37,11 @@ void lexer::punctuation(std::string &character)
   else if (result.value == "%")
     result.type = MODULUS_OPERATOR;
 
-  /* assignment operators */
+  // assignment operators */
   else if (result.value == "=")
     result.type = ASSIGNMENT_OPERATOR;
 
-  /* brackets, braces and paranthesis */
+  // brackets, braces and paranthesis
   else if (result.value == "(")
     result.type = LEFT_PARANTHESIS;
   else if (result.value == "{")
@@ -55,7 +55,7 @@ void lexer::punctuation(std::string &character)
   else if (result.value == "]")
     result.type = RIGHT_SQUARE_BRACKETS;
 
-  /* bitwise operators */
+  // bitwise operators
   else if (result.value == "&")
     result.type = BITWISE_AND_OPERATOR;
   else if (result.value == "|")
@@ -65,11 +65,11 @@ void lexer::punctuation(std::string &character)
   else if (result.value == "~")
     result.type = BITWISE_ONES_COMPLEMENT_OPERATOR;
 
-  /* logical operators */
+  // logical operators
   else if (result.value == "!")
     result.type = LOGICAL_NOT_OPERATOR;
 
-  /* unicode operators */
+  // unicode operators
   else if (result.value == "＝")
     result.type = ASSIGNMENT_OPERATOR;
   else if (result.value == "≥")

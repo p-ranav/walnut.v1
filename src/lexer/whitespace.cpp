@@ -18,11 +18,9 @@ void lexer::whitespace(std::string &character)
   {
     character = peek();
     if (valid_whitespace(character))
-    {
       character = next();
-      continue;
-    }
-    return;
+    else
+      return;
   }
 }
 

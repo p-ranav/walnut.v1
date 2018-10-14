@@ -12,13 +12,9 @@ bool lexer::valid_symbol(std::string &character)
         (c >= '0' && c <= '9') ||
         (c == '_') ||
         ((unsigned char)c >= 0x80))
-    {
       continue;
-    }
     else
-    {
       return false;
-    }
   }
   return true;
 }
@@ -55,14 +51,12 @@ void lexer::symbol(std::string &character)
     result.type = KEYWORD_FOR;
   else if (result.value == "function")
     result.type = KEYWORD_FUNCTION;
-  else if (result.value == "return")
-    result.type = KEYWORD_RETURN;
-
-  /* unicode keywords */
   else if (result.value == "ƒ")
     result.type = KEYWORD_FUNCTION;
   else if (result.value == "𝑓")
     result.type = KEYWORD_FUNCTION;
+  else if (result.value == "return")
+    result.type = KEYWORD_RETURN;
 
   tokens.push_back(result);
 }

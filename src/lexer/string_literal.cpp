@@ -22,9 +22,7 @@ void lexer::string_literal(std::string &character)
       }
 
       if (character[0] == 0x0A || character[0] == EOF)
-      {
         throw std::runtime_error("unterminated string literal");
-      }
 
       result.value += character;
       continue;
@@ -38,9 +36,7 @@ void lexer::string_literal(std::string &character)
     }
 
     if (character[0] == 0x0A || character[0] == EOF)
-    {
       throw std::runtime_error("unterminated string literal");
-    }
 
     next();
     break;
