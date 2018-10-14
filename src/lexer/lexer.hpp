@@ -26,8 +26,12 @@ private:
   void block_comment(std::string &character);
 
   void number(std::string &character);
+
   bool valid_symbol(std::string &character);
   void symbol(std::string &character);
+
+  bool valid_whitespace(std::string& character);
+  void whitespace(std::string& character);
 
   std::string file;
   unsigned int line;
