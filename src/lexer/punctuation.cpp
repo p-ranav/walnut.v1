@@ -71,15 +71,15 @@ void lexer::punctuation(std::string &character)
 
   /* unicode operators */
   else if (result.value == "＝")
-    result.type = ASSIGNMENT_OPERATOR;     
+    result.type = ASSIGNMENT_OPERATOR;
   else if (result.value == "≥")
-    result.type = GREATER_THAN_OR_EQUAL_OPERATOR; 
+    result.type = GREATER_THAN_OR_EQUAL_OPERATOR;
   else if (result.value == "≤")
     result.type = LESSER_THAN_OR_EQUAL_OPERATOR;
   else if (result.value == "≠")
-    result.type = INEQUALITY_OPERATOR;     
+    result.type = INEQUALITY_OPERATOR;
   else if (result.value == "⋅")
-    result.type = MULTIPLICATION_OPERATOR; 
+    result.type = MULTIPLICATION_OPERATOR;
   else if (result.value == "•")
     result.type = MULTIPLICATION_OPERATOR;
   else if (result.value == "×")

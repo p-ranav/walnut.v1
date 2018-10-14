@@ -33,8 +33,7 @@ private:
   void string_literal(std::string &character);
   void punctuation(std::string &character);
 
-  void token_pair(size_t& index, token_type first, token_type second, token_type result,
-    std::string result_value);
+  void token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value);
 
   std::string file;
   unsigned int line;

@@ -47,7 +47,6 @@ void lexer::tokenize(const std::string &file_path)
   }
 
   /* update token type for 2-character operator sequences */
-  std::vector<size_t> indices;
   for (size_t i = 0; i < tokens.size(); i++)
   {
     /* assignment operators */
@@ -71,7 +70,6 @@ void lexer::tokenize(const std::string &file_path)
     token_pair(i, BITWISE_AND_OPERATOR, BITWISE_AND_OPERATOR, LOGICAL_AND_OPERATOR, "&&");
     token_pair(i, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, "||");
   }
-
 }
 
 std::string lexer::next(bool update_index)
@@ -98,16 +96,13 @@ std::string lexer::peek()
   return next(false);
 }
 
-void lexer::token_pair(size_t& index, 
-  token_type first, 
-  token_type second, 
-  token_type result,
-  std::string result_value)
+void lexer::token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value)
 {
-  auto& current = tokens[index].type;
+  auto &current = tokens[index].type;
   auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : INVALID;
 
-  if (current == first && next == second) {
+  if (current == first && next == second)
+  {
     current = result;
     tokens[index].value = result_value;
     tokens.erase(tokens.begin() + index + 1);
