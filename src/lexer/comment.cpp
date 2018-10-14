@@ -6,7 +6,6 @@ namespace lexer
 void lexer::comment()
 {
   std::string character = next();
-  cursor += 2;
 
   if (starts_with(character, '/'))
   {
@@ -27,10 +26,9 @@ void lexer::line_comment(std::string &character)
   while (!starts_with(character, 0x0A) && index < buffer.size())
   {
     character = next();
-    cursor += 1;
   }
   line += 1;
-  cursor = 1;
+  cursor = 0;
 }
 
 void lexer::block_comment(std::string &character)
@@ -38,7 +36,6 @@ void lexer::block_comment(std::string &character)
   while (true)
   {
     character = next();
-    cursor += 1;
     if (starts_with(character, EOF))
     {
       std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
@@ -48,7 +45,7 @@ void lexer::block_comment(std::string &character)
     if (starts_with(character, 0x0A))
     {
       line += 1;
-      cursor = 1;
+      cursor = 0;
       continue;
     }
 
@@ -65,9 +62,7 @@ void lexer::block_comment(std::string &character)
       if (starts_with(character, '/'))
       {
         next();
-        cursor += 1;
         next();
-        cursor += 1;
         return;
       }
     }

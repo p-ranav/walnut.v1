@@ -33,6 +33,8 @@ private:
   bool valid_whitespace(std::string& character);
   void whitespace(std::string& character);
 
+  void string_literal(std::string& character);
+
   std::string file;
   unsigned int line;
   unsigned int cursor;

@@ -13,8 +13,6 @@ namespace lexer
 
   void lexer::whitespace(std::string& character)
   {
-    cursor += 1;
-
     while (true)
     {
       character = peek();

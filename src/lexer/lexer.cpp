@@ -7,7 +7,7 @@
 namespace lexer
 {
 
-lexer::lexer() : file(""), line(1), cursor(1), buffer(""), index(0) {}
+lexer::lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
 
 void lexer::tokenize(const std::string &file_path)
 {
@@ -30,12 +30,14 @@ void lexer::tokenize(const std::string &file_path)
         symbol(character);
       else if (valid_whitespace(character))
         whitespace(character);
+      else if (starts_with(character, '"'))
+        string_literal(character);
 
       /* if newline is encountered, update line and reset cursor */
       if (starts_with(character, '\n'))
       {
         line += 1;
-        cursor = 1;
+        cursor = 0;
       }
     }
   }

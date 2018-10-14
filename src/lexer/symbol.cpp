@@ -44,7 +44,6 @@ void lexer::symbol(std::string &character)
     }
   }
 
-  cursor += 1;
   print(result, "symbol");
   tokens.push_back(result);
 }
