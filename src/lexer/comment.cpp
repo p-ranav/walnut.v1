@@ -38,8 +38,7 @@ void lexer::block_comment(std::string &character)
     character = next();
     if (starts_with(character, EOF))
     {
-      std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
-      abort();
+      throw std::runtime_error("unterminated block comment");
     }
 
     if (starts_with(character, 0x0A))
@@ -55,8 +54,7 @@ void lexer::block_comment(std::string &character)
 
       if (starts_with(character, EOF))
       {
-        std::cerr << "lexer error: block comment not terminated before end of file" << std::endl;
-        abort();
+        throw std::runtime_error("unterminated block comment");
       }
 
       if (starts_with(character, '/'))

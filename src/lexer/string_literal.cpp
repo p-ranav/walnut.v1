@@ -25,8 +25,7 @@ namespace lexer
         if (starts_with(character, 0x0A) || 
           starts_with(character, EOF))
         {
-          std::cerr << "lexer error: block comment not terminated before closing string literal" << std::endl;
-          abort();
+          throw std::runtime_error("unterminated string literal");
         }
 
         result.value += character;
@@ -43,8 +42,7 @@ namespace lexer
       if (starts_with(character, 0x0A) || 
         starts_with(character, EOF))
       {
-        std::cerr << "lexer error: block comment not terminated before closing string literal" << std::endl;
-        abort();
+        throw std::runtime_error("unterminated string literal");
       }
 
       next();
