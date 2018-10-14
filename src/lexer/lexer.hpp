@@ -30,11 +30,11 @@ private:
   bool valid_symbol(std::string &character);
   void symbol(std::string &character);
 
-  bool valid_whitespace(std::string& character);
-  void whitespace(std::string& character);
+  bool valid_whitespace(std::string &character);
+  void whitespace(std::string &character);
 
-  void string_literal(std::string& character);
-  void punctuation(std::string& character);
+  void string_literal(std::string &character);
+  void punctuation(std::string &character);
 
   std::string file;
   unsigned int line;

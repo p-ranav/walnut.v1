@@ -3,16 +3,15 @@
 
 namespace lexer
 {
-  void lexer::punctuation(std::string& character)
+void lexer::punctuation(std::string &character)
+{
+  token result(file, line, cursor);
+
+  if (ispunct(character[0]))
   {
-    token result(file, line, cursor);
-
-    if (ispunct(character[0]))
-    {
-      result.value += character;
-      print(result, "punctuation");
-      tokens.push_back(result);
-    }
-
+    result.value += character;
+    print(result, "punctuation");
+    tokens.push_back(result);
   }
 }
+} // namespace lexer

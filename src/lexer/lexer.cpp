@@ -43,7 +43,6 @@ void lexer::tokenize(const std::string &file_path)
       }
 
       continue;
-
     }
   }
 }
