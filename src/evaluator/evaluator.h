@@ -24,4 +24,6 @@ object * eval_if_expression(node * ast_node);
 int is_condition_true(object * obj);
 object * eval_block(node * ast_node);
 
+object * eval_return(node * ast_node);
+
 #endif

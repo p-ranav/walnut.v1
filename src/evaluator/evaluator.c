@@ -7,11 +7,13 @@
 #include <infix_expression_node.h>
 #include <if_expression_node.h>
 #include <block_node.h>
+#include <return_node.h>
 
 /* Object model headers */
 #include <integer_object.h>
 #include <bool_object.h>
 #include <null_object.h>
+#include <return_object.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +45,9 @@ object * eval(node * ast_node)
     break;
   case BLOCK:
     result = eval_block(ast_node);
+    break;
+  case RETURN_STATEMENT:
+    result = eval_return(ast_node);
     break;
   default:
     result = eval_null();
@@ -357,6 +362,10 @@ object * eval_block(node * ast_node)
 
     /* eval each statement */
     result = eval(statement_node);
+
+    /* check if return is of type OBJECT_RETURN */
+    if (object_type(result) == OBJECT_RETURN)
+      return result;
   }
   deallocate(it);
 
@@ -419,4 +428,25 @@ int is_condition_true(object * obj)
   {
     return 1;
   }
+}
+
+object * eval_return(node * ast_node)
+{
+  /* declarations */
+  node * return_expression;
+  object * return_expression_result;
+  return_object * result;
+  object_interface * RETURN_AS_OBJECT;
+
+  return_expression = ((return_node *)ast_node->instance)->expression;
+  return_expression_result = eval(return_expression);
+
+  result = return_object_construct();
+  result->value = return_expression_result;
+
+  RETURN_AS_OBJECT = allocate(object_interface, 1);
+  RETURN_AS_OBJECT->type = (enum object_type_t(*)(void *))return_object_type;
+  RETURN_AS_OBJECT->inspect = (const char *(*)(void *))return_object_inspect;
+  RETURN_AS_OBJECT->destruct = (void(*)(void *))return_object_destruct;
+  return object_construct(result, RETURN_AS_OBJECT);
 }
