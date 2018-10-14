@@ -12,8 +12,6 @@ namespace lexer
     enum token {
       INVALID
     };
-    
-    std::vector<token> tokenize(std::string file);
 
     struct lexer_context
     {
@@ -21,12 +19,15 @@ namespace lexer
       unsigned int line;
       unsigned int cursor;
     };
+    lexer_context context;
+
+    std::vector<token> tokenize(std::string file);
 
   private:
 
-    std::string get_character(std::string& buffer, size_t& index);
+    std::string next(std::string& buffer, size_t& index);
 
-    lexer_context context;
+    bool starts_with(const std::string& buffer, char character);
 
   };
 }

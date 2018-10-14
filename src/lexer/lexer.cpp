@@ -21,13 +21,12 @@ namespace lexer
     std::string buffer((std::istreambuf_iterator<char>(file_stream)),
       std::istreambuf_iterator<char>());
 
-    size_t index = 0;
-    while (index < buffer.size())
+    for (size_t index = 0; index < buffer.size();)
     {
       if (isutf(buffer[index]))
       {
-        /* get next character (potentially multi-byte) */
-        std::string current = get_character(buffer, index);
+        std::string current = next(buffer, index);
+        std::cout << index << " " << current << std::endl;
 
       }
     }
@@ -35,21 +34,20 @@ namespace lexer
     return result;
   }
 
-  std::string lexer::get_character(std::string& buffer, size_t& index)
+  std::string lexer::next(std::string& buffer, size_t& index)
   {
-    std::string result;
-
-    int sequence_length = u8_seqlen(&(buffer[index]));
-
-    int sequence_index = 0;
-    while (sequence_index < sequence_length)
+    std::string result = "";
+    int length = u8_seqlen(&(buffer[index]));
+    for (int i = 0; i < length; i++, index++)
     {
       result += buffer[index];
-      index += 1;
-      sequence_index += 1;
     }
-
     return result;
+  }
+
+  bool starts_with(const std::string& buffer, char character)
+  {
+    return (buffer[0] == character);
   }
 
 }
