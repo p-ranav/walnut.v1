@@ -17,6 +17,15 @@ namespace lexer
     unsigned int cursor;
     token_type type;
     std::string value;
+
+    explicit token(std::string file, unsigned int line, unsigned int cursor, std::string initial_value = "") :
+      file(file),
+      line(line),
+      cursor(cursor) {
+      value = "";
+      value += initial_value;
+    }
+
   };
 
 }

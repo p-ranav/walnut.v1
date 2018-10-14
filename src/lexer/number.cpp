@@ -6,11 +6,7 @@ namespace lexer
 {
   void lexer::number(std::string& character)
   {
-    token result;
-    result.file = file;
-    result.line = line;
-    result.cursor = cursor;
-    result.value += character[0];
+    token result(file, line, cursor, std::to_string(character[0]));
 
     while (true)
     {

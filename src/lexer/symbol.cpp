@@ -24,11 +24,7 @@ namespace lexer
 
   void lexer::symbol(std::string& character)
   {
-    token result;
-    result.file = file;
-    result.line = line;
-    result.cursor = cursor;
-    result.value += character;
+    token result(file, line, cursor, character);
 
     while (true)
     {
