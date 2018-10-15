@@ -1,31 +1,29 @@
 #include <parser.hpp>
 
 Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
-                                                          peek_token(Token()),
-                                                          current_token_index(0),
-                                                          statements({}),
-                                                          tokens(tokens)
+                                             peek_token(Token()),
+                                             current_token_index(0),
+                                             statements({}),
+                                             tokens(tokens),
+                                             precedences({
+                                                 {TokenType::LEFT_PARANTHESIS, CALL},
+                                                 {TokenType::EQUALITY_OPERATOR, EQUAL},
+                                                 {TokenType::INEQUALITY_OPERATOR, EQUAL},
+                                                 {TokenType::LESSER_THAN_OPERATOR, LESSGREATER},
+                                                 {TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                                                 {TokenType::GREATER_THAN_OPERATOR, LESSGREATER},
+                                                 {TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                                                 {TokenType::ADDITION_OPERATOR, SUM},
+                                                 {TokenType::SUBTRACTION_OPERATOR, SUM},
+                                                 {TokenType::MULTIPLICATION_OPERATOR, PRODUCT},
+                                                 {TokenType::DIVISION_OPERATOR, PRODUCT},
+                                                 {TokenType::MODULUS_OPERATOR, PRODUCT},
+                                             })
 {
-  precedences = {
-      {TokenType::LEFT_PARANTHESIS, CALL},
-      {TokenType::EQUALITY_OPERATOR, EQUAL},
-      {TokenType::INEQUALITY_OPERATOR, EQUAL},
-      {TokenType::LESSER_THAN_OPERATOR, LESSGREATER},
-      {TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-      {TokenType::GREATER_THAN_OPERATOR, LESSGREATER},
-      {TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-      {TokenType::ADDITION_OPERATOR, SUM},
-      {TokenType::SUBTRACTION_OPERATOR, SUM},
-      {TokenType::MULTIPLICATION_OPERATOR, PRODUCT},
-      {TokenType::DIVISION_OPERATOR, PRODUCT},
-      {TokenType::MODULUS_OPERATOR, PRODUCT},
-  };
-
   // prefix parse functions
   RegisterPrefixParseFunction(TokenType::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
   RegisterPrefixParseFunction(TokenType::INTEGER, std::bind(&Parser::ParseInteger, this));
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
-
 }
 
 void Parser::ParseProgram()
@@ -168,7 +166,7 @@ AstNodePtr Parser::ParseExpressionStatement()
 AstNodePtr Parser::ParseExpression(Precedence precedence)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
-  
+
   if (prefix == nullptr)
     return nullptr;
 

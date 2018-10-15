@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 typedef std::string String;
-typedef std::string& StringRef;
-typedef const std::string& StringConstRef;
+typedef std::string &StringRef;
+typedef const std::string &StringConstRef;
 typedef bool Bool;
 typedef unsigned int UnsignedInt;
 typedef std::ifstream InputFileStream;
@@ -45,4 +45,4 @@ struct Lexer
   UnsignedInt cursor;
   String buffer;
   UnsignedInt index;
-}; 
+};

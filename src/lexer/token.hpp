@@ -88,8 +88,8 @@ struct Token
   Token() : file(""), line(1), cursor(0), type(INVALID), value("") {}
 
   explicit Token(const String &file,
-    UnsignedInt line,
-    UnsignedInt cursor,
+                 UnsignedInt line,
+                 UnsignedInt cursor,
                  Type type = INVALID,
                  const String &initial_value = "")
       : file(file),
@@ -104,4 +104,4 @@ struct Token
 
 typedef Token::Type TokenType;
 typedef std::vector<Token> TokenVector;
-typedef const std::vector<Token>& TokenVectorConstRef;
+typedef const std::vector<Token> &TokenVectorConstRef;

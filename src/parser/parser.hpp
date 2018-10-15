@@ -15,7 +15,7 @@
 #include <functional>
 
 typedef std::vector<Token> TokenVector;
-typedef const std::vector<Token>& TokenVectorConstRef;
+typedef const std::vector<Token> &TokenVectorConstRef;
 typedef std::vector<std::shared_ptr<AstNode>> AstStatements;
 typedef unsigned int UnsignedInt;
 typedef Token::Type TokenType;
@@ -75,5 +75,4 @@ struct Parser
   Token current_token;
   Token peek_token;
   TokenPrecedenceMap precedences;
-
 };

@@ -18,16 +18,22 @@ void Lexer::Tokenize(StringConstRef file_path)
     if (isutf(buffer[index]))
     {
       String character = NextCharacter();
+
       if (character[0] == '/')
         ParseComment();
+
       else if (isdigit(character[0]))
         ParseNumber(character);
+
       else if (IsValidSymbol(character))
         ParseSymbol(character);
+
       else if (IsValidWhitespace(character))
         ParseWhitespace(character);
+
       else if (character[0] == '"')
         ParseStringLiteral(character);
+
       else if (ispunct(character[0]))
         ParsePunctuation(character);
 
@@ -102,7 +108,7 @@ void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second,
     tokens[index].value = result_value;
     tokens.erase(tokens.begin() + index + 1);
   }
-} 
+}
 
 void Lexer::ParseComment()
 {
@@ -167,7 +173,7 @@ void Lexer::ParseNumber(StringRef character)
   {
     character = PeekCharacter();
     if (character.size() == 1 &&
-      (character[0] == '.' || isdigit(character[0])))
+        (character[0] == '.' || isdigit(character[0])))
     {
       character = NextCharacter();
       result.value += character;
@@ -187,10 +193,10 @@ bool Lexer::IsValidSymbol(StringRef character)
   for (auto &c : character)
   {
     if ((c >= 'A' && c <= 'Z') ||
-      (c >= 'a' && c <= 'z') ||
-      (c >= '0' && c <= '9') ||
-      (c == '_') ||
-      ((unsigned char)c >= 0x80))
+        (c >= 'a' && c <= 'z') ||
+        (c >= '0' && c <= '9') ||
+        (c == '_') ||
+        ((unsigned char)c >= 0x80))
       continue;
     else
       return false;
@@ -243,10 +249,10 @@ void Lexer::ParseSymbol(StringRef character)
 bool Lexer::IsValidWhitespace(StringRef character)
 {
   return (
-    character[0] == ' ' ||
-    character[0] == 0x09 ||
-    character[0] == 0x08 ||
-    character[0] == 0x0D);
+      character[0] == ' ' ||
+      character[0] == 0x09 ||
+      character[0] == 0x08 ||
+      character[0] == 0x0D);
 }
 
 void Lexer::ParseWhitespace(StringRef character)
