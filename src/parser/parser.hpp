@@ -67,6 +67,7 @@ struct Parser
   AstNodePtr ParseIdentifier();
   AstNodePtr ParseInteger();
   AstNodePtr ParseDouble();
+  AstNodePtr ParseBoolean();
   AstNodePtr ParsePrefixExpression();
   AstNodePtr ParseInfixExpression(AstNodePtr left);
 

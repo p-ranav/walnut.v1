@@ -24,6 +24,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
   RegisterPrefixParseFunction(TokenType::INTEGER, std::bind(&Parser::ParseInteger, this));
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
 
@@ -214,6 +216,11 @@ AstNodePtr Parser::ParseInteger()
 AstNodePtr Parser::ParseDouble()
 {
   return std::make_shared<AstDoubleNode>(std::stod(current_token.value));
+}
+
+AstNodePtr Parser::ParseBoolean()
+{
+  return std::make_shared<AstBooleanNode>(current_token.type == TokenType::KEYWORD_TRUE);
 }
 
 AstNodePtr Parser::ParsePrefixExpression()
