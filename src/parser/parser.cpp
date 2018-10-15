@@ -28,6 +28,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
+  RegisterPrefixParseFunction(TokenType::LEFT_PARANTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
 
   // infix parse functions
   RegisterInfixParseFunction(TokenType::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
@@ -228,6 +229,15 @@ AstNodePtr Parser::ParsePrefixExpression()
   AstPrefixExpressionNodePtr result = std::make_shared<AstPrefixExpressionNode>(current_token.type);
   NextToken();
   result->right = ParseExpression(LOWEST);
+  return result;
+}
+
+AstNodePtr Parser::ParseGroupedExpression()
+{
+  NextToken();
+  AstNodePtr result = ParseExpression(LOWEST);
+  if (!ExpectPeek(TokenType::RIGHT_PARANTHESIS))
+    return nullptr;
   return result;
 }
 

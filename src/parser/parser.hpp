@@ -69,6 +69,9 @@ struct Parser
   AstNodePtr ParseDouble();
   AstNodePtr ParseBoolean();
   AstNodePtr ParsePrefixExpression();
+  AstNodePtr ParseGroupedExpression();
+
+  /* Infix parse functions */
   AstNodePtr ParseInfixExpression(AstNodePtr left);
 
   /* Member variables */
