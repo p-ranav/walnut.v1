@@ -4,5 +4,7 @@
 struct AstIntegerNode : AstNode
 {
   int value;
-  explicit AstIntegerNode(int value) : AstNode(INTEGER), value(value) {}
+  explicit AstIntegerNode(int value) : 
+    AstNode(INTEGER), 
+    value(value) {}
 };

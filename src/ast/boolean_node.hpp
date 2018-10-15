@@ -4,5 +4,7 @@
 struct AstBooleanNode : AstNode
 {
   bool value;
-  explicit AstBooleanNode(bool value) : AstNode(BOOLEAN), value(value) {}
+  explicit AstBooleanNode(bool value) : 
+    AstNode(BOOLEAN), 
+    value(value) {}
 };

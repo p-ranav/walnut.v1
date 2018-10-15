@@ -29,6 +29,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LEFT_PARANTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
 
   // infix parse functions
   RegisterInfixParseFunction(TokenType::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
@@ -238,6 +239,55 @@ AstNodePtr Parser::ParseGroupedExpression()
   AstNodePtr result = ParseExpression(LOWEST);
   if (!ExpectPeek(TokenType::RIGHT_PARANTHESIS))
     return nullptr;
+  return result;
+}
+
+AstBlockStatementNodePtr Parser::ParseBlockStatement()
+{
+  AstBlockStatementNodePtr result = std::make_shared<AstBlockStatementNode>();
+  NextToken();
+
+  while (!IsCurrentToken(TokenType::RIGHT_CURLY_BRACES) && !IsCurrentToken(TokenType::END_OF_FILE))
+  {
+    AstNodePtr statement = ParseStatement();
+    
+    if (statement != nullptr)
+      result->statements.push_back(statement);
+
+    NextToken();
+  }
+  return result;
+}
+
+
+AstNodePtr Parser::ParseIfExpression()
+{
+  AstIfExpressionNodePtr result = std::make_shared<AstIfExpressionNode>();
+
+  if (!ExpectPeek(TokenType::LEFT_PARANTHESIS))
+    return nullptr;
+
+  NextToken();
+
+  result->condition = ParseExpression(LOWEST);
+
+  if (!ExpectPeek(TokenType::RIGHT_PARANTHESIS))
+    return nullptr;
+
+  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+    return nullptr;
+
+  result->consequence = ParseBlockStatement();
+
+  if (IsPeekToken(TokenType::KEYWORD_ELSE))
+  {
+    NextToken();
+    if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+      return nullptr;
+
+    result->alternative = ParseBlockStatement();
+  }
+
   return result;
 }
 

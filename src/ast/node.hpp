@@ -15,14 +15,15 @@ struct AstNode
     PREFIX_EXPRESSION,
     INFIX_EXPRESSION,
     IF_EXPRESSION,
-    BLOCK,
+    BLOCK_STATEMENT,
     FUNCTION,
     CALL_EXPRESSION,
     INVALID
   };
 
   Type type;
-  explicit AstNode(Type type) : type(type) {}
+  explicit AstNode(Type type) : 
+    type(type) {}
   virtual ~AstNode() {}
 };
 

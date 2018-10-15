@@ -6,7 +6,8 @@ struct AstVarStatementNode : AstNode
 {
   AstIdentifierNodePtr name;
   AstNodePtr expression;
-  AstVarStatementNode() : AstNode(VAR_STATEMENT) {}
+  AstVarStatementNode() : 
+    AstNode(VAR_STATEMENT) {}
 };
 
 typedef std::shared_ptr<AstVarStatementNode> AstVarStatementNodePtr;

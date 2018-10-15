@@ -9,6 +9,7 @@
 #include <var_statement_node.hpp>
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
+#include <if_expression_node.hpp>
 #include <infix_expression_node.hpp>
 #include <vector>
 #include <map>
@@ -70,6 +71,8 @@ struct Parser
   AstNodePtr ParseBoolean();
   AstNodePtr ParsePrefixExpression();
   AstNodePtr ParseGroupedExpression();
+  AstBlockStatementNodePtr ParseBlockStatement();
+  AstNodePtr ParseIfExpression();
 
   /* Infix parse functions */
   AstNodePtr ParseInfixExpression(AstNodePtr left);
