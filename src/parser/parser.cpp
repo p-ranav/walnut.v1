@@ -44,6 +44,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
+
 }
 
 void Parser::ParseProgram()
@@ -334,6 +336,39 @@ AstNodePtr Parser::ParseFunctionLiteral()
 
   result->body = ParseBlockStatement();
 
+  return result;
+}
+
+std::vector<AstNodePtr> Parser::ParseCallArguments()
+{
+  std::vector<AstNodePtr> result = {};
+
+  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+  {
+    NextToken();
+    return result;
+  }
+
+  NextToken();
+  result.push_back(ParseExpression(LOWEST));
+
+  while (IsPeekToken(TokenType::COMMA_OPERATOR))
+  {
+    NextToken();
+    NextToken();
+    result.push_back(ParseExpression(LOWEST));
+  }
+
+  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
+    return {};
+  return result;
+}
+
+AstNodePtr Parser::ParseCallExpression(AstNodePtr function)
+{
+  AstCallExpressionNodePtr result = std::make_shared<AstCallExpressionNode>();
+  result->function = function;
+  result->arguments = ParseCallArguments();
   return result;
 }
 

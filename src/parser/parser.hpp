@@ -11,6 +11,7 @@
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>
 #include <function_literal_node.hpp>
+#include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 #include <vector>
 #include <map>
@@ -79,6 +80,8 @@ struct Parser
 
   /* Infix parse functions */
   AstNodePtr ParseInfixExpression(AstNodePtr left);
+  std::vector<AstNodePtr> ParseCallArguments();
+  AstNodePtr ParseCallExpression(AstNodePtr function);
 
   /* Member variables */
   TokenVector tokens;
