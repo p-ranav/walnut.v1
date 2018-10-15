@@ -71,6 +71,7 @@ struct Parser
   AstNodePtr ParseInteger();
   AstNodePtr ParseDouble();
   AstNodePtr ParseBoolean();
+  AstNodePtr ParseStringLiteral();
   AstNodePtr ParsePrefixExpression();
   AstNodePtr ParseGroupedExpression();
   AstBlockStatementNodePtr ParseBlockStatement();

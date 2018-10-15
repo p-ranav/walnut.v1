@@ -26,6 +26,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
+  RegisterPrefixParseFunction(TokenType::STRING_LITERAL, std::bind(&Parser::ParseStringLiteral, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
@@ -67,8 +68,8 @@ void Parser::NextToken()
   current_token = peek_token;
   current_token_index += 1;
   peek_token = Token("", 1, 1, TokenType::END_OF_FILE, "");
-  if (current_token_index < tokens.size())
-    peek_token = tokens[current_token_index];
+  if (current_token_index - 1 < tokens.size())
+    peek_token = tokens[current_token_index - 1];
 }
 
 bool Parser::IsCurrentToken(TokenType value)
@@ -231,6 +232,11 @@ AstNodePtr Parser::ParseBoolean()
   return std::make_shared<AstBooleanNode>(current_token.type == TokenType::KEYWORD_TRUE);
 }
 
+AstNodePtr Parser::ParseStringLiteral()
+{
+  return std::make_shared<AstStringNode>(current_token.value);
+}
+
 AstNodePtr Parser::ParsePrefixExpression()
 {
   AstPrefixExpressionNodePtr result = std::make_shared<AstPrefixExpressionNode>(current_token.type);
@@ -378,7 +384,8 @@ AstNodePtr Parser::ParseCallExpression(AstNodePtr function)
 AstNodePtr Parser::ParseInfixExpression(AstNodePtr left) {
   AstInfixExpressionNodePtr result = std::make_shared<AstInfixExpressionNode>(current_token.type);
   result->left = left;
+  Precedence precedence = CurrentPrecedence();
   NextToken();
-  result->right = ParseExpression(CurrentPrecedence());
+  result->right = ParseExpression(precedence);
   return result;
 }
