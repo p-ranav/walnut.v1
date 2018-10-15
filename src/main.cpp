@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     lexer::lexer lexer;
     lexer.tokenize(filename);
     parser::parser parser(lexer.tokens);
-
+    parser.parse_program();
   }
   return 0;
 }

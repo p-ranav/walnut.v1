@@ -4,6 +4,28 @@
 
 namespace parser
 {
+  parser::parser(const std::vector<lexer::token>& tokens) :
+    current_token(lexer::token()),
+    peek_token(lexer::token()),
+    current_token_index(0),
+    ast({}),
+    tokens(tokens) {
+    precedences = {
+  {lexer::token_type::LEFT_PARANTHESIS, CALL},
+  {lexer::token_type::EQUALITY_OPERATOR, EQUAL},
+  {lexer::token_type::INEQUALITY_OPERATOR, EQUAL},
+  {lexer::token_type::LESSER_THAN_OPERATOR, LESSGREATER},
+  {lexer::token_type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+  {lexer::token_type::GREATER_THAN_OPERATOR, LESSGREATER},
+  {lexer::token_type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+  {lexer::token_type::ADDITION_OPERATOR, SUM},
+  {lexer::token_type::SUBTRACTION_OPERATOR, SUM},
+  {lexer::token_type::MULTIPLICATION_OPERATOR, PRODUCT},
+  {lexer::token_type::DIVISION_OPERATOR, PRODUCT},
+  {lexer::token_type::MODULUS_OPERATOR, PRODUCT},
+    };
+  }
+
   void parser::parse_program()
   {
     next_token();
@@ -24,7 +46,7 @@ namespace parser
   {
     current_token = peek_token;
     current_token_index += 1;
-    peek_token = lexer::token("", 1, 1, lexer::token_type::INVALID, "");
+    peek_token = lexer::token("", 1, 1, lexer::token_type::END_OF_FILE, "");
     if (current_token_index < tokens.size())
       peek_token = tokens[current_token_index];
   }
@@ -63,42 +85,8 @@ namespace parser
       return parse_return_statement();
       break;
     default:
-      // return parse_expression_statement();
+      return parse_expression_statement();
       break;
     }
-  }
-
-  std::shared_ptr<node> parser::parse_var_statement()
-  {
-    std::shared_ptr<var_statement_node> result = std::make_shared<var_statement_node>();
-
-    if (!expect_peek(lexer::token_type::SYMBOL))
-    {
-      return nullptr;
-    }
-    result->name = std::make_shared<identifier_node>(current_token.value);
-
-    if (!expect_peek(lexer::token_type::ASSIGNMENT_OPERATOR))
-    {
-      return nullptr;
-    }
-
-    // TODO: parse expression
-    while (!current_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
-    {
-      next_token();
-    }
-
-    return result;
-  }
-
-  std::shared_ptr<node> parser::parse_return_statement() 
-  {
-    std::shared_ptr<return_statement_node> result = std::make_shared<return_statement_node>();
-    next_token();
-    while (!current_token_is(lexer::token_type::SEMI_COLON_OPERATOR)) {
-      next_token();
-    }
-    return result;
   }
 }
