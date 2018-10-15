@@ -6,31 +6,30 @@
 
 Lexer::Lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
 
-void Lexer::tokenize(const std::string &file_path)
+void Lexer::Tokenize(StringConstRef file_path)
 {
   // read file into buffer
   file = file_path;
-  std::ifstream file_stream(file);
-  buffer = std::string((std::istreambuf_iterator<char>(file_stream)),
-                       std::istreambuf_iterator<char>());
+  InputFileStream file_stream(file);
+  buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
 
   for (index = 0; index < buffer.size();)
   {
     if (isutf(buffer[index]))
     {
-      std::string character = next();
+      String character = NextCharacter();
       if (character[0] == '/')
-        comment();
+        ParseComment();
       else if (isdigit(character[0]))
-        number(character);
-      else if (valid_symbol(character))
-        symbol(character);
-      else if (valid_whitespace(character))
-        whitespace(character);
+        ParseNumber(character);
+      else if (IsValidSymbol(character))
+        ParseSymbol(character);
+      else if (IsValidWhitespace(character))
+        ParseWhitespace(character);
       else if (character[0] == '"')
-        string_literal(character);
+        ParseStringLiteral(character);
       else if (ispunct(character[0]))
-        punctuation(character);
+        ParsePunctuation(character);
 
       if (character[0] == '\n')
       {
@@ -46,34 +45,34 @@ void Lexer::tokenize(const std::string &file_path)
   for (size_t i = 0; i < tokens.size(); i++)
   {
     // assignment operators
-    token_pair(i, ADDITION_OPERATOR, ASSIGNMENT_OPERATOR, ADD_AND_ASSIGN_OPERATOR, "+=");
-    token_pair(i, SUBTRACTION_OPERATOR, ASSIGNMENT_OPERATOR, SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
-    token_pair(i, MULTIPLICATION_OPERATOR, ASSIGNMENT_OPERATOR, MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
-    token_pair(i, DIVISION_OPERATOR, ASSIGNMENT_OPERATOR, DIVIDE_AND_ASSIGN_OPERATOR, "/=");
-    token_pair(i, MODULUS_OPERATOR, ASSIGNMENT_OPERATOR, MODULUS_AND_ASSIGN_OPERATOR, "%=");
+    MergeTokenPair(i, TokenType::ADDITION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::ADD_AND_ASSIGN_OPERATOR, "+=");
+    MergeTokenPair(i, TokenType::SUBTRACTION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
+    MergeTokenPair(i, TokenType::MULTIPLICATION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
+    MergeTokenPair(i, TokenType::DIVISION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::DIVIDE_AND_ASSIGN_OPERATOR, "/=");
+    MergeTokenPair(i, TokenType::MODULUS_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::MODULUS_AND_ASSIGN_OPERATOR, "%=");
 
     // comparison operators
-    token_pair(i, ASSIGNMENT_OPERATOR, ASSIGNMENT_OPERATOR, EQUALITY_OPERATOR, "==");
-    token_pair(i, LOGICAL_NOT_OPERATOR, ASSIGNMENT_OPERATOR, INEQUALITY_OPERATOR, "!=");
-    token_pair(i, GREATER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
-    token_pair(i, LESSER_THAN_OPERATOR, ASSIGNMENT_OPERATOR, LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
+    MergeTokenPair(i, TokenType::ASSIGNMENT_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::EQUALITY_OPERATOR, "==");
+    MergeTokenPair(i, TokenType::LOGICAL_NOT_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::INEQUALITY_OPERATOR, "!=");
+    MergeTokenPair(i, TokenType::GREATER_THAN_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
+    MergeTokenPair(i, TokenType::LESSER_THAN_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
 
     // bitwise operators
-    token_pair(i, LESSER_THAN_OPERATOR, LESSER_THAN_OPERATOR, BITWISE_LEFT_SHIFT_OPERATOR, "<<");
-    token_pair(i, GREATER_THAN_OPERATOR, GREATER_THAN_OPERATOR, BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
+    MergeTokenPair(i, TokenType::LESSER_THAN_OPERATOR, TokenType::LESSER_THAN_OPERATOR, TokenType::BITWISE_LEFT_SHIFT_OPERATOR, "<<");
+    MergeTokenPair(i, TokenType::GREATER_THAN_OPERATOR, TokenType::GREATER_THAN_OPERATOR, TokenType::BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
 
     // logical operators
-    token_pair(i, BITWISE_AND_OPERATOR, BITWISE_AND_OPERATOR, LOGICAL_AND_OPERATOR, "&&");
-    token_pair(i, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, BITWISE_OR_OPERATOR, "||");
+    MergeTokenPair(i, TokenType::BITWISE_AND_OPERATOR, TokenType::BITWISE_AND_OPERATOR, TokenType::LOGICAL_AND_OPERATOR, "&&");
+    MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, "||");
   }
 
-  token eof(file, line, cursor, END_OF_FILE, "EOF");
+  Token eof(file, line, cursor, TokenType::END_OF_FILE, "EOF");
   tokens.push_back(eof);
 }
 
-std::string Lexer::next(bool update_index)
+String Lexer::NextCharacter(Bool update_index)
 {
-  std::string result = "";
+  String result = "";
   int length = u8_seqlen(&(buffer[index]));
 
   for (int i = 0; i < length; i++, index++)
@@ -87,15 +86,15 @@ std::string Lexer::next(bool update_index)
   return result;
 }
 
-std::string Lexer::peek()
+String Lexer::PeekCharacter()
 {
-  return next(false);
+  return NextCharacter(false);
 }
 
-void Lexer::token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value)
+void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second, Token::Type result, StringConstRef result_value)
 {
   auto &current = tokens[index].type;
-  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : INVALID;
+  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : TokenType::INVALID;
 
   if (current == first && next == second)
   {
@@ -104,3 +103,284 @@ void Lexer::token_pair(size_t &index, token_type first, token_type second, token
     tokens.erase(tokens.begin() + index + 1);
   }
 } 
+
+void Lexer::ParseComment()
+{
+  String character = NextCharacter();
+
+  if (character[0] == '/')
+    ParseLineComment(character);
+  else if (character[0] == '*')
+    ParseBlockComment(character);
+  else
+  {
+    Token result(file, line, cursor, TokenType::DIVISION_OPERATOR, character);
+    tokens.push_back(result);
+  }
+}
+
+void Lexer::ParseLineComment(StringRef character)
+{
+  while (character[0] != 0x0A && index < buffer.size())
+    character = NextCharacter();
+  line += 1;
+  cursor = 0;
+}
+
+void Lexer::ParseBlockComment(StringRef character)
+{
+  while (true)
+  {
+    character = NextCharacter();
+    if (character[0] == EOF)
+      throw std::runtime_error("unterminated block comment");
+
+    if (character[0] == 0x0A)
+    {
+      line += 1;
+      cursor = 0;
+      continue;
+    }
+
+    if (character[0] == '*')
+    {
+      character = PeekCharacter();
+
+      if (character[0] == EOF)
+        throw std::runtime_error("unterminated block comment");
+
+      if (character[0] == '/')
+      {
+        NextCharacter();
+        NextCharacter();
+        return;
+      }
+    }
+  }
+}
+
+void Lexer::ParseNumber(StringRef character)
+{
+  Token result(file, line, cursor, TokenType::INTEGER, character);
+
+  while (true)
+  {
+    character = PeekCharacter();
+    if (character.size() == 1 &&
+      (character[0] == '.' || isdigit(character[0])))
+    {
+      character = NextCharacter();
+      result.value += character;
+      continue;
+    }
+    break;
+  }
+
+  if (result.value.find(".") != std::string::npos)
+    result.type = TokenType::DOUBLE;
+
+  tokens.push_back(result);
+}
+
+bool Lexer::IsValidSymbol(StringRef character)
+{
+  for (auto &c : character)
+  {
+    if ((c >= 'A' && c <= 'Z') ||
+      (c >= 'a' && c <= 'z') ||
+      (c >= '0' && c <= '9') ||
+      (c == '_') ||
+      ((unsigned char)c >= 0x80))
+      continue;
+    else
+      return false;
+  }
+  return true;
+}
+
+void Lexer::ParseSymbol(StringRef character)
+{
+  Token result(file, line, cursor, TokenType::SYMBOL, character);
+
+  while (true)
+  {
+    character = PeekCharacter();
+    if (IsValidSymbol(character))
+    {
+      character = NextCharacter();
+      result.value += character;
+      continue;
+    }
+    break;
+  }
+
+  if (result.value == "var")
+    result.type = TokenType::KEYWORD_VAR;
+  else if (result.value == "true")
+    result.type = TokenType::KEYWORD_TRUE;
+  else if (result.value == "false")
+    result.type = TokenType::KEYWORD_FALSE;
+  else if (result.value == "if")
+    result.type = TokenType::KEYWORD_IF;
+  else if (result.value == "else")
+    result.type = TokenType::KEYWORD_ELSE;
+  else if (result.value == "while")
+    result.type = TokenType::KEYWORD_WHILE;
+  else if (result.value == "for")
+    result.type = TokenType::KEYWORD_FOR;
+  else if (result.value == "function")
+    result.type = TokenType::KEYWORD_FUNCTION;
+  else if (result.value == "ƒ")
+    result.type = TokenType::KEYWORD_FUNCTION;
+  else if (result.value == "𝑓")
+    result.type = TokenType::KEYWORD_FUNCTION;
+  else if (result.value == "return")
+    result.type = TokenType::KEYWORD_RETURN;
+
+  tokens.push_back(result);
+}
+
+bool Lexer::IsValidWhitespace(StringRef character)
+{
+  return (
+    character[0] == ' ' ||
+    character[0] == 0x09 ||
+    character[0] == 0x08 ||
+    character[0] == 0x0D);
+}
+
+void Lexer::ParseWhitespace(StringRef character)
+{
+  while (true)
+  {
+    character = PeekCharacter();
+    if (IsValidWhitespace(character))
+      character = NextCharacter();
+    else
+      return;
+  }
+}
+
+void Lexer::ParseStringLiteral(StringRef character)
+{
+  Token result(file, line, cursor, TokenType::STRING_LITERAL);
+  while (true)
+  {
+    character = PeekCharacter();
+
+    if (character[0] == '\\')
+    {
+      character = NextCharacter();
+      if (character[0] == '\"' || character[0] == '\\')
+      {
+        character = NextCharacter();
+        result.value += character;
+        continue;
+      }
+
+      if (character[0] == 0x0A || character[0] == EOF)
+        throw std::runtime_error("unterminated string literal");
+
+      result.value += character;
+      continue;
+    }
+
+    if (character[0] != '\"' && character[0] != EOF)
+    {
+      character = NextCharacter();
+      result.value += character;
+      continue;
+    }
+
+    if (character[0] == 0x0A || character[0] == EOF)
+      throw std::runtime_error("unterminated string literal");
+
+    NextCharacter();
+    break;
+  }
+  tokens.push_back(result);
+}
+
+void Lexer::ParsePunctuation(StringRef character)
+{
+  Token result(file, line, cursor, TokenType::PUNCTUATION);
+  result.value += character;
+
+  // delimiters
+  if (result.value == ".")
+    result.type = TokenType::DOT_OPERATOR;
+  else if (result.value == ",")
+    result.type = TokenType::COMMA_OPERATOR;
+  else if (result.value == ":")
+    result.type = TokenType::COLON_OPERATOR;
+  else if (result.value == ";")
+    result.type = TokenType::SEMI_COLON_OPERATOR;
+
+  // comparison operators
+  else if (result.value == ">")
+    result.type = TokenType::GREATER_THAN_OPERATOR;
+  else if (result.value == "<")
+    result.type = TokenType::LESSER_THAN_OPERATOR;
+
+  // arithmetic operators
+  else if (result.value == "+")
+    result.type = TokenType::ADDITION_OPERATOR;
+  else if (result.value == "-")
+    result.type = TokenType::SUBTRACTION_OPERATOR;
+  else if (result.value == "*")
+    result.type = TokenType::MULTIPLICATION_OPERATOR;
+  else if (result.value == "/")
+    result.type = TokenType::DIVISION_OPERATOR;
+  else if (result.value == "%")
+    result.type = TokenType::MODULUS_OPERATOR;
+
+  // assignment operators */
+  else if (result.value == "=")
+    result.type = TokenType::ASSIGNMENT_OPERATOR;
+
+  // brackets, braces and paranthesis
+  else if (result.value == "(")
+    result.type = TokenType::LEFT_PARANTHESIS;
+  else if (result.value == "{")
+    result.type = TokenType::LEFT_CURLY_BRACES;
+  else if (result.value == "[")
+    result.type = TokenType::LEFT_SQUARE_BRACKETS;
+  else if (result.value == ")")
+    result.type = TokenType::RIGHT_PARANTHESIS;
+  else if (result.value == "}")
+    result.type = TokenType::RIGHT_CURLY_BRACES;
+  else if (result.value == "]")
+    result.type = TokenType::RIGHT_SQUARE_BRACKETS;
+
+  // bitwise operators
+  else if (result.value == "&")
+    result.type = TokenType::BITWISE_AND_OPERATOR;
+  else if (result.value == "|")
+    result.type = TokenType::BITWISE_OR_OPERATOR;
+  else if (result.value == "^")
+    result.type = TokenType::BITWISE_XOR_OPERATOR;
+  else if (result.value == "~")
+    result.type = TokenType::BITWISE_ONES_COMPLEMENT_OPERATOR;
+
+  // logical operators
+  else if (result.value == "!")
+    result.type = TokenType::LOGICAL_NOT_OPERATOR;
+
+  // unicode operators
+  else if (result.value == "＝")
+    result.type = TokenType::ASSIGNMENT_OPERATOR;
+  else if (result.value == "≥")
+    result.type = TokenType::GREATER_THAN_OR_EQUAL_OPERATOR;
+  else if (result.value == "≤")
+    result.type = TokenType::LESSER_THAN_OR_EQUAL_OPERATOR;
+  else if (result.value == "≠")
+    result.type = TokenType::INEQUALITY_OPERATOR;
+  else if (result.value == "⋅")
+    result.type = TokenType::MULTIPLICATION_OPERATOR;
+  else if (result.value == "•")
+    result.type = TokenType::MULTIPLICATION_OPERATOR;
+  else if (result.value == "×")
+    result.type = TokenType::MULTIPLICATION_OPERATOR;
+
+  tokens.push_back(result);
+}

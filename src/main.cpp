@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 
     std::string filename = argv[1];
-    lexer::lexer lexer;
-    lexer.tokenize(filename);
+    Lexer lexer;
+    lexer.Tokenize(filename);
     parser::parser parser(lexer.tokens);
     parser.parse_program();
   }

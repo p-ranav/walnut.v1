@@ -5,37 +5,46 @@
 #include <vector>
 #include <stdlib.h>
 
-class Lexer
+typedef std::vector<Token> TokenVector;
+typedef std::string String;
+typedef std::string& StringRef;
+typedef const std::string& StringConstRef;
+typedef bool Bool;
+typedef unsigned int UnsignedInt;
+typedef std::ifstream InputFileStream;
+typedef std::istreambuf_iterator<char> EndOfStreamIterator;
+typedef Token::Type TokenType;
+
+struct Lexer
 {
-public:
   Lexer();
-  std::vector<Token> tokens;
-  void tokenize(const std::string &file_path);
 
-private:
-  std::string next(bool update_index = true);
-  std::string peek();
+  void Tokenize(StringConstRef file_path);
 
-  void comment();
-  void line_comment(std::string &character);
-  void block_comment(std::string &character);
+  String NextCharacter(Bool update_index = true);
+  String PeekCharacter();
 
-  void number(std::string &character);
+  void ParseComment();
+  void ParseLineComment(StringRef character);
+  void ParseBlockComment(StringRef character);
 
-  bool valid_symbol(std::string &character);
-  void symbol(std::string &character);
+  void ParseNumber(StringRef character);
 
-  bool valid_whitespace(std::string &character);
-  void whitespace(std::string &character);
+  bool IsValidSymbol(StringRef character);
+  void ParseSymbol(StringRef character);
 
-  void string_literal(std::string &character);
-  void punctuation(std::string &character);
+  bool IsValidWhitespace(StringRef character);
+  void ParseWhitespace(StringRef character);
 
-  void token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value);
+  void ParseStringLiteral(StringRef character);
+  void ParsePunctuation(StringRef character);
 
-  std::string file;
-  unsigned int line;
-  unsigned int cursor;
-  std::string buffer;
-  size_t index;
+  void MergeTokenPair(size_t &index, Token::Type first, Token::Type second, Token::Type result, const String &result_value);
+
+  TokenVector tokens;
+  String file;
+  UnsignedInt line;
+  UnsignedInt cursor;
+  String buffer;
+  UnsignedInt index;
 }; 
