@@ -344,15 +344,15 @@ void Lexer::ParsePunctuation(StringRef character)
   else if (result.value == "=")
     result.type = TokenType::ASSIGNMENT_OPERATOR;
 
-  // brackets, braces and paranthesis
+  // brackets, braces and PARENTHESIS
   else if (result.value == "(")
-    result.type = TokenType::LEFT_PARANTHESIS;
+    result.type = TokenType::LEFT_PARENTHESIS;
   else if (result.value == "{")
     result.type = TokenType::LEFT_CURLY_BRACES;
   else if (result.value == "[")
     result.type = TokenType::LEFT_SQUARE_BRACKETS;
   else if (result.value == ")")
-    result.type = TokenType::RIGHT_PARANTHESIS;
+    result.type = TokenType::RIGHT_PARENTHESIS;
   else if (result.value == "}")
     result.type = TokenType::RIGHT_CURLY_BRACES;
   else if (result.value == "]")

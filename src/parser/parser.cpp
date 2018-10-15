@@ -6,7 +6,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                              statements({}),
                                              tokens(tokens),
                                              precedences({
-                                                 {TokenType::LEFT_PARANTHESIS, CALL},
+                                                 {TokenType::LEFT_PARENTHESIS, CALL},
                                                  {TokenType::EQUALITY_OPERATOR, EQUAL},
                                                  {TokenType::INEQUALITY_OPERATOR, EQUAL},
                                                  {TokenType::LESSER_THAN_OPERATOR, LESSGREATER},
@@ -28,8 +28,9 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
-  RegisterPrefixParseFunction(TokenType::LEFT_PARANTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
+  RegisterPrefixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
 
   // infix parse functions
   RegisterInfixParseFunction(TokenType::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
@@ -237,7 +238,7 @@ AstNodePtr Parser::ParseGroupedExpression()
 {
   NextToken();
   AstNodePtr result = ParseExpression(LOWEST);
-  if (!ExpectPeek(TokenType::RIGHT_PARANTHESIS))
+  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
     return nullptr;
   return result;
 }
@@ -259,19 +260,18 @@ AstBlockStatementNodePtr Parser::ParseBlockStatement()
   return result;
 }
 
-
 AstNodePtr Parser::ParseIfExpression()
 {
   AstIfExpressionNodePtr result = std::make_shared<AstIfExpressionNode>();
 
-  if (!ExpectPeek(TokenType::LEFT_PARANTHESIS))
+  if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
     return nullptr;
 
   NextToken();
 
   result->condition = ParseExpression(LOWEST);
 
-  if (!ExpectPeek(TokenType::RIGHT_PARANTHESIS))
+  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
     return nullptr;
 
   if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
@@ -287,6 +287,52 @@ AstNodePtr Parser::ParseIfExpression()
 
     result->alternative = ParseBlockStatement();
   }
+
+  return result;
+}
+
+std::vector<AstIdentifierNodePtr> Parser::ParseFunctionParameters()
+{
+  std::vector<AstIdentifierNodePtr> result = {};
+
+  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+  {
+    NextToken();
+    return result;
+  }
+
+  NextToken();
+
+  AstIdentifierNodePtr identifier = std::make_shared<AstIdentifierNode>(current_token.value);
+  result.push_back(identifier);
+
+  while (IsPeekToken(TokenType::COMMA_OPERATOR))
+  {
+    NextToken();
+    NextToken();
+    AstIdentifierNodePtr identifier = std::make_shared<AstIdentifierNode>(current_token.value);
+    result.push_back(identifier);
+  }
+
+  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
+    return {};
+
+  return result;
+}
+
+AstNodePtr Parser::ParseFunctionLiteral()
+{
+  AstFunctionLiteralNodePtr result = std::make_shared<AstFunctionLiteralNode>();
+
+  if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
+    return nullptr;
+
+  result->parameters = ParseFunctionParameters();
+
+  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+    return nullptr;
+
+  result->body = ParseBlockStatement();
 
   return result;
 }

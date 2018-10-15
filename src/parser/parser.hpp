@@ -10,6 +10,7 @@
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>
+#include <function_literal_node.hpp>
 #include <infix_expression_node.hpp>
 #include <vector>
 #include <map>
@@ -73,6 +74,8 @@ struct Parser
   AstNodePtr ParseGroupedExpression();
   AstBlockStatementNodePtr ParseBlockStatement();
   AstNodePtr ParseIfExpression();
+  std::vector<AstIdentifierNodePtr> ParseFunctionParameters();
+  AstNodePtr ParseFunctionLiteral();
 
   /* Infix parse functions */
   AstNodePtr ParseInfixExpression(AstNodePtr left);
