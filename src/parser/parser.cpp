@@ -123,11 +123,12 @@ AstNodePtr Parser::ParseVarStatement()
     return nullptr;
   }
 
-  // TODO: parse expression
-  while (!IsCurrentToken(TokenType::SEMI_COLON_OPERATOR))
-  {
+  NextToken();
+
+  result->expression = ParseExpression(LOWEST);
+
+  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
     NextToken();
-  }
 
   return result;
 }
@@ -137,7 +138,9 @@ AstNodePtr Parser::ParseReturnStatement()
   AstReturnStatementNodePtr result = std::make_shared<AstReturnStatementNode>();
   NextToken();
 
-  while (!IsCurrentToken(TokenType::SEMI_COLON_OPERATOR))
+  result->expression = ParseExpression(LOWEST);
+
+  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
     NextToken();
 
   return result;
