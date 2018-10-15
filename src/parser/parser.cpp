@@ -24,6 +24,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
   RegisterPrefixParseFunction(TokenType::INTEGER, std::bind(&Parser::ParseInteger, this));
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
+  RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
+  RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
 }
 
 void Parser::ParseProgram()
