@@ -1,12 +1,29 @@
 #pragma once
-#include <node_type.hpp>
+#include <memory>
 
-namespace ast
+struct AstNode
 {
-  struct node
+  enum Type
   {
-    node_type type;
-    explicit node(node_type type) : type(type) {}
-    virtual void print() = 0;
+    IDENTIFIER,
+    INTEGER,
+    DOUBLE,
+    STRING_LITERAL,
+    BOOLEAN,
+    VAR_STATEMENT,
+    RETURN_STATEMENT,
+    PREFIX_EXPRESSION,
+    INFIX_EXPRESSION,
+    IF_EXPRESSION,
+    BLOCK,
+    FUNCTION,
+    CALL_EXPRESSION,
+    INVALID
   };
-}
+
+  Type type;
+  explicit AstNode(Type type) : type(type) {}
+  virtual ~AstNode() = 0;
+};
+
+typedef std::shared_ptr<AstNode> AstNodePtr;

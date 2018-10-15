@@ -6,12 +6,9 @@
 #include <memory>
 #include <functional>
 
-namespace parser
+struct Parser
 {
-class parser
-{
-public:
-  explicit parser(const std::vector<lexer::token> &tokens);
+  explicit Parser(const std::vector<lexer::token> &tokens);
 
   void parse_program();
 
@@ -60,5 +57,3 @@ private:
   std::shared_ptr<ast::node> parse_double();
   std::shared_ptr<ast::node> parse_prefix_expression();
 };
-
-} // namespace parser

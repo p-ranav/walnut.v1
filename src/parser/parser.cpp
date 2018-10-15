@@ -3,8 +3,6 @@
 #include <statements.hpp>
 #include <expression.hpp>
 
-namespace parser
-{
 parser::parser(const std::vector<lexer::token> &tokens) : current_token(lexer::token()),
                                                           peek_token(lexer::token()),
                                                           current_token_index(0),
@@ -229,5 +227,3 @@ std::shared_ptr<ast::node> parser::parse_prefix_expression()
   result->right = parse_expression(LOWEST);
   return result;
 }
-
-} // namespace parser

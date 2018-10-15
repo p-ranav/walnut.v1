@@ -13,7 +13,6 @@ typedef bool Bool;
 typedef unsigned int UnsignedInt;
 typedef std::ifstream InputFileStream;
 typedef std::istreambuf_iterator<char> EndOfStreamIterator;
-typedef Token::Type TokenType;
 
 struct Lexer
 {

@@ -100,3 +100,5 @@ struct Token
     value += initial_value;
   }
 };
+
+typedef Token::Type TokenType;
