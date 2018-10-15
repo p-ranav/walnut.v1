@@ -4,12 +4,9 @@
 #include <fstream>
 #include <string>
 
-namespace lexer
-{
+Lexer::Lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
 
-lexer::lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
-
-void lexer::tokenize(const std::string &file_path)
+void Lexer::tokenize(const std::string &file_path)
 {
   // read file into buffer
   file = file_path;
@@ -74,7 +71,7 @@ void lexer::tokenize(const std::string &file_path)
   tokens.push_back(eof);
 }
 
-std::string lexer::next(bool update_index)
+std::string Lexer::next(bool update_index)
 {
   std::string result = "";
   int length = u8_seqlen(&(buffer[index]));
@@ -90,12 +87,12 @@ std::string lexer::next(bool update_index)
   return result;
 }
 
-std::string lexer::peek()
+std::string Lexer::peek()
 {
   return next(false);
 }
 
-void lexer::token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value)
+void Lexer::token_pair(size_t &index, token_type first, token_type second, token_type result, const std::string &result_value)
 {
   auto &current = tokens[index].type;
   auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : INVALID;
@@ -106,6 +103,4 @@ void lexer::token_pair(size_t &index, token_type first, token_type second, token
     tokens[index].value = result_value;
     tokens.erase(tokens.begin() + index + 1);
   }
-}
-
 } 

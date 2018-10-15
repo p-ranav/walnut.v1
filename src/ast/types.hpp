@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-namespace parser
+namespace ast
 {
   struct boolean_node : node
   {

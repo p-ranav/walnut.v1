@@ -4,7 +4,7 @@
 #include <types.hpp>
 #include <memory>
 
-namespace parser
+namespace ast
 {
   struct var_statement_node : node
   {

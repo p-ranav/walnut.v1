@@ -5,13 +5,11 @@
 #include <vector>
 #include <stdlib.h>
 
-namespace lexer
-{
-class lexer
+class Lexer
 {
 public:
-  lexer();
-  std::vector<token> tokens;
+  Lexer();
+  std::vector<Token> tokens;
   void tokenize(const std::string &file_path);
 
 private:
@@ -40,5 +38,4 @@ private:
   unsigned int cursor;
   std::string buffer;
   size_t index;
-};
-} 
+}; 

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace parser
+namespace ast
 {
   enum node_type
   {

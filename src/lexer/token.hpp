@@ -1,10 +1,7 @@
 #pragma once
 #include <string>
 
-namespace lexer
-{
-
-enum token_type
+enum TokenType
 {
   INTEGER,
   DOUBLE,
@@ -77,20 +74,20 @@ enum token_type
   INVALID
 };
 
-struct token
+struct Token
 {
   std::string file;
   unsigned int line;
   unsigned int cursor;
-  token_type type;
+  TokenType type;
   std::string value;
 
-  token() : file(""), line(1), cursor(0), type(INVALID), value("") {}
+  Token() : file(""), line(1), cursor(0), type(INVALID), value("") {}
 
-  explicit token(const std::string &file,
+  explicit Token(const std::string &file,
                  unsigned int line,
                  unsigned int cursor,
-                 token_type type = INVALID,
+                 TokenType type = INVALID,
                  const std::string &initial_value = "")
       : file(file),
         line(line),
@@ -101,5 +98,3 @@ struct token
     value += initial_value;
   }
 };
-
-} 

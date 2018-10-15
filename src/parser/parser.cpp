@@ -1,6 +1,7 @@
 #include <parser.hpp>
 #include <types.hpp>
 #include <statements.hpp>
+#include <expression.hpp>
 
 namespace parser
 {
@@ -39,7 +40,7 @@ void parser::parse_program()
 
   while (!peek_token_is(lexer::token_type::END_OF_FILE))
   {
-    std::shared_ptr<node> statement = parse_statement();
+    std::shared_ptr<ast::node> statement = parse_statement();
     if (statement != nullptr)
     {
       ast.push_back(statement);
@@ -80,7 +81,7 @@ bool parser::expect_peek(lexer::token_type value)
   }
 }
 
-std::shared_ptr<node> parser::parse_statement()
+std::shared_ptr<ast::node> parser::parse_statement()
 {
   switch (current_token.type)
   {
@@ -96,15 +97,15 @@ std::shared_ptr<node> parser::parse_statement()
   }
 }
 
-std::shared_ptr<node> parser::parse_var_statement()
+std::shared_ptr<ast::node> parser::parse_var_statement()
 {
-  std::shared_ptr<var_statement_node> result = std::make_shared<var_statement_node>();
+  std::shared_ptr<ast::var_statement_node> result = std::make_shared<ast::var_statement_node>();
 
   if (!expect_peek(lexer::token_type::SYMBOL))
   {
     return nullptr;
   }
-  result->name = std::make_shared<identifier_node>(current_token.value);
+  result->name = std::make_shared<ast::identifier_node>(current_token.value);
 
   if (!expect_peek(lexer::token_type::ASSIGNMENT_OPERATOR))
   {
@@ -120,9 +121,9 @@ std::shared_ptr<node> parser::parse_var_statement()
   return result;
 }
 
-std::shared_ptr<node> parser::parse_return_statement()
+std::shared_ptr<ast::node> parser::parse_return_statement()
 {
-  std::shared_ptr<return_statement_node> result = std::make_shared<return_statement_node>();
+  std::shared_ptr<ast::return_statement_node> result = std::make_shared<ast::return_statement_node>();
   next_token();
   while (!current_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
   {
@@ -131,7 +132,7 @@ std::shared_ptr<node> parser::parse_return_statement()
   return result;
 }
 
-void parser::register_prefix_function(lexer::token_type token_type, std::function<std::shared_ptr<node>(void)> function)
+void parser::register_prefix_function(lexer::token_type token_type, std::function<std::shared_ptr<ast::node>(void)> function)
 {
   if (prefix_parse_functions.find(token_type) != prefix_parse_functions.end())
   {
@@ -140,11 +141,11 @@ void parser::register_prefix_function(lexer::token_type token_type, std::functio
   else
   {
     prefix_parse_functions.insert(
-        std::map<lexer::token_type, std::function<std::shared_ptr<node>(void)>>::value_type(token_type, function));
+        std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(void)>>::value_type(token_type, function));
   }
 }
 
-void parser::register_infix_function(lexer::token_type token_type, std::function<std::shared_ptr<node>(std::shared_ptr<node>)> function)
+void parser::register_infix_function(lexer::token_type token_type, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)> function)
 {
   if (infix_parse_functions.find(token_type) != infix_parse_functions.end())
   {
@@ -153,7 +154,7 @@ void parser::register_infix_function(lexer::token_type token_type, std::function
   else
   {
     infix_parse_functions.insert(
-        std::map<lexer::token_type, std::function<std::shared_ptr<node>(std::shared_ptr<node>)>>::value_type(token_type, function));
+        std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)>>::value_type(token_type, function));
   }
 }
 
@@ -173,9 +174,9 @@ parser::precedence parser::current_precedence()
     return LOWEST;
 }
 
-std::shared_ptr<node> parser::parse_expression_statement()
+std::shared_ptr<ast::node> parser::parse_expression_statement()
 {
-  std::shared_ptr<node> result = parse_expression(LOWEST);
+  std::shared_ptr<ast::node> result = parse_expression(LOWEST);
 
   if (peek_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
     next_token();
@@ -183,42 +184,50 @@ std::shared_ptr<node> parser::parse_expression_statement()
   return result;
 }
 
-std::shared_ptr<node> parser::parse_expression(precedence precedence)
+std::shared_ptr<ast::node> parser::parse_expression(precedence precedence)
 {
-  std::function<std::shared_ptr<node>(void)> prefix = prefix_parse_functions[current_token.type];
+  std::function<std::shared_ptr<ast::node>(void)> prefix = prefix_parse_functions[current_token.type];
+  
   if (prefix == nullptr)
     return nullptr;
 
-  std::shared_ptr<node> left_expression = prefix();
+  std::shared_ptr<ast::node> left_expression = prefix();
 
   while (!peek_token_is(lexer::token_type::SEMI_COLON_OPERATOR) && precedence < peek_precedence())
   {
-    std::function<std::shared_ptr<node>(std::shared_ptr<node>)> infix = infix_parse_functions[peek_token.type];
+    std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)> infix = infix_parse_functions[peek_token.type];
 
     if (infix == nullptr)
       return left_expression;
 
     next_token();
-
     left_expression = infix(left_expression);
   }
 
   return left_expression;
 }
 
-std::shared_ptr<node> parser::parse_identifier()
+std::shared_ptr<ast::node> parser::parse_identifier()
 {
-  return std::make_shared<identifier_node>(current_token.value);
+  return std::make_shared<ast::identifier_node>(current_token.value);
 }
 
-std::shared_ptr<node> parser::parse_integer()
+std::shared_ptr<ast::node> parser::parse_integer()
 {
-  return std::make_shared<integer_node>(std::stoi(current_token.value));
+  return std::make_shared<ast::integer_node>(std::stoi(current_token.value));
 }
 
-std::shared_ptr<node> parser::parse_double()
+std::shared_ptr<ast::node> parser::parse_double()
 {
-  return std::make_shared<double_node>(std::stod(current_token.value));
+  return std::make_shared<ast::double_node>(std::stod(current_token.value));
+}
+
+std::shared_ptr<ast::node> parser::parse_prefix_expression()
+{
+  std::shared_ptr<ast::prefix_expression_node> result = std::make_shared<ast::prefix_expression_node>(current_token.type);
+  next_token();
+  result->right = parse_expression(LOWEST);
+  return result;
 }
 
 } // namespace parser

@@ -1,7 +1,7 @@
 #pragma once
 #include <node_type.hpp>
 
-namespace parser
+namespace ast
 {
   struct node
   {

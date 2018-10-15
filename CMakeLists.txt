@@ -33,6 +33,11 @@ ADD_SUBLIBRARY(LEXER src/lexer)
 set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
 TARGET_LINK_LIBRARIES(LEXER UTF8)
 
+# AST library
+ADD_SUBLIBRARY(AST src/ast)
+set_target_properties(AST PROPERTIES OUTPUT_NAME ast) # ast.lib
+set_target_properties(AST PROPERTIES LINKER_LANGUAGE CXX)
+
 # Parser library
 ADD_SUBLIBRARY(PARSER src/parser src/parser/ast)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
