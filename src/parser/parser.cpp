@@ -1,162 +1,145 @@
 #include <parser.hpp>
-#include <types.hpp>
-#include <statements.hpp>
-#include <expression.hpp>
 
-parser::parser(const std::vector<lexer::token> &tokens) : current_token(lexer::token()),
-                                                          peek_token(lexer::token()),
+Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
+                                                          peek_token(Token()),
                                                           current_token_index(0),
-                                                          ast({}),
+                                                          statements({}),
                                                           tokens(tokens)
 {
   precedences = {
-      {lexer::token_type::LEFT_PARANTHESIS, CALL},
-      {lexer::token_type::EQUALITY_OPERATOR, EQUAL},
-      {lexer::token_type::INEQUALITY_OPERATOR, EQUAL},
-      {lexer::token_type::LESSER_THAN_OPERATOR, LESSGREATER},
-      {lexer::token_type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-      {lexer::token_type::GREATER_THAN_OPERATOR, LESSGREATER},
-      {lexer::token_type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-      {lexer::token_type::ADDITION_OPERATOR, SUM},
-      {lexer::token_type::SUBTRACTION_OPERATOR, SUM},
-      {lexer::token_type::MULTIPLICATION_OPERATOR, PRODUCT},
-      {lexer::token_type::DIVISION_OPERATOR, PRODUCT},
-      {lexer::token_type::MODULUS_OPERATOR, PRODUCT},
+      {TokenType::LEFT_PARANTHESIS, CALL},
+      {TokenType::EQUALITY_OPERATOR, EQUAL},
+      {TokenType::INEQUALITY_OPERATOR, EQUAL},
+      {TokenType::LESSER_THAN_OPERATOR, LESSGREATER},
+      {TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+      {TokenType::GREATER_THAN_OPERATOR, LESSGREATER},
+      {TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+      {TokenType::ADDITION_OPERATOR, SUM},
+      {TokenType::SUBTRACTION_OPERATOR, SUM},
+      {TokenType::MULTIPLICATION_OPERATOR, PRODUCT},
+      {TokenType::DIVISION_OPERATOR, PRODUCT},
+      {TokenType::MODULUS_OPERATOR, PRODUCT},
   };
 
   // prefix parse functions
-  register_prefix_function(lexer::token_type::SYMBOL, std::bind(&parser::parse_identifier, this));
-  register_prefix_function(lexer::token_type::INTEGER, std::bind(&parser::parse_integer, this));
-  register_prefix_function(lexer::token_type::DOUBLE, std::bind(&parser::parse_double, this));
+  RegisterPrefixParseFunction(TokenType::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
+  RegisterPrefixParseFunction(TokenType::INTEGER, std::bind(&Parser::ParseInteger, this));
+  RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
 
 }
 
-void parser::parse_program()
+void Parser::ParseProgram()
 {
-  next_token();
-  next_token();
+  NextToken();
+  NextToken();
 
-  while (!peek_token_is(lexer::token_type::END_OF_FILE))
+  while (!IsPeekToken(TokenType::END_OF_FILE))
   {
-    std::shared_ptr<ast::node> statement = parse_statement();
+    AstNodePtr statement = ParseStatement();
     if (statement != nullptr)
-    {
-      ast.push_back(statement);
-    }
-    next_token();
+      statements.push_back(statement);
+    NextToken();
   }
 }
 
-void parser::next_token()
+void Parser::NextToken()
 {
   current_token = peek_token;
   current_token_index += 1;
-  peek_token = lexer::token("", 1, 1, lexer::token_type::END_OF_FILE, "");
+  peek_token = Token("", 1, 1, TokenType::END_OF_FILE, "");
   if (current_token_index < tokens.size())
     peek_token = tokens[current_token_index];
 }
 
-bool parser::current_token_is(lexer::token_type value)
+bool Parser::IsCurrentToken(TokenType value)
 {
   return (current_token.type == value);
 }
 
-bool parser::peek_token_is(lexer::token_type value)
+bool Parser::IsPeekToken(TokenType value)
 {
   return (peek_token.type == value);
 }
 
-bool parser::expect_peek(lexer::token_type value)
+bool Parser::ExpectPeek(TokenType value)
 {
-  if (peek_token_is(value))
+  if (IsPeekToken(value))
   {
-    next_token();
+    NextToken();
     return true;
   }
   else
-  {
     throw std::runtime_error("expected token X, instead got token Y");
-  }
 }
 
-std::shared_ptr<ast::node> parser::parse_statement()
+AstNodePtr Parser::ParseStatement()
 {
   switch (current_token.type)
   {
-  case lexer::token_type::KEYWORD_VAR:
-    return parse_var_statement();
+  case TokenType::KEYWORD_VAR:
+    return ParseVarStatement();
     break;
-  case lexer::token_type::KEYWORD_RETURN:
-    return parse_return_statement();
+  case TokenType::KEYWORD_RETURN:
+    return ParseReturnStatement();
     break;
   default:
-    return parse_expression_statement();
+    return ParseExpressionStatement();
     break;
   }
 }
 
-std::shared_ptr<ast::node> parser::parse_var_statement()
+AstNodePtr Parser::ParseVarStatement()
 {
-  std::shared_ptr<ast::var_statement_node> result = std::make_shared<ast::var_statement_node>();
+  AstVarStatementNodePtr result = std::make_shared<AstVarStatementNode>();
 
-  if (!expect_peek(lexer::token_type::SYMBOL))
+  if (!ExpectPeek(TokenType::SYMBOL))
   {
     return nullptr;
   }
-  result->name = std::make_shared<ast::identifier_node>(current_token.value);
+  result->name = std::make_shared<AstIdentifierNode>(current_token.value);
 
-  if (!expect_peek(lexer::token_type::ASSIGNMENT_OPERATOR))
+  if (!ExpectPeek(TokenType::ASSIGNMENT_OPERATOR))
   {
     return nullptr;
   }
 
   // TODO: parse expression
-  while (!current_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
+  while (!IsCurrentToken(TokenType::SEMI_COLON_OPERATOR))
   {
-    next_token();
+    NextToken();
   }
 
   return result;
 }
 
-std::shared_ptr<ast::node> parser::parse_return_statement()
+AstNodePtr Parser::ParseReturnStatement()
 {
-  std::shared_ptr<ast::return_statement_node> result = std::make_shared<ast::return_statement_node>();
-  next_token();
-  while (!current_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
-  {
-    next_token();
-  }
+  AstReturnStatementNodePtr result = std::make_shared<AstReturnStatementNode>();
+  NextToken();
+
+  while (!IsCurrentToken(TokenType::SEMI_COLON_OPERATOR))
+    NextToken();
+
   return result;
 }
 
-void parser::register_prefix_function(lexer::token_type token_type, std::function<std::shared_ptr<ast::node>(void)> function)
+void Parser::RegisterPrefixParseFunction(TokenType token_type, PrefixParseFunction function)
 {
   if (prefix_parse_functions.find(token_type) != prefix_parse_functions.end())
-  {
     prefix_parse_functions[token_type] = function;
-  }
   else
-  {
-    prefix_parse_functions.insert(
-        std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(void)>>::value_type(token_type, function));
-  }
+    prefix_parse_functions.insert(PrefixParseFunctionMap::value_type(token_type, function));
 }
 
-void parser::register_infix_function(lexer::token_type token_type, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)> function)
+void Parser::RegisterInfixParseFunction(TokenType token_type, InfixParseFunction function)
 {
   if (infix_parse_functions.find(token_type) != infix_parse_functions.end())
-  {
     infix_parse_functions[token_type] = function;
-  }
   else
-  {
-    infix_parse_functions.insert(
-        std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)>>::value_type(token_type, function));
-  }
+    infix_parse_functions.insert(InfixParseFunctionMap::value_type(token_type, function));
 }
 
-parser::precedence parser::peek_precedence()
+Parser::Precedence Parser::PeekPrecedence()
 {
   if (precedences.find(peek_token.type) != precedences.end())
     return precedences[peek_token.type];
@@ -164,7 +147,7 @@ parser::precedence parser::peek_precedence()
     return LOWEST;
 }
 
-parser::precedence parser::current_precedence()
+Parser::Precedence Parser::CurrentPrecedence()
 {
   if (precedences.find(current_token.type) != precedences.end())
     return precedences[current_token.type];
@@ -172,58 +155,58 @@ parser::precedence parser::current_precedence()
     return LOWEST;
 }
 
-std::shared_ptr<ast::node> parser::parse_expression_statement()
+AstNodePtr Parser::ParseExpressionStatement()
 {
-  std::shared_ptr<ast::node> result = parse_expression(LOWEST);
+  AstNodePtr result = ParseExpression(LOWEST);
 
-  if (peek_token_is(lexer::token_type::SEMI_COLON_OPERATOR))
-    next_token();
+  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
+    NextToken();
 
   return result;
 }
 
-std::shared_ptr<ast::node> parser::parse_expression(precedence precedence)
+AstNodePtr Parser::ParseExpression(Precedence precedence)
 {
-  std::function<std::shared_ptr<ast::node>(void)> prefix = prefix_parse_functions[current_token.type];
+  PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
   
   if (prefix == nullptr)
     return nullptr;
 
-  std::shared_ptr<ast::node> left_expression = prefix();
+  AstNodePtr left_expression = prefix();
 
-  while (!peek_token_is(lexer::token_type::SEMI_COLON_OPERATOR) && precedence < peek_precedence())
+  while (!IsPeekToken(TokenType::SEMI_COLON_OPERATOR) && precedence < PeekPrecedence())
   {
-    std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)> infix = infix_parse_functions[peek_token.type];
+    InfixParseFunction infix = infix_parse_functions[peek_token.type];
 
     if (infix == nullptr)
       return left_expression;
 
-    next_token();
+    NextToken();
     left_expression = infix(left_expression);
   }
 
   return left_expression;
 }
 
-std::shared_ptr<ast::node> parser::parse_identifier()
+AstNodePtr Parser::ParseIdentifier()
 {
-  return std::make_shared<ast::identifier_node>(current_token.value);
+  return std::make_shared<AstIdentifierNode>(current_token.value);
 }
 
-std::shared_ptr<ast::node> parser::parse_integer()
+AstNodePtr Parser::ParseInteger()
 {
-  return std::make_shared<ast::integer_node>(std::stoi(current_token.value));
+  return std::make_shared<AstIntegerNode>(std::stoi(current_token.value));
 }
 
-std::shared_ptr<ast::node> parser::parse_double()
+AstNodePtr Parser::ParseDouble()
 {
-  return std::make_shared<ast::double_node>(std::stod(current_token.value));
+  return std::make_shared<AstDoubleNode>(std::stod(current_token.value));
 }
 
-std::shared_ptr<ast::node> parser::parse_prefix_expression()
+AstNodePtr Parser::ParsePrefixExpression()
 {
-  std::shared_ptr<ast::prefix_expression_node> result = std::make_shared<ast::prefix_expression_node>(current_token.type);
-  next_token();
-  result->right = parse_expression(LOWEST);
+  AstPrefixExpressionNodePtr result = std::make_shared<AstPrefixExpressionNode>(current_token.type);
+  NextToken();
+  result->right = ParseExpression(LOWEST);
   return result;
 }

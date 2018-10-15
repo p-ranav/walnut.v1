@@ -1,41 +1,52 @@
 #pragma once
 #include <token.hpp>
 #include <node.hpp>
+#include <integer_node.hpp>
+#include <double_node.hpp>
+#include <boolean_node.hpp>
+#include <string_node.hpp>
+#include <identifier_node.hpp>
+#include <var_statement_node.hpp>
+#include <return_statement_node.hpp>
+#include <prefix_expression_node.hpp>
 #include <vector>
 #include <map>
 #include <memory>
 #include <functional>
 
+typedef std::vector<Token> TokenVector;
+typedef const std::vector<Token>& TokenVectorConstRef;
+typedef std::vector<std::shared_ptr<AstNode>> AstStatements;
+typedef unsigned int UnsignedInt;
+typedef Token::Type TokenType;
+typedef std::function<AstNodePtr(void)> PrefixParseFunction;
+typedef std::map<TokenType, std::function<AstNodePtr(void)>> PrefixParseFunctionMap;
+typedef std::function<AstNodePtr(AstNodePtr)> InfixParseFunction;
+typedef std::map<TokenType, std::function<AstNodePtr(AstNodePtr)>> InfixParseFunctionMap;
+
 struct Parser
 {
-  explicit Parser(const std::vector<lexer::token> &tokens);
+  explicit Parser(TokenVectorConstRef tokens);
 
-  void parse_program();
+  void ParseProgram();
 
-  std::vector<lexer::token> tokens;
-  std::vector<std::shared_ptr<ast::node>> ast;
-  size_t current_token_index;
-  lexer::token current_token;
-  lexer::token peek_token;
+  void NextToken();
+  bool IsCurrentToken(TokenType value);
+  bool IsPeekToken(TokenType value);
+  bool ExpectPeek(TokenType value);
 
-private:
-  void next_token();
-  bool current_token_is(lexer::token_type value);
-  bool peek_token_is(lexer::token_type value);
-  bool expect_peek(lexer::token_type value);
+  AstNodePtr ParseStatement();
+  AstNodePtr ParseVarStatement();
+  AstNodePtr ParseReturnStatement();
+  AstNodePtr ParseExpressionStatement();
 
-  std::shared_ptr<ast::node> parse_statement();
-  std::shared_ptr<ast::node> parse_var_statement();
-  std::shared_ptr<ast::node> parse_return_statement();
-  std::shared_ptr<ast::node> parse_expression_statement();
+  PrefixParseFunctionMap prefix_parse_functions;
+  void RegisterPrefixParseFunction(TokenType token, PrefixParseFunction function);
 
-  std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(void)>> prefix_parse_functions;
-  void register_prefix_function(lexer::token_type token, std::function<std::shared_ptr<ast::node>(void)> function);
+  InfixParseFunctionMap infix_parse_functions;
+  void RegisterInfixParseFunction(TokenType token, InfixParseFunction function);
 
-  std::map<lexer::token_type, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)>> infix_parse_functions;
-  void register_infix_function(lexer::token_type token, std::function<std::shared_ptr<ast::node>(std::shared_ptr<ast::node>)> function);
-
-  enum precedence
+  enum Precedence
   {
     LOWEST,
     EQUAL,       /* ==, != */
@@ -45,15 +56,24 @@ private:
     PREFIX,      /* -X or !X */
     CALL         /* my_function(X) */
   };
-  std::map<lexer::token_type, precedence> precedences;
+  typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
 
-  precedence peek_precedence();
-  precedence current_precedence();
-  std::shared_ptr<ast::node> parse_expression(precedence precedence);
+  Precedence PeekPrecedence();
+  Precedence CurrentPrecedence();
+  AstNodePtr ParseExpression(Precedence precedence);
 
   /* Prefix parse functions */
-  std::shared_ptr<ast::node> parse_identifier();
-  std::shared_ptr<ast::node> parse_integer();
-  std::shared_ptr<ast::node> parse_double();
-  std::shared_ptr<ast::node> parse_prefix_expression();
+  AstNodePtr ParseIdentifier();
+  AstNodePtr ParseInteger();
+  AstNodePtr ParseDouble();
+  AstNodePtr ParsePrefixExpression();
+
+  /* Member variables */
+  TokenVector tokens;
+  AstStatements statements;
+  UnsignedInt current_token_index;
+  Token current_token;
+  Token peek_token;
+  TokenPrecedenceMap precedences;
+
 };

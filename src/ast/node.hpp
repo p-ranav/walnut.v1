@@ -23,7 +23,7 @@ struct AstNode
 
   Type type;
   explicit AstNode(Type type) : type(type) {}
-  virtual ~AstNode() = 0;
+  virtual ~AstNode() {}
 };
 
 typedef std::shared_ptr<AstNode> AstNodePtr;

@@ -5,7 +5,6 @@
 #include <vector>
 #include <stdlib.h>
 
-typedef std::vector<Token> TokenVector;
 typedef std::string String;
 typedef std::string& StringRef;
 typedef const std::string& StringConstRef;

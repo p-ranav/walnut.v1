@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     std::string filename = argv[1];
     Lexer lexer;
     lexer.Tokenize(filename);
-    parser::parser parser(lexer.tokens);
-    parser.parse_program();
+    Parser parser(lexer.tokens);
+    parser.ParseProgram();
   }
   return 0;
 }

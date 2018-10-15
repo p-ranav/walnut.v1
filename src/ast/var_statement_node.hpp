@@ -8,3 +8,5 @@ struct AstVarStatementNode : AstNode
   AstNodePtr expression;
   AstVarStatementNode() : AstNode(VAR_STATEMENT) {}
 };
+
+typedef std::shared_ptr<AstVarStatementNode> AstVarStatementNodePtr;

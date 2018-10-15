@@ -12,3 +12,5 @@ struct AstPrefixExpressionNode : AstNode
     prefix_operator(prefix_operator),
     right(nullptr) {}
 };
+
+typedef std::shared_ptr<AstPrefixExpressionNode> AstPrefixExpressionNodePtr;
