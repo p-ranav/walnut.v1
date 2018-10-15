@@ -4,15 +4,15 @@
 #include <fstream>
 #include <string>
 
-Lexer::Lexer() : file(""), line(1), cursor(0), buffer(""), index(0) {}
+Lexer::Lexer(StringConstRef filename, StringConstRef buffer) : 
+  file(filename), 
+  line(1), 
+  cursor(0),
+  buffer(buffer), 
+  index(0) {}
 
-void Lexer::Tokenize(StringConstRef file_path)
+void Lexer::Tokenize()
 {
-  // read file into buffer
-  file = file_path;
-  InputFileStream file_stream(file);
-  buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
-
   for (index = 0; index < buffer.size();)
   {
     if (isutf(buffer[index]))

@@ -27,4 +27,6 @@ struct AstNode
   virtual ~AstNode() {}
 };
 
+typedef std::string String;
+typedef const std::string &StringConstRef;
 typedef std::shared_ptr<AstNode> AstNodePtr;

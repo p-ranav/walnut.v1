@@ -3,6 +3,7 @@
 #include <token.hpp>
 
 #include <vector>
+#include <fstream>
 #include <stdlib.h>
 
 typedef std::string String;
@@ -15,9 +16,9 @@ typedef std::istreambuf_iterator<char> EndOfStreamIterator;
 
 struct Lexer
 {
-  Lexer();
+  explicit Lexer(StringConstRef filename, StringConstRef buffer);
 
-  void Tokenize(StringConstRef file_path);
+  void Tokenize();
 
   String NextCharacter(Bool update_index = true);
   String PeekCharacter();
