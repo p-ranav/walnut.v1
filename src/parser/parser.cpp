@@ -26,6 +26,19 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
+
+  // infix parse functions
+  RegisterInfixParseFunction(TokenType::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::MULTIPLICATION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::DIVISION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::MODULUS_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::EQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::INEQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LESSER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
 }
 
 void Parser::ParseProgram()
@@ -208,5 +221,13 @@ AstNodePtr Parser::ParsePrefixExpression()
   AstPrefixExpressionNodePtr result = std::make_shared<AstPrefixExpressionNode>(current_token.type);
   NextToken();
   result->right = ParseExpression(LOWEST);
+  return result;
+}
+
+AstNodePtr Parser::ParseInfixExpression(AstNodePtr left) {
+  AstInfixExpressionNodePtr result = std::make_shared<AstInfixExpressionNode>(current_token.type);
+  result->left = left;
+  NextToken();
+  result->right = ParseExpression(CurrentPrecedence());
   return result;
 }

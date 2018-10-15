@@ -9,6 +9,7 @@
 #include <var_statement_node.hpp>
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
+#include <infix_expression_node.hpp>
 #include <vector>
 #include <map>
 #include <memory>
@@ -49,12 +50,12 @@ struct Parser
   enum Precedence
   {
     LOWEST,
-    EQUAL,       /* ==, != */
-    LESSGREATER, /* >, >=, < and <= */
-    SUM,         /* +, - */
-    PRODUCT,     /* *, /, % */
-    PREFIX,      /* -X or !X */
-    CALL         /* my_function(X) */
+    EQUAL,       // ==, !=
+    LESSGREATER, // >, >=, < and <=
+    SUM,         // +, -
+    PRODUCT,     // *, /, %
+    PREFIX,      // -X or !X
+    CALL         // my_function(X)
   };
   typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
 
@@ -67,6 +68,7 @@ struct Parser
   AstNodePtr ParseInteger();
   AstNodePtr ParseDouble();
   AstNodePtr ParsePrefixExpression();
+  AstNodePtr ParseInfixExpression(AstNodePtr left);
 
   /* Member variables */
   TokenVector tokens;
