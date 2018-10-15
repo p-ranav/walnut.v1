@@ -34,7 +34,7 @@ set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
 TARGET_LINK_LIBRARIES(LEXER UTF8)
 
 # Parser library
-ADD_SUBLIBRARY(PARSER src/parser)
+ADD_SUBLIBRARY(PARSER src/parser src/parser/ast)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
 TARGET_LINK_LIBRARIES(PARSER LEXER) 
 
