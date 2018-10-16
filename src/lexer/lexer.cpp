@@ -107,9 +107,7 @@ void Lexer::Tokenize()
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
-  {
     InsertKeywordVar(i);
-  }
 
   Token eof(file, line, cursor, TokenType::END_OF_FILE, "EOF");
   tokens.push_back(eof);
@@ -156,7 +154,7 @@ void Lexer::InsertKeywordVar(size_t &index)
 
   if (current == TokenType::SYMBOL && next == TokenType::ASSIGNMENT_OPERATOR)
   {
-    Token result(file, line, cursor, TokenType::KEYWORD_VAR, "var");
+    Token result(tokens[index].file, tokens[index].line, tokens[index].cursor, TokenType::KEYWORD_VAR, "var");
     tokens.insert(tokens.begin() + index, result);
     index += 1;
   }
