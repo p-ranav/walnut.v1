@@ -245,6 +245,15 @@ bool Evaluator::IsTruth(ObjectPtr condition, EnvironmentPtr environment)
     return true;
 }
 
+ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environment)
+{
+  WhileExpressionNodePtr expression = std::dynamic_pointer_cast<WhileExpressionNode>(node);
+  ObjectPtr condition = Eval(expression->condition, environment);
+
+  while (IsTruth(condition, environment))
+    Eval(expression->consequence, environment);
+}
+
 ObjectPtr Evaluator::EvalReturnStatement(NodePtr node, EnvironmentPtr environment)
 {
   ReturnStatementNodePtr statement = std::dynamic_pointer_cast<ReturnStatementNode>(node);

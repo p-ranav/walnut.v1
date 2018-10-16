@@ -9,6 +9,7 @@
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>
+#include <while_expression_node.h>
 #include <function_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
@@ -45,6 +46,7 @@ struct Evaluator
   ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
   bool IsTruth(ObjectPtr condition, EnvironmentPtr environment);
+  ObjectPtr EvalWhileExpression(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalReturnStatement(NodePtr node, EnvironmentPtr environment);
 
   ObjectPtr EvalIdentifier(NodePtr node, EnvironmentPtr environment);
