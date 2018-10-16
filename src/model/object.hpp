@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 
 typedef std::string String;
 typedef std::string& StringRef;
@@ -20,3 +21,5 @@ struct Object
   explicit Object(Type type) : type(type) {}
   virtual String Inspect() {}
 };
+
+typedef std::shared_ptr<Object> ObjectPtr;
