@@ -21,6 +21,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalInfixExpression(node, environment);
   case NodeType::IF_EXPRESSION:
     return EvalIfExpression(node, environment);
+  case NodeType::WHILE_EXPRESSION:
+    return EvalWhileExpression(node, environment);
   case NodeType::BLOCK_STATEMENT:
     return EvalBlockStatement(node, environment);
   case NodeType::RETURN_STATEMENT:
@@ -248,10 +250,16 @@ bool Evaluator::IsTruth(ObjectPtr condition, EnvironmentPtr environment)
 ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environment)
 {
   WhileExpressionNodePtr expression = std::dynamic_pointer_cast<WhileExpressionNode>(node);
-  ObjectPtr condition = Eval(expression->condition, environment);
+  ObjectPtr result = std::make_shared<NullObject>();
+  
+  while (IsTruth(Eval(expression->condition, environment), environment))
+  {
+    result = Eval(expression->consequence, environment);
+    if (result->type == ObjectType::RETURN)
+      return result;
+  }
 
-  while (IsTruth(condition, environment))
-    Eval(expression->consequence, environment);
+  return result;
 }
 
 ObjectPtr Evaluator::EvalReturnStatement(NodePtr node, EnvironmentPtr environment)
