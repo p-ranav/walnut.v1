@@ -2,6 +2,9 @@
 
 ObjectPtr Evaluator::Eval(NodePtr node)
 {
+  if (node == nullptr)
+    return std::make_shared<NullObject>();
+
   switch (node->type)
   {
   case NodeType::INTEGER:
@@ -16,8 +19,15 @@ ObjectPtr Evaluator::Eval(NodePtr node)
     return EvalPrefixExpression(node);
   case NodeType::INFIX_EXPRESSION:
     return EvalInfixExpression(node);
+  case NodeType::IF_EXPRESSION:
+    return EvalIfExpression(node);
+  case NodeType::BLOCK_STATEMENT:
+    return EvalBlockStatement(node);
+  case NodeType::RETURN_STATEMENT:
+    return EvalReturnStatement(node);
+  default:
+    return std::make_shared<NullObject>();
   }
-  return std::make_shared<NullObject>();
 }
 
 ObjectPtr Evaluator::EvalInteger(NodePtr node)
@@ -159,4 +169,64 @@ ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, Object
 
   else
     return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::EvalBlockStatement(NodePtr node)
+{
+  ObjectPtr result = std::make_shared<NullObject>();
+
+  BlockStatementNodePtr block = std::dynamic_pointer_cast<BlockStatementNode>(node);
+  for (auto& statement : block->statements)
+  {
+    result = Eval(statement);
+
+    if (result->type = ObjectType::RETURN)
+      return result;
+  }
+
+  return result;
+}
+
+ObjectPtr Evaluator::EvalIfExpression(NodePtr node)
+{
+  IfExpressionNodePtr if_expression_node = std::dynamic_pointer_cast<IfExpressionNode>(node);
+  ObjectPtr condition = Eval(if_expression_node->condition);
+  
+  if (IsTruth(condition))
+    return Eval(if_expression_node->consequence);
+  else
+    return Eval(if_expression_node->alternative);
+}
+
+bool Evaluator::IsTruth(ObjectPtr condition)
+{
+  if (condition->type == ObjectType::BOOLEAN)
+  {
+    BooleanObjectPtr boolean_condition = std::dynamic_pointer_cast<BooleanObject>(condition);
+    return (boolean_condition->value == true);
+  }
+  else if (condition->type == ObjectType::NULL_)
+  {
+    return false;
+  }
+  else if (condition->type == ObjectType::INTEGER)
+  {
+    IntegerNodePtr integer_condition = std::dynamic_pointer_cast<IntegerNode>(condition);
+    return (integer_condition->value != 0);
+  }
+  else if (condition->type == ObjectType::DOUBLE)
+  {
+    DoubleNodePtr double_condition = std::dynamic_pointer_cast<DoubleNode>(condition);
+    return (double_condition->value != 0.0);
+  }
+  else
+    return true;
+}
+
+ObjectPtr Evaluator::EvalReturnStatement(NodePtr node)
+{
+  ReturnStatementNodePtr return_statement_node = std::dynamic_pointer_cast<ReturnStatementNode>(node);
+  ReturnObjectPtr return_object = std::make_shared<ReturnObject>();
+  return_object->value = Eval(return_statement_node->expression);
+  return return_object;
 }

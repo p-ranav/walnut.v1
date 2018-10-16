@@ -37,4 +37,10 @@ struct Evaluator
   ObjectPtr EvalInfixExpression(NodePtr node);
   ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
   ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
+
+  ObjectPtr EvalBlockStatement(NodePtr node);
+  ObjectPtr EvalIfExpression(NodePtr node);
+  bool IsTruth(ObjectPtr condition);
+
+  ObjectPtr EvalReturnStatement(NodePtr node);
 };
