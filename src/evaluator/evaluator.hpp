@@ -40,6 +40,7 @@ struct Evaluator
   ObjectPtr EvalInfixExpression(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
   ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalStringInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
 
   ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);

@@ -1,5 +1,6 @@
 #pragma once
 #include <object.hpp>
+#include <memory>
 
 struct StringObject : Object
 {
@@ -10,3 +11,5 @@ struct StringObject : Object
     return "\"" + value + "\"";
   }
 };
+
+typedef std::shared_ptr<StringObject> StringObjectPtr;
