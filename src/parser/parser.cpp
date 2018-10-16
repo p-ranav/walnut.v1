@@ -208,8 +208,7 @@ NodePtr Parser::ParseExpression(Precedence precedence)
 
   NodePtr left_expression = prefix();
 
-  while (!IsPeekToken(TokenType::SEMI_COLON_OPERATOR) && !IsPeekToken(TokenType::COMMA_OPERATOR) && 
-    precedence < PeekPrecedence())
+  while (!IsPeekToken(TokenType::SEMI_COLON_OPERATOR) && precedence < PeekPrecedence())
   {
     InfixParseFunction infix = infix_parse_functions[peek_token.type];
 
