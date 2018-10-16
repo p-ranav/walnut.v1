@@ -6,7 +6,7 @@
 #include <string>
 #include <clocale>
 
-void Interpret(String filename, String buffer)
+void InterpretBuffer(String filename, String buffer)
 {
   Lexer lexer("", buffer);
   lexer.Tokenize();
@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
         c = std::cin.get();
         buffer += c;
       }
-      Interpret("", buffer);
+      buffer += ";";
+      InterpretBuffer("", buffer);
     }
   }
   else if (argc == 2)
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
     String filename = argv[1];
     InputFileStream file_stream(filename);
     String buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
-    Interpret(filename, buffer);
+    InterpretBuffer(filename, buffer);
   }
   return 0;
 }
