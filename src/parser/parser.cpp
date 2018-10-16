@@ -31,6 +31,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
 
   // infix parse functions
@@ -307,6 +308,28 @@ NodePtr Parser::ParseIfExpression()
 
     result->alternative = ParseBlockStatement();
   }
+
+  return result;
+}
+
+NodePtr Parser::ParseWhileExpression()
+{
+  WhileExpressionNodePtr result = std::make_shared<WhileExpressionNode>();
+
+  if (IsPeekToken(TokenType::LEFT_PARENTHESIS))
+    NextToken();
+
+  NextToken();
+
+  result->condition = ParseExpression(LOWEST);
+
+  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+    NextToken();
+
+  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+    return nullptr;
+
+  result->consequence = ParseBlockStatement();
 
   return result;
 }
