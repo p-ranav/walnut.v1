@@ -43,6 +43,25 @@ void Lexer::Tokenize()
         cursor = 0;
       }
 
+      // semicolon rule
+      if (character[0] == '\n')
+      {
+        if (tokens.size() > 0)
+        {
+          Token previous = tokens[tokens.size() - 1];
+          std::vector<TokenType> valid_tokens = { 
+            TokenType::SYMBOL, TokenType::INTEGER, TokenType::DOUBLE, TokenType::STRING_LITERAL,
+            TokenType::KEYWORD_TRUE, TokenType::KEYWORD_FALSE, TokenType::KEYWORD_RETURN,
+            TokenType::RIGHT_PARENTHESIS, TokenType::RIGHT_CURLY_BRACES 
+          };
+          if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
+          {
+            Token semi_colon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+            tokens.push_back(semi_colon);
+          }
+        }
+      }
+
       continue;
     }
   }

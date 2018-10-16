@@ -284,15 +284,15 @@ NodePtr Parser::ParseIfExpression()
 {
   IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
 
-  if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
-    return nullptr;
+  if (IsPeekToken(TokenType::LEFT_PARENTHESIS))
+    NextToken();
 
   NextToken();
 
   result->condition = ParseExpression(LOWEST);
 
-  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
-    return nullptr;
+  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+    NextToken();
 
   if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
     return nullptr;
