@@ -22,7 +22,7 @@
 
 typedef std::vector<Token> TokenVector;
 typedef const std::vector<Token> &TokenVectorConstRef;
-typedef std::vector<std::shared_ptr<Node>> Statements;
+typedef std::vector<NodePtr> Statements;
 typedef unsigned int UnsignedInt;
 typedef Token::Type TokenType;
 typedef std::function<NodePtr(void)> PrefixParseFunction;

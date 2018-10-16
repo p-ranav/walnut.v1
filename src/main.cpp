@@ -1,5 +1,6 @@
 #include <lexer.hpp>
 #include <parser.hpp>
+#include <evaluator.hpp>
 
 #include <iostream>
 #include <string>
@@ -12,6 +13,14 @@ void Interpret(String filename, String buffer)
 
   Parser parser(lexer.tokens);
   parser.ParseProgram();
+
+  Evaluator evaluator;
+  for (auto& statement : parser.statements)
+  {
+    ObjectPtr result = evaluator.Eval(statement);
+    std::cout << result->Inspect() << std::endl;
+  }
+
 }
 
 int main(int argc, char *argv[])

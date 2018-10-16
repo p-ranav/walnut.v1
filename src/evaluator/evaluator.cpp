@@ -15,7 +15,7 @@ ObjectPtr Evaluator::Eval(NodePtr node)
   case NodeType::PREFIX_EXPRESSION:
     return EvalPrefixExpression(node);
   }
-  return nullptr;
+  return std::make_shared<NullObject>();
 }
 
 ObjectPtr Evaluator::EvalInteger(NodePtr node)
@@ -88,4 +88,13 @@ ObjectPtr Evaluator::EvalUnaryMinusOperator(ObjectPtr right)
     double_right->value *= -1;
     return double_right;
   }
+  else
+  {
+    return std::make_shared<NullObject>();
+  }
+}
+
+ObjectPtr Evaluator::EvalInfixExpression(NodePtr node)
+{
+  return std::make_shared<NullObject>();
 }

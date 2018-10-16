@@ -34,4 +34,6 @@ struct Evaluator
   ObjectPtr EvalBangOperator(ObjectPtr right);
   ObjectPtr EvalUnaryMinusOperator(ObjectPtr right);
 
+  ObjectPtr EvalInfixExpression(NodePtr node);
+
 };
