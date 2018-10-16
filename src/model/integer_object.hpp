@@ -10,3 +10,5 @@ struct IntegerObject : Object
     return std::to_string(value);
   }
 };
+
+typedef std::shared_ptr<IntegerObject> IntegerObjectPtr;

@@ -8,3 +8,5 @@ struct BooleanNode : Node
     Node(BOOLEAN), 
     value(value) {}
 };
+
+typedef std::shared_ptr<BooleanNode> BooleanNodePtr;

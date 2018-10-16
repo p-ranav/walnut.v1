@@ -5,6 +5,15 @@
 #include <string>
 #include <clocale>
 
+void Interpret(String filename, String buffer)
+{
+  Lexer lexer("", buffer);
+  lexer.Tokenize();
+
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+}
+
 int main(int argc, char *argv[])
 {
   setlocale(LC_ALL, "");
@@ -19,11 +28,7 @@ int main(int argc, char *argv[])
         c = std::cin.get();
         buffer += c;
       }
-      Lexer lexer("", buffer);
-      lexer.Tokenize();
-
-      Parser parser(lexer.tokens);
-      parser.ParseProgram();
+      Interpret("", buffer);
     }
   }
   else if (argc == 2)
@@ -31,12 +36,7 @@ int main(int argc, char *argv[])
     String filename = argv[1];
     InputFileStream file_stream(filename);
     String buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
-
-    Lexer lexer(filename, buffer);
-    lexer.Tokenize();
-
-    Parser parser(lexer.tokens);
-    parser.ParseProgram();
+    Interpret(filename, buffer);
   }
   return 0;
 }

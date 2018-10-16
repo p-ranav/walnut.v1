@@ -39,7 +39,7 @@ set_target_properties(AST PROPERTIES OUTPUT_NAME ast) # ast.lib
 set_target_properties(AST PROPERTIES LINKER_LANGUAGE CXX)
 
 # Parser library
-ADD_SUBLIBRARY(PARSER src/parser src/parser/ast)
+ADD_SUBLIBRARY(PARSER src/parser)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
 TARGET_LINK_LIBRARIES(PARSER LEXER) 
 
@@ -47,6 +47,11 @@ TARGET_LINK_LIBRARIES(PARSER LEXER)
 ADD_SUBLIBRARY(MODEL src/model)
 set_target_properties(MODEL PROPERTIES OUTPUT_NAME model) # model.lib
 set_target_properties(MODEL PROPERTIES LINKER_LANGUAGE CXX)
+
+# EVALUATOR library
+ADD_SUBLIBRARY(EVALUATOR src/evaluator)
+set_target_properties(EVALUATOR PROPERTIES OUTPUT_NAME evaluator) # evaluator.lib
+TARGET_LINK_LIBRARIES(EVALUATOR PARSER) 
 
 # Main executable
 file(GLOB EXECUTABLE_SOURCES 

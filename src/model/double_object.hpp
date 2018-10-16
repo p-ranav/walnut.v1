@@ -10,3 +10,5 @@ struct DoubleObject : Object
     return std::to_string(value);
   }
 };
+
+typedef std::shared_ptr<DoubleObject> DoubleObjectPtr;

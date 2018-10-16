@@ -9,3 +9,5 @@ struct StringLiteralNode : Node
     Node(STRING_LITERAL), 
     value(value) {}
 };
+
+typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;

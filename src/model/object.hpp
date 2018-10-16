@@ -13,13 +13,15 @@ struct Object
     INTEGER,
     DOUBLE,
     BOOLEAN,
+    STRING,
     NULL_,
     RETURN
   };
 
   Type type;
   explicit Object(Type type) : type(type) {}
-  virtual String Inspect() {}
+  virtual String Inspect() = 0;
 };
 
 typedef std::shared_ptr<Object> ObjectPtr;
+typedef Object::Type ObjectType;

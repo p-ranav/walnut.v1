@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <memory>
 
 struct Node
@@ -30,3 +31,4 @@ struct Node
 typedef std::string String;
 typedef const std::string &StringConstRef;
 typedef std::shared_ptr<Node> NodePtr;
+typedef Node::Type NodeType;

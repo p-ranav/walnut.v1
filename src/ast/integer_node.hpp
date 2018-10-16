@@ -8,3 +8,5 @@ struct IntegerNode : Node
     Node(INTEGER), 
     value(value) {}
 };
+
+typedef std::shared_ptr<IntegerNode> IntegerNodePtr;

@@ -8,3 +8,5 @@ struct DoubleNode : Node
     Node(DOUBLE), 
     value(value) {}
 };
+
+typedef std::shared_ptr<DoubleNode> DoubleNodePtr;
