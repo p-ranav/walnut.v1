@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <memory>
 
@@ -21,6 +22,7 @@ struct Object
 
   Type type;
   explicit Object(Type type) : type(type) {}
+  virtual ~Object() {}
   virtual String Inspect() = 0;
 };
 

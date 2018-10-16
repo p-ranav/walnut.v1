@@ -15,9 +15,11 @@ void InterpretBuffer(StringConstRef filename, String buffer, EnvironmentPtr envi
   parser.ParseProgram();
 
   Evaluator evaluator;
+  std::vector<ObjectPtr> objects;
   for (auto& statement : parser.statements)
   {
     ObjectPtr result = evaluator.Eval(statement, environment);
+    objects.push_back(result);
     String inspect = result->Inspect();
     if (inspect != "")
       std::cout << result->Inspect() << std::endl;
@@ -48,10 +50,20 @@ int main(int argc, char *argv[])
   else if (argc == 2)
   {
     String filename = argv[1];
-    InputFileStream file_stream(filename);
-    String buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
+    InputFileStream file_stream;
+    String buffer;
+    try
+    {
+      file_stream = InputFileStream(filename);
+      buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
+    }
+    catch (std::exception)
+    {
+      std::cout << "error: failed to open " << filename << std::endl;
+    }
     InterpretBuffer(filename, buffer, environment);
     file_stream.close();
   }
+  environment->store.clear();
   return 0;
 }

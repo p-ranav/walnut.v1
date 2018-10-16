@@ -3,6 +3,7 @@
 #include <block_statement_node.hpp>
 #include <object.hpp>
 #include <environment.hpp>
+#include <iostream>
 
 struct FunctionObject : Object
 {
@@ -16,6 +17,10 @@ struct FunctionObject : Object
     parameters(parameters),
     body(body),
     environment(environment) {}
+
+  virtual ~FunctionObject() {
+    environment.reset();
+  }
 
   String Inspect() override {
     return "";
