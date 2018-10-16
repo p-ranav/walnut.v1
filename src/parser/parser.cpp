@@ -321,13 +321,21 @@ NodePtr Parser::ParseWhileExpression()
 
   NextToken();
 
-  result->condition = ParseExpression(LOWEST);
-
-  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+  if (IsCurrentToken(TokenType::LEFT_CURLY_BRACES)) 
+  {
     NextToken();
+    result->condition = std::make_shared<BooleanNode>(true);
+  }
+  else
+  {
+    result->condition = ParseExpression(LOWEST);
 
-  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
-    return nullptr;
+    if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+      NextToken();
+
+    if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+      return nullptr;
+  }
 
   result->consequence = ParseBlockStatement();
 
