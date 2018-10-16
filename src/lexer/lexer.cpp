@@ -70,7 +70,7 @@ void Lexer::Tokenize()
           {
             if (!(previous.type == TokenType::RIGHT_PARENTHESIS && exception_to_semicolon_rule))
             {
-              Token semi_colon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+              Token semi_colon(previous.file, previous.line, previous.cursor + 1, TokenType::SEMI_COLON_OPERATOR, ";");
               tokens.push_back(semi_colon);
             }
           }
