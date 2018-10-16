@@ -56,10 +56,10 @@ ObjectPtr Evaluator::EvalString(NodePtr node)
 
 ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node)
 {
-  PrefixExpressionNodePtr prefix_expression_node = std::dynamic_pointer_cast<PrefixExpressionNode>(node);
-  ObjectPtr right = Eval(prefix_expression_node->right);
+  PrefixExpressionNodePtr expression = std::dynamic_pointer_cast<PrefixExpressionNode>(node);
+  ObjectPtr right = Eval(expression->right);
   
-  TokenType prefix_operator = prefix_expression_node->prefix_operator;
+  TokenType prefix_operator = expression->prefix_operator;
   switch (prefix_operator)
   {
   case TokenType::LOGICAL_NOT_OPERATOR:
@@ -106,10 +106,10 @@ ObjectPtr Evaluator::EvalUnaryMinusOperator(ObjectPtr right)
 
 ObjectPtr Evaluator::EvalInfixExpression(NodePtr node)
 {
-  InfixExpressionNodePtr infix_expression_node = std::dynamic_pointer_cast<InfixExpressionNode>(node);
-  ObjectPtr left = Eval(infix_expression_node->left);
-  ObjectPtr right = Eval(infix_expression_node->right);
-  TokenType infix_operator = infix_expression_node->infix_operator;
+  InfixExpressionNodePtr expression = std::dynamic_pointer_cast<InfixExpressionNode>(node);
+  ObjectPtr left = Eval(expression->left);
+  ObjectPtr right = Eval(expression->right);
+  TokenType infix_operator = expression->infix_operator;
 
   if (left->type == ObjectType::INTEGER && right->type == ObjectType::INTEGER)
     return EvalIntegerInfixExpression(infix_operator, left, right);
@@ -189,13 +189,13 @@ ObjectPtr Evaluator::EvalBlockStatement(NodePtr node)
 
 ObjectPtr Evaluator::EvalIfExpression(NodePtr node)
 {
-  IfExpressionNodePtr if_expression_node = std::dynamic_pointer_cast<IfExpressionNode>(node);
-  ObjectPtr condition = Eval(if_expression_node->condition);
+  IfExpressionNodePtr expression = std::dynamic_pointer_cast<IfExpressionNode>(node);
+  ObjectPtr condition = Eval(expression->condition);
   
   if (IsTruth(condition))
-    return Eval(if_expression_node->consequence);
+    return Eval(expression->consequence);
   else
-    return Eval(if_expression_node->alternative);
+    return Eval(expression->alternative);
 }
 
 bool Evaluator::IsTruth(ObjectPtr condition)
@@ -225,8 +225,14 @@ bool Evaluator::IsTruth(ObjectPtr condition)
 
 ObjectPtr Evaluator::EvalReturnStatement(NodePtr node)
 {
-  ReturnStatementNodePtr return_statement_node = std::dynamic_pointer_cast<ReturnStatementNode>(node);
-  ReturnObjectPtr return_object = std::make_shared<ReturnObject>();
-  return_object->value = Eval(return_statement_node->expression);
-  return return_object;
+  ReturnStatementNodePtr statement = std::dynamic_pointer_cast<ReturnStatementNode>(node);
+  return std::make_shared<ReturnObject>(Eval(statement->expression));
+}
+
+ObjectPtr Evaluator::EvalVarStatement(NodePtr node)
+{
+  VarStatementNodePtr statement = std::dynamic_pointer_cast<VarStatementNode>(node);
+  ObjectPtr expression = Eval(statement->expression);
+  // TODO: save value
+  return std::make_shared<NullObject>();
 }

@@ -41,6 +41,7 @@ struct Evaluator
   ObjectPtr EvalBlockStatement(NodePtr node);
   ObjectPtr EvalIfExpression(NodePtr node);
   bool IsTruth(ObjectPtr condition);
-
   ObjectPtr EvalReturnStatement(NodePtr node);
+
+  ObjectPtr EvalVarStatement(NodePtr node);
 };

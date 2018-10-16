@@ -5,7 +5,7 @@
 struct ReturnObject : Object
 {
   ObjectPtr value;
-  explicit ReturnObject() : Object(RETURN) {}
+  explicit ReturnObject(ObjectPtr value) : Object(RETURN), value(value) {}
 
   String Inspect() override {
     return value->Inspect();
