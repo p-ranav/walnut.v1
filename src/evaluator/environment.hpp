@@ -7,9 +7,18 @@
 struct Environment
 {
   std::map<String, ObjectPtr> store;
-  std::shared_ptr<Environment> outer;
 
-  explicit Environment(std::shared_ptr<Environment> outer = nullptr) : store({}), outer(outer) {}
+  typedef std::shared_ptr<Environment> EnvironmentPtr;
+  EnvironmentPtr outer;
+
+  explicit Environment(EnvironmentPtr outer_environment = nullptr) :
+    store({}), 
+    outer(outer_environment) {}
+
+  ~Environment() {
+    store.clear();
+    outer.reset();
+  }
 
   ObjectPtr Get(String key) {
     ObjectPtr result;

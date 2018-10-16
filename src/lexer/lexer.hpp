@@ -39,6 +39,7 @@ struct Lexer
   void ParsePunctuation(StringRef character);
 
   void MergeTokenPair(size_t &index, Token::Type first, Token::Type second, Token::Type result, const String &result_value);
+  void InsertKeywordVar(size_t &index);
 
   TokenVector tokens;
   String file;

@@ -54,7 +54,7 @@ struct Evaluator
 
   ObjectPtr EvalCallExpression(NodePtr node, EnvironmentPtr environment);
   std::vector<ObjectPtr> EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment);
-  ObjectPtr ApplyFunction(ObjectPtr function, std::vector<ObjectPtr> arguments);
+  ObjectPtr ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments);
   EnvironmentPtr ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments);
   ObjectPtr UnwrapReturnValue(ObjectPtr object);
 };

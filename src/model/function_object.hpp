@@ -9,6 +9,7 @@ struct FunctionObject : Object
   std::vector<IdentifierNodePtr> parameters;
   BlockStatementNodePtr body;
   EnvironmentPtr environment;
+
   explicit FunctionObject(const std::vector<IdentifierNodePtr>& parameters, 
     BlockStatementNodePtr body, EnvironmentPtr environment) : 
     Object(FUNCTION),
@@ -17,25 +18,7 @@ struct FunctionObject : Object
     environment(environment) {}
 
   String Inspect() override {
-    String buffer;
-    buffer += "function(";
-
-    if (parameters.size() == 1)
-      buffer += parameters[0]->value;
-    
-    else if (parameters.size() > 1)
-    {
-      for (size_t i = 0; i < parameters.size() - 1; i++)
-      {
-        buffer += parameters[i]->value;
-        buffer += ", ";
-      }
-      buffer += parameters[parameters.size() - 1]->value;
-    }
-
-    buffer += ")";
-    // TODO: print body
-    return buffer;
+    return "";
   }
 };
 

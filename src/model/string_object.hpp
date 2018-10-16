@@ -5,7 +5,7 @@
 struct StringObject : Object
 {
   String value;
-  explicit StringObject(String value) : Object(STRING), value(value) {}
+  explicit StringObject(StringConstRef value) : Object(STRING), value(value) {}
 
   String Inspect() override {
     return "\"" + value + "\"";

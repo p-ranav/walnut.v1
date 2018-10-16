@@ -72,6 +72,11 @@ void Lexer::Tokenize()
     MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, "||");
   }
 
+  for (size_t i = 0; i < tokens.size(); i++)
+  {
+    InsertKeywordVar(i);
+  }
+
   Token eof(file, line, cursor, TokenType::END_OF_FILE, "EOF");
   tokens.push_back(eof);
 }
@@ -107,6 +112,19 @@ void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second,
     current = result;
     tokens[index].value = result_value;
     tokens.erase(tokens.begin() + index + 1);
+  }
+}
+
+void Lexer::InsertKeywordVar(size_t &index)
+{
+  auto& current = tokens[index].type;
+  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : TokenType::INVALID;
+
+  if (current == TokenType::SYMBOL && next == TokenType::ASSIGNMENT_OPERATOR)
+  {
+    Token result(file, line, cursor, TokenType::KEYWORD_VAR, "var");
+    tokens.insert(tokens.begin() + index, result);
+    index += 1;
   }
 }
 

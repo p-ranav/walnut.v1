@@ -293,7 +293,7 @@ std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressio
   return result;
 }
 
-ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments)
 {
   if (function->type != ObjectType::FUNCTION)
     std::cout << "not a function" << std::endl;
