@@ -4,7 +4,7 @@
 #include <integer_node.hpp>
 #include <double_node.hpp>
 #include <boolean_node.hpp>
-#include <string_node.hpp>
+#include <string_literal_node.hpp>
 #include <identifier_node.hpp>
 #include <var_statement_node.hpp>
 #include <return_statement_node.hpp>
@@ -13,6 +13,8 @@
 #include <function_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
+
+#include <iostream>
 #include <vector>
 #include <map>
 #include <memory>
@@ -20,13 +22,13 @@
 
 typedef std::vector<Token> TokenVector;
 typedef const std::vector<Token> &TokenVectorConstRef;
-typedef std::vector<std::shared_ptr<AstNode>> AstStatements;
+typedef std::vector<std::shared_ptr<Node>> Statements;
 typedef unsigned int UnsignedInt;
 typedef Token::Type TokenType;
-typedef std::function<AstNodePtr(void)> PrefixParseFunction;
-typedef std::map<TokenType, std::function<AstNodePtr(void)>> PrefixParseFunctionMap;
-typedef std::function<AstNodePtr(AstNodePtr)> InfixParseFunction;
-typedef std::map<TokenType, std::function<AstNodePtr(AstNodePtr)>> InfixParseFunctionMap;
+typedef std::function<NodePtr(void)> PrefixParseFunction;
+typedef std::map<TokenType, std::function<NodePtr(void)>> PrefixParseFunctionMap;
+typedef std::function<NodePtr(NodePtr)> InfixParseFunction;
+typedef std::map<TokenType, std::function<NodePtr(NodePtr)>> InfixParseFunctionMap;
 
 struct Parser
 {
@@ -39,10 +41,10 @@ struct Parser
   bool IsPeekToken(TokenType value);
   bool ExpectPeek(TokenType value);
 
-  AstNodePtr ParseStatement();
-  AstNodePtr ParseVarStatement();
-  AstNodePtr ParseReturnStatement();
-  AstNodePtr ParseExpressionStatement();
+  NodePtr ParseStatement();
+  NodePtr ParseVarStatement();
+  NodePtr ParseReturnStatement();
+  NodePtr ParseExpressionStatement();
 
   PrefixParseFunctionMap prefix_parse_functions;
   void RegisterPrefixParseFunction(TokenType token, PrefixParseFunction function);
@@ -64,29 +66,29 @@ struct Parser
 
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
-  AstNodePtr ParseExpression(Precedence precedence);
+  NodePtr ParseExpression(Precedence precedence);
 
   /* Prefix parse functions */
-  AstNodePtr ParseIdentifier();
-  AstNodePtr ParseInteger();
-  AstNodePtr ParseDouble();
-  AstNodePtr ParseBoolean();
-  AstNodePtr ParseStringLiteral();
-  AstNodePtr ParsePrefixExpression();
-  AstNodePtr ParseGroupedExpression();
-  AstBlockStatementNodePtr ParseBlockStatement();
-  AstNodePtr ParseIfExpression();
-  std::vector<AstIdentifierNodePtr> ParseFunctionParameters();
-  AstNodePtr ParseFunctionLiteral();
+  NodePtr ParseIdentifier();
+  NodePtr ParseInteger();
+  NodePtr ParseDouble();
+  NodePtr ParseBoolean();
+  NodePtr ParseStringLiteral();
+  NodePtr ParsePrefixExpression();
+  NodePtr ParseGroupedExpression();
+  BlockStatementNodePtr ParseBlockStatement();
+  NodePtr ParseIfExpression();
+  std::vector<IdentifierNodePtr> ParseFunctionParameters();
+  NodePtr ParseFunctionLiteral();
 
   /* Infix parse functions */
-  AstNodePtr ParseInfixExpression(AstNodePtr left);
-  std::vector<AstNodePtr> ParseCallArguments();
-  AstNodePtr ParseCallExpression(AstNodePtr function);
+  NodePtr ParseInfixExpression(NodePtr left);
+  std::vector<NodePtr> ParseCallArguments();
+  NodePtr ParseCallExpression(NodePtr function);
 
   /* Member variables */
   TokenVector tokens;
-  AstStatements statements;
+  Statements statements;
   UnsignedInt current_token_index;
   Token current_token;
   Token peek_token;

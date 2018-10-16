@@ -43,6 +43,11 @@ ADD_SUBLIBRARY(PARSER src/parser src/parser/ast)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
 TARGET_LINK_LIBRARIES(PARSER LEXER) 
 
+# MODEL library
+ADD_SUBLIBRARY(MODEL src/model)
+set_target_properties(MODEL PROPERTIES OUTPUT_NAME model) # model.lib
+set_target_properties(MODEL PROPERTIES LINKER_LANGUAGE CXX)
+
 # Main executable
 file(GLOB EXECUTABLE_SOURCES 
     "src/main.cpp" 

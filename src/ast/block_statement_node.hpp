@@ -3,12 +3,12 @@
 #include <vector>
 #include <memory>
 
-struct AstBlockStatementNode : AstNode
+struct BlockStatementNode : Node
 {
-  std::vector<AstNodePtr> statements;
-  AstBlockStatementNode() : 
-    AstNode(BLOCK_STATEMENT), 
+  std::vector<NodePtr> statements;
+  BlockStatementNode() : 
+    Node(BLOCK_STATEMENT), 
     statements({}) {}
 };
 
-typedef std::shared_ptr<AstBlockStatementNode> AstBlockStatementNodePtr;
+typedef std::shared_ptr<BlockStatementNode> BlockStatementNodePtr;

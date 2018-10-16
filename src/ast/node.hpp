@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-struct AstNode
+struct Node
 {
   enum Type
   {
@@ -22,11 +22,11 @@ struct AstNode
   };
 
   Type type;
-  explicit AstNode(Type type) : 
+  explicit Node(Type type) : 
     type(type) {}
-  virtual ~AstNode() {}
+  virtual ~Node() {}
 };
 
 typedef std::string String;
 typedef const std::string &StringConstRef;
-typedef std::shared_ptr<AstNode> AstNodePtr;
+typedef std::shared_ptr<Node> NodePtr;

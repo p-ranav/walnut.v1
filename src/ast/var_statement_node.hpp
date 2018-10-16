@@ -2,12 +2,12 @@
 #include <node.hpp>
 #include <identifier_node.hpp>
 
-struct AstVarStatementNode : AstNode
+struct VarStatementNode : Node
 {
-  AstIdentifierNodePtr name;
-  AstNodePtr expression;
-  AstVarStatementNode() : 
-    AstNode(VAR_STATEMENT) {}
+  IdentifierNodePtr name;
+  NodePtr expression;
+  VarStatementNode() : 
+    Node(VAR_STATEMENT) {}
 };
 
-typedef std::shared_ptr<AstVarStatementNode> AstVarStatementNodePtr;
+typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;

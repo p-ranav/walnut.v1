@@ -2,14 +2,14 @@
 #include <node.hpp>
 #include <token.hpp>
 
-struct AstCallExpressionNode : AstNode
+struct CallExpressionNode : Node
 {
-  AstNodePtr function;
-  std::vector<AstNodePtr> arguments;
-  explicit AstCallExpressionNode() :
-    AstNode(CALL_EXPRESSION),
+  NodePtr function;
+  std::vector<NodePtr> arguments;
+  explicit CallExpressionNode() :
+    Node(CALL_EXPRESSION),
     function(nullptr),
     arguments({}) {}
 };
 
-typedef std::shared_ptr<AstCallExpressionNode> AstCallExpressionNodePtr;
+typedef std::shared_ptr<CallExpressionNode> CallExpressionNodePtr;

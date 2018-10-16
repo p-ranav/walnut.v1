@@ -4,14 +4,14 @@
 #include <block_statement_node.hpp>
 #include <vector>
 
-struct AstFunctionLiteralNode : AstNode
+struct FunctionLiteralNode : Node
 {
-  std::vector<AstIdentifierNodePtr> parameters;
-  AstBlockStatementNodePtr body;
-  explicit AstFunctionLiteralNode() :
-    AstNode(FUNCTION),
+  std::vector<IdentifierNodePtr> parameters;
+  BlockStatementNodePtr body;
+  explicit FunctionLiteralNode() :
+    Node(FUNCTION),
     parameters({}),
     body(nullptr) {}
 };
 
-typedef std::shared_ptr<AstFunctionLiteralNode> AstFunctionLiteralNodePtr;
+typedef std::shared_ptr<FunctionLiteralNode> FunctionLiteralNodePtr;

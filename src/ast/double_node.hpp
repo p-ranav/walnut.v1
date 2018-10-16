@@ -1,10 +1,10 @@
 #pragma once
 #include <node.hpp>
 
-struct AstDoubleNode : AstNode
+struct DoubleNode : Node
 {
   double value;
-  explicit AstDoubleNode(double value) : 
-    AstNode(DOUBLE), 
+  explicit DoubleNode(double value) : 
+    Node(DOUBLE), 
     value(value) {}
 };

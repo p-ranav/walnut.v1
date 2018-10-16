@@ -3,17 +3,17 @@
 #include <block_statement_node.hpp>
 #include <memory>
 
-struct AstIfExpressionNode : AstNode
+struct IfExpressionNode : Node
 {
-  AstNodePtr condition;
-  AstBlockStatementNodePtr consequence;
-  AstBlockStatementNodePtr alternative;
+  NodePtr condition;
+  BlockStatementNodePtr consequence;
+  BlockStatementNodePtr alternative;
 
-  explicit AstIfExpressionNode() : 
-    AstNode(IF_EXPRESSION), 
+  explicit IfExpressionNode() : 
+    Node(IF_EXPRESSION), 
     condition(nullptr), 
     consequence(nullptr), 
     alternative(nullptr) {}
 };
 
-typedef std::shared_ptr<AstIfExpressionNode> AstIfExpressionNodePtr;
+typedef std::shared_ptr<IfExpressionNode> IfExpressionNodePtr;

@@ -1,10 +1,10 @@
 #pragma once
 #include <node.hpp>
 
-struct AstIntegerNode : AstNode
+struct IntegerNode : Node
 {
   int value;
-  explicit AstIntegerNode(int value) : 
-    AstNode(INTEGER), 
+  explicit IntegerNode(int value) : 
+    Node(INTEGER), 
     value(value) {}
 };

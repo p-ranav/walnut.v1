@@ -2,15 +2,15 @@
 #include <node.hpp>
 #include <token.hpp>
 
-struct AstPrefixExpressionNode : AstNode
+struct PrefixExpressionNode : Node
 {
   TokenType prefix_operator;
-  AstNodePtr right;
+  NodePtr right;
 
-  explicit AstPrefixExpressionNode(TokenType prefix_operator) : 
-    AstNode(PREFIX_EXPRESSION), 
+  explicit PrefixExpressionNode(TokenType prefix_operator) : 
+    Node(PREFIX_EXPRESSION), 
     prefix_operator(prefix_operator), 
     right(nullptr) {}
 };
 
-typedef std::shared_ptr<AstPrefixExpressionNode> AstPrefixExpressionNodePtr;
+typedef std::shared_ptr<PrefixExpressionNode> PrefixExpressionNodePtr;

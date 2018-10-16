@@ -1,10 +1,10 @@
 #pragma once
 #include <node.hpp>
 
-struct AstBooleanNode : AstNode
+struct BooleanNode : Node
 {
   bool value;
-  explicit AstBooleanNode(bool value) : 
-    AstNode(BOOLEAN), 
+  explicit BooleanNode(bool value) : 
+    Node(BOOLEAN), 
     value(value) {}
 };

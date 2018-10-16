@@ -56,7 +56,7 @@ void Parser::ParseProgram()
 
   while (!IsPeekToken(TokenType::END_OF_FILE))
   {
-    AstNodePtr statement = ParseStatement();
+    NodePtr statement = ParseStatement();
     if (statement != nullptr)
       statements.push_back(statement);
     NextToken();
@@ -89,11 +89,20 @@ bool Parser::ExpectPeek(TokenType value)
     NextToken();
     return true;
   }
-  else
-    throw std::runtime_error("expected token X, instead got token Y");
+  else {
+    String message;
+    if (current_token.file != "")
+      message = "parser error: unexpected token \"" + current_token.value + "\" at "
+      + current_token.file + ", line " + std::to_string(current_token.line) + " char "
+      + std::to_string(current_token.cursor);
+    else
+      message = "parser error: unexpected token \"" + current_token.value + "\"";
+    std::cout << message << std::endl;
+    exit(EXIT_FAILURE);
+  }
 }
 
-AstNodePtr Parser::ParseStatement()
+NodePtr Parser::ParseStatement()
 {
   switch (current_token.type)
   {
@@ -109,15 +118,15 @@ AstNodePtr Parser::ParseStatement()
   }
 }
 
-AstNodePtr Parser::ParseVarStatement()
+NodePtr Parser::ParseVarStatement()
 {
-  AstVarStatementNodePtr result = std::make_shared<AstVarStatementNode>();
+  VarStatementNodePtr result = std::make_shared<VarStatementNode>();
 
   if (!ExpectPeek(TokenType::SYMBOL))
   {
     return nullptr;
   }
-  result->name = std::make_shared<AstIdentifierNode>(current_token.value);
+  result->name = std::make_shared<IdentifierNode>(current_token.value);
 
   if (!ExpectPeek(TokenType::ASSIGNMENT_OPERATOR))
   {
@@ -134,9 +143,9 @@ AstNodePtr Parser::ParseVarStatement()
   return result;
 }
 
-AstNodePtr Parser::ParseReturnStatement()
+NodePtr Parser::ParseReturnStatement()
 {
-  AstReturnStatementNodePtr result = std::make_shared<AstReturnStatementNode>();
+  ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>();
   NextToken();
 
   result->expression = ParseExpression(LOWEST);
@@ -179,9 +188,9 @@ Parser::Precedence Parser::CurrentPrecedence()
     return LOWEST;
 }
 
-AstNodePtr Parser::ParseExpressionStatement()
+NodePtr Parser::ParseExpressionStatement()
 {
-  AstNodePtr result = ParseExpression(LOWEST);
+  NodePtr result = ParseExpression(LOWEST);
 
   if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
     NextToken();
@@ -189,14 +198,14 @@ AstNodePtr Parser::ParseExpressionStatement()
   return result;
 }
 
-AstNodePtr Parser::ParseExpression(Precedence precedence)
+NodePtr Parser::ParseExpression(Precedence precedence)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
 
   if (prefix == nullptr)
     return nullptr;
 
-  AstNodePtr left_expression = prefix();
+  NodePtr left_expression = prefix();
 
   while (!IsPeekToken(TokenType::SEMI_COLON_OPERATOR) && precedence < PeekPrecedence())
   {
@@ -212,56 +221,56 @@ AstNodePtr Parser::ParseExpression(Precedence precedence)
   return left_expression;
 }
 
-AstNodePtr Parser::ParseIdentifier()
+NodePtr Parser::ParseIdentifier()
 {
-  return std::make_shared<AstIdentifierNode>(current_token.value);
+  return std::make_shared<IdentifierNode>(current_token.value);
 }
 
-AstNodePtr Parser::ParseInteger()
+NodePtr Parser::ParseInteger()
 {
-  return std::make_shared<AstIntegerNode>(std::stoi(current_token.value));
+  return std::make_shared<IntegerNode>(std::stoi(current_token.value));
 }
 
-AstNodePtr Parser::ParseDouble()
+NodePtr Parser::ParseDouble()
 {
-  return std::make_shared<AstDoubleNode>(std::stod(current_token.value));
+  return std::make_shared<DoubleNode>(std::stod(current_token.value));
 }
 
-AstNodePtr Parser::ParseBoolean()
+NodePtr Parser::ParseBoolean()
 {
-  return std::make_shared<AstBooleanNode>(current_token.type == TokenType::KEYWORD_TRUE);
+  return std::make_shared<BooleanNode>(current_token.type == TokenType::KEYWORD_TRUE);
 }
 
-AstNodePtr Parser::ParseStringLiteral()
+NodePtr Parser::ParseStringLiteral()
 {
-  return std::make_shared<AstStringNode>(current_token.value);
+  return std::make_shared<StringLiteralNode>(current_token.value);
 }
 
-AstNodePtr Parser::ParsePrefixExpression()
+NodePtr Parser::ParsePrefixExpression()
 {
-  AstPrefixExpressionNodePtr result = std::make_shared<AstPrefixExpressionNode>(current_token.type);
+  PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token.type);
   NextToken();
   result->right = ParseExpression(LOWEST);
   return result;
 }
 
-AstNodePtr Parser::ParseGroupedExpression()
+NodePtr Parser::ParseGroupedExpression()
 {
   NextToken();
-  AstNodePtr result = ParseExpression(LOWEST);
+  NodePtr result = ParseExpression(LOWEST);
   if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
     return nullptr;
   return result;
 }
 
-AstBlockStatementNodePtr Parser::ParseBlockStatement()
+BlockStatementNodePtr Parser::ParseBlockStatement()
 {
-  AstBlockStatementNodePtr result = std::make_shared<AstBlockStatementNode>();
+  BlockStatementNodePtr result = std::make_shared<BlockStatementNode>();
   NextToken();
 
   while (!IsCurrentToken(TokenType::RIGHT_CURLY_BRACES) && !IsCurrentToken(TokenType::END_OF_FILE))
   {
-    AstNodePtr statement = ParseStatement();
+    NodePtr statement = ParseStatement();
     
     if (statement != nullptr)
       result->statements.push_back(statement);
@@ -271,9 +280,9 @@ AstBlockStatementNodePtr Parser::ParseBlockStatement()
   return result;
 }
 
-AstNodePtr Parser::ParseIfExpression()
+NodePtr Parser::ParseIfExpression()
 {
-  AstIfExpressionNodePtr result = std::make_shared<AstIfExpressionNode>();
+  IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
 
   if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
     return nullptr;
@@ -302,9 +311,9 @@ AstNodePtr Parser::ParseIfExpression()
   return result;
 }
 
-std::vector<AstIdentifierNodePtr> Parser::ParseFunctionParameters()
+std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
 {
-  std::vector<AstIdentifierNodePtr> result = {};
+  std::vector<IdentifierNodePtr> result = {};
 
   if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
   {
@@ -314,14 +323,14 @@ std::vector<AstIdentifierNodePtr> Parser::ParseFunctionParameters()
 
   NextToken();
 
-  AstIdentifierNodePtr identifier = std::make_shared<AstIdentifierNode>(current_token.value);
+  IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
   result.push_back(identifier);
 
   while (IsPeekToken(TokenType::COMMA_OPERATOR))
   {
     NextToken();
     NextToken();
-    AstIdentifierNodePtr identifier = std::make_shared<AstIdentifierNode>(current_token.value);
+    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
     result.push_back(identifier);
   }
 
@@ -331,9 +340,9 @@ std::vector<AstIdentifierNodePtr> Parser::ParseFunctionParameters()
   return result;
 }
 
-AstNodePtr Parser::ParseFunctionLiteral()
+NodePtr Parser::ParseFunctionLiteral()
 {
-  AstFunctionLiteralNodePtr result = std::make_shared<AstFunctionLiteralNode>();
+  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
 
   if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
     return nullptr;
@@ -348,9 +357,9 @@ AstNodePtr Parser::ParseFunctionLiteral()
   return result;
 }
 
-std::vector<AstNodePtr> Parser::ParseCallArguments()
+std::vector<NodePtr> Parser::ParseCallArguments()
 {
-  std::vector<AstNodePtr> result = {};
+  std::vector<NodePtr> result = {};
 
   if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
   {
@@ -373,16 +382,16 @@ std::vector<AstNodePtr> Parser::ParseCallArguments()
   return result;
 }
 
-AstNodePtr Parser::ParseCallExpression(AstNodePtr function)
+NodePtr Parser::ParseCallExpression(NodePtr function)
 {
-  AstCallExpressionNodePtr result = std::make_shared<AstCallExpressionNode>();
+  CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
   result->function = function;
   result->arguments = ParseCallArguments();
   return result;
 }
 
-AstNodePtr Parser::ParseInfixExpression(AstNodePtr left) {
-  AstInfixExpressionNodePtr result = std::make_shared<AstInfixExpressionNode>(current_token.type);
+NodePtr Parser::ParseInfixExpression(NodePtr left) {
+  InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token.type);
   result->left = left;
   Precedence precedence = CurrentPrecedence();
   NextToken();

@@ -1,11 +1,11 @@
 #pragma once
 #include <node.hpp>
 
-struct AstReturnStatementNode : AstNode
+struct ReturnStatementNode : Node
 {
-  AstNodePtr expression;
-  AstReturnStatementNode() : 
-    AstNode(RETURN_STATEMENT) {}
+  NodePtr expression;
+  ReturnStatementNode() : 
+    Node(RETURN_STATEMENT) {}
 };
 
-typedef std::shared_ptr<AstReturnStatementNode> AstReturnStatementNodePtr;
+typedef std::shared_ptr<ReturnStatementNode> ReturnStatementNodePtr;

@@ -2,17 +2,17 @@
 #include <node.hpp>
 #include <token.hpp>
 
-struct AstInfixExpressionNode : AstNode
+struct InfixExpressionNode : Node
 {
-  AstNodePtr left;
+  NodePtr left;
   TokenType infix_operator;
-  AstNodePtr right;
+  NodePtr right;
 
-  explicit AstInfixExpressionNode(TokenType infix_operator) : 
-    AstNode(INFIX_EXPRESSION),
+  explicit InfixExpressionNode(TokenType infix_operator) : 
+    Node(INFIX_EXPRESSION),
     left(nullptr),
     infix_operator(infix_operator),
     right(nullptr) {}
 };
 
-typedef std::shared_ptr<AstInfixExpressionNode> AstInfixExpressionNodePtr;
+typedef std::shared_ptr<InfixExpressionNode> InfixExpressionNodePtr;

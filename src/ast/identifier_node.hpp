@@ -2,12 +2,12 @@
 #include <node.hpp>
 #include <string>
 
-struct AstIdentifierNode : AstNode
+struct IdentifierNode : Node
 {
   String value;
-  explicit AstIdentifierNode(StringConstRef value) : 
-    AstNode(IDENTIFIER), 
+  explicit IdentifierNode(StringConstRef value) : 
+    Node(IDENTIFIER), 
     value(value) {}
 };
 
-typedef std::shared_ptr<AstIdentifierNode> AstIdentifierNodePtr;
+typedef std::shared_ptr<IdentifierNode> IdentifierNodePtr;
