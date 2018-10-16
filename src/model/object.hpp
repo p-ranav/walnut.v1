@@ -15,7 +15,8 @@ struct Object
     BOOLEAN,
     STRING,
     NULL_,
-    RETURN
+    RETURN,
+    FUNCTION
   };
 
   Type type;

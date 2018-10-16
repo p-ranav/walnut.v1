@@ -7,12 +7,21 @@
 struct Environment
 {
   std::map<String, ObjectPtr> store;
+  std::shared_ptr<Environment> outer;
+
+  explicit Environment(std::shared_ptr<Environment> outer = nullptr) : store({}), outer(outer) {}
 
   ObjectPtr Get(String key) {
+    ObjectPtr result;
     if (store.find(key) != store.end())
-      return store[key];
+      result = store[key];
     else
-      return std::make_shared<NullObject>();
+      result = std::make_shared<NullObject>();
+
+    if (result->type == ObjectType::NULL_ && outer != nullptr)
+      result = outer->Get(key);
+
+    return result;
   }
 
   void Set(String key, ObjectPtr value) {

@@ -20,6 +20,7 @@
 #include <string_object.hpp>
 #include <null_object.hpp>
 #include <return_object.hpp>
+#include <function_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
@@ -47,4 +48,12 @@ struct Evaluator
 
   ObjectPtr EvalIdentifier(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalVarStatement(NodePtr node, EnvironmentPtr environment);
+
+  ObjectPtr EvalFunction(NodePtr node, EnvironmentPtr environment);
+
+  ObjectPtr EvalCallExpression(NodePtr node, EnvironmentPtr environment);
+  std::vector<ObjectPtr> EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment);
+  ObjectPtr ApplyFunction(ObjectPtr function, std::vector<ObjectPtr> arguments);
+  EnvironmentPtr ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments);
+  ObjectPtr UnwrapReturnValue(ObjectPtr object);
 };

@@ -29,6 +29,10 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalIdentifier(node, environment);
   case NodeType::VAR_STATEMENT:
     return EvalVarStatement(node, environment);
+  case NodeType::FUNCTION:
+    return EvalFunction(node, environment);
+  case NodeType::CALL_EXPRESSION:
+    return EvalCallExpression(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
@@ -251,4 +255,55 @@ ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
   ObjectPtr value = Eval(statement->expression, environment);
   environment->Set(statement->name->value, value);
   return value;
+}
+
+ObjectPtr Evaluator::EvalFunction(NodePtr node, EnvironmentPtr environment)
+{
+  FunctionLiteralNodePtr function = std::dynamic_pointer_cast<FunctionLiteralNode>(node);
+  return std::make_shared<FunctionObject>(function->parameters, function->body, environment);
+}
+
+ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment)
+{
+  CallExpressionNodePtr expression = std::dynamic_pointer_cast<CallExpressionNode>(node);
+  ObjectPtr function = Eval(expression->function, environment);
+  std::vector<ObjectPtr> arguments = EvalExpressions(expression->arguments, environment);
+  return ApplyFunction(function, arguments);
+}
+
+std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment)
+{
+  std::vector<ObjectPtr> result;
+  for (auto& expression : expressions)
+    result.push_back(Eval(expression, environment));
+  return result;
+}
+
+ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, std::vector<ObjectPtr> arguments)
+{
+  if (function->type != ObjectType::FUNCTION)
+    std::cout << "not a function" << std::endl;
+
+  FunctionObjectPtr function_object = std::dynamic_pointer_cast<FunctionObject>(function);
+  EnvironmentPtr extended_environment = ExtendFunctionEnvironment(function_object, arguments);
+  ObjectPtr evaluated = Eval(function_object->body, extended_environment);
+  return UnwrapReturnValue(evaluated);
+}
+
+EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments)
+{
+  EnvironmentPtr environment = std::make_shared<Environment>(function->environment);
+  for (size_t i = 0; i < function->parameters.size(); i++)
+    environment->Set(function->parameters[i]->value, arguments[i]);
+  return environment;
+}
+
+ObjectPtr Evaluator::UnwrapReturnValue(ObjectPtr object)
+{
+  if (object->type == ObjectType::RETURN)
+  {
+    ReturnObjectPtr result = std::dynamic_pointer_cast<ReturnObject>(object);
+    return result->value;
+  }
+  return object;
 }
