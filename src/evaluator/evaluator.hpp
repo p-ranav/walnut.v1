@@ -35,5 +35,6 @@ struct Evaluator
   ObjectPtr EvalUnaryMinusOperator(ObjectPtr right);
 
   ObjectPtr EvalInfixExpression(NodePtr node);
-
+  ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
+  ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
 };
