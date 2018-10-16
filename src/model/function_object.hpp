@@ -19,13 +19,19 @@ struct FunctionObject : Object
   String Inspect() override {
     String buffer;
     buffer += "function(";
-    for (size_t i = 0; i < parameters.size() - 1; i++)
+
+    if (parameters.size() == 1)
+      buffer += parameters[0]->value;
+    
+    else if (parameters.size() > 1)
     {
-      buffer += parameters[i]->value;
-      buffer += ", ";
-    }
-    if (parameters.size() > 0)
+      for (size_t i = 0; i < parameters.size() - 1; i++)
+      {
+        buffer += parameters[i]->value;
+        buffer += ", ";
+      }
       buffer += parameters[parameters.size() - 1]->value;
+    }
 
     buffer += ")";
     // TODO: print body
