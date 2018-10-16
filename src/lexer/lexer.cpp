@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 Lexer::Lexer(StringConstRef filename, StringConstRef buffer) : 
   file(filename), 
@@ -37,6 +38,15 @@ void Lexer::Tokenize()
       else if (ispunct(character[0]))
         ParsePunctuation(character);
 
+      if (tokens.size() > 0) {
+        if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_IF)
+          exception_to_semicolon_rule = true;
+        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_FUNCTION)
+          exception_to_semicolon_rule = true;
+        else if (tokens[tokens.size() - 1].type == TokenType::LEFT_CURLY_BRACES)
+          exception_to_semicolon_rule = false;
+      }
+
       if (character[0] == '\n')
       {
         line += 1;
@@ -56,8 +66,11 @@ void Lexer::Tokenize()
           };
           if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
           {
-            Token semi_colon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
-            tokens.push_back(semi_colon);
+            if (!(previous.type == TokenType::RIGHT_PARENTHESIS && exception_to_semicolon_rule))
+            {
+              Token semi_colon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+              tokens.push_back(semi_colon);
+            }
           }
         }
       }
