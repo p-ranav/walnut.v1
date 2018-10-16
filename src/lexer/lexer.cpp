@@ -270,9 +270,7 @@ void Lexer::ParseSymbol(StringRef character)
     break;
   }
 
-  if (result.value == "var")
-    result.type = TokenType::KEYWORD_VAR;
-  else if (result.value == "true")
+  if (result.value == "true")
     result.type = TokenType::KEYWORD_TRUE;
   else if (result.value == "false")
     result.type = TokenType::KEYWORD_FALSE;
