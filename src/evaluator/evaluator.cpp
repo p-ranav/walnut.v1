@@ -251,12 +251,23 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
 {
   WhileExpressionNodePtr expression = std::dynamic_pointer_cast<WhileExpressionNode>(node);
   ObjectPtr result = std::make_shared<NullObject>();
+
+  EnvironmentPtr while_environment = std::make_shared<Environment>();
+  while_environment->outer = environment;
   
-  while (IsTruth(Eval(expression->condition, environment), environment))
+  while (IsTruth(Eval(expression->condition, while_environment), while_environment))
   {
-    result = Eval(expression->consequence, environment);
+    result = Eval(expression->consequence, while_environment);
     if (result->type == ObjectType::RETURN)
       return result;
+  }
+
+  for (auto& kv : environment->store)
+  {
+    if (while_environment->store.find(kv.first) != while_environment->store.end())
+    {
+      environment->Set(kv.first, while_environment->Get(kv.first));
+    }
   }
 
   return result;
