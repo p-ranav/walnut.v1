@@ -43,6 +43,8 @@ void Lexer::Tokenize()
           exception_to_semicolon_rule = true;
         else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_FUNCTION)
           exception_to_semicolon_rule = true;
+        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_WHILE)
+          exception_to_semicolon_rule = true;
         else if (tokens[tokens.size() - 1].type == TokenType::LEFT_CURLY_BRACES)
           exception_to_semicolon_rule = false;
       }

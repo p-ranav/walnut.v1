@@ -15,14 +15,14 @@ void InterpretBuffer(StringConstRef filename, String buffer, EnvironmentPtr envi
   parser.ParseProgram();
 
   Evaluator evaluator;
-  std::vector<ObjectPtr> objects;
   for (auto& statement : parser.statements)
   {
     ObjectPtr result = evaluator.Eval(statement, environment);
-    objects.push_back(result);
     String inspect = result->Inspect();
     if (inspect != "")
       std::cout << result->Inspect() << std::endl;
+    if (result->type == ObjectType::RETURN)
+      break;
   }
   lexer.tokens.clear();
   parser.statements.clear();
