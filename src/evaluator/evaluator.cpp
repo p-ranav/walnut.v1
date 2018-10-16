@@ -1,6 +1,6 @@
 #include <evaluator.hpp>
 
-ObjectPtr Evaluator::Eval(NodePtr node)
+ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
 {
   if (node == nullptr)
     return std::make_shared<NullObject>();
@@ -8,70 +8,74 @@ ObjectPtr Evaluator::Eval(NodePtr node)
   switch (node->type)
   {
   case NodeType::INTEGER:
-    return EvalInteger(node);
+    return EvalInteger(node, environment);
   case NodeType::DOUBLE:
-    return EvalDouble(node);
+    return EvalDouble(node, environment);
   case NodeType::BOOLEAN:
-    return EvalBoolean(node);
+    return EvalBoolean(node, environment);
   case NodeType::STRING_LITERAL:
-    return EvalString(node);
+    return EvalString(node, environment);
   case NodeType::PREFIX_EXPRESSION:
-    return EvalPrefixExpression(node);
+    return EvalPrefixExpression(node, environment);
   case NodeType::INFIX_EXPRESSION:
-    return EvalInfixExpression(node);
+    return EvalInfixExpression(node, environment);
   case NodeType::IF_EXPRESSION:
-    return EvalIfExpression(node);
+    return EvalIfExpression(node, environment);
   case NodeType::BLOCK_STATEMENT:
-    return EvalBlockStatement(node);
+    return EvalBlockStatement(node, environment);
   case NodeType::RETURN_STATEMENT:
-    return EvalReturnStatement(node);
+    return EvalReturnStatement(node, environment);
+  case NodeType::IDENTIFIER:
+    return EvalIdentifier(node, environment);
+  case NodeType::VAR_STATEMENT:
+    return EvalVarStatement(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
 }
 
-ObjectPtr Evaluator::EvalInteger(NodePtr node)
+ObjectPtr Evaluator::EvalInteger(NodePtr node, EnvironmentPtr environment)
 {
   IntegerNodePtr integer_node = std::dynamic_pointer_cast<IntegerNode>(node);
   return std::make_shared<IntegerObject>(integer_node->value);
 }
 
-ObjectPtr Evaluator::EvalDouble(NodePtr node)
+ObjectPtr Evaluator::EvalDouble(NodePtr node, EnvironmentPtr environment)
 {
   DoubleNodePtr double_node = std::dynamic_pointer_cast<DoubleNode>(node);
   return std::make_shared<DoubleObject>(double_node->value);
 }
 
-ObjectPtr Evaluator::EvalBoolean(NodePtr node)
+ObjectPtr Evaluator::EvalBoolean(NodePtr node, EnvironmentPtr environment)
 {
   BooleanNodePtr boolean_node = std::dynamic_pointer_cast<BooleanNode>(node);
   return std::make_shared<BooleanObject>(boolean_node->value);
 }
 
-ObjectPtr Evaluator::EvalString(NodePtr node)
+ObjectPtr Evaluator::EvalString(NodePtr node, EnvironmentPtr environment)
 {
   StringLiteralNodePtr string_literal_node = std::dynamic_pointer_cast<StringLiteralNode>(node);
   return std::make_shared<StringObject>(string_literal_node->value);
 }
 
-ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node)
+ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node, EnvironmentPtr environment)
 {
   PrefixExpressionNodePtr expression = std::dynamic_pointer_cast<PrefixExpressionNode>(node);
-  ObjectPtr right = Eval(expression->right);
+  ObjectPtr right = Eval(expression->right, environment);
   
   TokenType prefix_operator = expression->prefix_operator;
   switch (prefix_operator)
   {
   case TokenType::LOGICAL_NOT_OPERATOR:
-    return EvalBangOperator(right);
+    return EvalBangOperator(right, environment);
   case TokenType::SUBTRACTION_OPERATOR:
-    return EvalUnaryMinusOperator(right);
+    return EvalUnaryMinusOperator(right, environment);
   default:
     return std::make_shared<NullObject>();
   }
 }
 
-ObjectPtr Evaluator::EvalBangOperator(ObjectPtr right)
+ObjectPtr Evaluator::EvalBangOperator(ObjectPtr right, EnvironmentPtr environment)
 {
   BooleanObjectPtr result = std::make_shared<BooleanObject>(false);
 
@@ -86,7 +90,7 @@ ObjectPtr Evaluator::EvalBangOperator(ObjectPtr right)
   return result;
 }
 
-ObjectPtr Evaluator::EvalUnaryMinusOperator(ObjectPtr right)
+ObjectPtr Evaluator::EvalUnaryMinusOperator(ObjectPtr right, EnvironmentPtr environment)
 {
   if (right->type == ObjectType::INTEGER)
   {
@@ -104,23 +108,23 @@ ObjectPtr Evaluator::EvalUnaryMinusOperator(ObjectPtr right)
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalInfixExpression(NodePtr node)
+ObjectPtr Evaluator::EvalInfixExpression(NodePtr node, EnvironmentPtr environment)
 {
   InfixExpressionNodePtr expression = std::dynamic_pointer_cast<InfixExpressionNode>(node);
-  ObjectPtr left = Eval(expression->left);
-  ObjectPtr right = Eval(expression->right);
+  ObjectPtr left = Eval(expression->left, environment);
+  ObjectPtr right = Eval(expression->right, environment);
   TokenType infix_operator = expression->infix_operator;
 
   if (left->type == ObjectType::INTEGER && right->type == ObjectType::INTEGER)
-    return EvalIntegerInfixExpression(infix_operator, left, right);
+    return EvalIntegerInfixExpression(infix_operator, left, right, environment);
   else if (left->type == ObjectType::BOOLEAN && right->type == ObjectType::BOOLEAN)
-    return EvalBooleanInfixExpression(infix_operator, left, right);
+    return EvalBooleanInfixExpression(infix_operator, left, right, environment);
 
   else
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right)
+ObjectPtr Evaluator::EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   IntegerObjectPtr left_node = std::dynamic_pointer_cast<IntegerObject>(left);
   IntegerObjectPtr right_node = std::dynamic_pointer_cast<IntegerObject>(right);
@@ -156,7 +160,7 @@ ObjectPtr Evaluator::EvalIntegerInfixExpression(TokenType infix_operator, Object
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right)
+ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   BooleanObjectPtr left_node = std::dynamic_pointer_cast<BooleanObject>(left);
   BooleanObjectPtr right_node = std::dynamic_pointer_cast<BooleanObject>(right);
@@ -171,34 +175,34 @@ ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, Object
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalBlockStatement(NodePtr node)
+ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment)
 {
   ObjectPtr result = std::make_shared<NullObject>();
 
   BlockStatementNodePtr block = std::dynamic_pointer_cast<BlockStatementNode>(node);
   for (auto& statement : block->statements)
   {
-    result = Eval(statement);
+    result = Eval(statement, environment);
 
-    if (result->type = ObjectType::RETURN)
+    if (result->type == ObjectType::RETURN)
       return result;
   }
 
   return result;
 }
 
-ObjectPtr Evaluator::EvalIfExpression(NodePtr node)
+ObjectPtr Evaluator::EvalIfExpression(NodePtr node, EnvironmentPtr environment)
 {
   IfExpressionNodePtr expression = std::dynamic_pointer_cast<IfExpressionNode>(node);
-  ObjectPtr condition = Eval(expression->condition);
+  ObjectPtr condition = Eval(expression->condition, environment);
   
-  if (IsTruth(condition))
-    return Eval(expression->consequence);
+  if (IsTruth(condition, environment))
+    return Eval(expression->consequence, environment);
   else
-    return Eval(expression->alternative);
+    return Eval(expression->alternative, environment);
 }
 
-bool Evaluator::IsTruth(ObjectPtr condition)
+bool Evaluator::IsTruth(ObjectPtr condition, EnvironmentPtr environment)
 {
   if (condition->type == ObjectType::BOOLEAN)
   {
@@ -223,16 +227,28 @@ bool Evaluator::IsTruth(ObjectPtr condition)
     return true;
 }
 
-ObjectPtr Evaluator::EvalReturnStatement(NodePtr node)
+ObjectPtr Evaluator::EvalReturnStatement(NodePtr node, EnvironmentPtr environment)
 {
   ReturnStatementNodePtr statement = std::dynamic_pointer_cast<ReturnStatementNode>(node);
-  return std::make_shared<ReturnObject>(Eval(statement->expression));
+  return std::make_shared<ReturnObject>(Eval(statement->expression, environment));
 }
 
-ObjectPtr Evaluator::EvalVarStatement(NodePtr node)
+ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)
+{
+  IdentifierNodePtr identifier_node = std::dynamic_pointer_cast<IdentifierNode>(node);
+  ObjectPtr lookup = environment->Get(identifier_node->value);
+  if (lookup->type == ObjectType::NULL_)
+  {
+    std::cout << "Identifier not found: " << identifier_node->value << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  return lookup;
+}
+
+ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
 {
   VarStatementNodePtr statement = std::dynamic_pointer_cast<VarStatementNode>(node);
-  ObjectPtr expression = Eval(statement->expression);
-  // TODO: save value
-  return std::make_shared<NullObject>();
+  ObjectPtr value = Eval(statement->expression, environment);
+  environment->Set(statement->name->value, value);
+  return value;
 }

@@ -21,27 +21,30 @@
 #include <null_object.hpp>
 #include <return_object.hpp>
 
+#include <environment.hpp>
+#include <iostream>
 
 struct Evaluator
 {
-  ObjectPtr Eval(NodePtr node);
-  ObjectPtr EvalInteger(NodePtr node);
-  ObjectPtr EvalDouble(NodePtr node);
-  ObjectPtr EvalBoolean(NodePtr node);
-  ObjectPtr EvalString(NodePtr node);
+  ObjectPtr Eval(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalBoolean(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalString(NodePtr node, EnvironmentPtr environment);
 
-  ObjectPtr EvalPrefixExpression(NodePtr node);
-  ObjectPtr EvalBangOperator(ObjectPtr right);
-  ObjectPtr EvalUnaryMinusOperator(ObjectPtr right);
+  ObjectPtr EvalPrefixExpression(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalBangOperator(ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalUnaryMinusOperator(ObjectPtr right, EnvironmentPtr environment);
 
-  ObjectPtr EvalInfixExpression(NodePtr node);
-  ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
-  ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right);
+  ObjectPtr EvalInfixExpression(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
 
-  ObjectPtr EvalBlockStatement(NodePtr node);
-  ObjectPtr EvalIfExpression(NodePtr node);
-  bool IsTruth(ObjectPtr condition);
-  ObjectPtr EvalReturnStatement(NodePtr node);
+  ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
+  bool IsTruth(ObjectPtr condition, EnvironmentPtr environment);
+  ObjectPtr EvalReturnStatement(NodePtr node, EnvironmentPtr environment);
 
-  ObjectPtr EvalVarStatement(NodePtr node);
+  ObjectPtr EvalIdentifier(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalVarStatement(NodePtr node, EnvironmentPtr environment);
 };

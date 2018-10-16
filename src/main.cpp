@@ -6,7 +6,7 @@
 #include <string>
 #include <clocale>
 
-void InterpretBuffer(String filename, String buffer)
+void InterpretBuffer(String filename, String buffer, EnvironmentPtr environment)
 {
   Lexer lexer("", buffer);
   lexer.Tokenize();
@@ -17,7 +17,7 @@ void InterpretBuffer(String filename, String buffer)
   Evaluator evaluator;
   for (auto& statement : parser.statements)
   {
-    ObjectPtr result = evaluator.Eval(statement);
+    ObjectPtr result = evaluator.Eval(statement, environment);
     std::cout << result->Inspect() << std::endl;
   }
 
@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
   setlocale(LC_ALL, "");
   if (argc == 1)
   {
+    EnvironmentPtr environment = std::make_shared<Environment>();
     while (true)
     {
       std::cout << ">>> ";
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
         buffer += c;
       }
       buffer += ";";
-      InterpretBuffer("", buffer);
+      InterpretBuffer("", buffer, environment);
     }
   }
   else if (argc == 2)
@@ -46,7 +47,8 @@ int main(int argc, char *argv[])
     String filename = argv[1];
     InputFileStream file_stream(filename);
     String buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
-    InterpretBuffer(filename, buffer);
+    EnvironmentPtr environment = std::make_shared<Environment>();
+    InterpretBuffer(filename, buffer, environment);
   }
   return 0;
 }
