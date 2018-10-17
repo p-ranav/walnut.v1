@@ -444,7 +444,7 @@ std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
 
 NodePtr Parser::ParseIndexExpression(NodePtr left)
 {
-  IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>();
+  IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>(left);
   NextToken();
   expression->index = ParseExpression(LOWEST);
   if (!ExpectPeek(TokenType::RIGHT_SQUARE_BRACKETS))

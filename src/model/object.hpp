@@ -18,7 +18,8 @@ struct Object
     NULL_,
     RETURN,
     FUNCTION,
-    BUILTIN_FUNCTION
+    BUILTIN_FUNCTION,
+    ARRAY
   };
 
   Type type;

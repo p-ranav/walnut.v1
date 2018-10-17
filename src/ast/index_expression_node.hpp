@@ -6,9 +6,9 @@ struct IndexExpressionNode : Node
 {
   NodePtr left;
   NodePtr index;
-  explicit IndexExpressionNode() :
+  explicit IndexExpressionNode(NodePtr left) :
     Node(INDEX_EXPRESSION),
-    left(nullptr),
+    left(left),
     index(nullptr){}
 };
 

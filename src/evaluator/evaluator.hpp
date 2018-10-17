@@ -13,6 +13,8 @@
 #include <function_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
+#include <array_literal_node.hpp>
+#include <index_expression_node.hpp>
 
 #include <object.hpp>
 #include <integer_object.hpp>
@@ -23,6 +25,7 @@
 #include <return_object.hpp>
 #include <function_object.hpp>
 #include <builtin_function_object.hpp>
+#include <array_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
@@ -63,6 +66,10 @@ struct Evaluator
   ObjectPtr ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments);
   EnvironmentPtr ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments);
   ObjectPtr UnwrapReturnValue(ObjectPtr object);
+
+  ObjectPtr EvalArrayLiteral(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalIndexOperator(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index);
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;

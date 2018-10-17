@@ -42,6 +42,10 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalFunction(node, environment);
   case NodeType::CALL_EXPRESSION:
     return EvalCallExpression(node, environment);
+  case NodeType::ARRAY_LITERAL:
+    return EvalArrayLiteral(node, environment);
+  case NodeType::INDEX_EXPRESSION:
+    return EvalIndexOperator(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
@@ -419,4 +423,50 @@ ObjectPtr Evaluator::UnwrapReturnValue(ObjectPtr object)
     return result->value;
   }
   return object;
+}
+
+ObjectPtr Evaluator::EvalArrayLiteral(NodePtr node, EnvironmentPtr environment)
+{
+  ArrayLiteralNodePtr array_node = std::dynamic_pointer_cast<ArrayLiteralNode>(node);
+  return std::make_shared<ArrayObject>(EvalExpressions(array_node->elements, environment));
+}
+
+ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
+{
+  IndexExpressionNodePtr expression = std::dynamic_pointer_cast<IndexExpressionNode>(node);
+  ObjectPtr left = Eval(expression->left, environment);
+  ObjectPtr index = Eval(expression->index, environment);
+
+  if (left->type == ObjectType::ARRAY && index->type == Object::INTEGER)
+  {
+    return EvalArrayIndexExpression(left, index);
+  }
+  else
+  {
+    std::cout << "error: index operator not supported" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+
+}
+
+ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
+{
+  ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(array);
+  std::vector<ObjectPtr> elements = array_object->elements;
+  int array_size = static_cast<int>(elements.size());
+
+  IntegerObjectPtr array_index = std::dynamic_pointer_cast<IntegerObject>(index);
+  int index_value = array_index->value;
+
+  if (index_value >= array_size)
+  {
+    std::cout << "error: array index out of range" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  else if (index_value < 0)
+  {
+    std::cout << "error: array index cannot be negative" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  return elements[index_value];
 }
