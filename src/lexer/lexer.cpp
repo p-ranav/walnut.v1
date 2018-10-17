@@ -163,9 +163,6 @@ void Lexer::InsertKeywordVar(size_t &index)
 
 void Lexer::ParseComment(StringRef character)
 {
-  Token semicolon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
-  tokens.push_back(semicolon);
-
   character = NextCharacter();
   String peek_character = PeekCharacter();
   if (peek_character[0] == '/')
@@ -183,6 +180,8 @@ void Lexer::ParseComment(StringRef character)
 
 void Lexer::ParseLineComment(StringRef character)
 {
+  Token semicolon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+  tokens.push_back(semicolon);
   while (character[0] != 0x0A && index < buffer.size())
     character = NextCharacter();
   line += 1;
