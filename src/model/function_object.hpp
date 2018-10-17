@@ -23,7 +23,22 @@ struct FunctionObject : Object
   }
 
   String Inspect() override {
-    return "";
+    String result = "";
+    result += "function(";
+    if (parameters.size() == 1)
+    {
+      result += parameters[0]->ToString();
+    }
+    else if (parameters.size() > 1)
+    {
+      for (size_t i = 0; i < parameters.size() - 1; i++)
+      {
+        result += parameters[i]->ToString() + ", ";
+      }
+      result += parameters[parameters.size() - 1]->ToString();
+    }
+    result += ") " + body->ToString();
+    return result;
   }
 };
 

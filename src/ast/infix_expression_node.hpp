@@ -16,7 +16,7 @@ struct InfixExpressionNode : Node
 
   String ToString() override
   {
-    return left->ToString() + " " + TokenString(infix_operator) + right->ToString();
+    return left->ToString() + " " + TokenString(infix_operator) + " " + right->ToString();
   }
 };
 

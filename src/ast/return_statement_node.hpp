@@ -9,7 +9,7 @@ struct ReturnStatementNode : Node
 
   String ToString() override
   {
-    return "return " + expression->ToString() + ";";
+    return "return " + expression->ToString();
   }
 };
 

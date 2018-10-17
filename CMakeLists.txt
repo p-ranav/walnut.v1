@@ -28,20 +28,20 @@ endif()
 ADD_SUBLIBRARY(UTF8 src/utf8)
 set_target_properties(UTF8 PROPERTIES OUTPUT_NAME utf8) # utf8.lib
 
-# Lexer library
-ADD_SUBLIBRARY(LEXER src/lexer)
-set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
-TARGET_LINK_LIBRARIES(LEXER UTF8)
-
 # AST library
 ADD_SUBLIBRARY(AST src/ast)
 set_target_properties(AST PROPERTIES OUTPUT_NAME ast) # ast.lib
 set_target_properties(AST PROPERTIES LINKER_LANGUAGE CXX)
 
+# Lexer library
+ADD_SUBLIBRARY(LEXER src/lexer)
+set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
+TARGET_LINK_LIBRARIES(LEXER UTF8 AST)
+
 # Parser library
 ADD_SUBLIBRARY(PARSER src/parser)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
-TARGET_LINK_LIBRARIES(PARSER LEXER) 
+TARGET_LINK_LIBRARIES(PARSER LEXER AST) 
 
 # MODEL library
 ADD_SUBLIBRARY(MODEL src/model)

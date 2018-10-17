@@ -17,7 +17,7 @@ struct BlockStatementNode : Node
     {
       result += statement->ToString() + "; ";
     }
-    result += " }";
+    result += "}";
     return result;
   }
 };
