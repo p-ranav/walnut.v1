@@ -19,8 +19,6 @@ void InterpretBuffer(StringConstRef filename, String buffer, EnvironmentPtr envi
   {
     ObjectPtr result = evaluator.Eval(statement, environment);
     String inspect = result->Inspect();
-    if (inspect != "")
-      std::cout << result->Inspect() << std::endl;
     if (result->type == ObjectType::RETURN)
       break;
   }

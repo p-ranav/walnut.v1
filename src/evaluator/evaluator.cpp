@@ -3,8 +3,12 @@
 
 Evaluator::Evaluator()
 {
+  builtin_functions.insert(std::make_pair("print",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("len", 
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::len, this, std::placeholders::_1))));
+  builtin_functions.insert(std::make_pair("append",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)

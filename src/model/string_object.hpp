@@ -8,7 +8,7 @@ struct StringObject : Object
   explicit StringObject(StringConstRef value) : Object(STRING), value(value) {}
 
   String Inspect() override {
-    return "\"" + value + "\"";
+    return value;
   }
 };
 

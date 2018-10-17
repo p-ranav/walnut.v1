@@ -103,7 +103,6 @@ bool Parser::ExpectPeek(TokenType value)
     else
       message = "parser error: unexpected token \"" + current_token.value + "\"";
     std::cout << message << std::endl;
-    exit(EXIT_FAILURE);
   }
 }
 
