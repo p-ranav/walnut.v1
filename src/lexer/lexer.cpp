@@ -75,6 +75,7 @@ void Lexer::Tokenize()
             }
           }
         }
+        NextCharacter();
       }
 
       continue;
@@ -241,7 +242,6 @@ void Lexer::ParseNumber(StringRef character)
 
 bool Lexer::IsValidSymbol(StringRef character)
 {
-  character = NextCharacter();
   for (auto &c : character)
   {
     if ((c >= 'A' && c <= 'Z') ||
@@ -258,16 +258,15 @@ bool Lexer::IsValidSymbol(StringRef character)
 
 void Lexer::ParseSymbol(StringRef character)
 {
-  character = NextCharacter();
-  Token result(file, line, cursor, TokenType::SYMBOL, character);
+  Token result(file, line, cursor, TokenType::SYMBOL, "");
 
   while (true)
   {
     character = PeekCharacter();
     if (IsValidSymbol(character))
     {
-      character = NextCharacter();
       result.value += character;
+      character = NextCharacter();
       continue;
     }
     break;
@@ -361,8 +360,8 @@ void Lexer::ParseStringLiteral(StringRef character)
 
 void Lexer::ParsePunctuation(StringRef character)
 {
-  Token result(file, line, cursor, TokenType::PUNCTUATION);
-  result.value += character;
+  character = NextCharacter();
+  Token result(file, line, cursor, TokenType::PUNCTUATION, character);
 
   // delimiters
   if (result.value == ".")
