@@ -1,6 +1,12 @@
 #include <evaluator.hpp>
 #include <math.h>
 
+Evaluator::Evaluator()
+{
+  builtin_functions.insert(std::make_pair("len", 
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::len, this, std::placeholders::_1))));
+}
+
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
 {
   if (node == nullptr)
@@ -331,13 +337,19 @@ ObjectPtr Evaluator::EvalReturnStatement(NodePtr node, EnvironmentPtr environmen
 ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)
 {
   IdentifierNodePtr identifier_node = std::dynamic_pointer_cast<IdentifierNode>(node);
-  ObjectPtr lookup = environment->Get(identifier_node->value);
-  if (lookup->type == ObjectType::NULL_)
+
+  if (builtin_functions.find(identifier_node->value) != builtin_functions.end())
+    return builtin_functions[identifier_node->value];
+
+  ObjectPtr environment_lookup = environment->Get(identifier_node->value);
+
+  if (environment_lookup->type == ObjectType::NULL_)
   {
     std::cout << "Identifier not found: " << identifier_node->value << std::endl;
     exit(EXIT_FAILURE);
   }
-  return lookup;
+  else
+    return environment_lookup;
 }
 
 ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
@@ -372,13 +384,23 @@ std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressio
 
 ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments)
 {
-  if (function->type != ObjectType::FUNCTION)
+  if (function->type != ObjectType::FUNCTION && function->type != ObjectType::BUILTIN_FUNCTION)
     std::cout << "not a function" << std::endl;
 
-  FunctionObjectPtr function_object = std::dynamic_pointer_cast<FunctionObject>(function);
-  EnvironmentPtr extended_environment = ExtendFunctionEnvironment(function_object, arguments);
-  ObjectPtr evaluated = Eval(function_object->body, extended_environment);
-  return UnwrapReturnValue(evaluated);
+  if (function->type == ObjectType::FUNCTION)
+  {
+    FunctionObjectPtr function_object = std::dynamic_pointer_cast<FunctionObject>(function);
+    EnvironmentPtr extended_environment = ExtendFunctionEnvironment(function_object, arguments);
+    ObjectPtr evaluated = Eval(function_object->body, extended_environment);
+    return UnwrapReturnValue(evaluated);
+  }
+  else if (function->type == ObjectType::BUILTIN_FUNCTION)
+  {
+    BuiltinFunctionObjectPtr function_object = std::dynamic_pointer_cast<BuiltinFunctionObject>(function);
+    return function_object->function(arguments);
+  }
+  else
+    return std::make_shared<NullObject>();
 }
 
 EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments)

@@ -22,12 +22,15 @@
 #include <null_object.hpp>
 #include <return_object.hpp>
 #include <function_object.hpp>
+#include <builtin_function_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
 
 struct Evaluator
 {
+  Evaluator();
+
   ObjectPtr Eval(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);
@@ -60,4 +63,8 @@ struct Evaluator
   ObjectPtr ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments);
   EnvironmentPtr ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments);
   ObjectPtr UnwrapReturnValue(ObjectPtr object);
+
+  // Built-in Functions
+  std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
+  ObjectPtr len(std::vector<ObjectPtr> arguments);
 };

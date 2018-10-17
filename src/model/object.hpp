@@ -17,7 +17,8 @@ struct Object
     STRING,
     NULL_,
     RETURN,
-    FUNCTION
+    FUNCTION,
+    BUILTIN_FUNCTION
   };
 
   Type type;
