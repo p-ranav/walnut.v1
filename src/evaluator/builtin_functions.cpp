@@ -5,7 +5,17 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
   String result;
   std::vector<String> print_vector;
   for (auto& argument : arguments)
-    print_vector.push_back(argument->Inspect());
+  {
+    if (argument->type == ObjectType::STRING)
+    {
+      StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(argument);
+      print_vector.push_back(string_argument->value);
+    }
+    else
+    {
+      print_vector.push_back(argument->Inspect());
+    }
+  }
 
   if (print_vector.size() == 1)
   {
@@ -22,7 +32,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
     std::cout << print_vector[print_vector.size() - 1] << std::endl;
     result += print_vector[print_vector.size() - 1];
   }
-  return std::make_shared<StringObject>("");
+  return std::make_shared<StringObject>(""); // return Void object
 }
 
 ObjectPtr Evaluator::len(std::vector<ObjectPtr> arguments)
