@@ -34,6 +34,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
+  RegisterPrefixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseArrayLiteral, this));
 
   // infix parse functions
   RegisterInfixParseFunction(TokenType::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
@@ -386,36 +387,11 @@ NodePtr Parser::ParseFunctionLiteral()
   return result;
 }
 
-std::vector<NodePtr> Parser::ParseCallArguments()
-{
-  std::vector<NodePtr> result = {};
-
-  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
-  {
-    NextToken();
-    return result;
-  }
-
-  NextToken();
-  result.push_back(ParseExpression(LOWEST));
-
-  while (IsPeekToken(TokenType::COMMA_OPERATOR))
-  {
-    NextToken();
-    NextToken();
-    result.push_back(ParseExpression(LOWEST));
-  }
-
-  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
-    return {};
-  return result;
-}
-
 NodePtr Parser::ParseCallExpression(NodePtr function)
 {
   CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
   result->function = function;
-  result->arguments = ParseCallArguments();
+  result->arguments = ParseExpressionList(TokenType::RIGHT_PARENTHESIS);
   return result;
 }
 
@@ -426,4 +402,40 @@ NodePtr Parser::ParseInfixExpression(NodePtr left) {
   NextToken();
   result->right = ParseExpression(precedence);
   return result;
+}
+
+NodePtr Parser::ParseArrayLiteral()
+{
+  ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
+  array_literal->elements = ParseExpressionList(TokenType::RIGHT_SQUARE_BRACKETS);
+  return array_literal;
+}
+
+std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
+{
+  std::vector<NodePtr> elements;
+
+  if (IsPeekToken(end))
+  {
+    NextToken();
+    return elements;
+  }
+
+  NextToken();
+
+  elements.push_back(ParseExpression(LOWEST));
+
+  while (IsPeekToken(TokenType::COMMA_OPERATOR))
+  {
+    NextToken();
+    NextToken();
+    elements.push_back(ParseExpression(LOWEST));
+  }
+
+  if (!ExpectPeek(end))
+  {
+    return {};
+  }
+
+  return elements;
 }

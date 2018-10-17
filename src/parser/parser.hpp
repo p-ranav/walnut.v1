@@ -12,6 +12,7 @@
 #include <if_expression_node.hpp>
 #include <while_expression_node.h>
 #include <function_literal_node.hpp>
+#include <array_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 
@@ -84,9 +85,11 @@ struct Parser
   std::vector<IdentifierNodePtr> ParseFunctionParameters();
   NodePtr ParseFunctionLiteral();
 
+  NodePtr ParseArrayLiteral();
+  std::vector<NodePtr> ParseExpressionList(TokenType end);
+
   /* Infix parse functions */
   NodePtr ParseInfixExpression(NodePtr left);
-  std::vector<NodePtr> ParseCallArguments();
   NodePtr ParseCallExpression(NodePtr function);
 
   /* Member variables */

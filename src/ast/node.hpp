@@ -21,6 +21,7 @@ struct Node
     BLOCK_STATEMENT,
     FUNCTION,
     CALL_EXPRESSION,
+    ARRAY_LITERAL,
     INVALID
   };
 
