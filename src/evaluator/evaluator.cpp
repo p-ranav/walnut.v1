@@ -1,4 +1,5 @@
 #include <evaluator.hpp>
+#include <math.h>
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
 {
@@ -123,6 +124,18 @@ ObjectPtr Evaluator::EvalInfixExpression(NodePtr node, EnvironmentPtr environmen
 
   if (left->type == ObjectType::INTEGER && right->type == ObjectType::INTEGER)
     return EvalIntegerInfixExpression(infix_operator, left, right, environment);
+  else if (left->type == ObjectType::INTEGER && right->type == ObjectType::DOUBLE)
+  {
+    IntegerObjectPtr left_object = std::dynamic_pointer_cast<IntegerObject>(left);
+    return EvalDoubleInfixExpression(infix_operator, left_object->ToDouble(), right, environment);
+  }
+  else if (left->type == ObjectType::DOUBLE && right->type == ObjectType::INTEGER)
+  {
+    IntegerObjectPtr right_object = std::dynamic_pointer_cast<IntegerObject>(right);
+    return EvalDoubleInfixExpression(infix_operator, left, right_object->ToDouble(), environment);
+  }
+  else if (left->type == ObjectType::DOUBLE && right->type == ObjectType::DOUBLE)
+    return EvalDoubleInfixExpression(infix_operator, left, right, environment);
   else if (left->type == ObjectType::BOOLEAN && right->type == ObjectType::BOOLEAN)
     return EvalBooleanInfixExpression(infix_operator, left, right, environment);
   else if (left->type == ObjectType::STRING && right->type == ObjectType::STRING)
@@ -149,6 +162,42 @@ ObjectPtr Evaluator::EvalIntegerInfixExpression(TokenType infix_operator, Object
     return std::make_shared<IntegerObject>(left_value / right_value);
   else if (infix_operator == TokenType::MODULUS_OPERATOR)
     return std::make_shared<IntegerObject>(left_value % right_value);
+
+  // logical operations
+  else if (infix_operator == TokenType::GREATER_THAN_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value > right_value);
+  else if (infix_operator == TokenType::GREATER_THAN_OR_EQUAL_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value >= right_value);
+  else if (infix_operator == TokenType::LESSER_THAN_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value < right_value);
+  else if (infix_operator == TokenType::LESSER_THAN_OR_EQUAL_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value <= right_value);
+  else if (infix_operator == TokenType::EQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value == right_value);
+  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value != right_value);
+
+  else
+    return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::EvalDoubleInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+{
+  DoubleObjectPtr left_node = std::dynamic_pointer_cast<DoubleObject>(left);
+  DoubleObjectPtr right_node = std::dynamic_pointer_cast<DoubleObject>(right);
+  double left_value = left_node->value, right_value = right_node->value;
+
+  // arithmetic operations
+  if (infix_operator == TokenType::ADDITION_OPERATOR)
+    return std::make_shared<DoubleObject>(left_value + right_value);
+  else if (infix_operator == TokenType::SUBTRACTION_OPERATOR)
+    return std::make_shared<DoubleObject>(left_value - right_value);
+  else if (infix_operator == TokenType::MULTIPLICATION_OPERATOR)
+    return std::make_shared<DoubleObject>(left_value * right_value);
+  else if (infix_operator == TokenType::DIVISION_OPERATOR)
+    return std::make_shared<DoubleObject>(left_value / right_value);
+  else if (infix_operator == TokenType::MODULUS_OPERATOR)
+    return std::make_shared<DoubleObject>(fmod(left_value, right_value));
 
   // logical operations
   else if (infix_operator == TokenType::GREATER_THAN_OPERATOR)

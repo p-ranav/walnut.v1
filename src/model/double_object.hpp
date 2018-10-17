@@ -1,5 +1,6 @@
 #pragma once
 #include <object.hpp>
+#include <integer_object.hpp>
 
 struct DoubleObject : Object
 {
@@ -9,6 +10,7 @@ struct DoubleObject : Object
   String Inspect() override {
     return std::to_string(value);
   }
+
 };
 
 typedef std::shared_ptr<DoubleObject> DoubleObjectPtr;

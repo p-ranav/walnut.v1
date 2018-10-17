@@ -23,7 +23,7 @@ struct Lexer
   String NextCharacter(Bool update_index = true);
   String PeekCharacter();
 
-  void ParseComment();
+  void ParseComment(StringRef character);
   void ParseLineComment(StringRef character);
   void ParseBlockComment(StringRef character);
 

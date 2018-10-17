@@ -18,10 +18,10 @@ void Lexer::Tokenize()
   {
     if (isutf(buffer[index]))
     {
-      String character = NextCharacter();
+      String character = PeekCharacter();
 
       if (character[0] == '/')
-        ParseComment();
+        ParseComment(character);
 
       else if (isdigit(character[0]))
         ParseNumber(character);
@@ -160,14 +160,14 @@ void Lexer::InsertKeywordVar(size_t &index)
   }
 }
 
-void Lexer::ParseComment()
+void Lexer::ParseComment(StringRef character)
 {
-  String character = NextCharacter();
-
-  if (character[0] == '/')
-    ParseLineComment(character);
-  else if (character[0] == '*')
-    ParseBlockComment(character);
+  character = NextCharacter();
+  String peek_character = PeekCharacter();
+  if (peek_character[0] == '/')
+    ParseLineComment(peek_character);
+  else if (peek_character[0] == '*')
+    ParseBlockComment(peek_character);
   else
   {
     Token result(file, line, cursor, TokenType::DIVISION_OPERATOR, character);
@@ -217,6 +217,7 @@ void Lexer::ParseBlockComment(StringRef character)
 
 void Lexer::ParseNumber(StringRef character)
 {
+  character = NextCharacter();
   Token result(file, line, cursor, TokenType::INTEGER, character);
 
   while (true)
@@ -240,6 +241,7 @@ void Lexer::ParseNumber(StringRef character)
 
 bool Lexer::IsValidSymbol(StringRef character)
 {
+  character = NextCharacter();
   for (auto &c : character)
   {
     if ((c >= 'A' && c <= 'Z') ||
@@ -256,6 +258,7 @@ bool Lexer::IsValidSymbol(StringRef character)
 
 void Lexer::ParseSymbol(StringRef character)
 {
+  character = NextCharacter();
   Token result(file, line, cursor, TokenType::SYMBOL, character);
 
   while (true)
@@ -317,6 +320,7 @@ void Lexer::ParseWhitespace(StringRef character)
 
 void Lexer::ParseStringLiteral(StringRef character)
 {
+  character = NextCharacter();
   Token result(file, line, cursor, TokenType::STRING_LITERAL);
   while (true)
   {
