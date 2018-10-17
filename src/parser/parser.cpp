@@ -18,7 +18,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                  {TokenType::MULTIPLICATION_OPERATOR, PRODUCT},
                                                  {TokenType::DIVISION_OPERATOR, PRODUCT},
                                                  {TokenType::MODULUS_OPERATOR, PRODUCT},
-                                                 {TokenType::LEFT_SQUARE_BRACKETS, INDEX}
+                                                 {TokenType::LEFT_SQUARE_BRACKETS, INDEX},
+                                                 {TokenType::DOT_OPERATOR, DOT}
                                              })
 {
   // prefix parse functions
@@ -51,6 +52,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
 
 }
 
@@ -203,7 +205,7 @@ NodePtr Parser::ParseExpressionStatement()
   return result;
 }
 
-NodePtr Parser::ParseExpression(Precedence precedence)
+NodePtr Parser::ParseExpression(Precedence precedence, TokenType end)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
 
@@ -212,7 +214,7 @@ NodePtr Parser::ParseExpression(Precedence precedence)
 
   NodePtr left_expression = prefix();
 
-  while (!IsPeekToken(TokenType::SEMI_COLON_OPERATOR) && precedence < PeekPrecedence())
+  while (!IsPeekToken(end) && precedence < PeekPrecedence())
   {
     InfixParseFunction infix = infix_parse_functions[peek_token.type];
 
@@ -221,6 +223,9 @@ NodePtr Parser::ParseExpression(Precedence precedence)
 
     NextToken();
     left_expression = infix(left_expression);
+
+    if (end != TokenType::SEMI_COLON_OPERATOR && IsCurrentToken(end))
+      break;
   }
 
   return left_expression;
@@ -450,4 +455,14 @@ NodePtr Parser::ParseIndexExpression(NodePtr left)
   if (!ExpectPeek(TokenType::RIGHT_SQUARE_BRACKETS))
     return nullptr;
   return expression;
+}
+
+NodePtr Parser::ParseDotOperator(NodePtr left)
+{
+  NextToken();
+  NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
+  CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
+  if (call_expression != nullptr)
+    call_expression->arguments.insert(call_expression->arguments.begin(), left);
+  return call_expression;
 }

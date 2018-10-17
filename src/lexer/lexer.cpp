@@ -26,6 +26,9 @@ void Lexer::Tokenize()
       else if (isdigit(character[0]))
         ParseNumber(character);
 
+      else if (character[0] == '"')
+        ParseStringLiteral(character);
+
       else if (IsValidPunctuation(character))
         ParsePunctuation(character);
 
@@ -34,9 +37,6 @@ void Lexer::Tokenize()
 
       else if (IsValidWhitespace(character))
         ParseWhitespace(character);
-
-      else if (character[0] == '"')
-        ParseStringLiteral(character);
 
       if (tokens.size() > 0) {
         if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_IF)
@@ -163,10 +163,15 @@ void Lexer::InsertKeywordVar(size_t &index)
 
 void Lexer::ParseComment(StringRef character)
 {
+  Token semicolon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+  tokens.push_back(semicolon);
+
   character = NextCharacter();
   String peek_character = PeekCharacter();
   if (peek_character[0] == '/')
+  {
     ParseLineComment(peek_character);
+  }
   else if (peek_character[0] == '*')
     ParseBlockComment(peek_character);
   else

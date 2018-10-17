@@ -64,13 +64,14 @@ struct Parser
     PRODUCT,     // *, /, %
     PREFIX,      // -X or !X
     CALL,        // my_function(X)
-    INDEX        // X[0], [1, 2, 3, 4][2]
+    INDEX,        // X[0], [1, 2, 3, 4][2]
+    DOT
   };
   typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
 
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
-  NodePtr ParseExpression(Precedence precedence);
+  NodePtr ParseExpression(Precedence precedence, TokenType end = TokenType::SEMI_COLON_OPERATOR);
 
   /* Prefix parse functions */
   NodePtr ParseIdentifier();
@@ -94,6 +95,7 @@ struct Parser
   NodePtr ParseInfixExpression(NodePtr left);
   NodePtr ParseCallExpression(NodePtr function);
   NodePtr ParseIndexExpression(NodePtr left);
+  NodePtr ParseDotOperator(NodePtr left);
 
   /* Member variables */
   TokenVector tokens;
