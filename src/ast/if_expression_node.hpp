@@ -14,6 +14,15 @@ struct IfExpressionNode : Node
     condition(nullptr), 
     consequence(nullptr), 
     alternative(nullptr) {}
+
+  String ToString() override
+  {
+    String result = "";
+    result += "if (" + condition->ToString() + ") " + consequence->ToString();
+    if (alternative != nullptr)
+      result += " else " + alternative->ToString();
+    return result;
+  }
 };
 
 typedef std::shared_ptr<IfExpressionNode> IfExpressionNodePtr;

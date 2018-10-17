@@ -10,6 +10,12 @@ struct IndexExpressionNode : Node
     Node(INDEX_EXPRESSION),
     left(left),
     index(nullptr){}
+
+  String ToString() override
+  {
+    return left->ToString() + "[" + index->ToString() + "]";
+  }
+
 };
 
 typedef std::shared_ptr<IndexExpressionNode> IndexExpressionNodePtr;

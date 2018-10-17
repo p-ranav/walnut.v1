@@ -8,6 +8,11 @@ struct StringLiteralNode : Node
   explicit StringLiteralNode(StringConstRef value) :
     Node(STRING_LITERAL), 
     value(value) {}
+
+  String ToString() override
+  {
+    return "\"" + value + "\"";
+  }
 };
 
 typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;

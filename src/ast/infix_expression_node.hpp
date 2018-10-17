@@ -13,6 +13,11 @@ struct InfixExpressionNode : Node
     left(nullptr),
     infix_operator(infix_operator),
     right(nullptr) {}
+
+  String ToString() override
+  {
+    return left->ToString() + " " + TokenString(infix_operator) + right->ToString();
+  }
 };
 
 typedef std::shared_ptr<InfixExpressionNode> InfixExpressionNodePtr;

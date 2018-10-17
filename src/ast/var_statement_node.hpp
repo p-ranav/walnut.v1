@@ -8,6 +8,11 @@ struct VarStatementNode : Node
   NodePtr expression;
   VarStatementNode() : 
     Node(VAR_STATEMENT) {}
+
+  String ToString() override
+  {
+    return name->ToString() + " = " + expression->ToString() + ";";
+  }
 };
 
 typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;

@@ -12,6 +12,11 @@ struct WhileExpressionNode : Node
     Node(WHILE_EXPRESSION),
     condition(nullptr),
     consequence(nullptr) {}
+
+  String ToString() override
+  {
+    return "while (" + condition->ToString() + ") " + consequence->ToString();
+  }
 };
 
 typedef std::shared_ptr<WhileExpressionNode> WhileExpressionNodePtr;

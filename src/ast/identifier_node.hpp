@@ -8,6 +8,11 @@ struct IdentifierNode : Node
   explicit IdentifierNode(StringConstRef value) : 
     Node(IDENTIFIER), 
     value(value) {}
+
+  String ToString() override
+  {
+    return value;
+  }
 };
 
 typedef std::shared_ptr<IdentifierNode> IdentifierNodePtr;

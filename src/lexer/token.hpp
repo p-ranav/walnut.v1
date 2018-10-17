@@ -106,3 +106,5 @@ struct Token
 typedef Token::Type TokenType;
 typedef std::vector<Token> TokenVector;
 typedef const std::vector<Token> &TokenVectorConstRef;
+
+Token::String TokenString(TokenType type);

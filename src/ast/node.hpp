@@ -2,6 +2,9 @@
 #include <string>
 #include <memory>
 
+typedef std::string String;
+typedef const std::string &StringConstRef;
+
 struct Node
 {
   enum Type
@@ -27,12 +30,13 @@ struct Node
   };
 
   Type type;
+
   explicit Node(Type type) : 
     type(type) {}
   virtual ~Node() {}
+
+  virtual String ToString() { return ""; }
 };
 
-typedef std::string String;
-typedef const std::string &StringConstRef;
 typedef std::shared_ptr<Node> NodePtr;
 typedef Node::Type NodeType;

@@ -11,6 +11,11 @@ struct PrefixExpressionNode : Node
     Node(PREFIX_EXPRESSION), 
     prefix_operator(prefix_operator), 
     right(nullptr) {}
+
+  String ToString() override
+  {
+    return TokenString(prefix_operator) + right->ToString();
+  }
 };
 
 typedef std::shared_ptr<PrefixExpressionNode> PrefixExpressionNodePtr;
