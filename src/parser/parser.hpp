@@ -13,6 +13,7 @@
 #include <while_expression_node.h>
 #include <function_literal_node.hpp>
 #include <array_literal_node.hpp>
+#include <index_expression_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 
@@ -62,7 +63,8 @@ struct Parser
     SUM,         // +, -
     PRODUCT,     // *, /, %
     PREFIX,      // -X or !X
-    CALL         // my_function(X)
+    CALL,        // my_function(X)
+    INDEX        // X[0], [1, 2, 3, 4][2]
   };
   typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
 
@@ -91,6 +93,7 @@ struct Parser
   /* Infix parse functions */
   NodePtr ParseInfixExpression(NodePtr left);
   NodePtr ParseCallExpression(NodePtr function);
+  NodePtr ParseIndexExpression(NodePtr left);
 
   /* Member variables */
   TokenVector tokens;

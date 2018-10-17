@@ -18,6 +18,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                  {TokenType::MULTIPLICATION_OPERATOR, PRODUCT},
                                                  {TokenType::DIVISION_OPERATOR, PRODUCT},
                                                  {TokenType::MODULUS_OPERATOR, PRODUCT},
+                                                 {TokenType::LEFT_SQUARE_BRACKETS, INDEX}
                                              })
 {
   // prefix parse functions
@@ -49,6 +50,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
 
 }
 
@@ -438,4 +440,14 @@ std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
   }
 
   return elements;
+}
+
+NodePtr Parser::ParseIndexExpression(NodePtr left)
+{
+  IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>();
+  NextToken();
+  expression->index = ParseExpression(LOWEST);
+  if (!ExpectPeek(TokenType::RIGHT_SQUARE_BRACKETS))
+    return nullptr;
+  return expression;
 }
