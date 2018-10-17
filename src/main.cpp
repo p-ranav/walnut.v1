@@ -6,7 +6,13 @@
 #include <string>
 #include <clocale>
 
-void InterpretBuffer(StringConstRef filename, String buffer, EnvironmentPtr environment)
+enum InterpreterMode
+{
+  READ_EVAL_PRINT,
+  READ_FROM_FILE
+};
+
+void InterpretBuffer(InterpreterMode mode, StringConstRef filename, String buffer, EnvironmentPtr environment)
 {
   Lexer lexer("", buffer);
   lexer.Tokenize();
@@ -19,6 +25,8 @@ void InterpretBuffer(StringConstRef filename, String buffer, EnvironmentPtr envi
   {
     ObjectPtr result = evaluator.Eval(statement, environment);
     String inspect = result->Inspect();
+    if (mode == READ_EVAL_PRINT && inspect != "")
+      std::cout << inspect << std::endl;
     if (result->type == ObjectType::RETURN)
       break;
   }
@@ -42,7 +50,7 @@ int main(int argc, char *argv[])
         buffer += c;
       }
       buffer += ";";
-      InterpretBuffer("", buffer, environment);
+      InterpretBuffer(READ_EVAL_PRINT, "", buffer, environment);
     }
   }
   else if (argc == 2)
@@ -59,7 +67,7 @@ int main(int argc, char *argv[])
     {
       std::cout << "error: failed to open " << filename << std::endl;
     }
-    InterpretBuffer(filename, buffer, environment);
+    InterpretBuffer(READ_FROM_FILE, filename, buffer, environment);
     file_stream.close();
   }
   environment->store.clear();

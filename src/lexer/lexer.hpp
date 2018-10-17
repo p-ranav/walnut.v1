@@ -36,6 +36,8 @@ struct Lexer
   void ParseWhitespace(StringRef character);
 
   void ParseStringLiteral(StringRef character);
+
+  bool IsValidPunctuation(StringRef character);
   void ParsePunctuation(StringRef character);
 
   void MergeTokenPair(size_t &index, Token::Type first, Token::Type second, Token::Type result, const String &result_value);

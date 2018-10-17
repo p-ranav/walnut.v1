@@ -26,6 +26,9 @@ void Lexer::Tokenize()
       else if (isdigit(character[0]))
         ParseNumber(character);
 
+      else if (IsValidPunctuation(character))
+        ParsePunctuation(character);
+
       else if (IsValidSymbol(character))
         ParseSymbol(character);
 
@@ -34,9 +37,6 @@ void Lexer::Tokenize()
 
       else if (character[0] == '"')
         ParseStringLiteral(character);
-
-      else if (ispunct(character[0]))
-        ParsePunctuation(character);
 
       if (tokens.size() > 0) {
         if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_IF)
@@ -356,6 +356,16 @@ void Lexer::ParseStringLiteral(StringRef character)
     break;
   }
   tokens.push_back(result);
+}
+
+bool Lexer::IsValidPunctuation(StringRef character)
+{
+  return (
+    ispunct(character[0]) || 
+    character == "＝" || character == "≥" || character == "≤" ||
+    character == "≠" || character == "⋅" || character == "•" ||
+    character == "×"
+    );
 }
 
 void Lexer::ParsePunctuation(StringRef character)

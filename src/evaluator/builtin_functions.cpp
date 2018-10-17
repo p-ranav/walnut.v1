@@ -22,7 +22,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
     std::cout << print_vector[print_vector.size() - 1] << std::endl;
     result += print_vector[print_vector.size() - 1];
   }
-  return std::make_shared<StringObject>(result);
+  return std::make_shared<StringObject>("");
 }
 
 ObjectPtr Evaluator::len(std::vector<ObjectPtr> arguments)
