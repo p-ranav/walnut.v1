@@ -19,7 +19,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                  {TokenType::DIVISION_OPERATOR, PRODUCT},
                                                  {TokenType::MODULUS_OPERATOR, PRODUCT},
                                                  {TokenType::LEFT_SQUARE_BRACKETS, INDEX},
-                                                 {TokenType::DOT_OPERATOR, DOT}
+                                                 {TokenType::DOT_OPERATOR, DOT},
+                                                 {TokenType::ARROW_OPERATOR, LAMBDA}
                                              })
 {
   // prefix parse functions
@@ -53,6 +54,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
 
 }
 
@@ -465,4 +467,16 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
   return call_expression;
+}
+
+NodePtr Parser::ParseArrowOperator(NodePtr left)
+{
+  NextToken();
+  NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
+  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+  IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
+  result->parameters.push_back(left_parameter);
+  result->body = std::make_shared<BlockStatementNode>();
+  result->body->statements.push_back(right);
+  return result;
 }

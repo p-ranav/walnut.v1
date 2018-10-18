@@ -65,7 +65,8 @@ struct Parser
     PREFIX,      // -X or !X
     CALL,        // my_function(X)
     INDEX,        // X[0], [1, 2, 3, 4][2]
-    DOT
+    DOT,
+    LAMBDA
   };
   typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
 
@@ -96,6 +97,7 @@ struct Parser
   NodePtr ParseCallExpression(NodePtr function);
   NodePtr ParseIndexExpression(NodePtr left);
   NodePtr ParseDotOperator(NodePtr left);
+  NodePtr ParseArrowOperator(NodePtr left);
 
   /* Member variables */
   TokenVector tokens;
