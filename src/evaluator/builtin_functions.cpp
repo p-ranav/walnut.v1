@@ -1,4 +1,5 @@
 #include <evaluator.hpp>
+#include <memory>
 
 ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
 {
@@ -35,7 +36,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
   return std::make_shared<StringObject>(""); // return Void object
 }
 
-ObjectPtr Evaluator::len(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 1)
   {
@@ -68,6 +69,102 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
       ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
       array_object->elements.push_back(arguments[1]);
       return array_object;
+    }
+  }
+  return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
+{
+  if (arguments.size() == 2)
+  {
+    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
+    {
+      ArrayObjectPtr result = std::make_shared<ArrayObject>();
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      for (auto& element : array_object->elements)
+      {
+        result->elements.push_back(ApplyFunction(map_function, { element }));
+      }
+
+      return result;
+    }
+  }
+  return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
+{
+  if (arguments.size() == 2)
+  {
+    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
+    {
+      ArrayObjectPtr result = std::make_shared<ArrayObject>();
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      for (auto& element : array_object->elements)
+      {
+        ObjectPtr filter_result = ApplyFunction(map_function, { element });
+        if (filter_result->type == ObjectType::BOOLEAN)
+        {
+          BooleanObjectPtr filter_boolean_result = std::dynamic_pointer_cast<BooleanObject>(filter_result);
+          if (filter_boolean_result->value)
+            result->elements.push_back(element);
+        }
+      }
+
+      return result;
+    }
+  }
+  return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments)
+{
+  if (arguments.size() == 1)
+  {
+    if (arguments[0]->type == ObjectType::ARRAY)
+    {
+      StringObjectPtr result = std::make_shared<StringObject>("");
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      StringObjectPtr connector = std::make_shared<StringObject>("");
+      for (auto& element : array_object->elements)
+      {
+        if (element->type == ObjectType::STRING)
+        {
+          StringObjectPtr object = std::dynamic_pointer_cast<StringObject>(element);
+          result->value += object->value;
+        }
+        else
+          result->value += element->Inspect();
+        if (&element != &(array_object->elements).back())
+          result->value += connector->value;
+      }
+      return result;
+    }
+  }  
+  else if (arguments.size() == 2)
+  {
+    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::STRING)
+    {
+      StringObjectPtr result = std::make_shared<StringObject>("");
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      StringObjectPtr connector = std::dynamic_pointer_cast<StringObject>(arguments[1]);
+      for (auto& element : array_object->elements)
+      {
+        if (element->type == ObjectType::STRING)
+        {
+          StringObjectPtr object = std::dynamic_pointer_cast<StringObject>(element);
+          result->value += object->value;
+        }
+        else
+          result->value += element->Inspect();
+        if (&element != &(array_object->elements).back())
+          result->value += connector->value;
+      }
+
+      return result;
     }
   }
   return std::make_shared<NullObject>();

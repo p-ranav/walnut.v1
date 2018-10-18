@@ -6,6 +6,7 @@
 struct ArrayObject : Object
 {
   std::vector<ObjectPtr> elements;
+  ArrayObject() : Object(ARRAY), elements({}) {}
   explicit ArrayObject(const std::vector<ObjectPtr>& elements) : Object(ARRAY), elements(elements) {}
 
   String Inspect() override {
