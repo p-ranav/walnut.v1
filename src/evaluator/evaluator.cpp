@@ -351,7 +351,7 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
   ForExpressionNodePtr expression = std::dynamic_pointer_cast<ForExpressionNode>(node);
   ObjectPtr result = std::make_shared<NullObject>();
 
-  // Iterable is a list
+  // Iterable is an array literal
   if (expression->iterable->type == NodeType::ARRAY_LITERAL)
   {
     ArrayLiteralNodePtr iterable_list = std::dynamic_pointer_cast<ArrayLiteralNode>(expression->iterable);
@@ -396,10 +396,18 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
 
       }
 
-      // Evaluate body of for loop using current iterator values
+      // Evaluate body of for loop using iterator values set in for_environment
       result = Eval(expression->body, for_environment);
       if (result->type == ObjectType::RETURN)
         return result;
+    }
+
+    for (auto& kv : environment->store)
+    {
+      if (for_environment->store.find(kv.first) != for_environment->store.end())
+      {
+        environment->Set(kv.first, for_environment->Get(kv.first));
+      }
     }
       
   }
