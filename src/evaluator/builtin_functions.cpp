@@ -67,7 +67,6 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments, bool mutate)
     }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
-      // TODO: deep copy the array and mutate/return either the actual array or the copy
       if (mutate)
       {
         ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
@@ -92,15 +91,23 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments, bool mutate)
   {
     if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
     {
-      ArrayObjectPtr result = std::make_shared<ArrayObject>();
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
-      for (auto& element : array_object->elements)
+      if (mutate)
       {
-        result->elements.push_back(ApplyFunction(map_function, { element }));
+        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+        FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+        for (auto& element : array_object->elements)
+          element = ApplyFunction(map_function, { element });
+        return std::make_shared<NullObject>();
       }
-
-      return result;
+      else
+      {
+        ArrayObjectPtr result = std::make_shared<ArrayObject>();
+        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+        FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+        for (auto& element : array_object->elements)
+          result->elements.push_back(ApplyFunction(map_function, { element }));
+        return result;
+      }
     }
   }
   return std::make_shared<NullObject>();
