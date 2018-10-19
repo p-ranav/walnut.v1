@@ -353,6 +353,7 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
 
   ObjectPtr iterable = Eval(expression->iterable, environment);
 
+  // Iterable is an array - It could be an array of anything:
   if (iterable->type == ObjectType::ARRAY)
   {
     ArrayObjectPtr iterable_list = std::dynamic_pointer_cast<ArrayObject>(iterable);

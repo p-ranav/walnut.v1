@@ -1,0 +1,10 @@
+// Alias to functions
+log = print
+log("Hello")
+
+push = append
+[].push(1).extend([2, 3]).print()
+
+add = function(a, b) { a + b }
+sum = add
+sum(2, 3).print()

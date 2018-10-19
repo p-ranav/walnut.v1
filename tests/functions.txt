@@ -1,0 +1,2 @@
+product = ƒ(a, b) { return a * b }
+print(product(5, 10))

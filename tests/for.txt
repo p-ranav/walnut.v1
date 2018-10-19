@@ -1,0 +1,22 @@
+for i in [1, 2, 3, 4, 5] { print(i) }
+
+for j in [[1, 2], [3, 4]] { print(j) }
+
+for i, j in [[1, 2], [3, 4]] { print(i, j) }
+
+list = []
+for i in [1, 2, 3] { list = list.append(i) }
+list.print()
+
+sum = 0
+for i in [1, 2, 3] { 
+  sum = sum + i 
+}
+print(sum)
+
+list = [1, 2, 3, 4, 5]
+input = list, output = []
+for i in input { 
+  output = output.append(i * 2) 
+}
+print(input, output)
