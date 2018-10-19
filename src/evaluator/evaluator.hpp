@@ -55,7 +55,9 @@ struct Evaluator
   ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
   bool IsTruth(ObjectPtr condition, EnvironmentPtr environment);
   ObjectPtr EvalWhileExpression(NodePtr node, EnvironmentPtr environment);
+  
   ObjectPtr EvalForExpression(NodePtr node, EnvironmentPtr environment);
+
   ObjectPtr EvalReturnStatement(NodePtr node, EnvironmentPtr environment);
 
   ObjectPtr EvalIdentifier(NodePtr node, EnvironmentPtr environment);
