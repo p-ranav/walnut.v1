@@ -1,4 +1,5 @@
 #include <parser.hpp>
+#include <algorithm>
 
 Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                              peek_token(Token()),

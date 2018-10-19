@@ -42,6 +42,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalIfExpression(node, environment);
   case NodeType::WHILE_EXPRESSION:
     return EvalWhileExpression(node, environment);
+  case NodeType::FOR_EXPRESSION:
+    return EvalForExpression(node, environment);
   case NodeType::BLOCK_STATEMENT:
     return EvalBlockStatement(node, environment);
   case NodeType::RETURN_STATEMENT:
@@ -339,6 +341,67 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
     {
       environment->Set(kv.first, while_environment->Get(kv.first));
     }
+  }
+
+  return result;
+}
+
+ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
+{
+  ForExpressionNodePtr expression = std::dynamic_pointer_cast<ForExpressionNode>(node);
+  ObjectPtr result = std::make_shared<NullObject>();
+
+  // Iterable is a list
+  if (expression->iterable->type == NodeType::ARRAY_LITERAL)
+  {
+    ArrayLiteralNodePtr iterable_list = std::dynamic_pointer_cast<ArrayLiteralNode>(expression->iterable);
+    EnvironmentPtr for_environment = std::make_shared<Environment>();
+    for_environment->outer = environment;
+
+    for (size_t i = 0; i < iterable_list->elements.size(); i++)
+    {
+      /* Initialize/update iterator values */
+
+      // We have just one iterator
+      if (expression->iterators.size() == 1)
+      {
+        IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
+        if (iterator)
+        {
+          NodePtr iterable_value = (iterable_list->elements)[i];
+          ObjectPtr iterator_value = Eval(iterable_value, for_environment);
+          for_environment->Set(iterator->value, iterator_value);
+        }
+      }
+      else if (expression->iterators.size() > 1)
+      {
+        NodePtr iterable_value = (iterable_list->elements)[i];
+
+        // Check if iterable_value is itself an iterable
+        if (iterable_value->type == NodeType::ARRAY_LITERAL)
+        {
+          ArrayLiteralNodePtr iterable_value_list = std::dynamic_pointer_cast<ArrayLiteralNode>(iterable_value);
+          if (iterable_value_list->elements.size() == expression->iterators.size())
+          {
+            for (size_t j = 0; j < expression->iterators.size(); j++)
+            {
+              IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[j]);
+              NodePtr iterable_value = (iterable_value_list->elements)[j];
+              ObjectPtr iterator_value = Eval(iterable_value, for_environment);
+              for_environment->Set(iterator->value, iterator_value);
+            }
+          }
+        }
+        // TODO: else if (iterable_value->type == NodeType::DICTIONARY)
+
+      }
+
+      // Evaluate body of for loop using current iterator values
+      result = Eval(expression->body, for_environment);
+      if (result->type == ObjectType::RETURN)
+        return result;
+    }
+      
   }
 
   return result;
