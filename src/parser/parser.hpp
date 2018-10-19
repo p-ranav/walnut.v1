@@ -10,7 +10,8 @@
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>
-#include <while_expression_node.h>
+#include <while_expression_node.hpp>
+#include <for_expression_node.hpp>
 #include <function_literal_node.hpp>
 #include <array_literal_node.hpp>
 #include <index_expression_node.hpp>
@@ -41,7 +42,9 @@ struct Parser
 
   void NextToken();
   bool IsCurrentToken(TokenType value);
+  bool IsCurrentTokenInList(const std::vector<TokenType>& value);
   bool IsPeekToken(TokenType value);
+  bool IsPeekTokenInList(const std::vector<TokenType>& value);
   bool ExpectPeek(TokenType value);
 
   NodePtr ParseStatement();
@@ -71,7 +74,7 @@ struct Parser
 
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
-  NodePtr ParseExpression(Precedence precedence, TokenType end = TokenType::SEMI_COLON_OPERATOR);
+  NodePtr ParseExpression(Precedence precedence, std::vector<TokenType> end = { TokenType::SEMI_COLON_OPERATOR });
 
   /* Prefix parse functions */
   NodePtr ParseIdentifier();
@@ -84,6 +87,7 @@ struct Parser
   BlockStatementNodePtr ParseBlockStatement();
   NodePtr ParseIfExpression();
   NodePtr ParseWhileExpression();
+  NodePtr ParseForExpression();
   
   std::vector<IdentifierNodePtr> ParseFunctionParameters();
   NodePtr ParseFunctionLiteral();

@@ -298,6 +298,8 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = TokenType::KEYWORD_FUNCTION;
   else if (result.value == "return")
     result.type = TokenType::KEYWORD_RETURN;
+  else if (result.value == "in")
+    result.type = TokenType::KEYWORD_IN;
 
   tokens.push_back(result);
 }

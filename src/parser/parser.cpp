@@ -34,6 +34,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
+  RegisterPrefixParseFunction(TokenType::KEYWORD_FOR, std::bind(&Parser::ParseForExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
   RegisterPrefixParseFunction(TokenType::LEFT_CURLY_BRACES, std::bind(&Parser::ParseBlockStatement, this));
@@ -84,9 +85,19 @@ bool Parser::IsCurrentToken(TokenType value)
   return (current_token.type == value);
 }
 
+bool Parser::IsCurrentTokenInList(const std::vector<TokenType>& value)
+{
+  return (std::find(value.begin(), value.end(), current_token.type) != value.end());
+}
+
 bool Parser::IsPeekToken(TokenType value)
 {
   return (peek_token.type == value);
+}
+
+bool Parser::IsPeekTokenInList(const std::vector<TokenType>& value)
+{
+  return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
 }
 
 bool Parser::ExpectPeek(TokenType value)
@@ -206,7 +217,7 @@ NodePtr Parser::ParseExpressionStatement()
   return result;
 }
 
-NodePtr Parser::ParseExpression(Precedence precedence, TokenType end)
+NodePtr Parser::ParseExpression(Precedence precedence, std::vector<TokenType> end)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
 
@@ -215,20 +226,20 @@ NodePtr Parser::ParseExpression(Precedence precedence, TokenType end)
 
   NodePtr left_expression = prefix();
 
-  while (!IsPeekToken(end) && precedence < PeekPrecedence())
+  while (!IsPeekTokenInList(end) && precedence < PeekPrecedence())
   {
     InfixParseFunction infix = infix_parse_functions[peek_token.type];
 
     if (infix == nullptr)
       return left_expression;
 
-    if (end != TokenType::SEMI_COLON_OPERATOR && IsCurrentToken(end))
+    if (IsCurrentTokenInList(end))
       break;
 
     NextToken();
     left_expression = infix(left_expression);
 
-    if (end != TokenType::SEMI_COLON_OPERATOR && IsCurrentToken(end))
+    if (IsCurrentTokenInList(end))
       break;
   }
 
@@ -352,6 +363,42 @@ NodePtr Parser::ParseWhileExpression()
   return result;
 }
 
+NodePtr Parser::ParseForExpression()
+{
+  ForExpressionNodePtr result = std::make_shared<ForExpressionNode>();
+  NextToken();
+
+  NodePtr iterator = ParseExpression(LOWEST, { TokenType::COMMA_OPERATOR });
+  if (iterator)
+    result->iterators.push_back(iterator);
+
+  while (IsPeekToken(TokenType::COMMA_OPERATOR))
+  {
+    NextToken();
+    NextToken();
+    NodePtr iterator = ParseExpression(LOWEST, { TokenType::COMMA_OPERATOR, TokenType::KEYWORD_IN });
+    if (iterator)
+      result->iterators.push_back(iterator);
+  }
+
+  if (!ExpectPeek(TokenType::KEYWORD_IN))
+  {
+    return nullptr;
+  }
+
+  NextToken();
+  result->iterable = ParseExpression(LOWEST, { TokenType::LEFT_CURLY_BRACES });
+
+  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+  {
+    return nullptr;
+  }
+
+  result->body = ParseBlockStatement();
+
+  return result;
+}
+
 std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
 {
   std::vector<IdentifierNodePtr> result = {};
@@ -463,7 +510,7 @@ NodePtr Parser::ParseIndexExpression(NodePtr left)
 NodePtr Parser::ParseDotOperator(NodePtr left)
 {
   NextToken();
-  NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
+  NodePtr right = ParseExpression(LOWEST, { TokenType::RIGHT_PARENTHESIS });
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
