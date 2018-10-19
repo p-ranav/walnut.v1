@@ -78,8 +78,6 @@ Token::String TokenString(TokenType type)
     return "for";
   case TokenType::KEYWORD_FUNCTION:
     return "function";
-  case TokenType::ARROW_OPERATOR:
-    return "=>";
   case TokenType::KEYWORD_RETURN:
     return "return";
   default:

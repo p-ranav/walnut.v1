@@ -106,9 +106,7 @@ void Lexer::Tokenize()
     // logical operators
     MergeTokenPair(i, TokenType::BITWISE_AND_OPERATOR, TokenType::BITWISE_AND_OPERATOR, TokenType::LOGICAL_AND_OPERATOR, "&&");
     MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, "||");
-  
-    // arrow operator
-    MergeTokenPair(i, TokenType::ASSIGNMENT_OPERATOR, TokenType::GREATER_THAN_OPERATOR, TokenType::ARROW_OPERATOR, "=>");
+
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
@@ -298,10 +296,6 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = TokenType::KEYWORD_FUNCTION;
   else if (result.value == "𝑓")
     result.type = TokenType::KEYWORD_FUNCTION;
-  else if (result.value == "lambda")
-    result.type = TokenType::KEYWORD_LAMBDA;
-  else if (result.value == "λ")
-    result.type = TokenType::KEYWORD_LAMBDA;
   else if (result.value == "return")
     result.type = TokenType::KEYWORD_RETURN;
 
