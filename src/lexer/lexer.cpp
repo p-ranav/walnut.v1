@@ -10,7 +10,8 @@ Lexer::Lexer(StringConstRef filename, StringConstRef buffer) :
   line(1), 
   cursor(0),
   buffer(buffer), 
-  index(0) {}
+  index(0),
+  exception_to_semicolon_rule(false) {}
 
 void Lexer::Tokenize()
 {
@@ -64,11 +65,11 @@ void Lexer::Tokenize()
           std::vector<TokenType> valid_tokens = { 
             TokenType::SYMBOL, TokenType::INTEGER, TokenType::DOUBLE, TokenType::STRING_LITERAL,
             TokenType::KEYWORD_TRUE, TokenType::KEYWORD_FALSE, TokenType::KEYWORD_RETURN,
-            TokenType::RIGHT_PARENTHESIS, TokenType::RIGHT_CURLY_BRACES 
+            TokenType::RIGHT_PARENTHESIS, TokenType::RIGHT_CURLY_BRACES, TokenType::RIGHT_SQUARE_BRACKETS
           };
           if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
           {
-            if (!(previous.type == TokenType::RIGHT_PARENTHESIS && exception_to_semicolon_rule))
+            if (!(previous.type == TokenType::RIGHT_PARENTHESIS && exception_to_semicolon_rule == true))
             {
               Token semi_colon(previous.file, previous.line, previous.cursor + 1, TokenType::SEMI_COLON_OPERATOR, ";");
               tokens.push_back(semi_colon);

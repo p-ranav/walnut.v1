@@ -222,6 +222,9 @@ NodePtr Parser::ParseExpression(Precedence precedence, TokenType end)
     if (infix == nullptr)
       return left_expression;
 
+    if (end != TokenType::SEMI_COLON_OPERATOR && IsCurrentToken(end))
+      break;
+
     NextToken();
     left_expression = infix(left_expression);
 
