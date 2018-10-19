@@ -1,14 +1,19 @@
 #pragma once
 #include <object.hpp>
 #include <integer_object.hpp>
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
 
 struct DoubleObject : Object
 {
   double value;
-  explicit DoubleObject(double value) : Object(DOUBLE), value(value) {}
+  std::streamsize str_precision;
+  explicit DoubleObject(double value) : Object(DOUBLE), value(value), str_precision(2) {}
 
   String Inspect() override {
-    return std::to_string(value);
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(str_precision) << value;
+    return stream.str();
   }
 
 };
