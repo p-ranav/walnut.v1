@@ -358,7 +358,10 @@ ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)
   ObjectPtr environment_lookup = environment->Get(identifier_node->value);
 
   if (!environment_lookup)
+  {
     std::cout << "Identifier not found: " << identifier_node->value << std::endl;
+    return std::make_shared<NullObject>();
+  }
   else
     return environment_lookup;
 }
@@ -366,7 +369,11 @@ ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)
 ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
 {
   VarStatementNodePtr statement = std::dynamic_pointer_cast<VarStatementNode>(node);
-  ObjectPtr value = Eval(statement->expression, environment);
+  ObjectPtr value;
+  if (statement->expression)
+    value = Eval(statement->expression, environment);
+  else
+    value = std::make_shared<NullObject>();
   environment->Set(statement->name->value, value);
   return value;
 }

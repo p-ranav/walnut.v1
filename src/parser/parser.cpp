@@ -19,8 +19,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                  {TokenType::DIVISION_OPERATOR, PRODUCT},
                                                  {TokenType::MODULUS_OPERATOR, PRODUCT},
                                                  {TokenType::LEFT_SQUARE_BRACKETS, INDEX},
-                                                 {TokenType::DOT_OPERATOR, DOT},
-                                                 {TokenType::ARROW_OPERATOR, LAMBDA}
+                                                 {TokenType::DOT_OPERATOR, DOT}
                                              })
 {
   // prefix parse functions
@@ -55,8 +54,6 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
-  RegisterInfixParseFunction(TokenType::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
-
 }
 
 void Parser::ParseProgram()
@@ -140,14 +137,15 @@ NodePtr Parser::ParseVarStatement()
 
   if (!ExpectPeek(TokenType::ASSIGNMENT_OPERATOR))
   {
-    return nullptr;
+    result->expression = nullptr;
+  }
+  else
+  {
+    NextToken();
+    result->expression = ParseExpression(LOWEST);
   }
 
-  NextToken();
-
-  result->expression = ParseExpression(LOWEST);
-
-  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
+  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR) || IsPeekToken(TokenType::COMMA_OPERATOR))
     NextToken();
 
   return result;
@@ -430,7 +428,6 @@ std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
     NextToken();
     return elements;
   }
-
   NextToken();
 
   elements.push_back(ParseExpression(LOWEST));
@@ -469,25 +466,4 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
   return call_expression;
-}
-
-NodePtr Parser::ParseArrowOperator(NodePtr left)
-{
-  NextToken();
-  NodePtr right;
-  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
-  if (IsCurrentToken(TokenType::LEFT_CURLY_BRACES)) {
-    right = ParseExpression(LOWEST);
-    IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
-    result->parameters.push_back(left_parameter);
-    result->body = std::dynamic_pointer_cast<BlockStatementNode>(right);
-  }
-  else {
-    right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
-    IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
-    result->parameters.push_back(left_parameter);
-    result->body = std::make_shared<BlockStatementNode>();
-    result->body->statements.push_back(right);
-  }
-  return result;
 }
