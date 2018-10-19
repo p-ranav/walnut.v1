@@ -37,7 +37,9 @@ struct FunctionObject : Object
       }
       result += parameters[parameters.size() - 1]->ToString();
     }
-    result += ") " + body->ToString();
+    result += ") ";
+    if (body)
+      result += body->ToString();
     return result;
   }
 };

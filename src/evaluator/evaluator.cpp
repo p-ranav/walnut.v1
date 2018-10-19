@@ -4,17 +4,17 @@
 Evaluator::Evaluator()
 {
   builtin_functions.insert(std::make_pair("print",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1, std::placeholders::_2))));
   builtin_functions.insert(std::make_pair("length", 
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1, std::placeholders::_2))));
   builtin_functions.insert(std::make_pair("append",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1, std::placeholders::_2))));
   builtin_functions.insert(std::make_pair("map",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1, std::placeholders::_2))));
   builtin_functions.insert(std::make_pair("filter",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1, std::placeholders::_2))));
   builtin_functions.insert(std::make_pair("join",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::join, this, std::placeholders::_1))));
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::join, this, std::placeholders::_1, std::placeholders::_2))));
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
@@ -357,11 +357,8 @@ ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)
 
   ObjectPtr environment_lookup = environment->Get(identifier_node->value);
 
-  if (environment_lookup->type == ObjectType::NULL_)
-  {
+  if (!environment_lookup)
     std::cout << "Identifier not found: " << identifier_node->value << std::endl;
-    exit(EXIT_FAILURE);
-  }
   else
     return environment_lookup;
 }
@@ -383,9 +380,10 @@ ObjectPtr Evaluator::EvalFunction(NodePtr node, EnvironmentPtr environment)
 ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment)
 {
   CallExpressionNodePtr expression = std::dynamic_pointer_cast<CallExpressionNode>(node);
+  FunctionLiteralNodePtr call_function = std::dynamic_pointer_cast<FunctionLiteralNode>(expression->function);
   ObjectPtr function = Eval(expression->function, environment);
   std::vector<ObjectPtr> arguments = EvalExpressions(expression->arguments, environment);
-  return ApplyFunction(function, arguments);
+  return ApplyFunction(function, arguments, expression->mutate);
 }
 
 std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment)
@@ -396,7 +394,7 @@ std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressio
   return result;
 }
 
-ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments)
+ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments, bool mutate)
 {
   if (function->type != ObjectType::FUNCTION && function->type != ObjectType::BUILTIN_FUNCTION)
     std::cout << "not a function" << std::endl;
@@ -411,7 +409,7 @@ ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectP
   else if (function->type == ObjectType::BUILTIN_FUNCTION)
   {
     BuiltinFunctionObjectPtr function_object = std::dynamic_pointer_cast<BuiltinFunctionObject>(function);
-    return function_object->function(arguments);
+    return function_object->function(arguments, mutate);
   }
   else
     return std::make_shared<NullObject>();
@@ -421,7 +419,10 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
 {
   EnvironmentPtr environment = std::make_shared<Environment>(function->environment);
   for (size_t i = 0; i < function->parameters.size(); i++)
-    environment->Set(function->parameters[i]->value, arguments[i]);
+  {
+    if (function->parameters[i])
+      environment->Set(function->parameters[i]->value, arguments[i]);
+  }
   return environment;
 }
 

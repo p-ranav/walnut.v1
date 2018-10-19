@@ -37,6 +37,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
+  RegisterPrefixParseFunction(TokenType::LEFT_CURLY_BRACES, std::bind(&Parser::ParseBlockStatement, this));
   RegisterPrefixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseArrayLiteral, this));
 
   // infix parse functions
@@ -464,6 +465,7 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   NextToken();
   NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
+  call_expression->mutate = true;
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
   return call_expression;
@@ -472,11 +474,20 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
 NodePtr Parser::ParseArrowOperator(NodePtr left)
 {
   NextToken();
-  NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
+  NodePtr right;
   FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
-  IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
-  result->parameters.push_back(left_parameter);
-  result->body = std::make_shared<BlockStatementNode>();
-  result->body->statements.push_back(right);
+  if (IsCurrentToken(TokenType::LEFT_CURLY_BRACES)) {
+    right = ParseExpression(LOWEST);
+    IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
+    result->parameters.push_back(left_parameter);
+    result->body = std::dynamic_pointer_cast<BlockStatementNode>(right);
+  }
+  else {
+    right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
+    IdentifierNodePtr left_parameter = std::dynamic_pointer_cast<IdentifierNode>(left);
+    result->parameters.push_back(left_parameter);
+    result->body = std::make_shared<BlockStatementNode>();
+    result->body->statements.push_back(right);
+  }
   return result;
 }

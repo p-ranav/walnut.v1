@@ -6,10 +6,12 @@ struct CallExpressionNode : Node
 {
   NodePtr function;
   std::vector<NodePtr> arguments;
-  explicit CallExpressionNode() :
+  bool mutate;
+  explicit CallExpressionNode(bool mutate = false) :
     Node(CALL_EXPRESSION),
     function(nullptr),
-    arguments({}) {}
+    arguments({}),
+    mutate(mutate) {}
 
   String ToString() override
   {

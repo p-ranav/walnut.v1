@@ -1,7 +1,7 @@
 #include <evaluator.hpp>
 #include <memory>
 
-ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments, bool mutate)
 {
   String result;
   std::vector<String> print_vector;
@@ -36,7 +36,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
   return std::make_shared<StringObject>(""); // return Void object
 }
 
-ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments, bool mutate)
 {
   if (arguments.size() == 1)
   {
@@ -54,27 +54,39 @@ ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments, bool mutate)
 {
   if (arguments.size() == 2)
   {
     if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::STRING)
     {
+      StringObjectPtr result;
       StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
       StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
       return std::make_shared<StringObject>(first->value + second->value);
     }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      array_object->elements.push_back(arguments[1]);
-      return array_object;
+      // TODO: deep copy the array and mutate/return either the actual array or the copy
+      if (mutate)
+      {
+        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+        array_object->elements.push_back(arguments[1]);
+        return std::make_shared<NullObject>();
+      }
+      else 
+      {
+        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+        ArrayObject array_copy = ArrayObject(*(array_object.get()));
+        array_copy.elements.push_back(arguments[1]);
+        return std::make_shared<ArrayObject>(array_copy);
+      }
     }
   }
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments, bool mutate)
 {
   if (arguments.size() == 2)
   {
@@ -94,7 +106,7 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments, bool mutate)
 {
   if (arguments.size() == 2)
   {
@@ -120,7 +132,7 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments, bool mutate)
 {
   if (arguments.size() == 1)
   {

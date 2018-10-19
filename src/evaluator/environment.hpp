@@ -25,9 +25,9 @@ struct Environment
     if (store.find(key) != store.end())
       result = store[key];
     else
-      result = std::make_shared<NullObject>();
+      result = nullptr;
 
-    if (result->type == ObjectType::NULL_ && outer != nullptr)
+    if (result == nullptr && outer != nullptr)
       result = outer->Get(key);
 
     return result;

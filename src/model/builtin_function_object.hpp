@@ -6,11 +6,11 @@
 
 struct BuiltinFunctionObject : Object
 {
-  typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
+  typedef std::function<ObjectPtr(std::vector<ObjectPtr>, bool)> BuiltinFunction;
   BuiltinFunction function;
 
   BuiltinFunctionObject(BuiltinFunction function) :
-    Object(BUILTIN_FUNCTION), 
+    Object(BUILTIN_FUNCTION),
     function(function) {}
 
   String Inspect() override {
