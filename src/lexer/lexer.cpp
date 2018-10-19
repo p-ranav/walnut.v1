@@ -298,6 +298,10 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = TokenType::KEYWORD_FUNCTION;
   else if (result.value == "𝑓")
     result.type = TokenType::KEYWORD_FUNCTION;
+  else if (result.value == "lambda")
+    result.type = TokenType::KEYWORD_LAMBDA;
+  else if (result.value == "λ")
+    result.type = TokenType::KEYWORD_LAMBDA;
   else if (result.value == "return")
     result.type = TokenType::KEYWORD_RETURN;
 
