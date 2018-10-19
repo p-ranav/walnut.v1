@@ -462,7 +462,6 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   NextToken();
   NodePtr right = ParseExpression(LOWEST, TokenType::RIGHT_PARENTHESIS);
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
-  call_expression->mutate = true;
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
   return call_expression;

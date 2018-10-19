@@ -1,7 +1,7 @@
 #include <evaluator.hpp>
 #include <memory>
 
-ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
 {
   String result;
   std::vector<String> print_vector;
@@ -36,7 +36,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments, bool mutate)
   return std::make_shared<StringObject>(""); // return Void object
 }
 
-ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 1)
   {
@@ -54,7 +54,7 @@ ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments, bool mutate)
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 2)
   {
@@ -67,53 +67,33 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments, bool mutate)
     }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
-      if (mutate)
-      {
-        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        array_object->elements.push_back(arguments[1]);
-        return std::make_shared<NullObject>();
-      }
-      else 
-      {
-        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        ArrayObject array_copy = ArrayObject(*(array_object.get()));
-        array_copy.elements.push_back(arguments[1]);
-        return std::make_shared<ArrayObject>(array_copy);
-      }
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      ArrayObject array_copy = ArrayObject(*(array_object.get()));
+      array_copy.elements.push_back(arguments[1]);
+      return std::make_shared<ArrayObject>(array_copy);
     }
   }
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 2)
   {
     if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
     {
-      if (mutate)
-      {
-        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
-        for (auto& element : array_object->elements)
-          element = ApplyFunction(map_function, { element });
-        return std::make_shared<NullObject>();
-      }
-      else
-      {
-        ArrayObjectPtr result = std::make_shared<ArrayObject>();
-        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
-        for (auto& element : array_object->elements)
-          result->elements.push_back(ApplyFunction(map_function, { element }));
-        return result;
-      }
+      ArrayObjectPtr result = std::make_shared<ArrayObject>();
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      for (auto& element : array_object->elements)
+        result->elements.push_back(ApplyFunction(map_function, { element }));
+      return result;
     }
   }
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 2)
   {
@@ -132,14 +112,13 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments, bool mutate)
             result->elements.push_back(element);
         }
       }
-
       return result;
     }
   }
   return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments, bool mutate)
+ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 1)
   {

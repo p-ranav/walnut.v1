@@ -63,7 +63,7 @@ struct Evaluator
 
   ObjectPtr EvalCallExpression(NodePtr node, EnvironmentPtr environment);
   std::vector<ObjectPtr> EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment);
-  ObjectPtr ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments, bool mutate = false);
+  ObjectPtr ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments);
   EnvironmentPtr ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments);
   ObjectPtr UnwrapReturnValue(ObjectPtr object);
 
@@ -73,11 +73,11 @@ struct Evaluator
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
-  ObjectPtr print(std::vector<ObjectPtr> arguments, bool mutate);
-  ObjectPtr length(std::vector<ObjectPtr> arguments, bool mutate);
+  ObjectPtr print(std::vector<ObjectPtr> arguments);
+  ObjectPtr length(std::vector<ObjectPtr> arguments);
 
-  ObjectPtr append(std::vector<ObjectPtr> arguments, bool mutate);
-  ObjectPtr map(std::vector<ObjectPtr> arguments, bool mutate);
-  ObjectPtr filter(std::vector<ObjectPtr> arguments, bool mutate);
-  ObjectPtr join(std::vector<ObjectPtr> arguments, bool mutate);
+  ObjectPtr append(std::vector<ObjectPtr> arguments);
+  ObjectPtr map(std::vector<ObjectPtr> arguments);
+  ObjectPtr filter(std::vector<ObjectPtr> arguments);
+  ObjectPtr join(std::vector<ObjectPtr> arguments);
 };

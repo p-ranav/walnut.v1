@@ -6,7 +6,7 @@
 
 struct BuiltinFunctionObject : Object
 {
-  typedef std::function<ObjectPtr(std::vector<ObjectPtr>, bool)> BuiltinFunction;
+  typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
   BuiltinFunction function;
 
   BuiltinFunctionObject(BuiltinFunction function) :
