@@ -7,3 +7,9 @@
 
 (true and not true and false).print() // (true and (!true and false)) = false
 (true and false and not true).print() // (true and (false and !true)) = false
+
+x = !(true and false)
+print(x) // true
+
+x = !(true or false)
+print(x) // false
