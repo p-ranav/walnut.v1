@@ -25,3 +25,5 @@ for i in "Hello" { print(i) }
 
 unicode_string = "Hello, 世界"
 for char in unicode_string { print(char) }
+
+for x in ["Hello", "World", unicode_string] { print(x) }
