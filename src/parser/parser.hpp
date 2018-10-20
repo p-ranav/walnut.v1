@@ -7,6 +7,7 @@
 #include <string_literal_node.hpp>
 #include <identifier_node.hpp>
 #include <var_statement_node.hpp>
+#include <expression_assignment_statement_node.hpp>
 #include <return_statement_node.hpp>
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>

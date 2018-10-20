@@ -215,6 +215,17 @@ Parser::Precedence Parser::CurrentPrecedence()
 NodePtr Parser::ParseExpressionStatement()
 {
   NodePtr result = ParseExpression(LOWEST);
+
+  if (IsPeekToken(TokenType::ASSIGNMENT_OPERATOR))
+  {
+    ExpressionAssignmentStatementNodePtr statement = std::make_shared<ExpressionAssignmentStatementNode>();
+    statement->left = result;
+    NextToken();
+    NextToken();
+    statement->expression = ParseExpression(LOWEST);
+    result = statement;
+  }
+
   if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
     NextToken();
 

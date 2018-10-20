@@ -52,6 +52,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalIdentifier(node, environment);
   case NodeType::VAR_STATEMENT:
     return EvalVarStatement(node, environment);
+  case NodeType::EXPRESSION_ASSIGNMENT_STATEMENT:
+    return EvalExpressionAssignmentStatement(node, environment);
   case NodeType::FUNCTION:
     return EvalFunction(node, environment);
   case NodeType::CALL_EXPRESSION:
@@ -464,6 +466,37 @@ ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
   return value;
 }
 
+ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, EnvironmentPtr environment)
+{
+  ExpressionAssignmentStatementNodePtr statement = 
+    std::dynamic_pointer_cast<ExpressionAssignmentStatementNode>(node);
+
+  NodePtr left_expression = statement->left;
+  if (left_expression->type == NodeType::INDEX_EXPRESSION)
+  {
+    IndexExpressionNodePtr index_expression = std::dynamic_pointer_cast<IndexExpressionNode>(left_expression);
+    NodePtr identifier = index_expression->left;
+    ObjectPtr identifier_object = Eval(identifier, environment);
+
+    NodePtr index = index_expression->index;
+    ObjectPtr index_object = Eval(index, environment);
+
+    // If left is an array index expression
+    if (identifier_object != nullptr && identifier_object->type == ObjectType::ARRAY && index_object->type == ObjectType::INTEGER)
+    {
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(identifier_object);
+      IntegerObjectPtr integer_object = std::dynamic_pointer_cast<IntegerObject>(index_object);
+      if (integer_object->value < array_object->elements.size())
+      {
+        array_object->elements[integer_object->value] = Eval(statement->expression, environment);
+      }
+      return array_object;
+    }
+  }
+
+  return std::make_shared<NullObject>();
+}
+
 ObjectPtr Evaluator::EvalFunction(NodePtr node, EnvironmentPtr environment)
 {
   FunctionLiteralNodePtr function = std::dynamic_pointer_cast<FunctionLiteralNode>(node);
@@ -556,7 +589,7 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
 ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
 {
   ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(array);
-  std::vector<ObjectPtr> elements = array_object->elements;
+  std::vector<ObjectPtr>& elements = array_object->elements;
   int array_size = static_cast<int>(elements.size());
 
   IntegerObjectPtr array_index = std::dynamic_pointer_cast<IntegerObject>(index);
