@@ -61,6 +61,8 @@ struct Parser
   enum Precedence
   {
     LOWEST,
+    LOGICAL_OR,  // ||
+    LOGICAL_AND, // &&
     EQUAL,       // ==, !=
     LESSGREATER, // >, >=, < and <=
     SUM,         // +, -

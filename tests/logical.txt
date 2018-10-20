@@ -1,0 +1,5 @@
+(true && false).print() // false
+(true || false).print() // true
+
+(true and false).print() // false
+(true or false).print() // true

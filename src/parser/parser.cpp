@@ -7,6 +7,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                              statements({}),
                                              tokens(tokens),
                                              precedences({
+                                                 {TokenType::LOGICAL_AND_OPERATOR, LOGICAL_AND},
+                                                 {TokenType::LOGICAL_OR_OPERATOR, LOGICAL_OR},
                                                  {TokenType::LEFT_PARENTHESIS, CALL},
                                                  {TokenType::EQUALITY_OPERATOR, EQUAL},
                                                  {TokenType::INEQUALITY_OPERATOR, EQUAL},
@@ -53,6 +55,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LOGICAL_AND_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+  RegisterInfixParseFunction(TokenType::LOGICAL_OR_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(TokenType::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));

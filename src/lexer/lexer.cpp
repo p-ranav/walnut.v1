@@ -105,7 +105,7 @@ void Lexer::Tokenize()
 
     // logical operators
     MergeTokenPair(i, TokenType::BITWISE_AND_OPERATOR, TokenType::BITWISE_AND_OPERATOR, TokenType::LOGICAL_AND_OPERATOR, "&&");
-    MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, "||");
+    MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::LOGICAL_OR_OPERATOR, "||");
 
   }
 
@@ -300,6 +300,10 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = TokenType::KEYWORD_RETURN;
   else if (result.value == "in")
     result.type = TokenType::KEYWORD_IN;
+  else if (result.value == "and")
+    result.type = TokenType::LOGICAL_AND_OPERATOR;
+  else if (result.value == "or")
+    result.type = TokenType::LOGICAL_OR_OPERATOR;
 
   tokens.push_back(result);
 }
