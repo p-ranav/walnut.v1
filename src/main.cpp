@@ -14,7 +14,7 @@ enum InterpreterMode
 
 void InterpretBuffer(InterpreterMode mode, StringConstRef filename, String buffer, EnvironmentPtr environment)
 {
-  Lexer lexer("", buffer);
+  Lexer lexer(filename, buffer);
   lexer.Tokenize();
 
   Parser parser(lexer.tokens);

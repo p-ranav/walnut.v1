@@ -1,44 +1,39 @@
-quickSort = function(alist) 
-{
-  quickSortHelper(alist, 0, alist.length() - 1)
+quickSort = function(alist) {
+  return quickSortHelper(alist, 0, alist.length() - 1)
 }
 
-quickSortHelper = function(alist, first, last) 
-{
+quickSortHelper = function(alist, first, last) {
   if first < last {
-    splitpoint = partition(alist, first, last)
-    quickSortHelper(alist, first, splitpoint - 1)
-    quickSortHelper(alist, splitpoint + 1, last)
+    partition_result = partition(alist, first, last)
+    splitpoint = partition_result[0]
+    alist = partition_result[1]
+    print("Split:", splitpoint)
+    alist = quickSortHelper(alist, first, splitpoint - 1)
+    alist = quickSortHelper(alist, splitpoint + 1, last)
   }
+  return alist
 }
 
-partition = function(alist, first, last) 
-{
+partition = function(alist, first, last) {
   pivotvalue = alist[first]
-  print(pivotvalue)
 
   leftmark = first + 1
   rightmark = last
 
   done = false
-  while not done 
-  {
-    while leftmark <= rightmark and alist[leftmark] <= pivotvalue 
-    { 
-      leftmark = leftmark + 1 
+  while not done {
+    while leftmark <= rightmark and alist[leftmark] <= pivotvalue { 
+      leftmark = leftmark + 1
     }
 
-    while alist[rightmark] >= pivotvalue and rightmark >= leftmark 
-    { 
+    while alist[rightmark] >= pivotvalue and rightmark >= leftmark { 
       rightmark = rightmark - 1 
     }
 
-    if rightmark < leftmark 
-    { 
+    if rightmark < leftmark { 
       done = true 
     }
-    else 
-    {
+    else {
       temp = alist[leftmark]
       alist[leftmark] = alist[rightmark]
       alist[rightmark] = temp
@@ -48,7 +43,8 @@ partition = function(alist, first, last)
   temp = alist[first]
   alist[first] = alist[rightmark]
   alist[rightmark] = temp
-  return rightmark
+  return [rightmark, alist]
 }
 
-[54,26,93,17,77,31,44,55,20].quickSort().print()
+alist = [54,26,93,17,77,31,44,55,20]
+alist.quickSort().print()

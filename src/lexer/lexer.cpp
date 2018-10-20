@@ -46,6 +46,8 @@ void Lexer::Tokenize()
           exception_to_semicolon_rule = true;
         else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_WHILE)
           exception_to_semicolon_rule = true;
+        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_FOR)
+          exception_to_semicolon_rule = true;
         else if (tokens[tokens.size() - 1].type == TokenType::LEFT_CURLY_BRACES)
           exception_to_semicolon_rule = false;
       }
@@ -69,7 +71,7 @@ void Lexer::Tokenize()
           };
           if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
           {
-            if (!(previous.type == TokenType::RIGHT_PARENTHESIS && exception_to_semicolon_rule == true))
+            if (exception_to_semicolon_rule == false)
             {
               Token semi_colon(previous.file, previous.line, previous.cursor + 1, TokenType::SEMI_COLON_OPERATOR, ";");
               tokens.push_back(semi_colon);

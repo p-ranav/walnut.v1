@@ -20,3 +20,8 @@ for i in input {
   output = output.append(i * 2) 
 }
 print(input, output)
+
+for i in "Hello" { print(i) }
+
+unicode_string = "Hello, 世界"
+for char in unicode_string { print(char) }

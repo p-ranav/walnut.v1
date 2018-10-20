@@ -1,5 +1,6 @@
 #include <evaluator.hpp>
 #include <math.h>
+#include <utf8.hpp>
 
 Evaluator::Evaluator()
 {
@@ -350,11 +351,26 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
       return result;
   }
 
-  for (auto& kv : environment->store)
+  // TODO: Verify the logic below for how the environment of nested while loops
+  // are adjusted after the while looping is completed.
+
+  std::vector<EnvironmentPtr> environments = { environment };
+  EnvironmentPtr outer_environment = environment->outer;
+  while (outer_environment != nullptr)
   {
-    if (while_environment->store.find(kv.first) != while_environment->store.end())
+    environments.push_back(outer_environment);
+    outer_environment = outer_environment->outer;
+  }
+
+  for (auto& nested_environment : environments)
+  {
+    for (auto& kv : nested_environment->store)
     {
-      environment->Set(kv.first, while_environment->Get(kv.first));
+      if (while_environment->store.find(kv.first) != while_environment->store.end())
+      {
+        nested_environment->Set(kv.first, while_environment->Get(kv.first));
+        while_environment->store.erase(kv.first);
+      }
     }
   }
 
@@ -417,14 +433,70 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
         return result;
     }
 
-    for (auto& kv : environment->store)
+    // TODO: Verify the logic below for how the environment of nested for loops
+    // are adjusted after the while looping is completed.
+
+    // Build list of environments
+    std::vector<EnvironmentPtr> environments = { environment };
+    EnvironmentPtr outer_environment = environment->outer;
+    while (outer_environment != nullptr)
     {
-      if (for_environment->store.find(kv.first) != for_environment->store.end())
+      environments.push_back(outer_environment);
+      outer_environment = outer_environment->outer;
+    }
+
+    // Update variables in appropriate environments
+    for (auto& nested_environment : environments)
+    {
+      for (auto& kv : nested_environment->store)
       {
-        environment->Set(kv.first, for_environment->Get(kv.first));
+        if (for_environment->store.find(kv.first) != for_environment->store.end())
+        {
+          nested_environment->Set(kv.first, for_environment->Get(kv.first));
+          for_environment->store.erase(kv.first);
+        }
       }
     }
 
+
+  }
+
+  else if (iterable->type == ObjectType::STRING)
+  {
+    StringObjectPtr iterable_string = std::dynamic_pointer_cast<StringObject>(iterable);
+    EnvironmentPtr for_environment = std::make_shared<Environment>();
+    for_environment->outer = environment;
+
+    if (expression->iterators.size() > 1)
+    {
+      // TODO: report error
+    }
+    else
+    {
+      IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
+      if (iterator)
+      {
+        size_t index = 0;
+        while (index < iterable_string->value.length())
+        {
+
+          String current_character = "";
+          int length = u8_seqlen(&(iterable_string->value[index]));
+
+          for (int i = 0; i < length; i++, index++)
+            current_character += iterable_string->value[index];
+
+          ObjectPtr iterable_value = std::make_shared<StringObject>(current_character);
+          for_environment->Set(iterator->value, iterable_value);
+
+          // Evaluate body of for loop using iterator values set in for_environment
+          result = Eval(expression->body, for_environment);
+          if (result->type == ObjectType::RETURN)
+            return result;
+        }
+
+      }
+    }
   }
 
   return result;
@@ -486,7 +558,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
     {
       ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(identifier_object);
       IntegerObjectPtr integer_object = std::dynamic_pointer_cast<IntegerObject>(index_object);
-      if (integer_object->value < array_object->elements.size())
+      if (integer_object->value < static_cast<int>(array_object->elements.size()))
       {
         array_object->elements[integer_object->value] = Eval(statement->expression, environment);
       }
@@ -580,7 +652,8 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
   }
   else
   {
-    std::cout << "error: index operator not supported" << std::endl;
+    std::cout << "error: index operator not supported " << std::endl;
+    exit(EXIT_FAILURE);
     return std::make_shared<NullObject>();
   }
 

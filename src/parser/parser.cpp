@@ -371,7 +371,7 @@ NodePtr Parser::ParseWhileExpression()
   }
   else
   {
-    result->condition = ParseExpression(LOWEST);
+    result->condition = ParseExpression(LOWEST, { TokenType::LEFT_CURLY_BRACES });
 
     if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
       return nullptr;
