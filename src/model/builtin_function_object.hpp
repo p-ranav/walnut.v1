@@ -13,6 +13,11 @@ struct BuiltinFunctionObject : Object
     Object(BUILTIN_FUNCTION),
     function(function) {}
 
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<BuiltinFunctionObject>(function);
+  }
+
   String Inspect() override {
     return "";
   }

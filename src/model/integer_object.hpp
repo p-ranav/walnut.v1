@@ -6,6 +6,11 @@ struct IntegerObject : Object
 {
   int value;
   explicit IntegerObject(int value) : Object(INTEGER), value(value) {}
+
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<IntegerObject>(value);
+  }
   
   String Inspect() override {
     return std::to_string(value);

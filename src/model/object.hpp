@@ -26,12 +26,14 @@ struct Object
 
   Type type;
   bool iterable;
+  Object() : type(NULL_), iterable(false) {}
   explicit Object(Type type, bool iterable = false) : type(type), iterable(iterable) {}
   virtual ~Object() {}
-  virtual String Inspect() = 0;
+  virtual String Inspect() { return ""; }
 
   typedef std::shared_ptr<Object> ObjectPtr;
 
+  virtual ObjectPtr Copy() { return std::make_shared<Object>(); }
   virtual std::vector<ObjectPtr>::iterator IterableBegin() { return std::vector<ObjectPtr>::iterator(); }
   virtual std::vector<ObjectPtr>::iterator IterableNext() { return std::vector<ObjectPtr>::iterator(); }
   virtual std::vector<ObjectPtr>::iterator IterableEnd() { return std::vector<ObjectPtr>::iterator(); }

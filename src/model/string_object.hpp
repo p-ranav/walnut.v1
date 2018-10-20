@@ -29,6 +29,11 @@ struct StringObject : Object
     iterator = buffer.begin();
   }
 
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<StringObject>(Value());
+  }
+
   String Value() {
     String result = "";
     for (auto& object : buffer)
@@ -51,7 +56,9 @@ struct StringObject : Object
 
   ObjectIterator IterableNext() override
   {
-    return iterator++;
+    if (iterator != buffer.end())
+      iterator = iterator + 1;
+    return iterator;
   }
 
   ObjectPtr IterableCurrentValue() override
@@ -64,7 +71,7 @@ struct StringObject : Object
 
   std::vector<ObjectPtr>::iterator IterableEnd() override
   {
-    return buffer.end() - 1;
+    return buffer.end();
   }
 
   size_t IterableSize() override

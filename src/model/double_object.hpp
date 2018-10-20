@@ -10,6 +10,11 @@ struct DoubleObject : Object
   std::streamsize str_precision;
   explicit DoubleObject(double value) : Object(DOUBLE), value(value), str_precision(2) {}
 
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<DoubleObject>(value);
+  }
+
   String Inspect() override {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(str_precision) << value;

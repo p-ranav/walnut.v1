@@ -33,7 +33,8 @@ struct Environment
     return result;
   }
 
-  void Set(String key, ObjectPtr value) {
+  void Set(String key, ObjectPtr value) 
+  {
     if (store.find(key) != store.end())
       store[key] = value;
     else

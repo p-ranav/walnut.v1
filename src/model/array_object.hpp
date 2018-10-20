@@ -15,6 +15,16 @@ struct ArrayObject : Object
   explicit ArrayObject(const std::vector<ObjectPtr>& elements) : Object(ARRAY, true), 
     elements(elements), iterator(this->elements.begin()) {}
 
+  ObjectPtr Copy() override
+  {
+    std::shared_ptr<ArrayObject> result = std::make_shared<ArrayObject>();
+    for (auto& element : elements)
+      result->elements.push_back(element->Copy());
+    result->iterator = result->elements.begin();
+    result->iterable = true;
+    return result;
+  }
+
   ObjectIterator IterableBegin() override
   {
     return iterator;
@@ -22,7 +32,9 @@ struct ArrayObject : Object
 
   ObjectIterator IterableNext() override
   {
-    return iterator++;
+    if (iterator != elements.end())
+      iterator = iterator + 1;
+    return iterator;
   }
 
   ObjectPtr IterableCurrentValue() override
@@ -35,7 +47,7 @@ struct ArrayObject : Object
 
   std::vector<ObjectPtr>::iterator IterableEnd() override
   {
-    return elements.end() - 1;
+    return elements.end();
   }
 
   size_t IterableSize() override
@@ -54,9 +66,21 @@ struct ArrayObject : Object
     {
       for (size_t i = 0; i < elements.size() - 1; i++)
       {
-        result += elements[i]->Inspect() + ", ";
+        if (elements[i]->type != ObjectType::STRING)
+          result += elements[i]->Inspect() + ", ";
+        else
+        {
+          StringObjectPtr string_element = std::dynamic_pointer_cast<StringObject>(elements[i]);
+          result += "\"" + string_element->Value() + "\"" + ", ";
+        }
       }
-      result += elements[elements.size() - 1]->Inspect();
+      if (elements[elements.size() - 1]->type != ObjectType::STRING)
+        result += elements[elements.size() - 1]->Inspect();
+      else
+      {
+        StringObjectPtr string_element = std::dynamic_pointer_cast<StringObject>(elements[elements.size() - 1]);
+        result += "\"" + string_element->Value() + "\"";
+      }
     }
     result += "]";
     return result;

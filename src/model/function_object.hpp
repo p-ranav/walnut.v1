@@ -18,6 +18,11 @@ struct FunctionObject : Object
     body(body),
     environment(environment) {}
 
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<FunctionObject>(parameters, body, environment);
+  }
+
   virtual ~FunctionObject() {
     environment.reset();
   }

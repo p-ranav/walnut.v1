@@ -7,6 +7,11 @@ struct BooleanObject : Object
   bool value;
   explicit BooleanObject(bool value) : Object(BOOLEAN), value(value) {}
 
+  ObjectPtr Copy() override
+  {
+    return std::make_shared<BooleanObject>(value);
+  }
+
   String Inspect() override {
     return (value == true) ? "true" : "false";
   }
