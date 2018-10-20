@@ -72,7 +72,6 @@ ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
     if (format)
     {
       String format_string = format->value;
-      std::vector<size_t> used_arguments;
 
       for (size_t i = 1; i < arguments.size(); i++)
       {
@@ -83,8 +82,15 @@ ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
         std::string::iterator end = begin + search_string.length();
         if (begin != format_string.end())
         {
-          format_string.replace(begin, end, arguments[i]->Inspect().c_str());
-          used_arguments.push_back(i);
+          if (arguments[i]->type != ObjectType::STRING)
+          {
+            format_string.replace(begin, end, arguments[i]->Inspect().c_str());
+          }
+          else
+          {
+            StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(arguments[i]);
+            format_string.replace(begin, end, string_argument->value);
+          }
         }
       }
 

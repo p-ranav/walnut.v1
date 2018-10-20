@@ -12,4 +12,16 @@ println("\"Hello\"")
 
 print("'Hi, my name is Pranav'\n")
 
-printf("[Thread {0}] [{1}] {2}", 15, "INFO", "Thread started...");
+// Different ways to print log message:
+
+threadId = 15, logLevel = "INFO", message = "Thread Started..."
+print("[Thread ", threadId, "] ", "[", logLevel, "] ", message, "\n")
+
+threadId = 9, logLevel = "DEBUG", message = "Checking stability metric"
+println("[ Thread", threadId, "]", "[", logLevel, "]", message)
+
+threadId = 3, logLevel = "WARNING", message = "Calling exec with nullptr"
+printf("[Thread {0}] [{1}] {2}\n", threadId, logLevel, message)
+
+threadId = 6, logLevel = "ERROR", message = "Segmentation Fault"
+["[Thread ", threadId, "] ", "[", logLevel, "] ", message].join().println()
