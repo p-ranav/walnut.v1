@@ -167,6 +167,8 @@ ObjectPtr Evaluator::EvalInfixExpression(NodePtr node, EnvironmentPtr environmen
     return EvalBooleanInfixExpression(infix_operator, left, right, environment);
   else if (left->type == ObjectType::STRING && right->type == ObjectType::STRING)
     return EvalStringInfixExpression(infix_operator, left, right, environment);
+  else if (left->type == ObjectType::CHARACTER && right->type == ObjectType::CHARACTER)
+    return EvalCharacterInfixExpression(infix_operator, left, right, environment);
 
   else
     return std::make_shared<NullObject>();
@@ -280,6 +282,24 @@ ObjectPtr Evaluator::EvalStringInfixExpression(TokenType infix_operator, ObjectP
 
   if (infix_operator == TokenType::ADDITION_OPERATOR)
     return std::make_shared<StringObject>(left_value + right_value);
+  else if (infix_operator == TokenType::EQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value == right_value);
+  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value != right_value);
+  else
+    return std::make_shared<NullObject>();
+}
+
+ObjectPtr Evaluator::EvalCharacterInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+{
+  CharacterObjectPtr left_node = std::dynamic_pointer_cast<CharacterObject>(left);
+  CharacterObjectPtr right_node = std::dynamic_pointer_cast<CharacterObject>(right);
+  String left_value = left_node->Value(), right_value = right_node->Value();
+
+  if (infix_operator == TokenType::EQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value == right_value);
+  if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+    return std::make_shared<BooleanObject>(left_value != right_value);
   else
     return std::make_shared<NullObject>();
 }

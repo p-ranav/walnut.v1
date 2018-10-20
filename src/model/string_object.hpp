@@ -74,6 +74,11 @@ struct StringObject : Object
     return buffer.end();
   }
 
+  void IterableAppend(ObjectPtr value) override
+  {
+    buffer.push_back(value);
+  }
+
   size_t IterableSize() override
   {
     return buffer.size();

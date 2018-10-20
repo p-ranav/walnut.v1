@@ -39,6 +39,7 @@ struct Object
   virtual std::vector<ObjectPtr>::iterator IterableEnd() { return std::vector<ObjectPtr>::iterator(); }
   virtual ObjectPtr IterableCurrentValue() { return nullptr; }
   virtual size_t IterableSize() { return 0; }
+  virtual void IterableAppend(ObjectPtr value) { }
 
 };
 

@@ -55,6 +55,11 @@ struct ArrayObject : Object
     return elements.size();
   }
 
+  void IterableAppend(ObjectPtr value) override
+  {
+    elements.push_back(value);
+  }
+
   String Inspect() override {
     String result = "";
     result += "[";

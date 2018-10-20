@@ -103,6 +103,13 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
       StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
       return std::make_shared<StringObject>(first->Value() + second->Value());
     }
+    else if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::CHARACTER)
+    {
+      StringObjectPtr result;
+      StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
+      CharacterObjectPtr second = std::dynamic_pointer_cast<CharacterObject>(arguments[1]);
+      return std::make_shared<StringObject>(first->Value() + second->Value());
+    }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
       ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
@@ -135,13 +142,28 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 2)
   {
-    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
+    if (arguments[0]->iterable == true && arguments[1]->type == ObjectType::FUNCTION)
     {
-      ArrayObjectPtr result = std::make_shared<ArrayObject>();
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      // TODO: implement way to push values to iterable
+      ObjectPtr result;
+      switch (arguments[0]->type)
+      {
+      case ObjectType::ARRAY:
+        result = std::make_shared<ArrayObject>();
+        break;
+      case ObjectType::STRING:
+        result = std::make_shared<StringObject>("");
+        break;
+      default:
+        result = std::make_shared<NullObject>();
+        break;
+      }
+
       FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
-      for (auto& element : array_object->elements)
-        result->elements.push_back(ApplyFunction(map_function, { element }));
+      do
+      {
+        result->IterableAppend(ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() }));
+      } while (arguments[0]->IterableNext() != arguments[0]->IterableEnd());
       return result;
     }
   }
