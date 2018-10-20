@@ -215,7 +215,6 @@ Parser::Precedence Parser::CurrentPrecedence()
 NodePtr Parser::ParseExpressionStatement()
 {
   NodePtr result = ParseExpression(LOWEST);
-
   if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
     NextToken();
 
