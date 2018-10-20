@@ -9,6 +9,7 @@ struct Token
     INTEGER,
     DOUBLE,
     SYMBOL,
+    CHARACTER,
     STRING_LITERAL,
     PUNCTUATION,
 

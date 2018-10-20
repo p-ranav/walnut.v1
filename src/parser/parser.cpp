@@ -31,6 +31,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(TokenType::DOUBLE, std::bind(&Parser::ParseDouble, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
   RegisterPrefixParseFunction(TokenType::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
+  RegisterPrefixParseFunction(TokenType::CHARACTER, std::bind(&Parser::ParseCharacter, this));
   RegisterPrefixParseFunction(TokenType::STRING_LITERAL, std::bind(&Parser::ParseStringLiteral, this));
   RegisterPrefixParseFunction(TokenType::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
   RegisterPrefixParseFunction(TokenType::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
@@ -281,6 +282,14 @@ NodePtr Parser::ParseBoolean()
   return std::make_shared<BooleanNode>(current_token.type == TokenType::KEYWORD_TRUE);
 }
 
+NodePtr Parser::ParseCharacter()
+{
+  CharacterNodePtr result = std::make_shared<CharacterNode>(current_token.value);
+  while (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
+    NextToken();
+  return result;
+}
+
 NodePtr Parser::ParseStringLiteral()
 {
   StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token.value);
@@ -460,6 +469,9 @@ NodePtr Parser::ParseFunctionLiteral()
     return nullptr;
 
   result->body = ParseBlockStatement();
+
+  while (IsCurrentToken(TokenType::RIGHT_CURLY_BRACES))
+    NextToken();
 
   return result;
 }

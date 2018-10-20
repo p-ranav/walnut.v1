@@ -4,7 +4,7 @@
 #include <double_node.hpp>
 #include <boolean_node.hpp>
 #include <string_literal_node.hpp>
-#include <character_object.hpp>
+#include <character_node.hpp>
 #include <identifier_node.hpp>
 #include <var_statement_node.hpp>
 #include <expression_assignment_statement_node.hpp>
@@ -23,6 +23,7 @@
 #include <integer_object.hpp>
 #include <double_object.hpp>
 #include <boolean_object.hpp>
+#include <character_object.hpp>
 #include <string_object.hpp>
 #include <null_object.hpp>
 #include <return_object.hpp>
@@ -41,6 +42,7 @@ struct Evaluator
   ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalBoolean(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalCharacter(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalString(NodePtr node, EnvironmentPtr environment);
 
   ObjectPtr EvalPrefixExpression(NodePtr node, EnvironmentPtr environment);

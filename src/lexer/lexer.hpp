@@ -35,6 +35,7 @@ struct Lexer
   bool IsValidWhitespace(StringRef character);
   void ParseWhitespace(StringRef character);
 
+  void ParseCharacter(StringRef character);
   void ParseStringLiteral(StringRef character);
 
   bool IsValidPunctuation(StringRef character);

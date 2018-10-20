@@ -4,6 +4,7 @@
 #include <integer_node.hpp>
 #include <double_node.hpp>
 #include <boolean_node.hpp>
+#include <character_node.hpp>
 #include <string_literal_node.hpp>
 #include <identifier_node.hpp>
 #include <var_statement_node.hpp>
@@ -84,6 +85,7 @@ struct Parser
   NodePtr ParseInteger();
   NodePtr ParseDouble();
   NodePtr ParseBoolean();
+  NodePtr ParseCharacter();
   NodePtr ParseStringLiteral();
   NodePtr ParsePrefixExpression();
   NodePtr ParseGroupedExpression();

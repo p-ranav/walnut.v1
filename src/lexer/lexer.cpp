@@ -30,6 +30,9 @@ void Lexer::Tokenize()
       else if (character[0] == '"')
         ParseStringLiteral(character);
 
+      else if (character[0] == '\'')
+        ParseCharacter(character);
+
       else if (IsValidPunctuation(character))
         ParsePunctuation(character);
 
@@ -331,6 +334,62 @@ void Lexer::ParseWhitespace(StringRef character)
     else
       return;
   }
+}
+
+void Lexer::ParseCharacter(StringRef character)
+{
+  character = NextCharacter();
+  Token result(file, line, cursor, TokenType::CHARACTER);
+  while (true)
+  {
+    character = PeekCharacter();
+
+    if (character[0] == '\\')
+    {
+      character = NextCharacter();
+      if (character[0] == '\'' || character[0] == '\\')
+      {
+        character = NextCharacter();
+
+        if (character == "n")
+        {
+          result.value += '\n';
+        }
+        else
+        {
+          // TODO: maybe report error here - unrecognized escape sequence
+          result.value += character;
+        }
+        continue;
+      }
+
+      else if (character[0] == 'n')
+      {
+        character = NextCharacter();
+        result.value += '\n';
+      }
+
+      if (character[0] == 0x0A || character[0] == EOF)
+        throw std::runtime_error("unterminated string literal");
+
+      result.value += character;
+      continue;
+    }
+
+    if (character[0] != '\'' && character[0] != EOF)
+    {
+      character = NextCharacter();
+      result.value += character;
+      continue;
+    }
+
+    if (character[0] == 0x0A || character[0] == EOF)
+      throw std::runtime_error("unterminated string literal");
+
+    NextCharacter();
+    break;
+  }
+  tokens.push_back(result);
 }
 
 void Lexer::ParseStringLiteral(StringRef character)

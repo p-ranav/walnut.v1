@@ -33,6 +33,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalDouble(node, environment);
   case NodeType::BOOLEAN:
     return EvalBoolean(node, environment);
+  case NodeType::CHARACTER:
+    return EvalCharacter(node, environment);
   case NodeType::STRING_LITERAL:
     return EvalString(node, environment);
   case NodeType::PREFIX_EXPRESSION:
@@ -84,6 +86,12 @@ ObjectPtr Evaluator::EvalBoolean(NodePtr node, EnvironmentPtr environment)
 {
   BooleanNodePtr boolean_node = std::dynamic_pointer_cast<BooleanNode>(node);
   return std::make_shared<BooleanObject>(boolean_node->value);
+}
+
+ObjectPtr Evaluator::EvalCharacter(NodePtr node, EnvironmentPtr environment)
+{
+  CharacterNodePtr character_node = std::dynamic_pointer_cast<CharacterNode>(node);
+  return std::make_shared<CharacterObject>(character_node->value);
 }
 
 ObjectPtr Evaluator::EvalString(NodePtr node, EnvironmentPtr environment)

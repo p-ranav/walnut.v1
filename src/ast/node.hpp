@@ -13,6 +13,7 @@ struct Node
     IDENTIFIER_LIST,
     INTEGER,
     DOUBLE,
+    CHARACTER,
     STRING_LITERAL,
     BOOLEAN,
     VAR_STATEMENT,
