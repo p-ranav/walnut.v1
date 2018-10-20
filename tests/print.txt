@@ -1,7 +1,7 @@
-print("Hello", "World\n") // HelloWorld
-println("Hello", "World") // Hello World
-
-ƒ(message) { println("LOG:", message) }(5)  // "LOG: 5"
-
-println("\"Hello\"")
+print("Hello", "World\n") // HelloWorld
+println("Hello", "World") // Hello World
+
+ƒ(message) { println("LOG:", message) }(5)  // "LOG: 5"
+
+println("\"Hello\"")
 print("'Hi, my name is Pranav'\n")
