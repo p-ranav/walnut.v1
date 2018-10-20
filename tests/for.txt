@@ -27,3 +27,5 @@ unicode_string = "Hello, 世界"
 for char in unicode_string { print(char) }
 
 for x in ["Hello", "World", unicode_string] { print(x) }
+
+for c in "".append("Hello").append("世界") { print(c) } 
