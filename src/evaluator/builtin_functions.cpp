@@ -16,6 +16,11 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
       StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(argument);
       print_vector.push_back(string_argument->Value());
     }
+    else if (argument->type == ObjectType::CHARACTER)
+    {
+      CharacterObjectPtr character_argument = std::dynamic_pointer_cast<CharacterObject>(argument);
+      print_vector.push_back(character_argument->value);
+    }
     else
     {
       print_vector.push_back(argument->Inspect());
@@ -38,6 +43,11 @@ ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
     {
       StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(argument);
       print_vector.push_back(string_argument->Value());
+    }
+    else if (argument->type == ObjectType::CHARACTER)
+    {
+      CharacterObjectPtr character_argument = std::dynamic_pointer_cast<CharacterObject>(argument);
+      print_vector.push_back(character_argument->value);
     }
     else
     {
@@ -62,47 +72,6 @@ ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
     std::cout << print_vector[print_vector.size() - 1] << std::endl;
   }
   return std::make_shared<StringObject>(""); // return Void object
-}
-
-ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
-{
-  if (arguments.size() > 1)
-  {
-    StringObjectPtr format = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-    if (format)
-    {
-      String format_string = format->Value();
-
-      for (size_t i = 1; i < arguments.size(); i++)
-      {
-        String search_string = "{" + std::to_string(i - 1) + "}";
-        // TODO: catch exception in find and report error
-        size_t search_index = format_string.find(search_string);
-        std::string::iterator begin = format_string.begin() + search_index;
-        std::string::iterator end = begin + search_string.length();
-        if (begin != format_string.end())
-        {
-          if (arguments[i]->type != ObjectType::STRING)
-          {
-            format_string.replace(begin, end, arguments[i]->Inspect().c_str());
-          }
-          else
-          {
-            StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(arguments[i]);
-            format_string.replace(begin, end, string_argument->Value());
-          }
-        }
-      }
-
-      std::cout << format_string;
-
-    }
-    else
-    {
-      // TODO: report error
-    }
-  }
-  return std::make_shared<NullObject>();
 }
 
 ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)

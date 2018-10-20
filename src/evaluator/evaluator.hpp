@@ -82,7 +82,6 @@ struct Evaluator
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
   ObjectPtr print(std::vector<ObjectPtr> arguments);
   ObjectPtr println(std::vector<ObjectPtr> arguments);
-  ObjectPtr printf_(std::vector<ObjectPtr> arguments);
   ObjectPtr length(std::vector<ObjectPtr> arguments);
 
   ObjectPtr append(std::vector<ObjectPtr> arguments);
