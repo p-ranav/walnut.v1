@@ -282,8 +282,12 @@ NodePtr Parser::ParseStringLiteral()
 NodePtr Parser::ParsePrefixExpression()
 {
   PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token.type);
+  TokenType prefix_operator = current_token.type;
   NextToken();
-  result->right = ParseExpression(LOWEST);
+  if (prefix_operator == TokenType::LOGICAL_NOT_OPERATOR)
+    result->right = ParseExpression(PREFIX);
+  else
+    result->right = ParseExpression(LOWEST);
   return result;
 }
 

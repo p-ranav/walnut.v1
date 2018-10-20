@@ -304,6 +304,8 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = TokenType::LOGICAL_AND_OPERATOR;
   else if (result.value == "or")
     result.type = TokenType::LOGICAL_OR_OPERATOR;
+  else if (result.value == "not")
+    result.type = TokenType::LOGICAL_NOT_OPERATOR;
 
   tokens.push_back(result);
 }
