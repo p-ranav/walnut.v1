@@ -4,6 +4,8 @@
 
 Evaluator::Evaluator()
 {
+  builtin_functions.insert(std::make_pair("print",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("println",
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::println, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("length", 

@@ -347,8 +347,23 @@ void Lexer::ParseStringLiteral(StringRef character)
       if (character[0] == '\"' || character[0] == '\\')
       {
         character = NextCharacter();
-        result.value += character;
+
+        if (character == "n")
+        {
+          result.value += '\n';
+        }
+        else
+        {
+          // TODO: maybe report error here - unrecognized escape sequence
+          result.value += character;
+        }
         continue;
+      }
+
+      else if (character[0] == 'n')
+      {
+        character = NextCharacter();
+        result.value += '\n';
       }
 
       if (character[0] == 0x0A || character[0] == EOF)
