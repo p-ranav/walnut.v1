@@ -1,0 +1,21 @@
+bubble_sort = function(list)
+{
+  i = 0, j = 0
+  while i < (list.length() - 1) 
+  {
+    while j < (list.length() - i - 1) 
+    {
+      if list[j] > list[j + 1]
+      {
+        temp = list[j]
+        list[j] = list[(j + 1)]
+        list[(j + 1)] = temp
+      }
+      j = j + 1
+    }
+    i = i + 1, j = 0
+  }
+  return list
+}
+
+[5, -4, 3, -2, 1].bubble_sort().println()

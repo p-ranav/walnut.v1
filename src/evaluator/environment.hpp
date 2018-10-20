@@ -20,6 +20,18 @@ struct Environment
     outer.reset();
   }
 
+  std::shared_ptr<Environment> Copy()
+  {
+    std::shared_ptr<Environment> result = std::make_shared<Environment>();
+    for (auto& kv : store)
+    {
+      result->Set(kv.first, kv.second->Copy());
+    }
+    if (outer != nullptr)
+      result->outer = outer->Copy();
+    return result;
+  }
+
   ObjectPtr Get(String key) {
     ObjectPtr result;
     if (store.find(key) != store.end())
