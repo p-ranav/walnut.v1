@@ -1,5 +1,10 @@
 #include <evaluator.hpp>
 #include <memory>
+#include <algorithm>
+#include <string>
+#include <stdio.h>      /* printf */
+#include <string.h>
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
 ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
 {
@@ -57,6 +62,41 @@ ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
     std::cout << print_vector[print_vector.size() - 1] << std::endl;
   }
   return std::make_shared<StringObject>(""); // return Void object
+}
+
+ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
+{
+  if (arguments.size() > 1)
+  {
+    StringObjectPtr format = std::dynamic_pointer_cast<StringObject>(arguments[0]);
+    if (format)
+    {
+      String format_string = format->value;
+      std::vector<size_t> used_arguments;
+
+      for (size_t i = 1; i < arguments.size(); i++)
+      {
+        String search_string = "{" + std::to_string(i - 1) + "}";
+        // TODO: catch exception in find and report error
+        size_t search_index = format_string.find(search_string);
+        std::string::iterator begin = format_string.begin() + search_index;
+        std::string::iterator end = begin + search_string.length();
+        if (begin != format_string.end())
+        {
+          format_string.replace(begin, end, arguments[i]->Inspect().c_str());
+          used_arguments.push_back(i);
+        }
+      }
+
+      std::cout << format_string;
+
+    }
+    else
+    {
+      // TODO: report error
+    }
+  }
+  return std::make_shared<NullObject>();
 }
 
 ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)

@@ -8,6 +8,8 @@ Evaluator::Evaluator()
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("println",
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::println, this, std::placeholders::_1))));
+  builtin_functions.insert(std::make_pair("printf",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::printf_, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("length", 
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("append",
