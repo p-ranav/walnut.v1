@@ -252,10 +252,19 @@ ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, Object
   else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
   else if (infix_operator == TokenType::LOGICAL_AND_OPERATOR)
-    return std::make_shared<BooleanObject>(left_value && right_value);
+  {
+    if (left_value == false || right_value == false)
+      return std::make_shared<BooleanObject>(false);
+    else
+      return std::make_shared<BooleanObject>(true);
+  }
   else if (infix_operator == TokenType::LOGICAL_OR_OPERATOR)
-    return std::make_shared<BooleanObject>(left_value || right_value);
-
+  {
+    if (left_value == true || right_value == true)
+      return std::make_shared<BooleanObject>(true);
+    else
+      return std::make_shared<BooleanObject>(false);
+  }
   else
     return std::make_shared<NullObject>();
 }
