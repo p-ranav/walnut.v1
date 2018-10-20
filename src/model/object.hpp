@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <vector>
 
 typedef std::string String;
 typedef std::string& StringRef;
@@ -14,6 +15,7 @@ struct Object
     INTEGER,
     DOUBLE,
     BOOLEAN,
+    CHARACTER,
     STRING,
     NULL_,
     RETURN,
@@ -23,10 +25,21 @@ struct Object
   };
 
   Type type;
-  explicit Object(Type type) : type(type) {}
+  bool iterable;
+  explicit Object(Type type, bool iterable = false) : type(type), iterable(iterable) {}
   virtual ~Object() {}
   virtual String Inspect() = 0;
+
+  typedef std::shared_ptr<Object> ObjectPtr;
+
+  virtual std::vector<ObjectPtr>::iterator IterableBegin() { return std::vector<ObjectPtr>::iterator(); }
+  virtual std::vector<ObjectPtr>::iterator IterableNext() { return std::vector<ObjectPtr>::iterator(); }
+  virtual std::vector<ObjectPtr>::iterator IterableEnd() { return std::vector<ObjectPtr>::iterator(); }
+  virtual ObjectPtr IterableCurrentValue() { return nullptr; }
+  virtual size_t IterableSize() { return 0; }
+
 };
 
 typedef std::shared_ptr<Object> ObjectPtr;
 typedef Object::Type ObjectType;
+typedef std::vector<ObjectPtr>::iterator ObjectIterator;

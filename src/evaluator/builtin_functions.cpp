@@ -14,7 +14,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
     if (argument->type == ObjectType::STRING)
     {
       StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(argument);
-      print_vector.push_back(string_argument->value);
+      print_vector.push_back(string_argument->Value());
     }
     else
     {
@@ -37,7 +37,7 @@ ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
     if (argument->type == ObjectType::STRING)
     {
       StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(argument);
-      print_vector.push_back(string_argument->value);
+      print_vector.push_back(string_argument->Value());
     }
     else
     {
@@ -71,7 +71,7 @@ ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
     StringObjectPtr format = std::dynamic_pointer_cast<StringObject>(arguments[0]);
     if (format)
     {
-      String format_string = format->value;
+      String format_string = format->Value();
 
       for (size_t i = 1; i < arguments.size(); i++)
       {
@@ -89,7 +89,7 @@ ObjectPtr Evaluator::printf_(std::vector<ObjectPtr> arguments)
           else
           {
             StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(arguments[i]);
-            format_string.replace(begin, end, string_argument->value);
+            format_string.replace(begin, end, string_argument->Value());
           }
         }
       }
@@ -112,7 +112,7 @@ ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
     if (arguments[0]->type == ObjectType::STRING)
     {
       StringObjectPtr string_object = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-      return std::make_shared<IntegerObject>(static_cast<int>(string_object->value.length()));
+      return std::make_shared<IntegerObject>(static_cast<int>(string_object->Length()));
     }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
@@ -132,7 +132,7 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
       StringObjectPtr result;
       StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
       StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-      return std::make_shared<StringObject>(first->value + second->value);
+      return std::make_shared<StringObject>(first->Value() + second->Value());
     }
     else if (arguments[0]->type == ObjectType::ARRAY)
     {
@@ -198,56 +198,6 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
             result->elements.push_back(element);
         }
       }
-      return result;
-    }
-  }
-  return std::make_shared<NullObject>();
-}
-
-ObjectPtr Evaluator::join(std::vector<ObjectPtr> arguments)
-{
-  if (arguments.size() == 1)
-  {
-    if (arguments[0]->type == ObjectType::ARRAY)
-    {
-      StringObjectPtr result = std::make_shared<StringObject>("");
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      StringObjectPtr connector = std::make_shared<StringObject>("");
-      for (auto& element : array_object->elements)
-      {
-        if (element->type == ObjectType::STRING)
-        {
-          StringObjectPtr object = std::dynamic_pointer_cast<StringObject>(element);
-          result->value += object->value;
-        }
-        else
-          result->value += element->Inspect();
-        if (&element != &(array_object->elements).back())
-          result->value += connector->value;
-      }
-      return result;
-    }
-  }  
-  else if (arguments.size() == 2)
-  {
-    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::STRING)
-    {
-      StringObjectPtr result = std::make_shared<StringObject>("");
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      StringObjectPtr connector = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-      for (auto& element : array_object->elements)
-      {
-        if (element->type == ObjectType::STRING)
-        {
-          StringObjectPtr object = std::dynamic_pointer_cast<StringObject>(element);
-          result->value += object->value;
-        }
-        else
-          result->value += element->Inspect();
-        if (&element != &(array_object->elements).back())
-          result->value += connector->value;
-      }
-
       return result;
     }
   }

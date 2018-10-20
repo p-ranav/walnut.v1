@@ -4,6 +4,7 @@
 #include <double_node.hpp>
 #include <boolean_node.hpp>
 #include <string_literal_node.hpp>
+#include <character_object.hpp>
 #include <identifier_node.hpp>
 #include <var_statement_node.hpp>
 #include <expression_assignment_statement_node.hpp>
@@ -88,5 +89,4 @@ struct Evaluator
   ObjectPtr extend(std::vector<ObjectPtr> arguments);
   ObjectPtr map(std::vector<ObjectPtr> arguments);
   ObjectPtr filter(std::vector<ObjectPtr> arguments);
-  ObjectPtr join(std::vector<ObjectPtr> arguments);
 };

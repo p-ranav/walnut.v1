@@ -20,8 +20,6 @@ Evaluator::Evaluator()
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("filter",
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("join",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::join, this, std::placeholders::_1))));
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
@@ -280,7 +278,7 @@ ObjectPtr Evaluator::EvalStringInfixExpression(TokenType infix_operator, ObjectP
 {
   StringObjectPtr left_node = std::dynamic_pointer_cast<StringObject>(left);
   StringObjectPtr right_node = std::dynamic_pointer_cast<StringObject>(right);
-  String left_value = left_node->value, right_value = right_node->value;
+  String left_value = left_node->Value(), right_value = right_node->Value();
 
   if (infix_operator == TokenType::ADDITION_OPERATOR)
     return std::make_shared<StringObject>(left_value + right_value);
@@ -355,26 +353,12 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
       return result;
   }
 
-  // TODO: Verify the logic below for how the environment of nested while loops
-  // are adjusted after the while looping is completed.
-
-  std::vector<EnvironmentPtr> environments = { environment };
-  EnvironmentPtr outer_environment = environment->outer;
-  while (outer_environment != nullptr)
+  for (auto& kv : environment->store)
   {
-    environments.push_back(outer_environment);
-    outer_environment = outer_environment->outer;
-  }
-
-  for (auto& nested_environment : environments)
-  {
-    for (auto& kv : nested_environment->store)
+    if (while_environment->store.find(kv.first) != while_environment->store.end())
     {
-      if (while_environment->store.find(kv.first) != while_environment->store.end())
-      {
-        nested_environment->Set(kv.first, while_environment->Get(kv.first));
-        while_environment->store.erase(kv.first);
-      }
+      environment->Set(kv.first, while_environment->Get(kv.first));
+      while_environment->store.erase(kv.first);
     }
   }
 
@@ -383,123 +367,86 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
 
 ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
 {
-  ForExpressionNodePtr expression = std::dynamic_pointer_cast<ForExpressionNode>(node);
   ObjectPtr result = std::make_shared<NullObject>();
+  EnvironmentPtr for_environment = std::make_shared<Environment>();
+  for_environment->outer = environment;
 
-  ObjectPtr iterable = Eval(expression->iterable, environment);
+  ForExpressionNodePtr expression = std::dynamic_pointer_cast<ForExpressionNode>(node);
+  ObjectPtr expression_object = Eval(expression->iterable, environment);
 
-  // Iterable is an array - It could be an array of anything:
-  if (iterable->type == ObjectType::ARRAY)
+  if (expression_object->iterable == true)
   {
-    ArrayObjectPtr iterable_list = std::dynamic_pointer_cast<ArrayObject>(iterable);
-    EnvironmentPtr for_environment = std::make_shared<Environment>();
-    for_environment->outer = environment;
+    ObjectPtr identifier_value = expression_object->IterableCurrentValue();
 
-    for (size_t i = 0; i < iterable_list->elements.size(); i++)
+    do
     {
-      /* Initialize/update iterator values */
+      // Set value of each parameter in for expression
+      // Update environment
+      ObjectPtr current_value = expression_object->IterableCurrentValue();
 
-      // We have just one iterator
-      if (expression->iterators.size() == 1)
+      if (current_value->iterable == false)
       {
-        IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
-        if (iterator)
+        // Example: for x in [1, 2, 3, 4, 5]
+        // current_value = 1
+        // 1 is not iterable, so we're here
+        if (expression->iterators.size() != 1)
         {
-          ObjectPtr iterable_value = (iterable_list->elements)[i];
-          for_environment->Set(iterator->value, iterable_value);
+          // TODO: report error
         }
+        IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
+        for_environment->Set(identifier->value, current_value);
       }
-      else if (expression->iterators.size() > 1)
+      else
       {
-        ObjectPtr iterable_value = (iterable_list->elements)[i];
-
-        // Check if iterable_value is itself an iterable
-        if (iterable_value->type == ObjectType::ARRAY)
+        // Example: for x, y in [[1, 2], [3, 4]]
+        // current_value = [1, 2]
+        // [1, 2] is iterable
+        if (expression->iterators.size() == 1)
         {
-          ArrayObjectPtr iterable_value_list = std::dynamic_pointer_cast<ArrayObject>(iterable_value);
-          if (iterable_value_list->elements.size() == expression->iterators.size())
-          {
-            for (size_t j = 0; j < expression->iterators.size(); j++)
-            {
-              IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[j]);
-              ObjectPtr iterable_value = (iterable_value_list->elements)[j];
-              for_environment->Set(iterator->value, iterable_value);
-            }
-          }
+          // Example: for x in [[1, 2], [3, 4]]
+          // iterators size is just 1, i.e., x
+          // simply set x to [1, 2] and move on
+          IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
+          for_environment->Set(identifier->value, current_value);
         }
-        // TODO: else if (iterable_value->type == NodeType::DICTIONARY)
+        else if (expression->iterators.size() > 1)
+        {
+          if (expression->iterators.size() != current_value->IterableSize())
+          {
+            // We're here because you typed:
+            // for a, b in [[1, 2, 3], [4, 5, 6]]
+            // a, b      => size 2
+            // [1, 2, 3] => size 3
+            // TODO: report error
+          }
 
+          // Example: for a, b, c in [[1, 2, 3], [4, 5, 6]]
+          // current_value = [1, 2, 3]
+          // we need to set a = 1, b = 2 , c = 3
+          size_t index = 0;
+          do
+          {
+            IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[index]);
+            for_environment->Set(identifier->value, current_value->IterableCurrentValue());
+            index += 1;
+          } while(current_value->IterableNext() != current_value->IterableEnd());
+        }
       }
 
       // Evaluate body of for loop using iterator values set in for_environment
       result = Eval(expression->body, for_environment);
       if (result->type == ObjectType::RETURN)
         return result;
-    }
-
-    // TODO: Verify the logic below for how the environment of nested for loops
-    // are adjusted after the while looping is completed.
-
-    // Build list of environments
-    std::vector<EnvironmentPtr> environments = { environment };
-    EnvironmentPtr outer_environment = environment->outer;
-    while (outer_environment != nullptr)
-    {
-      environments.push_back(outer_environment);
-      outer_environment = outer_environment->outer;
-    }
-
-    // Update variables in appropriate environments
-    for (auto& nested_environment : environments)
-    {
-      for (auto& kv : nested_environment->store)
-      {
-        if (for_environment->store.find(kv.first) != for_environment->store.end())
-        {
-          nested_environment->Set(kv.first, for_environment->Get(kv.first));
-          for_environment->store.erase(kv.first);
-        }
-      }
-    }
-
+    } while (expression_object->IterableNext() != expression_object->IterableEnd());
 
   }
 
-  else if (iterable->type == ObjectType::STRING)
+  for (auto& kv : environment->store)
   {
-    StringObjectPtr iterable_string = std::dynamic_pointer_cast<StringObject>(iterable);
-    EnvironmentPtr for_environment = std::make_shared<Environment>();
-    for_environment->outer = environment;
-
-    if (expression->iterators.size() > 1)
+    if (for_environment->store.find(kv.first) != for_environment->store.end())
     {
-      // TODO: report error
-    }
-    else
-    {
-      IdentifierNodePtr iterator = std::dynamic_pointer_cast<IdentifierNode>(expression->iterators[0]);
-      if (iterator)
-      {
-        size_t index = 0;
-        while (index < iterable_string->value.length())
-        {
-
-          String current_character = "";
-          int length = u8_seqlen(&(iterable_string->value[index]));
-
-          for (int i = 0; i < length; i++, index++)
-            current_character += iterable_string->value[index];
-
-          ObjectPtr iterable_value = std::make_shared<StringObject>(current_character);
-          for_environment->Set(iterator->value, iterable_value);
-
-          // Evaluate body of for loop using iterator values set in for_environment
-          result = Eval(expression->body, for_environment);
-          if (result->type == ObjectType::RETURN)
-            return result;
-        }
-
-      }
+      environment->Set(kv.first, for_environment->Get(kv.first));
+      for_environment->store.erase(kv.first);
     }
   }
 

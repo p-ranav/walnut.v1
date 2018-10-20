@@ -32,9 +32,12 @@ struct Node
   };
 
   Type type;
+  bool iterable;
 
-  explicit Node(Type type) : 
-    type(type) {}
+  explicit Node(Type type, bool iterable = false) :
+    type(type),
+    iterable(iterable) {}
+
   virtual ~Node() {}
 
   virtual String ToString() { return ""; }

@@ -6,7 +6,7 @@ struct ArrayLiteralNode : Node
 {
   std::vector<NodePtr> elements;
   explicit ArrayLiteralNode() :
-    Node(ARRAY_LITERAL),
+    Node(ARRAY_LITERAL, true),
     elements({}) {}
 
   String ToString() override

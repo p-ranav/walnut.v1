@@ -1,14 +1,85 @@
 #pragma once
 #include <object.hpp>
+#include <character_object.hpp>
+#include <utf8.hpp>
 #include <memory>
 
 struct StringObject : Object
 {
-  String value;
-  explicit StringObject(StringConstRef value) : Object(STRING), value(value) {}
+  std::vector<ObjectPtr> buffer;
+
+  typedef std::vector<ObjectPtr>::iterator ObjectIterator;
+  ObjectIterator iterator;
+
+  explicit StringObject(StringConstRef value) : Object(STRING, true)
+  {
+    String value_string = value;
+    size_t index = 0;
+    while (index < value_string.length())
+    {
+      String current_character = "";
+      int length = u8_seqlen(&(value_string[index]));
+
+      for (int i = 0; i < length; i++, index++)
+        current_character += value_string[index];
+
+      CharacterObjectPtr character = std::make_shared<CharacterObject>(current_character);
+      buffer.push_back(character);
+    }
+    iterator = buffer.begin();
+  }
+
+  String Value() {
+    String result = "";
+    for (auto& object : buffer)
+    {
+      CharacterObjectPtr character = std::dynamic_pointer_cast<CharacterObject>(object);
+      result += character->value;
+    }
+    return result;
+  }
+
+  size_t Length()
+  {
+    return buffer.size();
+  }
+
+  ObjectIterator IterableBegin() override
+  {
+    return iterator;
+  }
+
+  ObjectIterator IterableNext() override
+  {
+    return iterator++;
+  }
+
+  ObjectPtr IterableCurrentValue() override
+  {
+    if (iterator != buffer.end())
+      return *(iterator);
+    else
+      return nullptr;
+  }
+
+  std::vector<ObjectPtr>::iterator IterableEnd() override
+  {
+    return buffer.end() - 1;
+  }
+
+  size_t IterableSize() override
+  {
+    return buffer.size();
+  }
 
   String Inspect() override {
-    return "\"" + value + "\"";
+    String result = "\"";
+    for (auto& character : buffer)
+    {
+      result += character->Inspect();
+    }
+    result += "\"";
+    return result;
   }
 };
 
