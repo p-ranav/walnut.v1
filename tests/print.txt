@@ -1,1 +1,1 @@
-ƒ(message) { print("LOG:", message) }(5)  // "LOG: 5"
+ƒ(message) { println("LOG:", message) }(5)  // "LOG: 5"

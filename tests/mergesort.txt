@@ -1,5 +1,5 @@
 mergeSort = function(alist):
-    print("Splitting ",alist)
+    println("Splitting ",alist)
     if len(alist) > 1 {
         mid = len(alist)//2
         lefthalf = alist[:mid]
@@ -30,8 +30,8 @@ mergeSort = function(alist):
             j=j+1
             k=k+1
     }
-    print("Merging ",alist)
+    println("Merging ",alist)
 
 alist = [54,26,93,17,77,31,44,55,20]
 mergeSort(alist)
-print(alist)
+println(alist)

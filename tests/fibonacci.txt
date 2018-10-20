@@ -1,8 +1,8 @@
 fib = function(n) {
   a = 0; b = 1; c = 1
-  print(0)
+  println(0)
   while (c < n) {
-      print(c)
+      println(c)
       c = (a + b); a = b; b = c;
   }
 }

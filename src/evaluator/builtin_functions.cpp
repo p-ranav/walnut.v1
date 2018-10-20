@@ -1,7 +1,7 @@
 #include <evaluator.hpp>
 #include <memory>
 
-ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
 {
   String result;
   std::vector<String> print_vector;

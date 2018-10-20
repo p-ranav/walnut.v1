@@ -7,7 +7,7 @@ quickSortHelper = function(alist, first, last) {
     partition_result = partition(alist, first, last)
     splitpoint = partition_result[0]
     alist = partition_result[1]
-    print("Split:", splitpoint)
+    println("Split:", splitpoint)
     alist = quickSortHelper(alist, first, splitpoint - 1)
     alist = quickSortHelper(alist, splitpoint + 1, last)
   }
@@ -47,4 +47,4 @@ partition = function(alist, first, last) {
 }
 
 alist = [54,26,93,17,77,31,44,55,20]
-alist.quickSort().print()
+alist.quickSort().println()

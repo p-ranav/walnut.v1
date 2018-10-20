@@ -16,4 +16,4 @@ nested_whiles = function(i, j, k) {
 }
 
 i = 0, j = 0, k = 0
-print(nested_whiles(i, j, k))
+println(nested_whiles(i, j, k))
