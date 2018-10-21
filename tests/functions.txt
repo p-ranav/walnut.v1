@@ -1,2 +1,10 @@
+/*
 product = ƒ(a, b) { return a * b }
 println(product(5, 10));
+*/
+
+product = function(a, b) {
+  return a * b
+};
+
+(5).product(10).println()

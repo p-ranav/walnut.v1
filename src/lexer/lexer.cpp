@@ -51,6 +51,7 @@ void Lexer::Tokenize()
       if (character[0] == '\n')
       {
         NextCharacter();
+        cursor -= 1;
       }
 
       continue;

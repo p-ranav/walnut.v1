@@ -109,6 +109,19 @@ bool Parser::IsPeekTokenInList(const std::vector<Token::Type>& value)
   return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
 }
 
+void Parser::ReportError(Token::Type expected)
+{
+  String message;
+  if (peek_token.file != "")
+    message = "parser error: unexpected token \"" + peek_token.value + "\""
+    + ", expected \"" + TokenString(expected) + "\" at"
+    + peek_token.file + ", line " + std::to_string(current_token.line) + " char "
+    + std::to_string(current_token.cursor + 1);
+  else
+    message = "parser error: unexpected token \"" + peek_token.value + "\"";
+  std::cout << message << std::endl;
+}
+
 bool Parser::ExpectPeek(Token::Type value)
 {
   if (IsPeekToken(value))
@@ -117,14 +130,7 @@ bool Parser::ExpectPeek(Token::Type value)
     return true;
   }
   else {
-    String message;
-    if (peek_token.file != "")
-      message = "parser error: unexpected token \"" + peek_token.value + "\" at "
-      + peek_token.file + ", line " + std::to_string(peek_token.line) + " char "
-      + std::to_string(peek_token.cursor) + ", expected \"" + TokenString(value) + "\"";
-    else
-      message = "parser error: unexpected token \"" + peek_token.value + "\"";
-    std::cout << message << std::endl;
+    ReportError(value);
     return false;
   }
 }
@@ -450,6 +456,12 @@ NodePtr Parser::ParseFunctionLiteral()
     return nullptr;
 
   result->body = ParseBlockStatement();
+
+  if (!IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
+  {
+    ReportError(Token::Type::SEMI_COLON_OPERATOR);
+    return nullptr;
+  }
 
   return result;
 }

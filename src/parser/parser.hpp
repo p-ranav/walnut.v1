@@ -48,6 +48,7 @@ struct Parser
   bool IsPeekToken(Token::Type value);
   bool IsPeekTokenInList(const std::vector<Token::Type>& value);
   bool ExpectPeek(Token::Type value);
+  void ReportError(Token::Type expected);
 
   NodePtr ParseStatement();
   NodePtr ParseVarStatement();
