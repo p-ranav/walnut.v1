@@ -1,15 +1,19 @@
-x = {"a": 5, "b": 3.14, "c": "Hello", "d": false}
-x.println()
+x = {"a": 5, "b": 3.14, "c": "Hello", "d": false};
+x.println();
 
-x["a"].println()
-x["b"].println()
-x["c"].println()
-x["d"].println()
+y = {"value": x};
+y["value"]["a"].println(); // 5
 
-y = {"value": x}
-y["value"]["a"].println()
+z = {
+  "value" : 
+  { 
+    "pi": 3.14, 
+    "c": "Hello, 世界", 
+    "func": function(a, b) { a * b }  
+  } 
+};
 
-z = {"value" : {"a": 5, "pi": 3.14, "c": "Hello", "d": false} }
+pi = "pi";
+z["value"][pi].println(); // 3.14
 
-pi = "pi"
-z["value"][pi].println()
+z["value"]["func"](2, 3).println(); // 6

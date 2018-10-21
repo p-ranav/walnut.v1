@@ -42,45 +42,14 @@ void Lexer::Tokenize()
       else if (IsValidWhitespace(character))
         ParseWhitespace(character);
 
-      if (tokens.size() > 0) {
-        if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_IF)
-          exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_FUNCTION)
-          exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_WHILE)
-          exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_FOR)
-          exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == Token::Type::LEFT_CURLY_BRACES)
-          exception_to_semicolon_rule = false;
-      }
-
       if (character[0] == '\n')
       {
         line += 1;
         cursor = 0;
       }
 
-      // semicolon rule
       if (character[0] == '\n')
       {
-        if (tokens.size() > 0)
-        {
-          Token previous = tokens[tokens.size() - 1];
-          std::vector<Token::Type> valid_tokens = { 
-            Token::Type::SYMBOL, Token::Type::INTEGER, Token::Type::DOUBLE, Token::Type::STRING_LITERAL,
-            Token::Type::KEYWORD_TRUE, Token::Type::KEYWORD_FALSE, Token::Type::KEYWORD_RETURN,
-            Token::Type::RIGHT_PARENTHESIS, Token::Type::RIGHT_CURLY_BRACES, Token::Type::RIGHT_SQUARE_BRACKETS
-          };
-          if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
-          {
-            if (exception_to_semicolon_rule == false)
-            {
-              Token semi_colon(previous.file, previous.line, previous.cursor + 1, Token::Type::SEMI_COLON_OPERATOR, ";");
-              tokens.push_back(semi_colon);
-            }
-          }
-        }
         NextCharacter();
       }
 
