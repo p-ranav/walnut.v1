@@ -1,11 +1,11 @@
 // Alias to functions
-log = println
-log("Hello")
+log = println;
+log("Hello");
 
-push = append
-[].push(1).println()
-[].push(1).extend([2, 3]).println()
+push = append;
+[].push(1).println();
+[].push(1).extend([2, 3]).println();
 
-add = function(a, b) { a + b }
-sum = add
-sum(2, 3).println()
+add = function(a, b) { a + b };
+sum = add;
+sum(2, 3).println();

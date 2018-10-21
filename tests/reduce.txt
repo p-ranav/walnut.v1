@@ -8,7 +8,7 @@ reduce = function(iterable, lambda) {
   }
 
   return result
-}
+};
 
 [1, 2, 3, 4].reduce(function(a, b) { a + b }).println() // 10
 [1, 2, 3, 4].reduce(function(a, b) { a * b }).println() // 24

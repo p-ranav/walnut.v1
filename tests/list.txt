@@ -1,10 +1,10 @@
-x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-x.length().println()
-x.map( ƒ(i) { i * i } ).println()
-x.filter( ƒ(i) { i % 2 == 0 } ).println()
+x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+x.length().println();
+x.map( ƒ(i) { i * i } ).println();
+x.filter( ƒ(i) { i % 2 == 0 } ).println();
 
-["Hello", "World"].join(" ").println()
+["Hello", "World"].join(" ").println();
 
-music = ["Abba","Rolling Stones","Black Sabbath","Metallica"]
+music = ["Abba","Rolling Stones","Black Sabbath","Metallica"];
 music.join("
-").println()
+").println();

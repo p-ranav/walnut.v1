@@ -1,31 +1,31 @@
-for i in [1, 2, 3, 4, 5] { println(i) }
+for i in [1, 2, 3, 4, 5] { println(i); }
 
-for j in [[1, 2], [3, 4]] { println(j) }
+for j in [[1, 2], [3, 4]] { println(j); }
 
-for i, j in [[1, 2], [3, 4]] { println(i, j) }
+for i, j in [[1, 2], [3, 4]] { println(i, j); }
 
-list = []
-for i in [1, 2, 3] { list = list.append(i) }
-list.println()
+list = [];
+for i in [1, 2, 3] { list = list.append(i); }
+list.println();
 
-sum = 0
+sum = 0;
 for i in [1, 2, 3] { 
-  sum = sum + i 
+  sum = sum + i;
 }
-println(sum)
+println(sum);
 
-list = [1, 2, 3, 4, 5]
-input = list, output = []
+list = [1, 2, 3, 4, 5];
+input = list, output = [];
 for i in input { 
-  output = output.append(i * 2) 
+  output = output.append(i * 2); 
 }
-println(input, output)
+println(input, output);
 
-for i in "Hello" { println(i) }
+for i in "Hello" { println(i); }
 
-unicode_string = "Hello, 世界"
-for char in unicode_string { println(char) }
+unicode_string = "Hello, 世界";
+for char in unicode_string { println(char); }
 
-for x in ["Hello", "World", unicode_string] { println(x) }
+for x in ["Hello", "World", unicode_string] { println(x); }
 
-for c in "".append("Hello").append("世界") { println(c) } 
+for c in "".append("Hello").append("世界") { println(c); } 

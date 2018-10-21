@@ -1,2 +1,2 @@
 product = ƒ(a, b) { return a * b }
-println(product(5, 10))
+println(product(5, 10));
