@@ -5,10 +5,10 @@
 struct InfixExpressionNode : Node
 {
   NodePtr left;
-  TokenType infix_operator;
+  Token::Type infix_operator;
   NodePtr right;
 
-  explicit InfixExpressionNode(TokenType infix_operator) : 
+  explicit InfixExpressionNode(Token::Type infix_operator) : 
     Node(INFIX_EXPRESSION),
     left(nullptr),
     infix_operator(infix_operator),

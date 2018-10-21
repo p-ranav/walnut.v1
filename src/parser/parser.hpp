@@ -30,11 +30,10 @@ typedef std::vector<Token> TokenVector;
 typedef const std::vector<Token> &TokenVectorConstRef;
 typedef std::vector<NodePtr> Statements;
 typedef unsigned int UnsignedInt;
-typedef Token::Type TokenType;
 typedef std::function<NodePtr(void)> PrefixParseFunction;
-typedef std::map<TokenType, std::function<NodePtr(void)>> PrefixParseFunctionMap;
+typedef std::map<Token::Type, std::function<NodePtr(void)>> PrefixParseFunctionMap;
 typedef std::function<NodePtr(NodePtr)> InfixParseFunction;
-typedef std::map<TokenType, std::function<NodePtr(NodePtr)>> InfixParseFunctionMap;
+typedef std::map<Token::Type, std::function<NodePtr(NodePtr)>> InfixParseFunctionMap;
 
 struct Parser
 {
@@ -43,11 +42,11 @@ struct Parser
   void ParseProgram();
 
   void NextToken();
-  bool IsCurrentToken(TokenType value);
-  bool IsCurrentTokenInList(const std::vector<TokenType>& value);
-  bool IsPeekToken(TokenType value);
-  bool IsPeekTokenInList(const std::vector<TokenType>& value);
-  bool ExpectPeek(TokenType value);
+  bool IsCurrentToken(Token::Type value);
+  bool IsCurrentTokenInList(const std::vector<Token::Type>& value);
+  bool IsPeekToken(Token::Type value);
+  bool IsPeekTokenInList(const std::vector<Token::Type>& value);
+  bool ExpectPeek(Token::Type value);
 
   NodePtr ParseStatement();
   NodePtr ParseVarStatement();
@@ -55,10 +54,10 @@ struct Parser
   NodePtr ParseExpressionStatement();
 
   PrefixParseFunctionMap prefix_parse_functions;
-  void RegisterPrefixParseFunction(TokenType token, PrefixParseFunction function);
+  void RegisterPrefixParseFunction(Token::Type token, PrefixParseFunction function);
 
   InfixParseFunctionMap infix_parse_functions;
-  void RegisterInfixParseFunction(TokenType token, InfixParseFunction function);
+  void RegisterInfixParseFunction(Token::Type token, InfixParseFunction function);
 
   enum Precedence
   {
@@ -74,12 +73,12 @@ struct Parser
     INDEX,       // X[0], [1, 2, 3, 4][2]
     DOT
   };
-  typedef std::map<TokenType, Precedence> TokenPrecedenceMap;
+  typedef std::map<Token::Type, Precedence> TokenPrecedenceMap;
 
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
   NodePtr ParseExpression(Precedence precedence, 
-    std::vector<TokenType> end = { TokenType::SEMI_COLON_OPERATOR, TokenType::END_OF_FILE });
+    std::vector<Token::Type> end = { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE });
 
   /* Prefix parse functions */
   NodePtr ParseIdentifier();
@@ -99,7 +98,7 @@ struct Parser
   NodePtr ParseFunctionLiteral();
 
   NodePtr ParseArrayLiteral();
-  std::vector<NodePtr> ParseExpressionList(TokenType end);
+  std::vector<NodePtr> ParseExpressionList(Token::Type end);
 
   /* Infix parse functions */
   NodePtr ParseInfixExpression(NodePtr left);

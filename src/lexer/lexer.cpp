@@ -43,15 +43,15 @@ void Lexer::Tokenize()
         ParseWhitespace(character);
 
       if (tokens.size() > 0) {
-        if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_IF)
+        if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_IF)
           exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_FUNCTION)
+        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_FUNCTION)
           exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_WHILE)
+        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_WHILE)
           exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == TokenType::KEYWORD_FOR)
+        else if (tokens[tokens.size() - 1].type == Token::Type::KEYWORD_FOR)
           exception_to_semicolon_rule = true;
-        else if (tokens[tokens.size() - 1].type == TokenType::LEFT_CURLY_BRACES)
+        else if (tokens[tokens.size() - 1].type == Token::Type::LEFT_CURLY_BRACES)
           exception_to_semicolon_rule = false;
       }
 
@@ -67,16 +67,16 @@ void Lexer::Tokenize()
         if (tokens.size() > 0)
         {
           Token previous = tokens[tokens.size() - 1];
-          std::vector<TokenType> valid_tokens = { 
-            TokenType::SYMBOL, TokenType::INTEGER, TokenType::DOUBLE, TokenType::STRING_LITERAL,
-            TokenType::KEYWORD_TRUE, TokenType::KEYWORD_FALSE, TokenType::KEYWORD_RETURN,
-            TokenType::RIGHT_PARENTHESIS, TokenType::RIGHT_CURLY_BRACES, TokenType::RIGHT_SQUARE_BRACKETS
+          std::vector<Token::Type> valid_tokens = { 
+            Token::Type::SYMBOL, Token::Type::INTEGER, Token::Type::DOUBLE, Token::Type::STRING_LITERAL,
+            Token::Type::KEYWORD_TRUE, Token::Type::KEYWORD_FALSE, Token::Type::KEYWORD_RETURN,
+            Token::Type::RIGHT_PARENTHESIS, Token::Type::RIGHT_CURLY_BRACES, Token::Type::RIGHT_SQUARE_BRACKETS
           };
           if (std::find(valid_tokens.begin(), valid_tokens.end(), previous.type) != valid_tokens.end())
           {
             if (exception_to_semicolon_rule == false)
             {
-              Token semi_colon(previous.file, previous.line, previous.cursor + 1, TokenType::SEMI_COLON_OPERATOR, ";");
+              Token semi_colon(previous.file, previous.line, previous.cursor + 1, Token::Type::SEMI_COLON_OPERATOR, ";");
               tokens.push_back(semi_colon);
             }
           }
@@ -92,32 +92,32 @@ void Lexer::Tokenize()
   for (size_t i = 0; i < tokens.size(); i++)
   {
     // assignment operators
-    MergeTokenPair(i, TokenType::ADDITION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::ADD_AND_ASSIGN_OPERATOR, "+=");
-    MergeTokenPair(i, TokenType::SUBTRACTION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
-    MergeTokenPair(i, TokenType::MULTIPLICATION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
-    MergeTokenPair(i, TokenType::DIVISION_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::DIVIDE_AND_ASSIGN_OPERATOR, "/=");
-    MergeTokenPair(i, TokenType::MODULUS_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::MODULUS_AND_ASSIGN_OPERATOR, "%=");
+    MergeTokenPair(i, Token::Type::ADDITION_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::ADD_AND_ASSIGN_OPERATOR, "+=");
+    MergeTokenPair(i, Token::Type::SUBTRACTION_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::SUBTRACT_AND_ASSIGN_OPERATOR, "-=");
+    MergeTokenPair(i, Token::Type::MULTIPLICATION_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::MULTIPLY_AND_ASSIGN_OPERATOR, "*=");
+    MergeTokenPair(i, Token::Type::DIVISION_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::DIVIDE_AND_ASSIGN_OPERATOR, "/=");
+    MergeTokenPair(i, Token::Type::MODULUS_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::MODULUS_AND_ASSIGN_OPERATOR, "%=");
 
     // comparison operators
-    MergeTokenPair(i, TokenType::ASSIGNMENT_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::EQUALITY_OPERATOR, "==");
-    MergeTokenPair(i, TokenType::LOGICAL_NOT_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::INEQUALITY_OPERATOR, "!=");
-    MergeTokenPair(i, TokenType::GREATER_THAN_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
-    MergeTokenPair(i, TokenType::LESSER_THAN_OPERATOR, TokenType::ASSIGNMENT_OPERATOR, TokenType::LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
+    MergeTokenPair(i, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::EQUALITY_OPERATOR, "==");
+    MergeTokenPair(i, Token::Type::LOGICAL_NOT_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::INEQUALITY_OPERATOR, "!=");
+    MergeTokenPair(i, Token::Type::GREATER_THAN_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, ">=");
+    MergeTokenPair(i, Token::Type::LESSER_THAN_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, "<=");
 
     // bitwise operators
-    MergeTokenPair(i, TokenType::LESSER_THAN_OPERATOR, TokenType::LESSER_THAN_OPERATOR, TokenType::BITWISE_LEFT_SHIFT_OPERATOR, "<<");
-    MergeTokenPair(i, TokenType::GREATER_THAN_OPERATOR, TokenType::GREATER_THAN_OPERATOR, TokenType::BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
+    MergeTokenPair(i, Token::Type::LESSER_THAN_OPERATOR, Token::Type::LESSER_THAN_OPERATOR, Token::Type::BITWISE_LEFT_SHIFT_OPERATOR, "<<");
+    MergeTokenPair(i, Token::Type::GREATER_THAN_OPERATOR, Token::Type::GREATER_THAN_OPERATOR, Token::Type::BITWISE_RIGHT_SHIFT_OPERATOR, ">>");
 
     // logical operators
-    MergeTokenPair(i, TokenType::BITWISE_AND_OPERATOR, TokenType::BITWISE_AND_OPERATOR, TokenType::LOGICAL_AND_OPERATOR, "&&");
-    MergeTokenPair(i, TokenType::BITWISE_OR_OPERATOR, TokenType::BITWISE_OR_OPERATOR, TokenType::LOGICAL_OR_OPERATOR, "||");
+    MergeTokenPair(i, Token::Type::BITWISE_AND_OPERATOR, Token::Type::BITWISE_AND_OPERATOR, Token::Type::LOGICAL_AND_OPERATOR, "&&");
+    MergeTokenPair(i, Token::Type::BITWISE_OR_OPERATOR, Token::Type::BITWISE_OR_OPERATOR, Token::Type::LOGICAL_OR_OPERATOR, "||");
 
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
     InsertKeywordVar(i);
 
-  Token eof(file, line, cursor, TokenType::END_OF_FILE, "EOF");
+  Token eof(file, line, cursor, Token::Type::END_OF_FILE, "EOF");
   tokens.push_back(eof);
 
   //for (auto& token : tokens)
@@ -148,7 +148,7 @@ String Lexer::PeekCharacter()
 void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second, Token::Type result, StringConstRef result_value)
 {
   auto &current = tokens[index].type;
-  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : TokenType::INVALID;
+  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : Token::Type::INVALID;
 
   if (current == first && next == second)
   {
@@ -161,11 +161,11 @@ void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second,
 void Lexer::InsertKeywordVar(size_t &index)
 {
   auto& current = tokens[index].type;
-  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : TokenType::INVALID;
+  auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : Token::Type::INVALID;
 
-  if (current == TokenType::SYMBOL && next == TokenType::ASSIGNMENT_OPERATOR)
+  if (current == Token::Type::SYMBOL && next == Token::Type::ASSIGNMENT_OPERATOR)
   {
-    Token result(tokens[index].file, tokens[index].line, tokens[index].cursor, TokenType::KEYWORD_VAR, "var");
+    Token result(tokens[index].file, tokens[index].line, tokens[index].cursor, Token::Type::KEYWORD_VAR, "var");
     tokens.insert(tokens.begin() + index, result);
     index += 1;
   }
@@ -184,14 +184,14 @@ void Lexer::ParseComment(StringRef character)
     ParseBlockComment(peek_character);
   else
   {
-    Token result(file, line, cursor, TokenType::DIVISION_OPERATOR, character);
+    Token result(file, line, cursor, Token::Type::DIVISION_OPERATOR, character);
     tokens.push_back(result);
   }
 }
 
 void Lexer::ParseLineComment(StringRef character)
 {
-  Token semicolon(file, line, cursor, TokenType::SEMI_COLON_OPERATOR, ";");
+  Token semicolon(file, line, cursor, Token::Type::SEMI_COLON_OPERATOR, ";");
   tokens.push_back(semicolon);
   while (character[0] != 0x0A && index < buffer.size())
     character = NextCharacter();
@@ -234,7 +234,7 @@ void Lexer::ParseBlockComment(StringRef character)
 void Lexer::ParseNumber(StringRef character)
 {
   character = NextCharacter();
-  Token result(file, line, cursor, TokenType::INTEGER, character);
+  Token result(file, line, cursor, Token::Type::INTEGER, character);
 
   while (true)
   {
@@ -250,7 +250,7 @@ void Lexer::ParseNumber(StringRef character)
   }
 
   if (result.value.find(".") != std::string::npos)
-    result.type = TokenType::DOUBLE;
+    result.type = Token::Type::DOUBLE;
 
   tokens.push_back(result);
 }
@@ -273,7 +273,7 @@ bool Lexer::IsValidSymbol(StringRef character)
 
 void Lexer::ParseSymbol(StringRef character)
 {
-  Token result(file, line, cursor, TokenType::SYMBOL, "");
+  Token result(file, line, cursor, Token::Type::SYMBOL, "");
 
   while (true)
   {
@@ -288,33 +288,33 @@ void Lexer::ParseSymbol(StringRef character)
   }
 
   if (result.value == "true")
-    result.type = TokenType::KEYWORD_TRUE;
+    result.type = Token::Type::KEYWORD_TRUE;
   else if (result.value == "false")
-    result.type = TokenType::KEYWORD_FALSE;
+    result.type = Token::Type::KEYWORD_FALSE;
   else if (result.value == "if")
-    result.type = TokenType::KEYWORD_IF;
+    result.type = Token::Type::KEYWORD_IF;
   else if (result.value == "else")
-    result.type = TokenType::KEYWORD_ELSE;
+    result.type = Token::Type::KEYWORD_ELSE;
   else if (result.value == "while")
-    result.type = TokenType::KEYWORD_WHILE;
+    result.type = Token::Type::KEYWORD_WHILE;
   else if (result.value == "for")
-    result.type = TokenType::KEYWORD_FOR;
+    result.type = Token::Type::KEYWORD_FOR;
   else if (result.value == "function")
-    result.type = TokenType::KEYWORD_FUNCTION;
+    result.type = Token::Type::KEYWORD_FUNCTION;
   else if (result.value == "ƒ")
-    result.type = TokenType::KEYWORD_FUNCTION;
+    result.type = Token::Type::KEYWORD_FUNCTION;
   else if (result.value == "𝑓")
-    result.type = TokenType::KEYWORD_FUNCTION;
+    result.type = Token::Type::KEYWORD_FUNCTION;
   else if (result.value == "return")
-    result.type = TokenType::KEYWORD_RETURN;
+    result.type = Token::Type::KEYWORD_RETURN;
   else if (result.value == "in")
-    result.type = TokenType::KEYWORD_IN;
+    result.type = Token::Type::KEYWORD_IN;
   else if (result.value == "and")
-    result.type = TokenType::LOGICAL_AND_OPERATOR;
+    result.type = Token::Type::LOGICAL_AND_OPERATOR;
   else if (result.value == "or")
-    result.type = TokenType::LOGICAL_OR_OPERATOR;
+    result.type = Token::Type::LOGICAL_OR_OPERATOR;
   else if (result.value == "not")
-    result.type = TokenType::LOGICAL_NOT_OPERATOR;
+    result.type = Token::Type::LOGICAL_NOT_OPERATOR;
 
   tokens.push_back(result);
 }
@@ -343,7 +343,7 @@ void Lexer::ParseWhitespace(StringRef character)
 void Lexer::ParseCharacter(StringRef character)
 {
   character = NextCharacter();
-  Token result(file, line, cursor, TokenType::CHARACTER);
+  Token result(file, line, cursor, Token::Type::CHARACTER);
   while (true)
   {
     character = PeekCharacter();
@@ -404,7 +404,7 @@ void Lexer::ParseCharacter(StringRef character)
 void Lexer::ParseStringLiteral(StringRef character)
 {
   character = NextCharacter();
-  Token result(file, line, cursor, TokenType::STRING_LITERAL);
+  Token result(file, line, cursor, Token::Type::STRING_LITERAL);
   while (true)
   {
     character = PeekCharacter();
@@ -470,83 +470,83 @@ bool Lexer::IsValidPunctuation(StringRef character)
 void Lexer::ParsePunctuation(StringRef character)
 {
   character = NextCharacter();
-  Token result(file, line, cursor, TokenType::PUNCTUATION, character);
+  Token result(file, line, cursor, Token::Type::PUNCTUATION, character);
 
   // delimiters
   if (result.value == ".")
-    result.type = TokenType::DOT_OPERATOR;
+    result.type = Token::Type::DOT_OPERATOR;
   else if (result.value == ",")
-    result.type = TokenType::COMMA_OPERATOR;
+    result.type = Token::Type::COMMA_OPERATOR;
   else if (result.value == ":")
-    result.type = TokenType::COLON_OPERATOR;
+    result.type = Token::Type::COLON_OPERATOR;
   else if (result.value == ";")
-    result.type = TokenType::SEMI_COLON_OPERATOR;
+    result.type = Token::Type::SEMI_COLON_OPERATOR;
 
   // comparison operators
   else if (result.value == ">")
-    result.type = TokenType::GREATER_THAN_OPERATOR;
+    result.type = Token::Type::GREATER_THAN_OPERATOR;
   else if (result.value == "<")
-    result.type = TokenType::LESSER_THAN_OPERATOR;
+    result.type = Token::Type::LESSER_THAN_OPERATOR;
 
   // arithmetic operators
   else if (result.value == "+")
-    result.type = TokenType::ADDITION_OPERATOR;
+    result.type = Token::Type::ADDITION_OPERATOR;
   else if (result.value == "-")
-    result.type = TokenType::SUBTRACTION_OPERATOR;
+    result.type = Token::Type::SUBTRACTION_OPERATOR;
   else if (result.value == "*")
-    result.type = TokenType::MULTIPLICATION_OPERATOR;
+    result.type = Token::Type::MULTIPLICATION_OPERATOR;
   else if (result.value == "/")
-    result.type = TokenType::DIVISION_OPERATOR;
+    result.type = Token::Type::DIVISION_OPERATOR;
   else if (result.value == "%")
-    result.type = TokenType::MODULUS_OPERATOR;
+    result.type = Token::Type::MODULUS_OPERATOR;
 
   // assignment operators */
   else if (result.value == "=")
-    result.type = TokenType::ASSIGNMENT_OPERATOR;
+    result.type = Token::Type::ASSIGNMENT_OPERATOR;
 
   // brackets, braces and PARENTHESIS
   else if (result.value == "(")
-    result.type = TokenType::LEFT_PARENTHESIS;
+    result.type = Token::Type::LEFT_PARENTHESIS;
   else if (result.value == "{")
-    result.type = TokenType::LEFT_CURLY_BRACES;
+    result.type = Token::Type::LEFT_CURLY_BRACES;
   else if (result.value == "[")
-    result.type = TokenType::LEFT_SQUARE_BRACKETS;
+    result.type = Token::Type::LEFT_SQUARE_BRACKETS;
   else if (result.value == ")")
-    result.type = TokenType::RIGHT_PARENTHESIS;
+    result.type = Token::Type::RIGHT_PARENTHESIS;
   else if (result.value == "}")
-    result.type = TokenType::RIGHT_CURLY_BRACES;
+    result.type = Token::Type::RIGHT_CURLY_BRACES;
   else if (result.value == "]")
-    result.type = TokenType::RIGHT_SQUARE_BRACKETS;
+    result.type = Token::Type::RIGHT_SQUARE_BRACKETS;
 
   // bitwise operators
   else if (result.value == "&")
-    result.type = TokenType::BITWISE_AND_OPERATOR;
+    result.type = Token::Type::BITWISE_AND_OPERATOR;
   else if (result.value == "|")
-    result.type = TokenType::BITWISE_OR_OPERATOR;
+    result.type = Token::Type::BITWISE_OR_OPERATOR;
   else if (result.value == "^")
-    result.type = TokenType::BITWISE_XOR_OPERATOR;
+    result.type = Token::Type::BITWISE_XOR_OPERATOR;
   else if (result.value == "~")
-    result.type = TokenType::BITWISE_ONES_COMPLEMENT_OPERATOR;
+    result.type = Token::Type::BITWISE_ONES_COMPLEMENT_OPERATOR;
 
   // logical operators
   else if (result.value == "!")
-    result.type = TokenType::LOGICAL_NOT_OPERATOR;
+    result.type = Token::Type::LOGICAL_NOT_OPERATOR;
 
   // unicode operators
   else if (result.value == "＝")
-    result.type = TokenType::ASSIGNMENT_OPERATOR;
+    result.type = Token::Type::ASSIGNMENT_OPERATOR;
   else if (result.value == "≥")
-    result.type = TokenType::GREATER_THAN_OR_EQUAL_OPERATOR;
+    result.type = Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR;
   else if (result.value == "≤")
-    result.type = TokenType::LESSER_THAN_OR_EQUAL_OPERATOR;
+    result.type = Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR;
   else if (result.value == "≠")
-    result.type = TokenType::INEQUALITY_OPERATOR;
+    result.type = Token::Type::INEQUALITY_OPERATOR;
   else if (result.value == "⋅")
-    result.type = TokenType::MULTIPLICATION_OPERATOR;
+    result.type = Token::Type::MULTIPLICATION_OPERATOR;
   else if (result.value == "•")
-    result.type = TokenType::MULTIPLICATION_OPERATOR;
+    result.type = Token::Type::MULTIPLICATION_OPERATOR;
   else if (result.value == "×")
-    result.type = TokenType::MULTIPLICATION_OPERATOR;
+    result.type = Token::Type::MULTIPLICATION_OPERATOR;
 
   tokens.push_back(result);
 }

@@ -107,12 +107,12 @@ ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node, EnvironmentPtr environme
   PrefixExpressionNodePtr expression = std::dynamic_pointer_cast<PrefixExpressionNode>(node);
   ObjectPtr right = Eval(expression->right, environment);
   
-  TokenType prefix_operator = expression->prefix_operator;
+  Token::Type prefix_operator = expression->prefix_operator;
   switch (prefix_operator)
   {
-  case TokenType::LOGICAL_NOT_OPERATOR:
+  case Token::Type::LOGICAL_NOT_OPERATOR:
     return EvalBangOperator(right, environment);
-  case TokenType::SUBTRACTION_OPERATOR:
+  case Token::Type::SUBTRACTION_OPERATOR:
     return EvalUnaryMinusOperator(right, environment);
   default:
     return std::make_shared<NullObject>();
@@ -157,7 +157,7 @@ ObjectPtr Evaluator::EvalInfixExpression(NodePtr node, EnvironmentPtr environmen
   InfixExpressionNodePtr expression = std::dynamic_pointer_cast<InfixExpressionNode>(node);
   ObjectPtr left = Eval(expression->left, environment);
   ObjectPtr right = Eval(expression->right, environment);
-  TokenType infix_operator = expression->infix_operator;
+  Token::Type infix_operator = expression->infix_operator;
 
   if (left->type == ObjectType::INTEGER && right->type == ObjectType::INTEGER)
     return EvalIntegerInfixExpression(infix_operator, left, right, environment);
@@ -184,96 +184,96 @@ ObjectPtr Evaluator::EvalInfixExpression(NodePtr node, EnvironmentPtr environmen
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+ObjectPtr Evaluator::EvalIntegerInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   IntegerObjectPtr left_node = std::dynamic_pointer_cast<IntegerObject>(left);
   IntegerObjectPtr right_node = std::dynamic_pointer_cast<IntegerObject>(right);
   int left_value = left_node->value, right_value = right_node->value;
 
   // arithmetic operations
-  if (infix_operator == TokenType::ADDITION_OPERATOR)
+  if (infix_operator == Token::Type::ADDITION_OPERATOR)
     return std::make_shared<IntegerObject>(left_value + right_value);
-  else if (infix_operator == TokenType::SUBTRACTION_OPERATOR)
+  else if (infix_operator == Token::Type::SUBTRACTION_OPERATOR)
     return std::make_shared<IntegerObject>(left_value - right_value);
-  else if (infix_operator == TokenType::MULTIPLICATION_OPERATOR)
+  else if (infix_operator == Token::Type::MULTIPLICATION_OPERATOR)
     return std::make_shared<IntegerObject>(left_value * right_value);
-  else if (infix_operator == TokenType::DIVISION_OPERATOR)
+  else if (infix_operator == Token::Type::DIVISION_OPERATOR)
     return std::make_shared<IntegerObject>(left_value / right_value);
-  else if (infix_operator == TokenType::MODULUS_OPERATOR)
+  else if (infix_operator == Token::Type::MODULUS_OPERATOR)
     return std::make_shared<IntegerObject>(left_value % right_value);
 
   // logical operations
-  else if (infix_operator == TokenType::GREATER_THAN_OPERATOR)
+  else if (infix_operator == Token::Type::GREATER_THAN_OPERATOR)
     return std::make_shared<BooleanObject>(left_value > right_value);
-  else if (infix_operator == TokenType::GREATER_THAN_OR_EQUAL_OPERATOR)
+  else if (infix_operator == Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR)
     return std::make_shared<BooleanObject>(left_value >= right_value);
-  else if (infix_operator == TokenType::LESSER_THAN_OPERATOR)
+  else if (infix_operator == Token::Type::LESSER_THAN_OPERATOR)
     return std::make_shared<BooleanObject>(left_value < right_value);
-  else if (infix_operator == TokenType::LESSER_THAN_OR_EQUAL_OPERATOR)
+  else if (infix_operator == Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR)
     return std::make_shared<BooleanObject>(left_value <= right_value);
-  else if (infix_operator == TokenType::EQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::EQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value != right_value);
 
   else
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalDoubleInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+ObjectPtr Evaluator::EvalDoubleInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   DoubleObjectPtr left_node = std::dynamic_pointer_cast<DoubleObject>(left);
   DoubleObjectPtr right_node = std::dynamic_pointer_cast<DoubleObject>(right);
   double left_value = left_node->value, right_value = right_node->value;
 
   // arithmetic operations
-  if (infix_operator == TokenType::ADDITION_OPERATOR)
+  if (infix_operator == Token::Type::ADDITION_OPERATOR)
     return std::make_shared<DoubleObject>(left_value + right_value);
-  else if (infix_operator == TokenType::SUBTRACTION_OPERATOR)
+  else if (infix_operator == Token::Type::SUBTRACTION_OPERATOR)
     return std::make_shared<DoubleObject>(left_value - right_value);
-  else if (infix_operator == TokenType::MULTIPLICATION_OPERATOR)
+  else if (infix_operator == Token::Type::MULTIPLICATION_OPERATOR)
     return std::make_shared<DoubleObject>(left_value * right_value);
-  else if (infix_operator == TokenType::DIVISION_OPERATOR)
+  else if (infix_operator == Token::Type::DIVISION_OPERATOR)
     return std::make_shared<DoubleObject>(left_value / right_value);
-  else if (infix_operator == TokenType::MODULUS_OPERATOR)
+  else if (infix_operator == Token::Type::MODULUS_OPERATOR)
     return std::make_shared<DoubleObject>(fmod(left_value, right_value));
 
   // logical operations
-  else if (infix_operator == TokenType::GREATER_THAN_OPERATOR)
+  else if (infix_operator == Token::Type::GREATER_THAN_OPERATOR)
     return std::make_shared<BooleanObject>(left_value > right_value);
-  else if (infix_operator == TokenType::GREATER_THAN_OR_EQUAL_OPERATOR)
+  else if (infix_operator == Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR)
     return std::make_shared<BooleanObject>(left_value >= right_value);
-  else if (infix_operator == TokenType::LESSER_THAN_OPERATOR)
+  else if (infix_operator == Token::Type::LESSER_THAN_OPERATOR)
     return std::make_shared<BooleanObject>(left_value < right_value);
-  else if (infix_operator == TokenType::LESSER_THAN_OR_EQUAL_OPERATOR)
+  else if (infix_operator == Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR)
     return std::make_shared<BooleanObject>(left_value <= right_value);
-  else if (infix_operator == TokenType::EQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::EQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value != right_value);
 
   else
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+ObjectPtr Evaluator::EvalBooleanInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   BooleanObjectPtr left_node = std::dynamic_pointer_cast<BooleanObject>(left);
   BooleanObjectPtr right_node = std::dynamic_pointer_cast<BooleanObject>(right);
   bool left_value = left_node->value, right_value = right_node->value;
 
-  if (infix_operator == TokenType::EQUALITY_OPERATOR)
+  if (infix_operator == Token::Type::EQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  else if (infix_operator == TokenType::LOGICAL_AND_OPERATOR)
+  else if (infix_operator == Token::Type::LOGICAL_AND_OPERATOR)
   {
     if (left_value == false || right_value == false)
       return std::make_shared<BooleanObject>(false);
     else
       return std::make_shared<BooleanObject>(true);
   }
-  else if (infix_operator == TokenType::LOGICAL_OR_OPERATOR)
+  else if (infix_operator == Token::Type::LOGICAL_OR_OPERATOR)
   {
     if (left_value == true || right_value == true)
       return std::make_shared<BooleanObject>(true);
@@ -284,31 +284,31 @@ ObjectPtr Evaluator::EvalBooleanInfixExpression(TokenType infix_operator, Object
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalStringInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+ObjectPtr Evaluator::EvalStringInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   StringObjectPtr left_node = std::dynamic_pointer_cast<StringObject>(left);
   StringObjectPtr right_node = std::dynamic_pointer_cast<StringObject>(right);
   String left_value = left_node->Value(), right_value = right_node->Value();
 
-  if (infix_operator == TokenType::ADDITION_OPERATOR)
+  if (infix_operator == Token::Type::ADDITION_OPERATOR)
     return std::make_shared<StringObject>(left_value + right_value);
-  else if (infix_operator == TokenType::EQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::EQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  else if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+  else if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value != right_value);
   else
     return std::make_shared<NullObject>();
 }
 
-ObjectPtr Evaluator::EvalCharacterInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+ObjectPtr Evaluator::EvalCharacterInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
 {
   CharacterObjectPtr left_node = std::dynamic_pointer_cast<CharacterObject>(left);
   CharacterObjectPtr right_node = std::dynamic_pointer_cast<CharacterObject>(right);
   String left_value = left_node->Value(), right_value = right_node->Value();
 
-  if (infix_operator == TokenType::EQUALITY_OPERATOR)
+  if (infix_operator == Token::Type::EQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value == right_value);
-  if (infix_operator == TokenType::INEQUALITY_OPERATOR)
+  if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
     return std::make_shared<BooleanObject>(left_value != right_value);
   else
     return std::make_shared<NullObject>();

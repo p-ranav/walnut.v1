@@ -51,11 +51,11 @@ struct Evaluator
   ObjectPtr EvalUnaryMinusOperator(ObjectPtr right, EnvironmentPtr environment);
 
   ObjectPtr EvalInfixExpression(NodePtr node, EnvironmentPtr environment);
-  ObjectPtr EvalIntegerInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
-  ObjectPtr EvalDoubleInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
-  ObjectPtr EvalBooleanInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
-  ObjectPtr EvalStringInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
-  ObjectPtr EvalCharacterInfixExpression(TokenType infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalIntegerInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalDoubleInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalBooleanInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalStringInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalCharacterInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
 
   ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);

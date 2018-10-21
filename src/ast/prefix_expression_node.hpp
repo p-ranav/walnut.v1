@@ -4,10 +4,10 @@
 
 struct PrefixExpressionNode : Node
 {
-  TokenType prefix_operator;
+  Token::Type prefix_operator;
   NodePtr right;
 
-  explicit PrefixExpressionNode(TokenType prefix_operator) : 
+  explicit PrefixExpressionNode(Token::Type prefix_operator) : 
     Node(PREFIX_EXPRESSION), 
     prefix_operator(prefix_operator), 
     right(nullptr) {}
