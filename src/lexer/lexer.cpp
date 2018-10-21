@@ -389,6 +389,11 @@ void Lexer::ParseCharacter(StringRef character)
     NextCharacter();
     break;
   }
+
+  // TODO: check length of result and warn user if necessary
+  // x = 'ABC' will be recognized as a character
+  // when the user probably intends to declare a string
+
   tokens.push_back(result);
 }
 
