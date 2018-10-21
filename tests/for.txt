@@ -1,0 +1,31 @@
+for i in [1, 2, 3, 4, 5] { println(i) }
+
+for j in [[1, 2], [3, 4]] { println(j) }
+
+for i, j in [[1, 2], [3, 4]] { println(i, j) }
+
+list = []
+for i in [1, 2, 3] { list = list.append(i) }
+list.println()
+
+sum = 0
+for i in [1, 2, 3] { 
+  sum = sum + i 
+}
+println(sum)
+
+list = [1, 2, 3, 4, 5]
+input = list, output = []
+for i in input { 
+  output = output.append(i * 2) 
+}
+println(input, output)
+
+for i in "Hello" { println(i) }
+
+unicode_string = "Hello, 世界"
+for char in unicode_string { println(char) }
+
+for x in ["Hello", "World", unicode_string] { println(x) }
+
+for c in "".append("Hello").append("世界") { println(c) } 

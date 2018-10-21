@@ -1,0 +1,7 @@
+x = ["Hello", "World"]
+y = x.join(" ")
+println(x, y)
+// ["Hello", "World"] Hello World
+
+z = x.append(["!"]).println()
+println(x, z) // ["Hello", "World"] ["Hello", "World", ["!"]]

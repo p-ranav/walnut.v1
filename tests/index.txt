@@ -1,0 +1,8 @@
+x = [1, 2, 3, 4, 5]
+x[0] = -1
+println(x)
+
+y = [1, 2, 3, 4, 5]
+
+i = 0, while i < y.length() { y[i] = y[i] * -1, i = i + 1 }
+println(y)

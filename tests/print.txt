@@ -1,0 +1,27 @@
+print("Hello", "World\n") // HelloWorld
+
+println("Hello", "World") // Hello World
+
+
+
+ƒ(message) { println("LOG:", message) }(5)  // "LOG: 5"
+
+
+
+println("\"Hello\"")
+
+print("'Hi, my name is Pranav'\n")
+
+// Different ways to print log message:
+
+threadId = 15, logLevel = "INFO", message = "Thread Started..."
+print("[Thread ", threadId, "] ", "[", logLevel, "] ", message, "\n")
+
+threadId = 9, logLevel = "DEBUG", message = "Checking stability metric"
+println("[ Thread", threadId, "]", "[", logLevel, "]", message)
+
+threadId = 3, logLevel = "WARNING", message = "Calling exec with nullptr"
+"[Thread {0}] [{1}] {2}\n".printf(threadId, logLevel, message)
+
+threadId = 6, logLevel = "ERROR", message = "Segmentation Fault"
+["[Thread ", threadId, "] ", "[", logLevel, "] ", message].join().println()
