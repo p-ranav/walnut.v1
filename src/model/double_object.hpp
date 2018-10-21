@@ -8,7 +8,7 @@ struct DoubleObject : Object
 {
   double value;
   std::streamsize str_precision;
-  explicit DoubleObject(double value) : Object(DOUBLE), value(value), str_precision(2) {}
+  explicit DoubleObject(double value) : Object(DOUBLE, false, true), value(value), str_precision(2) {}
 
   ObjectPtr Copy() override
   {

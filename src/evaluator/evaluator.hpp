@@ -18,6 +18,7 @@
 #include <infix_expression_node.hpp>
 #include <array_literal_node.hpp>
 #include <index_expression_node.hpp>
+#include <hash_literal_node.hpp>
 
 #include <object.hpp>
 #include <integer_object.hpp>
@@ -31,6 +32,8 @@
 #include <builtin_function_object.hpp>
 #include <array_object.hpp>
 #include <range_object.hpp>
+#include <hash_key.hpp>
+#include <hash_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
@@ -81,6 +84,8 @@ struct Evaluator
   ObjectPtr EvalArrayLiteral(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIndexOperator(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index);
+
+  ObjectPtr EvalHashLiteral(NodePtr node, EnvironmentPtr environment);
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;

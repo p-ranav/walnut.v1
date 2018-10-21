@@ -5,7 +5,7 @@
 struct BooleanObject : Object
 {
   bool value;
-  explicit BooleanObject(bool value) : Object(BOOLEAN), value(value) {}
+  explicit BooleanObject(bool value) : Object(BOOLEAN, false, true), value(value) {}
 
   ObjectPtr Copy() override
   {

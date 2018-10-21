@@ -22,13 +22,16 @@ struct Object
     FUNCTION,
     BUILTIN_FUNCTION,
     ARRAY,
-    RANGE
+    RANGE,
+    HASH
   };
 
   Type type;
   bool iterable;
-  Object() : type(NULL_), iterable(false) {}
-  explicit Object(Type type, bool iterable = false) : type(type), iterable(iterable) {}
+  bool hashable;
+  Object() : type(NULL_), iterable(false), hashable(false) {}
+  explicit Object(Type type, bool iterable = false, bool hashable = false) : 
+    type(type), iterable(iterable), hashable(hashable) {}
   virtual ~Object() {}
   virtual String Inspect() { return ""; }
 

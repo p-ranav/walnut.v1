@@ -12,7 +12,7 @@ struct StringObject : Object
   typedef std::vector<ObjectPtr>::iterator ObjectIterator;
   ObjectIterator iterator;
 
-  explicit StringObject(StringConstRef value) : Object(STRING, true)
+  explicit StringObject(StringConstRef value) : Object(STRING, true, true)
   {
     String value_string = value;
     size_t index = 0;

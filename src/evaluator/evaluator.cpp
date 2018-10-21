@@ -67,6 +67,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalArrayLiteral(node, environment);
   case NodeType::INDEX_EXPRESSION:
     return EvalIndexOperator(node, environment);
+  case NodeType::HASH_LITERAL:
+    return EvalHashLiteral(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
@@ -692,4 +694,25 @@ ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
     return std::make_shared<NullObject>();
   }
   return elements[index_value];
+}
+
+ObjectPtr Evaluator::EvalHashLiteral(NodePtr node, EnvironmentPtr environment)
+{
+  HashObjectPtr result = std::make_shared<HashObject>();
+  HashLiteralNodePtr hash_literal_node = std::dynamic_pointer_cast<HashLiteralNode>(node);
+
+  for (auto& pair : hash_literal_node->pairs)
+  {
+    ObjectPtr key = Eval(pair.first, environment);
+    if (!key->hashable)
+    {
+      std::cout << "evaluator error: key " << key->Inspect() << " is not hashable" << std::endl;
+      return nullptr;
+    }
+    ObjectPtr value = Eval(pair.second, environment);
+    HashKey hash_key = Hash(key);
+    result->Set(hash_key, HashPair(key, value));
+  }
+
+  return result;
 }

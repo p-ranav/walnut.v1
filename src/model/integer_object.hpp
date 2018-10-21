@@ -5,7 +5,7 @@
 struct IntegerObject : Object
 {
   int value;
-  explicit IntegerObject(int value) : Object(INTEGER), value(value) {}
+  explicit IntegerObject(int value) : Object(INTEGER, false, true), value(value) {}
 
   ObjectPtr Copy() override
   {
