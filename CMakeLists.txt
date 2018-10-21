@@ -66,3 +66,18 @@ TARGET_LINK_LIBRARIES(CARBON UTF8 LEXER PARSER EVALUATOR)
 # Set ${PROJECT_NAME} as the startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CARBON)
 set_property(TARGET CARBON PROPERTY CXX_STANDARD 11)
+
+# Tests
+file(GLOB TESTS_SOURCES 
+    "tests/*.cpp" 
+    "tests/*.hpp"
+)
+INCLUDE_DIRECTORIES("tests")
+ADD_EXECUTABLE(TESTS ${TESTS_SOURCES})
+set_target_properties(TESTS PROPERTIES OUTPUT_NAME tests) # tests.exe
+TARGET_LINK_LIBRARIES(TESTS UTF8 LEXER PARSER EVALUATOR)
+
+# make check - runs unit tests
+if (UNIX)
+add_custom_target(check COMMAND ./tests)
+endif(UNIX)
