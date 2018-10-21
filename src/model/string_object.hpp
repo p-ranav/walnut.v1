@@ -1,6 +1,7 @@
 #pragma once
 #include <object.hpp>
 #include <character_object.hpp>
+#include <null_object.hpp>
 #include <utf8.hpp>
 #include <memory>
 
@@ -49,9 +50,9 @@ struct StringObject : Object
     return buffer.size();
   }
 
-  ObjectIterator IterableBegin() override
+  void IterableInit() override
   {
-    return iterator;
+    iterator = buffer.begin();
   }
 
   ObjectIterator IterableNext() override
@@ -66,7 +67,7 @@ struct StringObject : Object
     if (iterator != buffer.end())
       return *(iterator);
     else
-      return nullptr;
+      return std::make_shared<NullObject>();
   }
 
   std::vector<ObjectPtr>::iterator IterableEnd() override

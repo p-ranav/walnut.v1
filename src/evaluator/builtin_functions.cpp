@@ -159,6 +159,7 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       }
 
       FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      arguments[0]->IterableInit();
       do
       {
         result->IterableAppend(ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() }));
@@ -190,6 +191,7 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
       }
 
       FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      arguments[0]->IterableInit();
       do
       {
         ObjectPtr filter_result = ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() });

@@ -72,7 +72,10 @@ void Parser::ParseProgram()
   {
     NodePtr statement = ParseStatement();
     if (statement != nullptr)
+    {
       statements.push_back(statement);
+      //std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+    }
     NextToken();
   }
 }
@@ -118,7 +121,7 @@ bool Parser::ExpectPeek(TokenType value)
     if (current_token.file != "")
       message = "parser error: unexpected token \"" + current_token.value + "\" at "
       + current_token.file + ", line " + std::to_string(current_token.line) + " char "
-      + std::to_string(current_token.cursor);
+      + std::to_string(current_token.cursor) + ", expected \"" + TokenString(value) + "\"";
     else
       message = "parser error: unexpected token \"" + current_token.value + "\"";
     std::cout << message << std::endl;
@@ -511,23 +514,21 @@ std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
   }
   NextToken();
 
-  elements.push_back(ParseExpression(LOWEST));
-
-  if (IsCurrentToken(end))
-  {
-    NextToken();
-    return elements;
-  }
+  elements.push_back(ParseExpression(LOWEST, {TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS}));
 
   while (IsPeekToken(TokenType::COMMA_OPERATOR))
   {
     NextToken();
     NextToken();
-    elements.push_back(ParseExpression(LOWEST, { TokenType::COMMA_OPERATOR }));
+    elements.push_back(ParseExpression(LOWEST));
   }
 
   if (IsCurrentToken(end))
-    NextToken();
+    return elements;
+
+  if (!ExpectPeek(end))
+    return {};
+
   return elements;
 }
 

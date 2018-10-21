@@ -119,6 +119,9 @@ void Lexer::Tokenize()
 
   Token eof(file, line, cursor, TokenType::END_OF_FILE, "EOF");
   tokens.push_back(eof);
+
+  //for (auto& token : tokens)
+  //  std::cout << "[LEXER] " << token.value << std::endl;
 }
 
 String Lexer::NextCharacter(Bool update_index)

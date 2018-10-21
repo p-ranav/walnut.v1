@@ -383,6 +383,8 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
     ObjectPtr consequence_result = Eval(consequence, while_environment);
     if (consequence_result->type == ObjectType::RETURN)
       return consequence_result;
+    else
+      result = consequence_result;
   }
   
   std::vector<EnvironmentPtr> environments = { environment };
@@ -420,8 +422,7 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
 
   if (expression_object->iterable == true)
   {
-    ObjectPtr identifier_value = expression_object->IterableCurrentValue();
-
+    expression_object->IterableInit();
     do
     {
       // Set value of each parameter in for expression
@@ -444,6 +445,7 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
         }
         else
         {
+          current_value->IterableInit();
           // Example: for x, y in [[1, 2], [3, 4]]
           // current_value = [1, 2]
           // [1, 2] is iterable

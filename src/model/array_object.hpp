@@ -1,5 +1,6 @@
 #pragma once
 #include <object.hpp>
+#include <null_object.hpp>
 #include <memory>
 #include <vector>
 
@@ -25,9 +26,9 @@ struct ArrayObject : Object
     return result;
   }
 
-  ObjectIterator IterableBegin() override
+  void IterableInit() override
   {
-    return iterator;
+    iterator = elements.begin();
   }
 
   ObjectIterator IterableNext() override
@@ -42,7 +43,7 @@ struct ArrayObject : Object
     if (iterator != elements.end())
       return *(iterator);
     else
-      return nullptr;
+      return std::make_shared<NullObject>();
   }
 
   std::vector<ObjectPtr>::iterator IterableEnd() override

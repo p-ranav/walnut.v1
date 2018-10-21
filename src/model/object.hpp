@@ -34,7 +34,7 @@ struct Object
   typedef std::shared_ptr<Object> ObjectPtr;
 
   virtual ObjectPtr Copy() { return std::make_shared<Object>(); }
-  virtual std::vector<ObjectPtr>::iterator IterableBegin() { return std::vector<ObjectPtr>::iterator(); }
+  virtual void IterableInit() { }
   virtual std::vector<ObjectPtr>::iterator IterableNext() { return std::vector<ObjectPtr>::iterator(); }
   virtual std::vector<ObjectPtr>::iterator IterableEnd() { return std::vector<ObjectPtr>::iterator(); }
   virtual ObjectPtr IterableCurrentValue() { return nullptr; }
