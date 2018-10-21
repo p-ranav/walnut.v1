@@ -513,18 +513,21 @@ std::vector<NodePtr> Parser::ParseExpressionList(TokenType end)
 
   elements.push_back(ParseExpression(LOWEST));
 
+  if (IsCurrentToken(end))
+  {
+    NextToken();
+    return elements;
+  }
+
   while (IsPeekToken(TokenType::COMMA_OPERATOR))
   {
     NextToken();
     NextToken();
-    elements.push_back(ParseExpression(LOWEST));
+    elements.push_back(ParseExpression(LOWEST, { TokenType::COMMA_OPERATOR }));
   }
 
-  if (!ExpectPeek(end))
-  {
-    return {};
-  }
-
+  if (IsCurrentToken(end))
+    NextToken();
   return elements;
 }
 

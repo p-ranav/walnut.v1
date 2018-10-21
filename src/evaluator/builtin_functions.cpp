@@ -144,7 +144,6 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
   {
     if (arguments[0]->iterable == true && arguments[1]->type == ObjectType::FUNCTION)
     {
-      // TODO: implement way to push values to iterable
       ObjectPtr result;
       switch (arguments[0]->type)
       {
@@ -174,21 +173,35 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 2)
   {
-    if (arguments[0]->type == ObjectType::ARRAY && arguments[1]->type == ObjectType::FUNCTION)
+    if (arguments[0]->iterable == true && arguments[1]->type == ObjectType::FUNCTION)
     {
-      ArrayObjectPtr result = std::make_shared<ArrayObject>();
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
-      for (auto& element : array_object->elements)
+      ObjectPtr result;
+      switch (arguments[0]->type)
       {
-        ObjectPtr filter_result = ApplyFunction(map_function, { element });
+      case ObjectType::ARRAY:
+        result = std::make_shared<ArrayObject>();
+        break;
+      case ObjectType::STRING:
+        result = std::make_shared<StringObject>("");
+        break;
+      default:
+        result = std::make_shared<NullObject>();
+        break;
+      }
+
+      FunctionObjectPtr map_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
+      do
+      {
+        ObjectPtr filter_result = ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() });
         if (filter_result->type == ObjectType::BOOLEAN)
         {
           BooleanObjectPtr filter_boolean_result = std::dynamic_pointer_cast<BooleanObject>(filter_result);
           if (filter_boolean_result->value)
-            result->elements.push_back(element);
+            result->IterableAppend(arguments[0]->IterableCurrentValue());
         }
-      }
+        
+      } while (arguments[0]->IterableNext() != arguments[0]->IterableEnd());
+
       return result;
     }
   }
