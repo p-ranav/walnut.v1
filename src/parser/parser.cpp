@@ -74,7 +74,7 @@ void Parser::ParseProgram()
     if (statement != nullptr)
     {
       statements.push_back(statement);
-      //std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+      // std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
     }
     NextToken();
   }
@@ -178,9 +178,6 @@ NodePtr Parser::ParseReturnStatement()
 
   result->expression = ParseExpression(LOWEST);
 
-  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
-    NextToken();
-
   return result;
 }
 
@@ -230,7 +227,7 @@ NodePtr Parser::ParseExpressionStatement()
     result = statement;
   }
 
-  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR))
+  if (IsPeekToken(TokenType::SEMI_COLON_OPERATOR) || IsPeekToken(TokenType::END_OF_FILE))
     NextToken();
 
   return result;
@@ -324,10 +321,8 @@ BlockStatementNodePtr Parser::ParseBlockStatement()
   while (!IsCurrentToken(TokenType::RIGHT_CURLY_BRACES) && !IsCurrentToken(TokenType::END_OF_FILE))
   {
     NodePtr statement = ParseStatement();
-    
     if (statement != nullptr)
       result->statements.push_back(statement);
-
     NextToken();
   }
   return result;
@@ -456,9 +451,6 @@ NodePtr Parser::ParseFunctionLiteral()
 
   result->body = ParseBlockStatement();
 
-  while (IsCurrentToken(TokenType::RIGHT_CURLY_BRACES))
-    NextToken();
-
   return result;
 }
 
@@ -475,7 +467,8 @@ NodePtr Parser::ParseInfixExpression(NodePtr left) {
   result->left = left;
   Precedence precedence = CurrentPrecedence();
   NextToken();
-  result->right = ParseExpression(precedence, {TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS});
+  result->right = ParseExpression(precedence, 
+    { TokenType::SEMI_COLON_OPERATOR, TokenType::END_OF_FILE, TokenType::RIGHT_PARENTHESIS });
   return result;
 }
 
@@ -525,7 +518,8 @@ NodePtr Parser::ParseIndexExpression(NodePtr left)
 NodePtr Parser::ParseDotOperator(NodePtr left)
 {
   NextToken();
-  NodePtr right = ParseExpression(LOWEST, { TokenType::RIGHT_PARENTHESIS });
+  NodePtr right = ParseExpression(SUM, {
+    TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS, TokenType::DOT_OPERATOR });
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);

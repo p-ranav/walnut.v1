@@ -3,6 +3,7 @@ log = println
 log("Hello")
 
 push = append
+[].push(1).println()
 [].push(1).extend([2, 3]).println()
 
 add = function(a, b) { a + b }

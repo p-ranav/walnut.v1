@@ -1,9 +1,9 @@
 bubble_sort = function(list)
 {
   i = 0, j = 0
-  while i < (list.length() - 1) 
+  while i < (list.length() - 1)
   {
-    while j < (list.length() - i - 1) 
+    while j < (list.length() - i - 1)
     {
       if (list[j] > list[j + 1])
       {
