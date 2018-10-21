@@ -21,7 +21,8 @@ struct Object
     RETURN,
     FUNCTION,
     BUILTIN_FUNCTION,
-    ARRAY
+    ARRAY,
+    RANGE
   };
 
   Type type;

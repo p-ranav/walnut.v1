@@ -420,6 +420,9 @@ NodePtr Parser::ParseForExpression()
   NextToken();
   result->iterable = ParseExpression(LOWEST, { TokenType::LEFT_CURLY_BRACES });
 
+  while (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
+    NextToken();
+
   if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
   {
     return nullptr;

@@ -30,6 +30,7 @@
 #include <function_object.hpp>
 #include <builtin_function_object.hpp>
 #include <array_object.hpp>
+#include <range_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
@@ -89,6 +90,7 @@ struct Evaluator
 
   ObjectPtr append(std::vector<ObjectPtr> arguments);
   ObjectPtr extend(std::vector<ObjectPtr> arguments);
+  ObjectPtr range(std::vector<ObjectPtr> arguments);
   ObjectPtr map(std::vector<ObjectPtr> arguments);
   ObjectPtr filter(std::vector<ObjectPtr> arguments);
 };
