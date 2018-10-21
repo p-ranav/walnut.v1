@@ -177,6 +177,7 @@ void Lexer::ParseComment(StringRef character)
   String peek_character = PeekCharacter();
   if (peek_character[0] == '/')
   {
+    NextCharacter();
     ParseLineComment(peek_character);
   }
   else if (peek_character[0] == '*')

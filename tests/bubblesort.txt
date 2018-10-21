@@ -5,7 +5,7 @@ bubble_sort = function(list)
   {
     while j < (list.length() - i - 1) 
     {
-      if list[j] > list[j + 1]
+      if (list[j] > list[j + 1])
       {
         temp = list[j]
         list[j] = list[(j + 1)]

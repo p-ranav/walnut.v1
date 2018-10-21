@@ -118,12 +118,12 @@ bool Parser::ExpectPeek(TokenType value)
   }
   else {
     String message;
-    if (current_token.file != "")
-      message = "parser error: unexpected token \"" + current_token.value + "\" at "
-      + current_token.file + ", line " + std::to_string(current_token.line) + " char "
-      + std::to_string(current_token.cursor) + ", expected \"" + TokenString(value) + "\"";
+    if (peek_token.file != "")
+      message = "parser error: unexpected token \"" + peek_token.value + "\" at "
+      + peek_token.file + ", line " + std::to_string(peek_token.line) + " char "
+      + std::to_string(peek_token.cursor) + ", expected \"" + TokenString(value) + "\"";
     else
-      message = "parser error: unexpected token \"" + current_token.value + "\"";
+      message = "parser error: unexpected token \"" + peek_token.value + "\"";
     std::cout << message << std::endl;
     return false;
   }
@@ -252,14 +252,8 @@ NodePtr Parser::ParseExpression(Precedence precedence, std::vector<TokenType> en
     if (infix == nullptr)
       return left_expression;
 
-    if (IsCurrentTokenInList(end))
-      break;
-
     NextToken();
     left_expression = infix(left_expression);
-
-    if (IsCurrentTokenInList(end))
-      break;
   }
 
   return left_expression;
@@ -316,9 +310,9 @@ NodePtr Parser::ParsePrefixExpression()
 NodePtr Parser::ParseGroupedExpression()
 {
   NextToken();
-  NodePtr result = ParseExpression(LOWEST);
-  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
-    return nullptr;
+  NodePtr result = ParseExpression(LOWEST, { TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS });
+  //if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
+  //  return nullptr;
   return result;
 }
 
@@ -343,28 +337,47 @@ NodePtr Parser::ParseIfExpression()
 {
   IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
 
-  if (IsPeekToken(TokenType::LEFT_PARENTHESIS))
-    NextToken();
-
-  NextToken();
-
-  result->condition = ParseExpression(LOWEST);
-
-  if (IsPeekToken(TokenType::RIGHT_PARENTHESIS))
-    NextToken();
-
-  if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+  if (!ExpectPeek(TokenType::LEFT_PARENTHESIS))
     return nullptr;
 
-  result->consequence = ParseBlockStatement();
+  result->condition = ParseExpression(LOWEST, { TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS });
+
+  if (!ExpectPeek(TokenType::RIGHT_PARENTHESIS))
+    return nullptr;
+
+  NextToken(); // now current token is start of if consequence
+
+  if (IsPeekToken(TokenType::LEFT_CURLY_BRACES))
+  {
+    if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+      return nullptr;
+
+    result->consequence = ParseBlockStatement();
+  }
+  else
+  {
+    result->consequence = std::make_shared<BlockStatementNode>();
+    result->consequence->statements.push_back(
+      ParseExpression(LOWEST, { TokenType::SEMI_COLON_OPERATOR, TokenType::KEYWORD_ELSE }));
+  }
 
   if (IsPeekToken(TokenType::KEYWORD_ELSE))
   {
     NextToken();
-    if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
-      return nullptr;
+    NextToken();
+    if (IsPeekToken(TokenType::LEFT_CURLY_BRACES))
+    {
+      if (!ExpectPeek(TokenType::LEFT_CURLY_BRACES))
+        return nullptr;
 
-    result->alternative = ParseBlockStatement();
+      result->alternative = ParseBlockStatement();
+    }
+    else
+    {
+      result->alternative = std::make_shared<BlockStatementNode>();
+      result->alternative->statements.push_back(
+        ParseExpression(LOWEST, { TokenType::SEMI_COLON_OPERATOR }));
+    }
   }
 
   return result;
@@ -495,7 +508,7 @@ NodePtr Parser::ParseInfixExpression(NodePtr left) {
   result->left = left;
   Precedence precedence = CurrentPrecedence();
   NextToken();
-  result->right = ParseExpression(precedence);
+  result->right = ParseExpression(precedence, {TokenType::SEMI_COLON_OPERATOR, TokenType::RIGHT_PARENTHESIS});
   return result;
 }
 
