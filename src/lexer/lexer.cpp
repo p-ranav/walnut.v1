@@ -185,6 +185,7 @@ void Lexer::ParseComment(StringRef character)
   else
   {
     Token result(file, line, cursor, Token::Type::DIVISION_OPERATOR, character);
+    cursor += 1;
     tokens.push_back(result);
   }
 }
