@@ -67,6 +67,10 @@ int main(int argc, char *argv[])
     {
       std::cout << "error: failed to open " << filename << std::endl;
     }
+    if (buffer == "")
+    {
+      std::cout << filename << " is not a valid program" << std::endl;
+    }
     InterpretBuffer(READ_FROM_FILE, filename, buffer, environment);
     file_stream.close();
   }
