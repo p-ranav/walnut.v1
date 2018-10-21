@@ -86,6 +86,7 @@ struct Evaluator
   ObjectPtr EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index);
 
   ObjectPtr EvalHashLiteral(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index);
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;

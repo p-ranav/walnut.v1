@@ -665,6 +665,10 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
   {
     return EvalArrayIndexExpression(left, index);
   }
+  if (left->type == ObjectType::HASH)
+  {
+    return EvalHashIndexExpression(left, index);
+  }
   else
   {
     std::cout << "error: index operator not supported " << std::endl;
@@ -715,4 +719,26 @@ ObjectPtr Evaluator::EvalHashLiteral(NodePtr node, EnvironmentPtr environment)
   }
 
   return result;
+}
+
+ObjectPtr Evaluator::EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index)
+{
+  HashObjectPtr object = std::dynamic_pointer_cast<HashObject>(hash);
+  if (!index->hashable)
+  {
+    std::cout << "evaluator error: key " << index->Inspect() << " is not hashable" << std::endl;
+    return nullptr;
+  }
+
+  HashKey hash_key = Hash(index);
+
+  if (object->pairs.find(hash_key) != object->pairs.end())
+  {
+    HashPair hash_pair = object->pairs[Hash(index)];
+    return hash_pair.value;
+  }
+  else
+  {
+    return std::make_shared<NullObject>();
+  }
 }

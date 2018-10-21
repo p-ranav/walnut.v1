@@ -1,2 +1,15 @@
 x = {"a": 5, "b": 3.14, "c": "Hello", "d": false}
 x.println()
+
+x["a"].println()
+x["b"].println()
+x["c"].println()
+x["d"].println()
+
+y = {"value": x}
+y["value"]["a"].println()
+
+z = {"value" : {"a": 5, "pi": 3.14, "c": "Hello", "d": false} }
+
+pi = "pi"
+z["value"][pi].println()
