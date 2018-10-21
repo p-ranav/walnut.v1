@@ -273,6 +273,7 @@ bool Lexer::IsValidSymbol(StringRef character)
 
 void Lexer::ParseSymbol(StringRef character)
 {
+  cursor += 1;
   Token result(file, line, cursor, Token::Type::SYMBOL, "");
 
   while (true)
@@ -471,6 +472,7 @@ void Lexer::ParsePunctuation(StringRef character)
 {
   character = NextCharacter();
   Token result(file, line, cursor, Token::Type::PUNCTUATION, character);
+  cursor += 1;
 
   // delimiters
   if (result.value == ".")
