@@ -9,7 +9,7 @@ z = {
   { 
     "pi": 3.14, 
     "c": "Hello, 世界", 
-    "func": function(a, b) { a * b }  
+    "func": function(a, b) { a * b }
   } 
 };
 

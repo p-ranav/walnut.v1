@@ -457,12 +457,6 @@ NodePtr Parser::ParseFunctionLiteral()
 
   result->body = ParseBlockStatement();
 
-  if (!IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
-  {
-    ReportError(Token::Type::SEMI_COLON_OPERATOR);
-    return nullptr;
-  }
-
   return result;
 }
 
