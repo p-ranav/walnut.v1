@@ -17,6 +17,7 @@
 #include <function_literal_node.hpp>
 #include <array_literal_node.hpp>
 #include <index_expression_node.hpp>
+#include <hash_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 
@@ -99,6 +100,8 @@ struct Parser
 
   NodePtr ParseArrayLiteral();
   std::vector<NodePtr> ParseExpressionList(Token::Type end);
+
+  NodePtr ParseHashLiteral();
 
   /* Infix parse functions */
   NodePtr ParseInfixExpression(NodePtr left);

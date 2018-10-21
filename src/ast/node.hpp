@@ -29,6 +29,7 @@ struct Node
     CALL_EXPRESSION,
     ARRAY_LITERAL,
     INDEX_EXPRESSION,
+    HASH_LITERAL,
     INVALID
   };
 

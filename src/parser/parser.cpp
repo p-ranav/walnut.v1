@@ -41,7 +41,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterPrefixParseFunction(Token::Type::KEYWORD_FOR, std::bind(&Parser::ParseForExpression, this));
   RegisterPrefixParseFunction(Token::Type::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
   RegisterPrefixParseFunction(Token::Type::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
-  RegisterPrefixParseFunction(Token::Type::LEFT_CURLY_BRACES, std::bind(&Parser::ParseBlockStatement, this));
+  RegisterPrefixParseFunction(Token::Type::LEFT_CURLY_BRACES, std::bind(&Parser::ParseHashLiteral, this));
   RegisterPrefixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseArrayLiteral, this));
 
   // infix parse functions
@@ -524,4 +524,35 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
   return call_expression;
+}
+
+NodePtr Parser::ParseHashLiteral()
+{
+  HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
+
+  while (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES))
+  {
+    NextToken();
+    NodePtr key = ParseExpression(LOWEST);
+
+    if (!ExpectPeek(Token::Type::COLON_OPERATOR))
+      return nullptr;
+
+    NextToken();
+    NodePtr value = ParseExpression(LOWEST);
+
+    if (result->pairs.find(key) != result->pairs.end())
+    {
+      result->pairs[key] = value;
+      // TODO: report warning/error?
+    }
+    else
+      result->pairs.insert(std::make_pair(key, value));
+
+    if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR)) 
+    { 
+      return nullptr;
+    }
+  }
+  return result;
 }
