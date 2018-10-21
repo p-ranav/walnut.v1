@@ -1,9 +1,19 @@
-if (true and (true or false)) { println("inside if block") } else { println("inside else block") }
+if (true and (true or false)) { 
+  println("inside if block") 
+} else { 
+  println("inside else block") 
+}
 
-if (false and (true or false)) { println("inside if block") } else { println("inside else block") }
+if (false and (true or false)) { 
+  println("inside if block") 
+} else { 
+  println("inside else block") 
+}
 
-v = 5
-if (v < 10) println("v is too small") else println("v is fine")
+if true {
+  (true).println()
+}
 
-v = 15
-if (v < 10) println("v < 10") else println("v > 10")
+if false {} else {
+  (false).println()
+}
