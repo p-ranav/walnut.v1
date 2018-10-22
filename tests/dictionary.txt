@@ -1,18 +1,28 @@
+/*
+
 x = {"a": 5, "b": 3.14, "c": "Hello", "d": false};
 x.println();
+
+for k, v in x {
+  println(k, ":", v)
+}
 
 y = {"value": x};
 y["value"]["a"].println(); // 5
 
+*/
+
 z = {
+  "test": 5,
   "value" : 
   { 
     "pi": 3.14, 
     "c": "Hello, 世界", 
     "func": function(a, b) { a * b }
-  } 
+  },
+  "test2" : 15
 };
-
+/*
 pi = "pi";
 z["value"][pi].println(); // 3.14
 
@@ -33,3 +43,57 @@ for pair in z["value"] {
 // [func, function(a, b) { a * b; }]
 // [c, Hello, 世界]
 // [pi, 3.14]
+
+z.println()
+*/
+
+z.println()
+
+thisdict =	{
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+};
+println(thisdict);
+
+animals = [
+    {
+        "animal" : {
+            "type" : "bunny"
+        }
+    },
+    {
+        "animal" : {}
+    },
+    {}
+];
+
+for item in animals { println(item); }
+
+Menu = {
+  "PLU" : 234,
+  "Salad": {
+    "salad": {
+        "ceaser":{
+            "PLU": 32
+        },
+        "italian":{
+            "PLU": 33
+        }
+    }
+  },
+  "Dessert": {
+    "cookie": {
+      "PLU": 334,
+      "NAME": "cookie ",
+    }
+  },
+  "Appetizer": {
+    "extra sauce": {
+      "PLU": 61,
+      "NAME": "extra sauce",
+    }
+  }
+};
+
+Menu.println();

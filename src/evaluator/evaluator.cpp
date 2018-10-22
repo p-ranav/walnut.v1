@@ -579,6 +579,15 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       }
       return array_object;
     }
+
+    else if (identifier_object != nullptr && identifier_object->type == ObjectType::ARRAY && index_object->type == ObjectType::INTEGER)
+    {
+      HashObjectPtr hash_object = std::dynamic_pointer_cast<HashObject>(identifier_object);
+      HashPair& pair = hash_object->pairs[Hash(index_object)];
+      pair.value = Eval(statement->expression, environment);
+      return hash_object;
+    }
+
   }
 
   return std::make_shared<NullObject>();

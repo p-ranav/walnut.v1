@@ -535,10 +535,10 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
 NodePtr Parser::ParseHashLiteral()
 {
   HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
+  NextToken();
 
-  while (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES))
+  while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
   {
-    NextToken();
     NodePtr key = ParseExpression(LOWEST);
 
     if (!ExpectPeek(Token::Type::COLON_OPERATOR))
@@ -548,17 +548,15 @@ NodePtr Parser::ParseHashLiteral()
     NodePtr value = ParseExpression(LOWEST);
 
     if (result->pairs.find(key) != result->pairs.end())
-    {
       result->pairs[key] = value;
-      // TODO: report warning/error?
-    }
     else
-      result->pairs.insert(std::make_pair(key, value));
+      result->pairs.insert(std::make_pair(key, value)); // TODO: report warning/error?
 
     if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR)) 
     { 
       return nullptr;
     }
+    NextToken();
   }
   return result;
 }
