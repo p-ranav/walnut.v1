@@ -33,7 +33,6 @@ struct RangeObject : Object
       elements.push_back(std::make_shared<IntegerObject>(static_cast<int>(start)));
     else
       elements.push_back(std::make_shared<DoubleObject>(start));
-
   }
 
   ObjectIterator IterableNext() override

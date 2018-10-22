@@ -1,6 +1,8 @@
 #pragma once
 #include <object.hpp>
 #include <hash_key.hpp>
+#include <array_object.hpp>
+#include <vector>
 #include <memory>
 #include <map>
 
@@ -18,15 +20,100 @@ struct HashObject : Object
   explicit HashObject() : Object(HASH, true), pairs({}) {}
   typedef std::shared_ptr<HashObject> HashObjectPtr;
 
+  size_t current_index;
+  std::vector<ObjectPtr> elements;
+  typedef std::vector<ObjectPtr>::iterator ObjectIterator;
+  ObjectIterator iterator;
+
   ObjectPtr Copy() override
   {
     HashObjectPtr result = std::make_shared<HashObject>();
     for (auto& pair : pairs)
     {
       HashPair copy(pair.second.key->Copy(), pair.second.value->Copy());
-      pairs.insert(std::make_pair(pair.first, copy));
+      result->pairs.insert(std::make_pair(pair.first, copy));
     }
     return result;
+  }
+
+  void IterableInit() override
+  {
+    current_index = 0;
+
+    if (elements.size() > 0)
+      elements.clear();
+
+    for (auto& pair : pairs)
+    {
+      std::shared_ptr<ArrayObject> pair_as_array = std::make_shared<ArrayObject>();
+      pair_as_array->IterableAppend(pair.second.key);
+      pair_as_array->IterableAppend(pair.second.value);
+      elements.push_back(pair_as_array);
+      break;
+    }
+  }
+
+  ObjectIterator IterableNext() override
+  {
+    current_index += 1;
+
+    if (current_index == pairs.size()) {
+      return elements.end();
+    }
+
+    if (elements.size() == 0)
+    {
+      size_t index = 0;
+      for (auto& pair : pairs)
+      {
+        if (index == current_index)
+        {
+          std::shared_ptr<ArrayObject> pair_as_array = std::make_shared<ArrayObject>();
+          pair_as_array->IterableAppend(pair.second.key);
+          pair_as_array->IterableAppend(pair.second.value);
+          elements.push_back(pair_as_array);
+          break;
+        }
+        index += 1;
+      }
+    }
+    else
+    {
+      size_t index = 0;
+      for (auto& pair : pairs)
+      {
+        if (index == current_index)
+        {
+          std::shared_ptr<ArrayObject> pair_as_array = std::make_shared<ArrayObject>();
+          pair_as_array->IterableAppend(pair.second.key);
+          pair_as_array->IterableAppend(pair.second.value);
+          elements[0] = pair_as_array;
+          break;
+        }
+        index += 1;
+      }
+    }
+    return elements.begin();
+  }
+
+  ObjectPtr IterableCurrentValue() override
+  {
+    if (elements.size() == 0)
+      return std::make_shared<NullObject>();
+    else
+      return elements[0];
+  }
+
+  std::vector<ObjectPtr>::iterator IterableEnd() override
+  {
+    return elements.end();
+  }
+
+  void IterableAppend(ObjectPtr value) override {}
+
+  size_t IterableSize() override
+  {
+    return elements.size();
   }
 
   String Inspect() override {

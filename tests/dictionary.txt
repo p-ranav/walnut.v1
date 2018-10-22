@@ -17,3 +17,19 @@ pi = "pi";
 z["value"][pi].println(); // 3.14
 
 z["value"]["func"](2, 3).println(); // 6
+
+for key, value in z["value"] {
+  println(key, ":", value)
+}
+
+// func : function(a, b) { a * b; }
+// c : Hello, 世界
+// pi : 3.14
+
+for pair in z["value"] {
+  println(pair)
+}
+
+// [func, function(a, b) { a * b; }]
+// [c, Hello, 世界]
+// [pi, 3.14]
