@@ -584,12 +584,28 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       return array_object;
     }
 
-    else if (identifier_object != nullptr && identifier_object->type == ObjectType::ARRAY && index_object->type == ObjectType::INTEGER)
+    else if (identifier_object != nullptr && identifier_object->type == ObjectType::HASH)
     {
       HashObjectPtr hash_object = std::dynamic_pointer_cast<HashObject>(identifier_object);
-      HashPair& pair = hash_object->pairs[Hash(index_object)];
-      pair.value = Eval(statement->expression, environment);
-      return hash_object;
+      try
+      {
+        HashPair& pair = hash_object->Get(Hash(index_object));
+        pair.value = Eval(statement->expression, environment);
+        return hash_object;
+      }
+      catch (std::exception& e)
+      {
+        if (index_object->type != ObjectType::STRING)
+        {
+          std::cout << e.what() << " - " << index_object->Inspect() << std::endl;
+        }
+        else
+        {
+          StringObjectPtr string_index_object = std::dynamic_pointer_cast<StringObject>(index_object);
+          std::cout << e.what() << " - " << "\"" << string_index_object->Value() << "\"" << std::endl;
+        }
+        exit(EXIT_FAILURE);
+      }
     }
 
   }
@@ -747,7 +763,7 @@ ObjectPtr Evaluator::EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index)
 
   if (object->pairs.find(hash_key) != object->pairs.end())
   {
-    HashPair hash_pair = object->pairs[Hash(index)];
+    HashPair& hash_pair = object->pairs[Hash(index)];
     return hash_pair.value;
   }
   else

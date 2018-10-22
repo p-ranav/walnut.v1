@@ -151,6 +151,16 @@ struct HashObject : Object
     return result;
   }
 
+  HashPair& Get(HashKey key)
+  {
+    if (pairs.find(key) != pairs.end())
+      return pairs[key];
+    else
+    {
+      throw std::runtime_error("error: key not found");
+    }
+  }
+
   void Set(HashKey key, HashPair value)
   {
     if (pairs.find(key) != pairs.end())

@@ -1,5 +1,3 @@
-/*
-
 x = {"a": 5, "b": 3.14, "c": "Hello", "d": false};
 x.println();
 
@@ -9,8 +7,6 @@ for k, v in x {
 
 y = {"value": x};
 y["value"]["a"].println(); // 5
-
-*/
 
 z = {
   "test": 5,
@@ -22,7 +18,7 @@ z = {
   },
   "test2" : 15
 };
-/*
+
 pi = "pi";
 z["value"][pi].println(); // 3.14
 
@@ -43,9 +39,6 @@ for pair in z["value"] {
 // [func, function(a, b) { a * b; }]
 // [c, Hello, 世界]
 // [pi, 3.14]
-
-z.println()
-*/
 
 z.println()
 
@@ -103,3 +96,21 @@ range(10).map(function(i) { i * 2 }).println()
 {"a": 10, "b": 3.14}.map(function(i) { 
   return [i[0], i[1] * 4]; // return a key value pair in a list 
 }).println();
+
+a = {"a": 5, "b": 6, "c": 7}
+a["a"] = 4
+a.println()
+
+z = {
+  "test": 5,
+  "value" : 
+  { 
+    "pi": 3.14, 
+    "c": "Hello, 世界", 
+    "func": function(a, b) { a * b }
+  },
+  "test2" : 15
+};
+
+z["value"]["c"] = "Hello, World!"
+z.println()
