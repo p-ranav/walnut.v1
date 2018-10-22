@@ -14,6 +14,10 @@ Evaluator::Evaluator()
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("extend",
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::extend, this, std::placeholders::_1))));
+  builtin_functions.insert(std::make_pair("insert",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::insert, this, std::placeholders::_1))));
+  builtin_functions.insert(std::make_pair("upsert",
+    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::upsert, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("range",
     std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::range, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("map",

@@ -96,6 +96,8 @@ struct Evaluator
 
   ObjectPtr append(std::vector<ObjectPtr> arguments);
   ObjectPtr extend(std::vector<ObjectPtr> arguments);
+  ObjectPtr insert(std::vector<ObjectPtr> arguments);
+  ObjectPtr upsert(std::vector<ObjectPtr> arguments);
   ObjectPtr range(std::vector<ObjectPtr> arguments);
   ObjectPtr map(std::vector<ObjectPtr> arguments);
   ObjectPtr filter(std::vector<ObjectPtr> arguments);

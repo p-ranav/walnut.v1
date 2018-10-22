@@ -1,0 +1,13 @@
+x = [1, 2, 3, 4, 5];
+y = x.insert(0, 0);
+y.println(); // [0, 1, 2, 3, 4, 5]
+
+z = x.insert(11, 15); // evaluator error: list index out of range - array size = 5; provided index = 11
+
+{}.insert("a", 5).println();
+
+x = {};
+x = x.insert("pi", 3.14);
+println(x);
+
+x = x.insert("pi", 3.14); // evaluator warning: dictionary already has key "pi" - dictionary.insert("pi", 3.14) has done nothing
