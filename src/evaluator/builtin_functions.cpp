@@ -221,6 +221,9 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       case ObjectType::RANGE:
         result = std::make_shared<ArrayObject>();
         break;
+      case ObjectType::HASH:
+        result = std::make_shared<HashObject>();
+        break;
       default:
         result = std::make_shared<NullObject>();
         break;
@@ -230,7 +233,24 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       arguments[0]->IterableInit();
       do
       {
-        result->IterableAppend(ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() }));
+        if (result->type != ObjectType::HASH)
+        {
+          result->IterableAppend(ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() }));
+        }
+        else
+        {
+          ObjectPtr map_result = ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() });
+          if (map_result->type == ObjectType::ARRAY)
+          {
+            ArrayObjectPtr array_result = std::dynamic_pointer_cast<ArrayObject>(map_result);
+            if (array_result->elements.size() == 2)
+            {
+              HashObjectPtr hash_result = std::dynamic_pointer_cast<HashObject>(result);
+              HashPair new_hash_pair(array_result->elements[0], array_result->elements[1]);
+              hash_result->Set(Hash(array_result->elements[0]), new_hash_pair);
+            }
+          }
+        }
       } while (arguments[0]->IterableNext() != arguments[0]->IterableEnd());
       return result;
     }

@@ -97,3 +97,9 @@ Menu = {
 };
 
 Menu.println();
+
+range(10).map(function(i) { i * 2 }).println()
+
+{"a": 10, "b": 3.14}.map(function(i) { 
+  return [i[0], i[1] * 4]; // return a key value pair in a list 
+}).println();
