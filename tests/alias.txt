@@ -9,3 +9,19 @@ push = append;
 add = function(a, b) { a + b };
 sum = add;
 sum(2, 3).println();
+
+proxy = function(message) { print("DEBUG::", message, "\n") }
+debug = proxy
+
+proxy = function(message) { print("INFO::", message, "\n") }
+info = proxy
+
+proxy = function(message) { print("ERROR::", message, "\n") }
+error = proxy
+
+"In function x".debug()
+"Thread started".info()
+"Segmentation Fault".error()
+// DEBUG::In function x
+// INFO::Thread started
+// ERROR::Segmentation Fault
