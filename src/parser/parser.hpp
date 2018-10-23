@@ -104,7 +104,7 @@ struct Parser
   NodePtr ParseArrayLiteral();
   std::vector<NodePtr> ParseExpressionList(Token::Type end);
 
-  NodePtr ParseSetLiteral(NodePtr first);
+  NodePtr ParseSetLiteral(NodePtr first, size_t start_index);
   NodePtr ParseHashLiteral();
 
   /* Infix parse functions */

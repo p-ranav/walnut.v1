@@ -543,13 +543,14 @@ NodePtr Parser::ParseHashLiteral()
 {
   HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
   NextToken();
+  size_t current_index = current_token_index;
 
   while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
   {
     NodePtr key = ParseExpression(LOWEST);
 
     if (IsPeekToken(Token::Type::COMMA_OPERATOR))
-      return ParseSetLiteral(key); // this is not a dictionary but in fact a set
+      return ParseSetLiteral(key, current_index); // this is not a dictionary but in fact a set
 
     if (!ExpectPeek(Token::Type::COLON_OPERATOR))
       return nullptr;
@@ -571,9 +572,10 @@ NodePtr Parser::ParseHashLiteral()
   return result;
 }
 
-NodePtr Parser::ParseSetLiteral(NodePtr first)
+NodePtr Parser::ParseSetLiteral(NodePtr first, size_t start_index)
 {
-  PreviousToken();
+  while(current_token_index >= start_index)
+    PreviousToken();
   SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
   set_literal->elements = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
   return set_literal;
