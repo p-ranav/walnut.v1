@@ -78,15 +78,9 @@ ObjectPtr Evaluator::length(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 1)
   {
-    if (arguments[0]->type == ObjectType::STRING)
+    if (arguments[0]->iterable == true)
     {
-      StringObjectPtr string_object = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-      return std::make_shared<IntegerObject>(static_cast<int>(string_object->Length()));
-    }
-    else if (arguments[0]->type == ObjectType::ARRAY)
-    {
-      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-      return std::make_shared<IntegerObject>(static_cast<int>(array_object->elements.size()));
+      return std::make_shared<IntegerObject>(static_cast<int>(arguments[0]->IterableSize()));
     }
   }
   return std::make_shared<NullObject>();
@@ -116,6 +110,13 @@ ObjectPtr Evaluator::append(std::vector<ObjectPtr> arguments)
       ArrayObject array_copy = ArrayObject(*(array_object.get()));
       array_copy.elements.push_back(arguments[1]);
       return std::make_shared<ArrayObject>(array_copy);
+    }
+    else if (arguments[0]->type == ObjectType::SET)
+    {
+      SetObjectPtr set_object = std::dynamic_pointer_cast<SetObject>(arguments[0]);
+      SetObject set_copy = SetObject(*(set_object.get()));
+      set_copy.IterableAppend(arguments[1]);
+      return std::make_shared<SetObject>(set_copy);
     }
   }
   return std::make_shared<NullObject>();
@@ -220,8 +221,8 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       case ObjectType::RANGE:
         result = std::make_shared<ArrayObject>();
         break;
-      case ObjectType::HASH:
-        result = std::make_shared<HashObject>();
+      case ObjectType::SET:
+        result = std::make_shared<SetObject>();
         break;
       default:
         result = std::make_shared<NullObject>();
@@ -232,24 +233,7 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       arguments[0]->IterableInit();
       do
       {
-        if (result->type != ObjectType::HASH)
-        {
-          result->IterableAppend(ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()}));
-        }
-        else
-        {
-          ObjectPtr map_result = ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()});
-          if (map_result->type == ObjectType::ARRAY)
-          {
-            ArrayObjectPtr array_result = std::dynamic_pointer_cast<ArrayObject>(map_result);
-            if (array_result->elements.size() == 2)
-            {
-              HashObjectPtr hash_result = std::dynamic_pointer_cast<HashObject>(result);
-              HashPair new_hash_pair(array_result->elements[0], array_result->elements[1]);
-              hash_result->Set(Hash(array_result->elements[0]), new_hash_pair);
-            }
-          }
-        }
+        result->IterableAppend(ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()}));
       } while (arguments[0]->IterableNext() != arguments[0]->IterableEnd());
       return result;
     }
