@@ -30,6 +30,7 @@ struct Node
     ARRAY_LITERAL,
     INDEX_EXPRESSION,
     HASH_LITERAL,
+    SET_LITERAL,
     INVALID
   };
 

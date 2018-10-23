@@ -1,0 +1,13 @@
+factorial = function(m) { /* ... */ };
+(5).factorial().println();
+println(factorial(5));
+
+namespace math
+{
+  factorial = function(n) { /* ... */ };
+}
+
+(5).math::factorial().println();
+println(math::factorial(5));
+
+

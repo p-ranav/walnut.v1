@@ -23,7 +23,8 @@ struct Object
     BUILTIN_FUNCTION,
     ARRAY,
     RANGE,
-    HASH
+    HASH,
+    SET
   };
 
   Type type;

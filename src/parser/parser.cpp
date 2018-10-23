@@ -80,6 +80,15 @@ void Parser::ParseProgram()
   }
 }
 
+void Parser::PreviousToken()
+{
+  peek_token = current_token;
+  current_token_index -= 1;
+  current_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
+  if (current_token_index - 1 < tokens.size())
+    current_token = tokens[current_token_index - 1];
+}
+
 void Parser::NextToken()
 {
   current_token = peek_token;
@@ -541,6 +550,9 @@ NodePtr Parser::ParseHashLiteral()
   {
     NodePtr key = ParseExpression(LOWEST);
 
+    if (IsPeekToken(Token::Type::COMMA_OPERATOR))
+      return ParseSetLiteral(key); // this is not a dictionary but in fact a set
+
     if (!ExpectPeek(Token::Type::COLON_OPERATOR))
       return nullptr;
 
@@ -559,4 +571,12 @@ NodePtr Parser::ParseHashLiteral()
     NextToken();
   }
   return result;
+}
+
+NodePtr Parser::ParseSetLiteral(NodePtr first)
+{
+  PreviousToken();
+  SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
+  set_literal->elements = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
+  return set_literal;
 }

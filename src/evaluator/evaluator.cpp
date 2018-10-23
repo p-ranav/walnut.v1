@@ -73,6 +73,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalIndexOperator(node, environment);
   case NodeType::HASH_LITERAL:
     return EvalHashLiteral(node, environment);
+  case NodeType::SET_LITERAL:
+    return EvalSetLiteral(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
@@ -608,6 +610,13 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       }
     }
 
+    else
+    {
+      std::cout << "error: index operator not supported " << std::endl;
+      exit(EXIT_FAILURE);
+      return std::make_shared<NullObject>();
+    }
+
   }
 
   return std::make_shared<NullObject>();
@@ -770,4 +779,10 @@ ObjectPtr Evaluator::EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index)
   {
     return std::make_shared<NullObject>();
   }
+}
+
+ObjectPtr Evaluator::EvalSetLiteral(NodePtr node, EnvironmentPtr environment)
+{
+  SetLiteralNodePtr set_node = std::dynamic_pointer_cast<SetLiteralNode>(node);
+  return std::make_shared<SetObject>(EvalExpressions(set_node->elements, environment));
 }

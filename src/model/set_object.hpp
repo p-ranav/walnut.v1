@@ -4,22 +4,31 @@
 #include <null_object.hpp>
 #include <memory>
 #include <vector>
+#include <set>
 
-struct ArrayObject : Object
+struct SetObject : Object
 {
   std::vector<ObjectPtr> elements;
 
   typedef std::vector<ObjectPtr>::iterator ObjectIterator;
   ObjectIterator iterator;
 
-  ArrayObject() : Object(ARRAY, true), elements({}), iterator(elements.begin()) {}
+  SetObject() : Object(SET, true), elements({}), iterator(elements.begin()) {}
 
-  explicit ArrayObject(const std::vector<ObjectPtr>& elements) : Object(ARRAY, true), 
-    elements(elements), iterator(this->elements.begin()) {}
+  explicit SetObject(const std::vector<ObjectPtr>& elements) : Object(SET, true)
+  {
+    std::set<String> string_set;
+    for (auto& element : elements)
+    {
+      if (string_set.find(element->Inspect()) == string_set.end())
+        this->elements.push_back(element);
+      string_set.insert(element->Inspect());
+    }
+  }
 
   ObjectPtr Copy() override
   {
-    std::shared_ptr<ArrayObject> result = std::make_shared<ArrayObject>();
+    std::shared_ptr<SetObject> result = std::make_shared<SetObject>();
     for (auto& element : elements)
       result->elements.push_back(element->Copy());
     result->iterator = result->elements.begin();
@@ -59,12 +68,17 @@ struct ArrayObject : Object
 
   void IterableAppend(ObjectPtr value) override
   {
-    elements.push_back(value);
+    std::set<String> string_set;
+    for (auto& element : elements)
+      string_set.insert(element->Inspect());
+
+    if (string_set.find(value->Inspect()) == string_set.end())
+      elements.push_back(value);
   }
 
   String Inspect() override {
     String result = "";
-    result += "[";
+    result += "{";
     if (elements.size() == 1)
     {
       result += elements[0]->Inspect();
@@ -89,9 +103,9 @@ struct ArrayObject : Object
         result += "\"" + string_element->Value() + "\"";
       }
     }
-    result += "]";
+    result += "}";
     return result;
   }
 };
 
-typedef std::shared_ptr<ArrayObject> ArrayObjectPtr;
+typedef std::shared_ptr<SetObject> SetObjectPtr;

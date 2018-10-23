@@ -19,6 +19,7 @@
 #include <array_literal_node.hpp>
 #include <index_expression_node.hpp>
 #include <hash_literal_node.hpp>
+#include <set_literal_node.hpp>
 
 #include <object.hpp>
 #include <integer_object.hpp>
@@ -34,6 +35,7 @@
 #include <range_object.hpp>
 #include <hash_key.hpp>
 #include <hash_object.hpp>
+#include <set_object.hpp>
 
 #include <environment.hpp>
 #include <iostream>
@@ -87,6 +89,8 @@ struct Evaluator
 
   ObjectPtr EvalHashLiteral(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index);
+
+  ObjectPtr EvalSetLiteral(NodePtr node, EnvironmentPtr environment);
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;

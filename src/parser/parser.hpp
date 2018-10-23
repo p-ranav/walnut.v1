@@ -18,6 +18,7 @@
 #include <array_literal_node.hpp>
 #include <index_expression_node.hpp>
 #include <hash_literal_node.hpp>
+#include <set_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 
@@ -42,6 +43,7 @@ struct Parser
 
   void ParseProgram();
 
+  void PreviousToken();
   void NextToken();
   bool IsCurrentToken(Token::Type value);
   bool IsCurrentTokenInList(const std::vector<Token::Type>& value);
@@ -102,6 +104,7 @@ struct Parser
   NodePtr ParseArrayLiteral();
   std::vector<NodePtr> ParseExpressionList(Token::Type end);
 
+  NodePtr ParseSetLiteral(NodePtr first);
   NodePtr ParseHashLiteral();
 
   /* Infix parse functions */
