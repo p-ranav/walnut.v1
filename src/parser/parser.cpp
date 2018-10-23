@@ -85,6 +85,8 @@ void Parser::PreviousToken()
   current_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
   if (current_token_index - 2 >= 0 && current_token_index - 2 < tokens.size())
     current_token = tokens[current_token_index - 2];
+  else
+    current_token = tokens[0];
 }
 
 void Parser::NextToken()
