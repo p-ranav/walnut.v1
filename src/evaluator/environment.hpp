@@ -11,11 +11,11 @@ struct Environment
   typedef std::shared_ptr<Environment> EnvironmentPtr;
   EnvironmentPtr outer;
 
-  explicit Environment(EnvironmentPtr outer_environment = nullptr) :
-    store({}), 
-    outer(outer_environment) {}
+  explicit Environment(EnvironmentPtr outer_environment = nullptr) : store({}),
+                                                                     outer(outer_environment) {}
 
-  ~Environment() {
+  ~Environment()
+  {
     store.clear();
     outer.reset();
   }
@@ -23,7 +23,7 @@ struct Environment
   std::shared_ptr<Environment> Copy()
   {
     std::shared_ptr<Environment> result = std::make_shared<Environment>();
-    for (auto& kv : store)
+    for (auto &kv : store)
     {
       result->Set(kv.first, kv.second->Copy());
     }
@@ -32,7 +32,8 @@ struct Environment
     return result;
   }
 
-  ObjectPtr Get(String key) {
+  ObjectPtr Get(String key)
+  {
     ObjectPtr result;
     if (store.find(key) != store.end())
       result = store[key];
@@ -45,14 +46,13 @@ struct Environment
     return result;
   }
 
-  void Set(String key, ObjectPtr value) 
+  void Set(String key, ObjectPtr value)
   {
     if (store.find(key) != store.end())
       store[key] = value;
     else
       store.insert(std::make_pair(key, value));
   }
-
 };
 
 typedef std::shared_ptr<Environment> EnvironmentPtr;

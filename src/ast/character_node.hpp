@@ -5,9 +5,8 @@
 struct CharacterNode : Node
 {
   String value;
-  explicit CharacterNode(StringConstRef value) :
-    Node(CHARACTER),
-    value(value) {}
+  explicit CharacterNode(StringConstRef value) : Node(CHARACTER),
+                                                 value(value) {}
 
   String ToString() override
   {

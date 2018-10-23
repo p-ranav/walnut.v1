@@ -8,10 +8,9 @@ struct WhileExpressionNode : Node
   NodePtr condition;
   BlockStatementNodePtr consequence;
 
-  explicit WhileExpressionNode() :
-    Node(WHILE_EXPRESSION),
-    condition(nullptr),
-    consequence(nullptr) {}
+  explicit WhileExpressionNode() : Node(WHILE_EXPRESSION),
+                                   condition(nullptr),
+                                   consequence(nullptr) {}
 
   String ToString() override
   {

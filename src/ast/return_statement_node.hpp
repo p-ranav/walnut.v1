@@ -4,8 +4,7 @@
 struct ReturnStatementNode : Node
 {
   NodePtr expression;
-  ReturnStatementNode() : 
-    Node(RETURN_STATEMENT) {}
+  ReturnStatementNode() : Node(RETURN_STATEMENT) {}
 
   String ToString() override
   {

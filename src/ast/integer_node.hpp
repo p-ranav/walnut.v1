@@ -4,9 +4,8 @@
 struct IntegerNode : Node
 {
   int value;
-  explicit IntegerNode(int value) : 
-    Node(INTEGER), 
-    value(value) {}
+  explicit IntegerNode(int value) : Node(INTEGER),
+                                    value(value) {}
 
   String ToString() override
   {

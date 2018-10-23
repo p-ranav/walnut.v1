@@ -9,11 +9,10 @@ struct IfExpressionNode : Node
   BlockStatementNodePtr consequence;
   BlockStatementNodePtr alternative;
 
-  explicit IfExpressionNode() : 
-    Node(IF_EXPRESSION), 
-    condition(nullptr), 
-    consequence(nullptr), 
-    alternative(nullptr) {}
+  explicit IfExpressionNode() : Node(IF_EXPRESSION),
+                                condition(nullptr),
+                                consequence(nullptr),
+                                alternative(nullptr) {}
 
   String ToString() override
   {

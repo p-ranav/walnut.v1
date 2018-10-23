@@ -5,9 +5,8 @@
 struct SetLiteralNode : Node
 {
   std::vector<NodePtr> elements;
-  explicit SetLiteralNode() :
-    Node(SET_LITERAL, true),
-    elements({}) {}
+  explicit SetLiteralNode() : Node(SET_LITERAL, true),
+                              elements({}) {}
 
   String ToString() override
   {

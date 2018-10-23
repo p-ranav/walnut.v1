@@ -46,9 +46,9 @@ struct Parser
   void PreviousToken();
   void NextToken();
   bool IsCurrentToken(Token::Type value);
-  bool IsCurrentTokenInList(const std::vector<Token::Type>& value);
+  bool IsCurrentTokenInList(const std::vector<Token::Type> &value);
   bool IsPeekToken(Token::Type value);
-  bool IsPeekTokenInList(const std::vector<Token::Type>& value);
+  bool IsPeekTokenInList(const std::vector<Token::Type> &value);
   bool ExpectPeek(Token::Type value);
   void ReportError(Token::Type expected);
 
@@ -81,8 +81,8 @@ struct Parser
 
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
-  NodePtr ParseExpression(Precedence precedence, 
-    std::vector<Token::Type> end = { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE });
+  NodePtr ParseExpression(Precedence precedence,
+                          std::vector<Token::Type> end = {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE});
 
   /* Prefix parse functions */
   NodePtr ParseIdentifier();
@@ -97,7 +97,7 @@ struct Parser
   NodePtr ParseIfExpression();
   NodePtr ParseWhileExpression();
   NodePtr ParseForExpression();
-  
+
   std::vector<IdentifierNodePtr> ParseFunctionParameters();
   NodePtr ParseFunctionLiteral();
 

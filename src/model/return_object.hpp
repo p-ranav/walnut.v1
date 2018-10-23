@@ -12,7 +12,8 @@ struct ReturnObject : Object
     return std::make_shared<ReturnObject>(value);
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     return value->Inspect();
   }
 };

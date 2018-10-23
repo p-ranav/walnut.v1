@@ -14,13 +14,13 @@ struct ArrayObject : Object
 
   ArrayObject() : Object(ARRAY, true), elements({}), iterator(elements.begin()) {}
 
-  explicit ArrayObject(const std::vector<ObjectPtr>& elements) : Object(ARRAY, true), 
-    elements(elements), iterator(this->elements.begin()) {}
+  explicit ArrayObject(const std::vector<ObjectPtr> &elements) : Object(ARRAY, true),
+                                                                 elements(elements), iterator(this->elements.begin()) {}
 
   ObjectPtr Copy() override
   {
     std::shared_ptr<ArrayObject> result = std::make_shared<ArrayObject>();
-    for (auto& element : elements)
+    for (auto &element : elements)
       result->elements.push_back(element->Copy());
     result->iterator = result->elements.begin();
     result->iterable = true;
@@ -62,7 +62,8 @@ struct ArrayObject : Object
     elements.push_back(value);
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     String result = "";
     result += "[";
     if (elements.size() == 1)

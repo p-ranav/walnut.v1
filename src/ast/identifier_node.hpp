@@ -5,9 +5,8 @@
 struct IdentifierNode : Node
 {
   String value;
-  explicit IdentifierNode(StringConstRef value) : 
-    Node(IDENTIFIER), 
-    value(value) {}
+  explicit IdentifierNode(StringConstRef value) : Node(IDENTIFIER),
+                                                  value(value) {}
 
   String ToString() override
   {

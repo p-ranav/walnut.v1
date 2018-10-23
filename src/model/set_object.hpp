@@ -15,10 +15,10 @@ struct SetObject : Object
 
   SetObject() : Object(SET, true), elements({}), iterator(elements.begin()) {}
 
-  explicit SetObject(const std::vector<ObjectPtr>& elements) : Object(SET, true)
+  explicit SetObject(const std::vector<ObjectPtr> &elements) : Object(SET, true)
   {
     std::set<String> string_set;
-    for (auto& element : elements)
+    for (auto &element : elements)
     {
       if (string_set.find(element->Inspect()) == string_set.end())
         this->elements.push_back(element);
@@ -29,7 +29,7 @@ struct SetObject : Object
   ObjectPtr Copy() override
   {
     std::shared_ptr<SetObject> result = std::make_shared<SetObject>();
-    for (auto& element : elements)
+    for (auto &element : elements)
       result->elements.push_back(element->Copy());
     result->iterator = result->elements.begin();
     result->iterable = true;
@@ -69,14 +69,15 @@ struct SetObject : Object
   void IterableAppend(ObjectPtr value) override
   {
     std::set<String> string_set;
-    for (auto& element : elements)
+    for (auto &element : elements)
       string_set.insert(element->Inspect());
 
     if (string_set.find(value->Inspect()) == string_set.end())
       elements.push_back(value);
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     String result = "";
     result += "{";
     if (elements.size() == 1)

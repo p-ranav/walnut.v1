@@ -102,7 +102,6 @@ struct Token
   {
     value += initial_value;
   }
-
 };
 
 typedef std::vector<Token> TokenVector;

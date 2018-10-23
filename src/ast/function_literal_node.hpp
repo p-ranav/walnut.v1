@@ -8,10 +8,9 @@ struct FunctionLiteralNode : Node
 {
   std::vector<IdentifierNodePtr> parameters;
   BlockStatementNodePtr body;
-  explicit FunctionLiteralNode() :
-    Node(FUNCTION),
-    parameters({}),
-    body(nullptr) {}
+  explicit FunctionLiteralNode() : Node(FUNCTION),
+                                   parameters({}),
+                                   body(nullptr) {}
 
   String ToString() override
   {

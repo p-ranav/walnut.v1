@@ -11,23 +11,24 @@ struct FunctionObject : Object
   BlockStatementNodePtr body;
   EnvironmentPtr environment;
 
-  explicit FunctionObject(const std::vector<IdentifierNodePtr>& parameters, 
-    BlockStatementNodePtr body, EnvironmentPtr environment) : 
-    Object(FUNCTION),
-    parameters(parameters),
-    body(body),
-    environment(environment) {}
+  explicit FunctionObject(const std::vector<IdentifierNodePtr> &parameters,
+                          BlockStatementNodePtr body, EnvironmentPtr environment) : Object(FUNCTION),
+                                                                                    parameters(parameters),
+                                                                                    body(body),
+                                                                                    environment(environment) {}
 
   ObjectPtr Copy() override
   {
     return std::make_shared<FunctionObject>(parameters, body, environment);
   }
 
-  virtual ~FunctionObject() {
+  virtual ~FunctionObject()
+  {
     environment.reset();
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     String result = "";
     result += "function(";
     if (parameters.size() == 1)

@@ -2,14 +2,14 @@
 #include <memory>
 #include <algorithm>
 #include <string>
-#include <stdio.h>      /* printf */
+#include <stdio.h> /* printf */
 #include <string.h>
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+#include <stdarg.h> /* va_list, va_start, va_arg, va_end */
 
 ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
 {
   std::vector<String> print_vector;
-  for (auto& argument : arguments)
+  for (auto &argument : arguments)
   {
     if (argument->type == ObjectType::STRING)
     {
@@ -37,7 +37,7 @@ ObjectPtr Evaluator::print(std::vector<ObjectPtr> arguments)
 ObjectPtr Evaluator::println(std::vector<ObjectPtr> arguments)
 {
   std::vector<String> print_vector;
-  for (auto& argument : arguments)
+  for (auto &argument : arguments)
   {
     if (argument->type == ObjectType::STRING)
     {
@@ -130,7 +130,7 @@ ObjectPtr Evaluator::extend(std::vector<ObjectPtr> arguments)
       ArrayObjectPtr first = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
       ArrayObjectPtr second = std::dynamic_pointer_cast<ArrayObject>(arguments[1]);
       ArrayObject array_copy = ArrayObject(*(first.get()));
-      for (auto& element: second->elements)
+      for (auto &element : second->elements)
         array_copy.elements.push_back(element);
       return std::make_shared<ArrayObject>(array_copy);
     }
@@ -198,7 +198,6 @@ ObjectPtr Evaluator::range(std::vector<ObjectPtr> arguments)
     }
 
     return std::make_shared<RangeObject>(start, end, step, integral_range);
-
   }
   return std::make_shared<NullObject>();
 }
@@ -235,11 +234,11 @@ ObjectPtr Evaluator::map(std::vector<ObjectPtr> arguments)
       {
         if (result->type != ObjectType::HASH)
         {
-          result->IterableAppend(ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() }));
+          result->IterableAppend(ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()}));
         }
         else
         {
-          ObjectPtr map_result = ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() });
+          ObjectPtr map_result = ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()});
           if (map_result->type == ObjectType::ARRAY)
           {
             ArrayObjectPtr array_result = std::dynamic_pointer_cast<ArrayObject>(map_result);
@@ -285,14 +284,14 @@ ObjectPtr Evaluator::filter(std::vector<ObjectPtr> arguments)
       arguments[0]->IterableInit();
       do
       {
-        ObjectPtr filter_result = ApplyFunction(map_function, { arguments[0]->IterableCurrentValue() });
+        ObjectPtr filter_result = ApplyFunction(map_function, {arguments[0]->IterableCurrentValue()});
         if (filter_result->type == ObjectType::BOOLEAN)
         {
           BooleanObjectPtr filter_boolean_result = std::dynamic_pointer_cast<BooleanObject>(filter_result);
           if (filter_boolean_result->value)
             result->IterableAppend(arguments[0]->IterableCurrentValue());
         }
-        
+
       } while (arguments[0]->IterableNext() != arguments[0]->IterableEnd());
 
       return result;
@@ -305,7 +304,7 @@ ObjectPtr Evaluator::insert(std::vector<ObjectPtr> arguments)
 {
   if (arguments.size() == 3)
   {
-    if (arguments[0]->type == ObjectType::ARRAY && 
+    if (arguments[0]->type == ObjectType::ARRAY &&
         arguments[1]->type == ObjectType::INTEGER)
     {
       ArrayObjectPtr input_array = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
@@ -322,9 +321,9 @@ ObjectPtr Evaluator::insert(std::vector<ObjectPtr> arguments)
       else
       {
         std::cout << "evaluator error: list index out of range - "
-          << "array size = " << result_array->elements.size()
-          << "; provided index = " << index->value
-          << std::endl;
+                  << "array size = " << result_array->elements.size()
+                  << "; provided index = " << index->value
+                  << std::endl;
         return std::make_shared<NullObject>();
       }
     }
@@ -349,10 +348,10 @@ ObjectPtr Evaluator::insert(std::vector<ObjectPtr> arguments)
           value = "\"" + string_argument->Value() + "\"";
         }
         std::cout << "evaluator warning: "
-          << "dictionary already has key " << key
-          << " - dictionary.insert(" << key << ", " <<  value 
-          << ") has done nothing"
-          << std::endl;
+                  << "dictionary already has key " << key
+                  << " - dictionary.insert(" << key << ", " << value
+                  << ") has done nothing"
+                  << std::endl;
       }
       else
       {

@@ -7,7 +7,7 @@
 #include <string>
 #include <clocale>
 
-TEST_CASE("Lexer can recognize the keyword 'true'", "[lexer]") 
+TEST_CASE("Lexer can recognize the keyword 'true'", "[lexer]")
 {
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();

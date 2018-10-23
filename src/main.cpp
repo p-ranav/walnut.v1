@@ -21,7 +21,7 @@ void InterpretBuffer(InterpreterMode mode, StringConstRef filename, String buffe
   parser.ParseProgram();
 
   Evaluator evaluator;
-  for (auto& statement : parser.statements)
+  for (auto &statement : parser.statements)
   {
     ObjectPtr result = evaluator.Eval(statement, environment);
     String inspect = result->Inspect();
@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
       std::cout << ">>> ";
       String buffer;
       char c = '\0';
-      while (c != '\n') {
+      while (c != '\n')
+      {
         c = std::cin.get();
         buffer += c;
       }

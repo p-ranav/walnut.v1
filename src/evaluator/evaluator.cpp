@@ -5,25 +5,25 @@
 Evaluator::Evaluator()
 {
   builtin_functions.insert(std::make_pair("print",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("println",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::println, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("length", 
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::println, this, std::placeholders::_1))));
+  builtin_functions.insert(std::make_pair("length",
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("append",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("extend",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::extend, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::extend, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("insert",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::insert, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::insert, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("upsert",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::upsert, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::upsert, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("range",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::range, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::range, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("map",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1))));
   builtin_functions.insert(std::make_pair("filter",
-    std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1))));
+                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1))));
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
@@ -114,7 +114,7 @@ ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node, EnvironmentPtr environme
 {
   PrefixExpressionNodePtr expression = std::dynamic_pointer_cast<PrefixExpressionNode>(node);
   ObjectPtr right = Eval(expression->right, environment);
-  
+
   Token::Type prefix_operator = expression->prefix_operator;
   switch (prefix_operator)
   {
@@ -327,7 +327,7 @@ ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment
   ObjectPtr result = std::make_shared<NullObject>();
 
   BlockStatementNodePtr block = std::dynamic_pointer_cast<BlockStatementNode>(node);
-  for (auto& statement : block->statements)
+  for (auto &statement : block->statements)
   {
     result = Eval(statement, environment);
 
@@ -342,7 +342,7 @@ ObjectPtr Evaluator::EvalIfExpression(NodePtr node, EnvironmentPtr environment)
 {
   IfExpressionNodePtr expression = std::dynamic_pointer_cast<IfExpressionNode>(node);
   ObjectPtr condition = Eval(expression->condition, environment);
-  
+
   if (IsTruth(condition, environment))
     return Eval(expression->consequence, environment);
   else
@@ -385,7 +385,7 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
   {
     NodePtr condition = expression->condition;
     ObjectPtr condition_result = Eval(condition, while_environment);
-    
+
     if (!IsTruth(condition_result, while_environment))
       break;
 
@@ -396,8 +396,8 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
     else
       result = consequence_result;
   }
-  
-  std::vector<EnvironmentPtr> environments = { environment };
+
+  std::vector<EnvironmentPtr> environments = {environment};
   EnvironmentPtr outer_environment = environment->outer;
   while (outer_environment != nullptr)
   {
@@ -405,9 +405,9 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
     outer_environment = outer_environment->outer;
   }
 
-  for (auto& nested_environment : environments)
+  for (auto &nested_environment : environments)
   {
-    for (auto& kv : nested_environment->store)
+    for (auto &kv : nested_environment->store)
     {
       if (while_environment->store.find(kv.first) != while_environment->store.end())
       {
@@ -500,7 +500,7 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
     } while (expression_object->IterableNext() != expression_object->IterableEnd());
   }
 
-  std::vector<EnvironmentPtr> environments = { environment };
+  std::vector<EnvironmentPtr> environments = {environment};
   EnvironmentPtr outer_environment = environment->outer;
   while (outer_environment != nullptr)
   {
@@ -508,9 +508,9 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
     outer_environment = outer_environment->outer;
   }
 
-  for (auto& nested_environment : environments)
+  for (auto &nested_environment : environments)
   {
-    for (auto& kv : nested_environment->store)
+    for (auto &kv : nested_environment->store)
     {
       if (for_environment->store.find(kv.first) != for_environment->store.end())
       {
@@ -561,8 +561,8 @@ ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
 
 ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, EnvironmentPtr environment)
 {
-  ExpressionAssignmentStatementNodePtr statement = 
-    std::dynamic_pointer_cast<ExpressionAssignmentStatementNode>(node);
+  ExpressionAssignmentStatementNodePtr statement =
+      std::dynamic_pointer_cast<ExpressionAssignmentStatementNode>(node);
 
   NodePtr left_expression = statement->left;
   if (left_expression->type == NodeType::INDEX_EXPRESSION)
@@ -591,11 +591,11 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       HashObjectPtr hash_object = std::dynamic_pointer_cast<HashObject>(identifier_object);
       try
       {
-        HashPair& pair = hash_object->Get(Hash(index_object));
+        HashPair &pair = hash_object->Get(Hash(index_object));
         pair.value = Eval(statement->expression, environment);
         return hash_object;
       }
-      catch (std::exception& e)
+      catch (std::exception &e)
       {
         if (index_object->type != ObjectType::STRING)
         {
@@ -604,7 +604,8 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
         else
         {
           StringObjectPtr string_index_object = std::dynamic_pointer_cast<StringObject>(index_object);
-          std::cout << e.what() << " - " << "\"" << string_index_object->Value() << "\"" << std::endl;
+          std::cout << e.what() << " - "
+                    << "\"" << string_index_object->Value() << "\"" << std::endl;
         }
         exit(EXIT_FAILURE);
       }
@@ -616,7 +617,6 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       exit(EXIT_FAILURE);
       return std::make_shared<NullObject>();
     }
-
   }
 
   return std::make_shared<NullObject>();
@@ -640,12 +640,12 @@ ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment
 std::vector<ObjectPtr> Evaluator::EvalExpressions(std::vector<NodePtr> expressions, EnvironmentPtr environment)
 {
   std::vector<ObjectPtr> result;
-  for (auto& expression : expressions)
+  for (auto &expression : expressions)
     result.push_back(Eval(expression, environment));
   return result;
 }
 
-ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr>& arguments)
+ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectPtr> &arguments)
 {
   if (function->type != ObjectType::FUNCTION && function->type != ObjectType::BUILTIN_FUNCTION)
     std::cout << "not a function" << std::endl;
@@ -713,13 +713,12 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
     exit(EXIT_FAILURE);
     return std::make_shared<NullObject>();
   }
-
 }
 
 ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
 {
   ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(array);
-  std::vector<ObjectPtr>& elements = array_object->elements;
+  std::vector<ObjectPtr> &elements = array_object->elements;
   int array_size = static_cast<int>(elements.size());
 
   IntegerObjectPtr array_index = std::dynamic_pointer_cast<IntegerObject>(index);
@@ -743,7 +742,7 @@ ObjectPtr Evaluator::EvalHashLiteral(NodePtr node, EnvironmentPtr environment)
   HashObjectPtr result = std::make_shared<HashObject>();
   HashLiteralNodePtr hash_literal_node = std::dynamic_pointer_cast<HashLiteralNode>(node);
 
-  for (auto& pair : hash_literal_node->pairs)
+  for (auto &pair : hash_literal_node->pairs)
   {
     ObjectPtr key = Eval(pair.first, environment);
     if (!key->hashable)
@@ -772,7 +771,7 @@ ObjectPtr Evaluator::EvalHashIndexExpression(ObjectPtr hash, ObjectPtr index)
 
   if (object->pairs.find(hash_key) != object->pairs.end())
   {
-    HashPair& hash_pair = object->pairs[Hash(index)];
+    HashPair &hash_pair = object->pairs[Hash(index)];
     return hash_pair.value;
   }
   else

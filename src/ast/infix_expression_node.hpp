@@ -8,11 +8,10 @@ struct InfixExpressionNode : Node
   Token::Type infix_operator;
   NodePtr right;
 
-  explicit InfixExpressionNode(Token::Type infix_operator) : 
-    Node(INFIX_EXPRESSION),
-    left(nullptr),
-    infix_operator(infix_operator),
-    right(nullptr) {}
+  explicit InfixExpressionNode(Token::Type infix_operator) : Node(INFIX_EXPRESSION),
+                                                             left(nullptr),
+                                                             infix_operator(infix_operator),
+                                                             right(nullptr) {}
 
   String ToString() override
   {

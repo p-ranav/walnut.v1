@@ -4,9 +4,8 @@
 struct DoubleNode : Node
 {
   double value;
-  explicit DoubleNode(double value) : 
-    Node(DOUBLE), 
-    value(value) {}
+  explicit DoubleNode(double value) : Node(DOUBLE),
+                                      value(value) {}
 
   String ToString() override
   {

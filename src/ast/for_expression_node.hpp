@@ -10,11 +10,10 @@ struct ForExpressionNode : Node
   NodePtr iterable;
   BlockStatementNodePtr body;
 
-  explicit ForExpressionNode() :
-    Node(FOR_EXPRESSION),
-    iterators({}),
-    iterable(nullptr),
-    body(nullptr) {}
+  explicit ForExpressionNode() : Node(FOR_EXPRESSION),
+                                 iterators({}),
+                                 iterable(nullptr),
+                                 body(nullptr) {}
 
   String ToString() override
   {

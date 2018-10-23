@@ -6,10 +6,9 @@ struct CallExpressionNode : Node
 {
   NodePtr function;
   std::vector<NodePtr> arguments;
-  explicit CallExpressionNode() :
-    Node(CALL_EXPRESSION),
-    function(nullptr),
-    arguments({}) {}
+  explicit CallExpressionNode() : Node(CALL_EXPRESSION),
+                                  function(nullptr),
+                                  arguments({}) {}
 
   String ToString() override
   {

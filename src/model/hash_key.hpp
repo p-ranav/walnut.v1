@@ -12,11 +12,10 @@ struct HashKey : Object
   size_t value;
   explicit HashKey(ObjectType type, size_t value) : Object(type), value(value) {}
 
-  friend bool operator<(const HashKey& left, const HashKey& right)
+  friend bool operator<(const HashKey &left, const HashKey &right)
   {
     return (left.value < right.value);
   }
-
 };
 
 typedef std::shared_ptr<HashKey> HashKeyPtr;

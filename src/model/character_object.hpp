@@ -13,11 +13,13 @@ struct CharacterObject : Object
     return std::make_shared<CharacterObject>(value);
   }
 
-  String Value() {
+  String Value()
+  {
     return value;
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     return "'" + value + "'";
   }
 };

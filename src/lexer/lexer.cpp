@@ -5,13 +5,12 @@
 #include <string>
 #include <algorithm>
 
-Lexer::Lexer(StringConstRef filename, StringConstRef buffer) : 
-  file(filename), 
-  line(1), 
-  cursor(0),
-  buffer(buffer), 
-  index(0),
-  exception_to_semicolon_rule(false) {}
+Lexer::Lexer(StringConstRef filename, StringConstRef buffer) : file(filename),
+                                                               line(1),
+                                                               cursor(0),
+                                                               buffer(buffer),
+                                                               index(0),
+                                                               exception_to_semicolon_rule(false) {}
 
 void Lexer::Tokenize()
 {
@@ -81,7 +80,6 @@ void Lexer::Tokenize()
     // logical operators
     MergeTokenPair(i, Token::Type::BITWISE_AND_OPERATOR, Token::Type::BITWISE_AND_OPERATOR, Token::Type::LOGICAL_AND_OPERATOR, "&&");
     MergeTokenPair(i, Token::Type::BITWISE_OR_OPERATOR, Token::Type::BITWISE_OR_OPERATOR, Token::Type::LOGICAL_OR_OPERATOR, "||");
-
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
@@ -130,7 +128,7 @@ void Lexer::MergeTokenPair(size_t &index, Token::Type first, Token::Type second,
 
 void Lexer::InsertKeywordVar(size_t &index)
 {
-  auto& current = tokens[index].type;
+  auto &current = tokens[index].type;
   auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : Token::Type::INVALID;
 
   if (current == Token::Type::SYMBOL && next == Token::Type::ASSIGNMENT_OPERATOR)
@@ -432,11 +430,10 @@ void Lexer::ParseStringLiteral(StringRef character)
 bool Lexer::IsValidPunctuation(StringRef character)
 {
   return (
-    ispunct(character[0]) || 
-    character == "＝" || character == "≥" || character == "≤" ||
-    character == "≠" || character == "⋅" || character == "•" ||
-    character == "×"
-    );
+      ispunct(character[0]) ||
+      character == "＝" || character == "≥" || character == "≤" ||
+      character == "≠" || character == "⋅" || character == "•" ||
+      character == "×");
 }
 
 void Lexer::ParsePunctuation(StringRef character)

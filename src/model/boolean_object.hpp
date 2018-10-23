@@ -12,7 +12,8 @@ struct BooleanObject : Object
     return std::make_shared<BooleanObject>(value);
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     return (value == true) ? "true" : "false";
   }
 };

@@ -7,10 +7,9 @@ struct PrefixExpressionNode : Node
   Token::Type prefix_operator;
   NodePtr right;
 
-  explicit PrefixExpressionNode(Token::Type prefix_operator) : 
-    Node(PREFIX_EXPRESSION), 
-    prefix_operator(prefix_operator), 
-    right(nullptr) {}
+  explicit PrefixExpressionNode(Token::Type prefix_operator) : Node(PREFIX_EXPRESSION),
+                                                               prefix_operator(prefix_operator),
+                                                               right(nullptr) {}
 
   String ToString() override
   {

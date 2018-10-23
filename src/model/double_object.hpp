@@ -15,12 +15,12 @@ struct DoubleObject : Object
     return std::make_shared<DoubleObject>(value);
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(str_precision) << value;
     return stream.str();
   }
-
 };
 
 typedef std::shared_ptr<DoubleObject> DoubleObjectPtr;

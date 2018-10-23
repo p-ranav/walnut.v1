@@ -28,7 +28,7 @@ struct HashObject : Object
   ObjectPtr Copy() override
   {
     HashObjectPtr result = std::make_shared<HashObject>();
-    for (auto& pair : pairs)
+    for (auto &pair : pairs)
     {
       HashPair copy(pair.second.key->Copy(), pair.second.value->Copy());
       result->pairs.insert(std::make_pair(pair.first, copy));
@@ -43,7 +43,7 @@ struct HashObject : Object
     if (elements.size() > 0)
       elements.clear();
 
-    for (auto& pair : pairs)
+    for (auto &pair : pairs)
     {
       std::shared_ptr<ArrayObject> pair_as_array = std::make_shared<ArrayObject>();
       pair_as_array->IterableAppend(pair.second.key);
@@ -57,14 +57,15 @@ struct HashObject : Object
   {
     current_index += 1;
 
-    if (current_index == pairs.size()) {
+    if (current_index == pairs.size())
+    {
       return elements.end();
     }
 
     if (elements.size() == 0)
     {
       size_t index = 0;
-      for (auto& pair : pairs)
+      for (auto &pair : pairs)
       {
         if (index == current_index)
         {
@@ -80,7 +81,7 @@ struct HashObject : Object
     else
     {
       size_t index = 0;
-      for (auto& pair : pairs)
+      for (auto &pair : pairs)
       {
         if (index == current_index)
         {
@@ -116,10 +117,11 @@ struct HashObject : Object
     return elements.size();
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     String result = "{";
     size_t index = 1;
-    for (auto& pair : pairs)
+    for (auto &pair : pairs)
     {
       if (pair.second.key->type == ObjectType::STRING)
       {
@@ -151,7 +153,7 @@ struct HashObject : Object
     return result;
   }
 
-  HashPair& Get(HashKey key)
+  HashPair &Get(HashKey key)
   {
     if (pairs.find(key) != pairs.end())
       return pairs[key];

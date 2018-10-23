@@ -6,14 +6,13 @@
 struct BlockStatementNode : Node
 {
   std::vector<NodePtr> statements;
-  BlockStatementNode() : 
-    Node(BLOCK_STATEMENT), 
-    statements({}) {}
+  BlockStatementNode() : Node(BLOCK_STATEMENT),
+                         statements({}) {}
 
   String ToString() override
   {
     String result = "{ ";
-    for (auto& statement : statements)
+    for (auto &statement : statements)
     {
       result += statement->ToString() + "; ";
     }

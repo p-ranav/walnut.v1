@@ -6,8 +6,7 @@ struct VarStatementNode : Node
 {
   IdentifierNodePtr name;
   NodePtr expression;
-  VarStatementNode() : 
-    Node(VAR_STATEMENT) {}
+  VarStatementNode() : Node(VAR_STATEMENT) {}
 
   String ToString() override
   {

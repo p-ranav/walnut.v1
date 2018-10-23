@@ -11,8 +11,7 @@ struct ExpressionAssignmentStatementNode : Node
 {
   NodePtr left;
   NodePtr expression;
-  ExpressionAssignmentStatementNode() :
-    Node(EXPRESSION_ASSIGNMENT_STATEMENT) {}
+  ExpressionAssignmentStatementNode() : Node(EXPRESSION_ASSIGNMENT_STATEMENT) {}
 
   String ToString() override
   {

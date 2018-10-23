@@ -35,9 +35,10 @@ struct StringObject : Object
     return std::make_shared<StringObject>(Value());
   }
 
-  String Value() {
+  String Value()
+  {
     String result = "";
-    for (auto& object : buffer)
+    for (auto &object : buffer)
     {
       CharacterObjectPtr character = std::dynamic_pointer_cast<CharacterObject>(object);
       result += character->value;
@@ -85,9 +86,10 @@ struct StringObject : Object
     return buffer.size();
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     String result = "\"";
-    for (auto& character : buffer)
+    for (auto &character : buffer)
     {
       result += character->Inspect();
     }

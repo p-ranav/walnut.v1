@@ -4,9 +4,8 @@
 struct BooleanNode : Node
 {
   bool value;
-  explicit BooleanNode(bool value) : 
-    Node(BOOLEAN), 
-    value(value) {}
+  explicit BooleanNode(bool value) : Node(BOOLEAN),
+                                     value(value) {}
 
   String ToString() override
   {

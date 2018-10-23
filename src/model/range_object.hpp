@@ -16,13 +16,12 @@ struct RangeObject : Object
   typedef std::vector<ObjectPtr>::iterator ObjectIterator;
   ObjectIterator iterator;
 
-  explicit RangeObject(double start, double end, double step, bool integral_range) :
-    Object(RANGE, true),
-    start(start),
-    end(end),
-    step(step),
-    current(start),
-    integral_range(integral_range) {}
+  explicit RangeObject(double start, double end, double step, bool integral_range) : Object(RANGE, true),
+                                                                                     start(start),
+                                                                                     end(end),
+                                                                                     step(step),
+                                                                                     current(start),
+                                                                                     integral_range(integral_range) {}
 
   void IterableInit() override
   {
@@ -38,10 +37,12 @@ struct RangeObject : Object
   ObjectIterator IterableNext() override
   {
     current = current + step;
-    if (start < end && current >= end) {
-        return elements.end();
+    if (start < end && current >= end)
+    {
+      return elements.end();
     }
-    else if (start > end && current <= end) {
+    else if (start > end && current <= end)
+    {
       return elements.end();
     }
 
@@ -87,12 +88,13 @@ struct RangeObject : Object
   {
     std::shared_ptr<RangeObject> result = std::make_shared<RangeObject>(start, end, step, integral_range);
     result->current = current;
-    for (auto& element : elements)
+    for (auto &element : elements)
       result->elements.push_back(element);
     return result;
   }
 
-  String Inspect() override {
+  String Inspect() override
+  {
     return "range [" + std::to_string(start) + ", " + std::to_string(end) + ") @ " + std::to_string(step);
   }
 };

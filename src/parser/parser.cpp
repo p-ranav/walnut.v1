@@ -6,24 +6,22 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                              current_token_index(0),
                                              statements({}),
                                              tokens(tokens),
-                                             precedences({
-                                                 {Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
-                                                 {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
-                                                 {Token::Type::LEFT_PARENTHESIS, CALL},
-                                                 {Token::Type::EQUALITY_OPERATOR, EQUAL},
-                                                 {Token::Type::INEQUALITY_OPERATOR, EQUAL},
-                                                 {Token::Type::LESSER_THAN_OPERATOR, LESSGREATER},
-                                                 {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                                                 {Token::Type::GREATER_THAN_OPERATOR, LESSGREATER},
-                                                 {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                                                 {Token::Type::ADDITION_OPERATOR, SUM},
-                                                 {Token::Type::SUBTRACTION_OPERATOR, SUM},
-                                                 {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
-                                                 {Token::Type::DIVISION_OPERATOR, PRODUCT},
-                                                 {Token::Type::MODULUS_OPERATOR, PRODUCT},
-                                                 {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
-                                                 {Token::Type::DOT_OPERATOR, DOT}
-                                             })
+                                             precedences({{Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
+                                                          {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
+                                                          {Token::Type::LEFT_PARENTHESIS, CALL},
+                                                          {Token::Type::EQUALITY_OPERATOR, EQUAL},
+                                                          {Token::Type::INEQUALITY_OPERATOR, EQUAL},
+                                                          {Token::Type::LESSER_THAN_OPERATOR, LESSGREATER},
+                                                          {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                                                          {Token::Type::GREATER_THAN_OPERATOR, LESSGREATER},
+                                                          {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                                                          {Token::Type::ADDITION_OPERATOR, SUM},
+                                                          {Token::Type::SUBTRACTION_OPERATOR, SUM},
+                                                          {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
+                                                          {Token::Type::DIVISION_OPERATOR, PRODUCT},
+                                                          {Token::Type::MODULUS_OPERATOR, PRODUCT},
+                                                          {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
+                                                          {Token::Type::DOT_OPERATOR, DOT}})
 {
   // prefix parse functions
   RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -103,7 +101,7 @@ bool Parser::IsCurrentToken(Token::Type value)
   return (current_token.type == value);
 }
 
-bool Parser::IsCurrentTokenInList(const std::vector<Token::Type>& value)
+bool Parser::IsCurrentTokenInList(const std::vector<Token::Type> &value)
 {
   return (std::find(value.begin(), value.end(), current_token.type) != value.end());
 }
@@ -113,7 +111,7 @@ bool Parser::IsPeekToken(Token::Type value)
   return (peek_token.type == value);
 }
 
-bool Parser::IsPeekTokenInList(const std::vector<Token::Type>& value)
+bool Parser::IsPeekTokenInList(const std::vector<Token::Type> &value)
 {
   return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
 }
@@ -122,10 +120,7 @@ void Parser::ReportError(Token::Type expected)
 {
   String message;
   if (peek_token.file != "")
-    message = "parser error: unexpected token \"" + peek_token.value + "\""
-    + ", expected \"" + TokenString(expected) + "\" at"
-    + peek_token.file + ", line " + std::to_string(current_token.line) + " char "
-    + std::to_string(current_token.cursor + 1);
+    message = "parser error: unexpected token \"" + peek_token.value + "\"" + ", expected \"" + TokenString(expected) + "\" at" + peek_token.file + ", line " + std::to_string(current_token.line) + " char " + std::to_string(current_token.cursor + 1);
   else
     message = "parser error: unexpected token \"" + peek_token.value + "\"";
   std::cout << message << std::endl;
@@ -138,7 +133,8 @@ bool Parser::ExpectPeek(Token::Type value)
     NextToken();
     return true;
   }
-  else {
+  else
+  {
     ReportError(value);
     return false;
   }
@@ -373,14 +369,14 @@ NodePtr Parser::ParseWhileExpression()
 
   NextToken();
 
-  if (IsCurrentToken(Token::Type::LEFT_CURLY_BRACES)) 
+  if (IsCurrentToken(Token::Type::LEFT_CURLY_BRACES))
   {
     NextToken();
     result->condition = std::make_shared<BooleanNode>(true);
   }
   else
   {
-    result->condition = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
+    result->condition = ParseExpression(LOWEST, {Token::Type::LEFT_CURLY_BRACES});
 
     if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
       return nullptr;
@@ -396,7 +392,7 @@ NodePtr Parser::ParseForExpression()
   ForExpressionNodePtr result = std::make_shared<ForExpressionNode>();
   NextToken();
 
-  NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR });
+  NodePtr iterator = ParseExpression(LOWEST, {Token::Type::COMMA_OPERATOR});
   if (iterator)
     result->iterators.push_back(iterator);
 
@@ -404,7 +400,7 @@ NodePtr Parser::ParseForExpression()
   {
     NextToken();
     NextToken();
-    NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR, Token::Type::KEYWORD_IN });
+    NodePtr iterator = ParseExpression(LOWEST, {Token::Type::COMMA_OPERATOR, Token::Type::KEYWORD_IN});
     if (iterator)
       result->iterators.push_back(iterator);
   }
@@ -413,7 +409,7 @@ NodePtr Parser::ParseForExpression()
     return nullptr;
 
   NextToken();
-  result->iterable = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
+  result->iterable = ParseExpression(LOWEST, {Token::Type::LEFT_CURLY_BRACES});
 
   if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
     return nullptr;
@@ -477,13 +473,14 @@ NodePtr Parser::ParseCallExpression(NodePtr function)
   return result;
 }
 
-NodePtr Parser::ParseInfixExpression(NodePtr left) {
+NodePtr Parser::ParseInfixExpression(NodePtr left)
+{
   InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token.type);
   result->left = left;
   Precedence precedence = CurrentPrecedence();
   NextToken();
-  result->right = ParseExpression(precedence, 
-    { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::RIGHT_PARENTHESIS });
+  result->right = ParseExpression(precedence,
+                                  {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::RIGHT_PARENTHESIS});
   return result;
 }
 
@@ -533,8 +530,7 @@ NodePtr Parser::ParseIndexExpression(NodePtr left)
 NodePtr Parser::ParseDotOperator(NodePtr left)
 {
   NextToken();
-  NodePtr right = ParseExpression(SUM, {
-    Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR });
+  NodePtr right = ParseExpression(SUM, {Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR});
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
   if (call_expression != nullptr)
     call_expression->arguments.insert(call_expression->arguments.begin(), left);
@@ -564,8 +560,8 @@ NodePtr Parser::ParseHashLiteral()
     else
       result->pairs.insert(std::make_pair(key, value)); // TODO: report warning/error?
 
-    if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR)) 
-    { 
+    if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR))
+    {
       return nullptr;
     }
     NextToken();
