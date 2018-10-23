@@ -38,7 +38,15 @@
 #include <set_object.hpp>
 
 #include <environment.hpp>
+
 #include <iostream>
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include <string>
+#include <stdio.h> /* printf */
+#include <string.h>
+#include <stdarg.h> /* va_list, va_start, va_arg, va_end */
 
 struct Evaluator
 {
@@ -94,15 +102,14 @@ struct Evaluator
 
   // Built-in Functions
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
-  ObjectPtr print(std::vector<ObjectPtr> arguments);
-  ObjectPtr println(std::vector<ObjectPtr> arguments);
-  ObjectPtr length(std::vector<ObjectPtr> arguments);
-
-  ObjectPtr append(std::vector<ObjectPtr> arguments);
-  ObjectPtr extend(std::vector<ObjectPtr> arguments);
-  ObjectPtr insert(std::vector<ObjectPtr> arguments);
-  ObjectPtr upsert(std::vector<ObjectPtr> arguments);
-  ObjectPtr range(std::vector<ObjectPtr> arguments);
-  ObjectPtr map(std::vector<ObjectPtr> arguments);
-  ObjectPtr filter(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinPrintln(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinAppend(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinExtend(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinInsert(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinUpsert(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinMap(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
 };

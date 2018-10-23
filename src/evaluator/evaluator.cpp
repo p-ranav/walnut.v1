@@ -2,28 +2,26 @@
 #include <math.h>
 #include <utf8.hpp>
 
+#define BUILTIN(label, function) \
+  builtin_functions.insert(std::make_pair(\
+  label, \
+  std::make_shared<BuiltinFunctionObject>(\
+    std::bind(&Evaluator::\
+      function\
+        , this, std::placeholders::_1))));
+
 Evaluator::Evaluator()
 {
-  builtin_functions.insert(std::make_pair("print",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::print, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("println",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::println, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("length",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::length, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("append",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::append, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("extend",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::extend, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("insert",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::insert, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("upsert",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::upsert, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("range",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::range, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("map",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::map, this, std::placeholders::_1))));
-  builtin_functions.insert(std::make_pair("filter",
-                                          std::make_shared<BuiltinFunctionObject>(std::bind(&Evaluator::filter, this, std::placeholders::_1))));
+  BUILTIN("print", BuiltinPrint);
+  BUILTIN("println", BuiltinPrintln);
+  BUILTIN("length", BuiltinLength);
+  BUILTIN("append", BuiltinAppend);
+  BUILTIN("extend", BuiltinExtend);
+  BUILTIN("insert", BuiltinInsert);
+  BUILTIN("upsert", BuiltinUpsert);
+  BUILTIN("range", BuiltinRange);
+  BUILTIN("map", BuiltinMap);
+  BUILTIN("filter", BuiltinFilter);
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
