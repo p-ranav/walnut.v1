@@ -631,7 +631,7 @@ ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment
   CallExpressionNodePtr expression = std::dynamic_pointer_cast<CallExpressionNode>(node);
   FunctionLiteralNodePtr call_function = std::dynamic_pointer_cast<FunctionLiteralNode>(expression->function);
   ObjectPtr function = Eval(expression->function, environment);
-  std::vector<ObjectPtr> arguments = EvalExpressions(expression->arguments, environment);
+  std::vector<ObjectPtr> arguments = EvalExpressions(expression->arguments->elements, environment);
   return ApplyFunction(function, arguments);
 }
 

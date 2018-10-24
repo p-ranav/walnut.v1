@@ -322,7 +322,12 @@ NodePtr Parser::ParsePrefixExpression()
 NodePtr Parser::ParseGroupedExpression()
 {
   NextToken();
+  size_t start_index = current_token_index;
   NodePtr result = ParseExpression(LOWEST);
+
+  if (IsPeekToken(Token::Type::COMMA_OPERATOR))
+    return ParseTuple(result, start_index);
+
   if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
     return nullptr;
   return result;
@@ -473,7 +478,8 @@ NodePtr Parser::ParseCallExpression(NodePtr function)
 {
   CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
   result->function = function;
-  result->arguments = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+  result->arguments = std::dynamic_pointer_cast<TupleNode>(expression_list);
   return result;
 }
 
@@ -491,18 +497,20 @@ NodePtr Parser::ParseInfixExpression(NodePtr left)
 NodePtr Parser::ParseArrayLiteral()
 {
   ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
-  array_literal->elements = ParseExpressionList(Token::Type::RIGHT_SQUARE_BRACKETS);
+  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_SQUARE_BRACKETS);
+  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+  array_literal->elements = expression_tuple->elements;
   return array_literal;
 }
 
-std::vector<NodePtr> Parser::ParseExpressionList(Token::Type end)
+NodePtr Parser::ParseExpressionList(Token::Type end)
 {
   std::vector<NodePtr> elements;
 
   if (IsPeekToken(end))
   {
     NextToken();
-    return elements;
+    return std::make_shared<TupleNode>(elements);
   }
   NextToken();
 
@@ -517,9 +525,9 @@ std::vector<NodePtr> Parser::ParseExpressionList(Token::Type end)
   }
 
   if (!ExpectPeek(end))
-    return {};
+    return std::make_shared<TupleNode>();
 
-  return elements;
+  return std::make_shared<TupleNode>(elements);
 }
 
 NodePtr Parser::ParseIndexExpression(NodePtr left)
@@ -538,7 +546,7 @@ NodePtr Parser::ParseDotOperator(NodePtr left)
   NodePtr right = ParseExpression(SUM, {Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR});
   CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
   if (call_expression != nullptr)
-    call_expression->arguments.insert(call_expression->arguments.begin(), left);
+    call_expression->arguments->elements.insert(call_expression->arguments->elements.begin(), left);
   return call_expression;
 }
 
@@ -580,7 +588,9 @@ NodePtr Parser::ParseSetLiteral(NodePtr first, size_t start_index)
   while(current_token_index >= start_index)
     PreviousToken();
   SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
-  set_literal->elements = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
+  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
+  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+  set_literal->elements = expression_tuple->elements;
   return set_literal;
 }
 
@@ -607,4 +617,11 @@ NodePtr Parser::ParseTernaryOperator(NodePtr left)
   }
 
   return result;
+}
+
+NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
+{
+  while (current_token_index >= start_index)
+    PreviousToken();
+  return ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
 }

@@ -31,6 +31,7 @@ struct Node
     INDEX_EXPRESSION,
     HASH_LITERAL,
     SET_LITERAL,
+    TUPLE,
     INVALID
   };
 

@@ -1,11 +1,12 @@
 #pragma once
 #include <node.hpp>
+#include <tuple_node.hpp>
 #include <token.hpp>
 
 struct CallExpressionNode : Node
 {
   NodePtr function;
-  std::vector<NodePtr> arguments;
+  TupleNodePtr arguments;
   explicit CallExpressionNode() : Node(CALL_EXPRESSION),
                                   function(nullptr),
                                   arguments({}) {}
@@ -14,17 +15,17 @@ struct CallExpressionNode : Node
   {
     String result = "";
     result += function->ToString() + "(";
-    if (arguments.size() == 1)
+    if (arguments->elements.size() == 1)
     {
-      result += arguments[0]->ToString();
+      result += arguments->elements[0]->ToString();
     }
-    else if (arguments.size() > 1)
+    else if (arguments->elements.size() > 1)
     {
-      for (size_t i = 0; i < arguments.size() - 1; i++)
+      for (size_t i = 0; i < arguments->elements.size() - 1; i++)
       {
-        result += arguments[i]->ToString() + ", ";
+        result += arguments->elements[i]->ToString() + ", ";
       }
-      result += arguments[arguments.size() - 1]->ToString();
+      result += arguments->elements[arguments->elements.size() - 1]->ToString();
     }
     result += ")";
     return result;

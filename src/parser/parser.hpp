@@ -21,6 +21,7 @@
 #include <set_literal_node.hpp>
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
+#include <tuple_node.hpp>
 
 #include <iostream>
 #include <vector>
@@ -103,10 +104,12 @@ struct Parser
   NodePtr ParseFunctionLiteral();
 
   NodePtr ParseArrayLiteral();
-  std::vector<NodePtr> ParseExpressionList(Token::Type end);
+  NodePtr ParseExpressionList(Token::Type end);
 
   NodePtr ParseSetLiteral(NodePtr first, size_t start_index);
   NodePtr ParseHashLiteral();
+
+  NodePtr ParseTuple(NodePtr first, size_t start_index);
 
   /* Infix parse functions */
   NodePtr ParseInfixExpression(NodePtr left);
