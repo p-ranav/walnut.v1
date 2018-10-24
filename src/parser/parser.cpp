@@ -21,7 +21,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                           {Token::Type::DIVISION_OPERATOR, PRODUCT},
                                                           {Token::Type::MODULUS_OPERATOR, PRODUCT},
                                                           {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
-                                                          {Token::Type::DOT_OPERATOR, DOT}})
+                                                          {Token::Type::DOT_OPERATOR, DOT},
+                                                          {Token::Type::KEYWORD_IF, IF} })
 {
   // prefix parse functions
   RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -59,6 +60,7 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(Token::Type::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
+  RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
 }
 
 void Parser::ParseProgram()
@@ -504,7 +506,8 @@ std::vector<NodePtr> Parser::ParseExpressionList(Token::Type end)
   }
   NextToken();
 
-  elements.push_back(ParseExpression(LOWEST, {Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS}));
+  elements.push_back(ParseExpression(LOWEST, 
+    { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS }));
 
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
   {
@@ -579,4 +582,29 @@ NodePtr Parser::ParseSetLiteral(NodePtr first, size_t start_index)
   SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
   set_literal->elements = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
   return set_literal;
+}
+
+NodePtr Parser::ParseTernaryOperator(NodePtr left)
+{
+  IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
+  NextToken();
+
+  result->consequence = std::make_shared<BlockStatementNode>();
+  result->consequence->statements.push_back(left);
+
+  result->condition = ParseExpression(LOWEST, 
+    { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE });
+
+  if (!ExpectPeek(Token::Type::KEYWORD_ELSE))
+  {
+    return nullptr;
+  }
+  else
+  {
+    NextToken();
+    result->alternative = std::make_shared<BlockStatementNode>();
+    result->alternative->statements.push_back(ParseExpression(LOWEST));
+  }
+
+  return result;
 }

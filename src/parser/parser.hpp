@@ -66,6 +66,7 @@ struct Parser
   enum Precedence
   {
     LOWEST,
+    IF,
     LOGICAL_OR,  // ||
     LOGICAL_AND, // &&
     EQUAL,       // ==, !=
@@ -112,6 +113,7 @@ struct Parser
   NodePtr ParseCallExpression(NodePtr function);
   NodePtr ParseIndexExpression(NodePtr left);
   NodePtr ParseDotOperator(NodePtr left);
+  NodePtr ParseTernaryOperator(NodePtr left);
 
   /* Member variables */
   TokenVector tokens;
