@@ -1,0 +1,6 @@
+x = 5 if true else 3;
+y = 5 if false else 3;
+println(x, y);
+
+z = (x * (y if y < 2 else 10));
+z.println();
