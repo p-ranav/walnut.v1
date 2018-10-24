@@ -24,7 +24,8 @@ struct Object
     ARRAY,
     RANGE,
     HASH,
-    SET
+    SET,
+    TUPLE
   };
 
   Type type;

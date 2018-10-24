@@ -520,8 +520,14 @@ NodePtr Parser::ParseExpressionList(Token::Type end)
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
   {
     NextToken();
-    NextToken();
-    elements.push_back(ParseExpression(LOWEST));
+    if (!IsPeekToken(end))
+    {
+      NextToken();
+      elements.push_back(ParseExpression(LOWEST));
+    }
+    else {
+      break;
+    }
   }
 
   if (!ExpectPeek(end))
@@ -621,7 +627,19 @@ NodePtr Parser::ParseTernaryOperator(NodePtr left)
 
 NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
 {
+  TupleNodePtr result = std::make_shared<TupleNode>();
   while (current_token_index >= start_index)
     PreviousToken();
-  return ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+
+  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+  if (expression_tuple->elements.size() == 0)
+  {
+    result->elements.push_back(first);
+    NextToken();
+    return result;
+  }
+
+  NextToken();
+  return expression_list;
 }

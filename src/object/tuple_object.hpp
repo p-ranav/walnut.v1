@@ -4,31 +4,22 @@
 #include <null_object.hpp>
 #include <memory>
 #include <vector>
-#include <set>
 
-struct SetObject : Object
+struct TupleObject : Object
 {
   std::vector<ObjectPtr> elements;
 
   typedef std::vector<ObjectPtr>::iterator ObjectIterator;
   ObjectIterator iterator;
 
-  SetObject() : Object(SET, true), elements({}), iterator(elements.begin()) {}
+  TupleObject() : Object(TUPLE, true), elements({}), iterator(elements.begin()) {}
 
-  explicit SetObject(const std::vector<ObjectPtr> &elements) : Object(SET, true)
-  {
-    std::set<String> string_set;
-    for (auto &element : elements)
-    {
-      if (string_set.find(element->Inspect()) == string_set.end())
-        this->elements.push_back(element);
-      string_set.insert(element->Inspect());
-    }
-  }
+  explicit TupleObject(const std::vector<ObjectPtr> &elements) : Object(TUPLE, true),
+    elements(elements), iterator(this->elements.begin()) {}
 
   ObjectPtr Copy() override
   {
-    std::shared_ptr<SetObject> result = std::make_shared<SetObject>();
+    std::shared_ptr<TupleObject> result = std::make_shared<TupleObject>();
     for (auto &element : elements)
       result->elements.push_back(element->Copy());
     result->iterator = result->elements.begin();
@@ -68,18 +59,13 @@ struct SetObject : Object
 
   void IterableAppend(ObjectPtr value) override
   {
-    std::set<String> string_set;
-    for (auto &element : elements)
-      string_set.insert(element->Inspect());
-
-    if (string_set.find(value->Inspect()) == string_set.end())
-      elements.push_back(value);
+    elements.push_back(value);
   }
 
   String Inspect() override
   {
     String result = "";
-    result += "{";
+    result += "(";
     if (elements.size() == 1)
     {
       if (elements[0]->type != ObjectType::STRING)
@@ -110,9 +96,9 @@ struct SetObject : Object
         result += "\"" + string_element->Value() + "\"";
       }
     }
-    result += "}";
+    result += ")";
     return result;
   }
 };
 
-typedef std::shared_ptr<SetObject> SetObjectPtr;
+typedef std::shared_ptr<TupleObject> TupleObjectPtr;

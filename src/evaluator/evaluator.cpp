@@ -73,6 +73,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
     return EvalHashLiteral(node, environment);
   case NodeType::SET_LITERAL:
     return EvalSetLiteral(node, environment);
+  case NodeType::TUPLE:
+    return EvalTuple(node, environment);
   default:
     return std::make_shared<NullObject>();
   }
@@ -584,6 +586,11 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       return array_object;
     }
 
+    else if (identifier_object != nullptr && identifier_object->type == ObjectType::TUPLE && index_object->type == ObjectType::INTEGER)
+    {
+      return identifier_object; // tuples can't be mutated
+    }
+
     else if (identifier_object != nullptr && identifier_object->type == ObjectType::HASH)
     {
       HashObjectPtr hash_object = std::dynamic_pointer_cast<HashObject>(identifier_object);
@@ -613,7 +620,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
     {
       std::cout << "error: index operator not supported " << std::endl;
       exit(EXIT_FAILURE);
-      return std::make_shared<NullObject>();
+      return identifier_object;
     }
   }
 
@@ -701,6 +708,10 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
   {
     return EvalArrayIndexExpression(left, index);
   }
+  if (left->type == ObjectType::TUPLE && index->type == Object::INTEGER)
+  {
+    return EvalTupleIndexExpression(left, index);
+  }
   if (left->type == ObjectType::HASH)
   {
     return EvalHashIndexExpression(left, index);
@@ -782,4 +793,32 @@ ObjectPtr Evaluator::EvalSetLiteral(NodePtr node, EnvironmentPtr environment)
 {
   SetLiteralNodePtr set_node = std::dynamic_pointer_cast<SetLiteralNode>(node);
   return std::make_shared<SetObject>(EvalExpressions(set_node->elements, environment));
+}
+
+ObjectPtr Evaluator::EvalTuple(NodePtr node, EnvironmentPtr environment)
+{
+  TupleNodePtr tuple_node = std::dynamic_pointer_cast<TupleNode>(node);
+  return std::make_shared<TupleObject>(EvalExpressions(tuple_node->elements, environment));
+}
+
+ObjectPtr Evaluator::EvalTupleIndexExpression(ObjectPtr array, ObjectPtr index)
+{
+  TupleObjectPtr tuple_object = std::dynamic_pointer_cast<TupleObject>(array);
+  std::vector<ObjectPtr> &elements = tuple_object->elements;
+  int tuple_size = static_cast<int>(elements.size());
+
+  IntegerObjectPtr tuple_index = std::dynamic_pointer_cast<IntegerObject>(index);
+  int index_value = tuple_index->value;
+
+  if (index_value >= tuple_size)
+  {
+    std::cout << "error: tuple index out of range" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  else if (index_value < 0)
+  {
+    std::cout << "error: tuple index cannot be negative" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  return elements[index_value];
 }

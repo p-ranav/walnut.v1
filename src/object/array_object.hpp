@@ -68,7 +68,13 @@ struct ArrayObject : Object
     result += "[";
     if (elements.size() == 1)
     {
-      result += elements[0]->Inspect();
+      if (elements[0]->type != ObjectType::STRING)
+        result += elements[0]->Inspect();
+      else
+      {
+        StringObjectPtr string_element = std::dynamic_pointer_cast<StringObject>(elements[0]);
+        result += "\"" + string_element->Value() + "\"";
+      }
     }
     else if (elements.size() > 1)
     {
