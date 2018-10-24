@@ -4,3 +4,7 @@ println(x, y);
 
 z = (x * (y if y < 2 else 10));
 z.println();
+
+even = function(n) { true if n % 2 == 0 else false }
+even(14).println();
+even(3).println();
