@@ -16,3 +16,6 @@ println(thistuple);
 
 z = ("apple",);
 z.println();
+
+z = ('a', 'p', 'p', 'l', 'e')
+z.println();
