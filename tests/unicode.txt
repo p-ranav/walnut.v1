@@ -1,0 +1,11 @@
+/*
+ * Function to calculate 🚀 thrust
+ * ṁ  - mass flow rate (kg/s)
+ * Pₐ - 🌍 atmospheric pressure (N/m²)
+ * Pₑ - exit pressure (N/m²)
+ * Vₑ - exit velocity 🙮 (m/s)
+ * Aₑ - exit area of nozzle (m²)
+ */
+thrust = function(ṁ, Vₑ, Pₑ, Pₐ, Aₑ) { 
+  ṁ • Vₑ + (Pₑ - Pₐ) • Aₑ 
+}
