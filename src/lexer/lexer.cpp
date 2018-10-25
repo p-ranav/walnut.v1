@@ -199,8 +199,8 @@ void Lexer::ParseBlockComment(StringRef character)
 
 void Lexer::ParseNumber(StringRef character)
 {
-  character = NextCharacter();
   Token result(file, line, cursor, Token::Type::INTEGER, character);
+  character = NextCharacter();
 
   while (true)
   {
