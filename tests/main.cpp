@@ -8,3 +8,4 @@
 #include <test_lexer_string.hpp>
 
 #include <test_parser_tuple.hpp>
+#include <test_parser_arrow.hpp>

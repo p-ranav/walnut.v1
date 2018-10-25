@@ -1,5 +1,8 @@
 #pragma once
 #include <node.hpp>
+#include <string>
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
 
 struct DoubleNode : Node
 {
@@ -9,7 +12,9 @@ struct DoubleNode : Node
 
   String ToString() override
   {
-    return std::to_string(value);
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2) << value;
+    return stream.str();
   }
 };
 
