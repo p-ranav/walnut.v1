@@ -29,3 +29,6 @@ functions["divide"](2, 3.).println(); // 0.67
 apply = function(a, b, c) { c(a, b) };
 
 (5).apply(2, functions["sum"]).println(); // 7
+
+trace = message => { print("TRACE::"); println(message); };
+trace("Thread started");
