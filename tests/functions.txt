@@ -32,3 +32,10 @@ apply = function(a, b, c) { c(a, b) };
 
 trace = message => { print("TRACE::"); println(message); };
 trace("Thread started");
+
+printer = function(text) {
+  return () => text.println();
+};
+
+my_function = printer("Hey");
+my_function();

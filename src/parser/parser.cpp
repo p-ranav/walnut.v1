@@ -328,7 +328,9 @@ NodePtr Parser::ParseGroupedExpression()
   size_t start_index = current_token_index;
   NodePtr result = ParseExpression(LOWEST);
 
-  if (IsPeekToken(Token::Type::COMMA_OPERATOR))
+  if (IsPeekToken(Token::Type::COMMA_OPERATOR) || 
+    // grouped expression is '()' - parse this as empty tuple
+    (IsCurrentToken(Token::Type::RIGHT_PARENTHESIS) && current_token_index == start_index))
     return ParseTuple(result, start_index);
 
   if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
@@ -638,8 +640,11 @@ NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
   TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
   if (expression_tuple->elements.size() == 0)
   {
-    result->elements.push_back(first);
-    NextToken();
+    if (first != nullptr)
+    {
+      result->elements.push_back(first);
+      NextToken();
+    }
     return result;
   }
 
@@ -651,38 +656,43 @@ NodePtr Parser::ParseArrowOperator(NodePtr left)
 {
   FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
 
-  if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
+  if (left == nullptr)
+    result->parameters = {};
+  else
   {
-    std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
-    return nullptr;
-  }
-  
-  if (left->type == Node::Type::TUPLE)
-  {
-    TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
-    for (auto& parameter : function_parameters->elements)
+    if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
     {
-      IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
+      std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
+      return nullptr;
+    }
+
+    if (left->type == Node::Type::TUPLE)
+    {
+      TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
+      for (auto& parameter : function_parameters->elements)
+      {
+        IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
+        if (identifier != nullptr)
+        {
+          result->parameters.push_back(identifier);
+        }
+        else
+        {
+          std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+        }
+      }
+    }
+    else if (left->type == Node::Type::IDENTIFIER)
+    {
+      IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
       if (identifier != nullptr)
       {
         result->parameters.push_back(identifier);
       }
       else
       {
-        std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+        std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
       }
-    }
-  }
-  else if (left->type == Node::Type::IDENTIFIER)
-  {
-    IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
-    if (identifier != nullptr)
-    {
-      result->parameters.push_back(identifier);
-    }
-    else
-    {
-      std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
     }
   }
 
