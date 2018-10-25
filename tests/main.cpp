@@ -6,3 +6,5 @@
 #include <test_lexer_integer.hpp>
 #include <test_lexer_double.hpp>
 #include <test_lexer_string.hpp>
+
+#include <test_parser_tuple.hpp>

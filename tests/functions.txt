@@ -39,3 +39,7 @@ printer = function(text) {
 
 my_function = printer("Hey");
 my_function();
+
+(() => true)().println(); // true
+
+(() => 50)().println(); // 50
