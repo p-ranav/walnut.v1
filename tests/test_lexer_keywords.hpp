@@ -26,7 +26,6 @@ TEST_CASE("Lexer can recognize the keyword 'true'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 5);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'false'", "[lexer]")
@@ -48,7 +47,6 @@ TEST_CASE("Lexer can recognize the keyword 'false'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 6);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'if'", "[lexer]")
@@ -70,7 +68,6 @@ TEST_CASE("Lexer can recognize the keyword 'if'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'else'", "[lexer]")
@@ -92,7 +89,6 @@ TEST_CASE("Lexer can recognize the keyword 'else'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 5);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'while'", "[lexer]")
@@ -114,7 +110,6 @@ TEST_CASE("Lexer can recognize the keyword 'while'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 6);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'for'", "[lexer]")
@@ -136,7 +131,6 @@ TEST_CASE("Lexer can recognize the keyword 'for'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 4);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'in'", "[lexer]")
@@ -158,7 +152,6 @@ TEST_CASE("Lexer can recognize the keyword 'in'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'function'", "[lexer]")
@@ -180,7 +173,6 @@ TEST_CASE("Lexer can recognize the keyword 'function'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 9);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'ƒ'", "[lexer]")
@@ -202,7 +194,6 @@ TEST_CASE("Lexer can recognize the keyword 'ƒ'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword '𝑓'", "[lexer]")
@@ -224,7 +215,6 @@ TEST_CASE("Lexer can recognize the keyword '𝑓'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'return'", "[lexer]")
@@ -246,7 +236,6 @@ TEST_CASE("Lexer can recognize the keyword 'return'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 7);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'and'", "[lexer]")
@@ -268,7 +257,6 @@ TEST_CASE("Lexer can recognize the keyword 'and'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 4);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'or'", "[lexer]")
@@ -290,7 +278,6 @@ TEST_CASE("Lexer can recognize the keyword 'or'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the keyword 'not'", "[lexer]")
@@ -312,5 +299,4 @@ TEST_CASE("Lexer can recognize the keyword 'not'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 4);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }

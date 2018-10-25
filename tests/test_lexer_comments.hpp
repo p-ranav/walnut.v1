@@ -21,7 +21,6 @@ TEST_CASE("Lexer can recognize line comments", "[lexer]")
   REQUIRE(lexer.tokens[0].cursor == 16);
   REQUIRE(lexer.tokens[0].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[0].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize block comments", "[lexer]")
@@ -38,7 +37,6 @@ TEST_CASE("Lexer can recognize block comments", "[lexer]")
   REQUIRE(lexer.tokens[0].cursor == 20);
   REQUIRE(lexer.tokens[0].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[0].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize comments", "[lexer]")
@@ -55,5 +53,4 @@ TEST_CASE("Lexer can recognize comments", "[lexer]")
   REQUIRE(lexer.tokens[0].cursor == 36);
   REQUIRE(lexer.tokens[0].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[0].value == "EOF");
-  lexer.Tokenize();
 }

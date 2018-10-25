@@ -26,7 +26,6 @@ TEST_CASE("Lexer can recognize the punctuation '.'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation ','", "[lexer]")
@@ -48,7 +47,6 @@ TEST_CASE("Lexer can recognize the punctuation ','", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation ':'", "[lexer]")
@@ -70,7 +68,6 @@ TEST_CASE("Lexer can recognize the punctuation ':'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation ';'", "[lexer]")
@@ -92,7 +89,6 @@ TEST_CASE("Lexer can recognize the punctuation ';'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '>'", "[lexer]")
@@ -114,7 +110,6 @@ TEST_CASE("Lexer can recognize the punctuation '>'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '<'", "[lexer]")
@@ -136,7 +131,6 @@ TEST_CASE("Lexer can recognize the punctuation '<'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '+'", "[lexer]")
@@ -158,7 +152,6 @@ TEST_CASE("Lexer can recognize the punctuation '+'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '-'", "[lexer]")
@@ -180,7 +173,6 @@ TEST_CASE("Lexer can recognize the punctuation '-'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '*'", "[lexer]")
@@ -202,7 +194,6 @@ TEST_CASE("Lexer can recognize the punctuation '*'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '/'", "[lexer]")
@@ -224,7 +215,6 @@ TEST_CASE("Lexer can recognize the punctuation '/'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '%'", "[lexer]")
@@ -246,7 +236,6 @@ TEST_CASE("Lexer can recognize the punctuation '%'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '('", "[lexer]")
@@ -268,7 +257,6 @@ TEST_CASE("Lexer can recognize the punctuation '('", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '{'", "[lexer]")
@@ -290,7 +278,6 @@ TEST_CASE("Lexer can recognize the punctuation '{'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '['", "[lexer]")
@@ -312,7 +299,6 @@ TEST_CASE("Lexer can recognize the punctuation '['", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation ')'", "[lexer]")
@@ -334,7 +320,6 @@ TEST_CASE("Lexer can recognize the punctuation ')'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '}'", "[lexer]")
@@ -356,7 +341,6 @@ TEST_CASE("Lexer can recognize the punctuation '}'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation ']'", "[lexer]")
@@ -378,7 +362,6 @@ TEST_CASE("Lexer can recognize the punctuation ']'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '&'", "[lexer]")
@@ -400,7 +383,6 @@ TEST_CASE("Lexer can recognize the punctuation '&'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '|'", "[lexer]")
@@ -422,7 +404,6 @@ TEST_CASE("Lexer can recognize the punctuation '|'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '^'", "[lexer]")
@@ -444,7 +425,6 @@ TEST_CASE("Lexer can recognize the punctuation '^'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '~'", "[lexer]")
@@ -466,7 +446,6 @@ TEST_CASE("Lexer can recognize the punctuation '~'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '!'", "[lexer]")
@@ -488,7 +467,6 @@ TEST_CASE("Lexer can recognize the punctuation '!'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '='", "[lexer]")
@@ -510,7 +488,6 @@ TEST_CASE("Lexer can recognize the punctuation '='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '＝'", "[lexer]")
@@ -532,7 +509,6 @@ TEST_CASE("Lexer can recognize the punctuation '＝'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '≥'", "[lexer]")
@@ -554,7 +530,6 @@ TEST_CASE("Lexer can recognize the punctuation '≥'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '≤'", "[lexer]")
@@ -576,7 +551,6 @@ TEST_CASE("Lexer can recognize the punctuation '≤'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '≠'", "[lexer]")
@@ -598,7 +572,6 @@ TEST_CASE("Lexer can recognize the punctuation '≠'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '⋅'", "[lexer]")
@@ -620,7 +593,6 @@ TEST_CASE("Lexer can recognize the punctuation '⋅'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '•'", "[lexer]")
@@ -642,7 +614,6 @@ TEST_CASE("Lexer can recognize the punctuation '•'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '×'", "[lexer]")
@@ -664,7 +635,6 @@ TEST_CASE("Lexer can recognize the punctuation '×'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 2);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '=='", "[lexer]")
@@ -686,7 +656,6 @@ TEST_CASE("Lexer can recognize the punctuation '=='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '!='", "[lexer]")
@@ -708,7 +677,6 @@ TEST_CASE("Lexer can recognize the punctuation '!='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '+='", "[lexer]")
@@ -730,7 +698,6 @@ TEST_CASE("Lexer can recognize the punctuation '+='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '-='", "[lexer]")
@@ -752,7 +719,6 @@ TEST_CASE("Lexer can recognize the punctuation '-='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '*='", "[lexer]")
@@ -774,7 +740,6 @@ TEST_CASE("Lexer can recognize the punctuation '*='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '/='", "[lexer]")
@@ -796,7 +761,6 @@ TEST_CASE("Lexer can recognize the punctuation '/='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '%='", "[lexer]")
@@ -818,7 +782,6 @@ TEST_CASE("Lexer can recognize the punctuation '%='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '>='", "[lexer]")
@@ -840,7 +803,6 @@ TEST_CASE("Lexer can recognize the punctuation '>='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '<='", "[lexer]")
@@ -862,7 +824,6 @@ TEST_CASE("Lexer can recognize the punctuation '<='", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '<<'", "[lexer]")
@@ -884,7 +845,6 @@ TEST_CASE("Lexer can recognize the punctuation '<<'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '>>'", "[lexer]")
@@ -906,7 +866,6 @@ TEST_CASE("Lexer can recognize the punctuation '>>'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '&&'", "[lexer]")
@@ -928,7 +887,6 @@ TEST_CASE("Lexer can recognize the punctuation '&&'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '||'", "[lexer]")
@@ -950,7 +908,6 @@ TEST_CASE("Lexer can recognize the punctuation '||'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }
 
 TEST_CASE("Lexer can recognize the punctuation '=>'", "[lexer]")
@@ -972,5 +929,4 @@ TEST_CASE("Lexer can recognize the punctuation '=>'", "[lexer]")
   REQUIRE(lexer.tokens[1].cursor == 3);
   REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
   REQUIRE(lexer.tokens[1].value == "EOF");
-  lexer.Tokenize();
 }

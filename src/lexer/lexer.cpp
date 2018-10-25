@@ -370,8 +370,9 @@ void Lexer::ParseCharacter(StringRef character)
 
 void Lexer::ParseStringLiteral(StringRef character)
 {
-  character = NextCharacter();
   Token result(file, line, cursor, Token::Type::STRING_LITERAL);
+  character = NextCharacter();
+
   while (true)
   {
     character = PeekCharacter();
