@@ -10,7 +10,7 @@ HashKey Hash(ObjectPtr object)
   else if (object->type == ObjectType::INTEGER)
   {
     IntegerObjectPtr integer = std::dynamic_pointer_cast<IntegerObject>(object);
-    return HashKey(ObjectType::INTEGER, std::hash<int>()(integer->value));
+    return HashKey(ObjectType::INTEGER, std::hash<int64_t>()(integer->value));
   }
   else if (object->type == ObjectType::DOUBLE)
   {

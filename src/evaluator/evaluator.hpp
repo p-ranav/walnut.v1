@@ -49,6 +49,7 @@
 #include <stdio.h> /* printf */
 #include <string.h>
 #include <stdarg.h> /* va_list, va_start, va_arg, va_end */
+#include <cstdint> // int64_t
 
 struct Evaluator
 {

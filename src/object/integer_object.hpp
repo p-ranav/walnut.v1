@@ -1,11 +1,12 @@
 #pragma once
 #include <object.hpp>
 #include <double_object.hpp>
+#include <cstdint>
 
 struct IntegerObject : Object
 {
-  int value;
-  explicit IntegerObject(int value) : Object(INTEGER, false, true), value(value) {}
+  int64_t value;
+  explicit IntegerObject(int64_t value) : Object(INTEGER, false, true), value(value) {}
 
   ObjectPtr Copy() override
   {

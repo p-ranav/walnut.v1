@@ -1,10 +1,11 @@
 #pragma once
 #include <node.hpp>
+#include <cstdint>
 
 struct IntegerNode : Node
 {
-  int value;
-  explicit IntegerNode(int value) : Node(INTEGER),
+  int64_t value;
+  explicit IntegerNode(int64_t value) : Node(INTEGER),
                                     value(value) {}
 
   String ToString() override

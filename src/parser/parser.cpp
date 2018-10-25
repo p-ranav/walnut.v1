@@ -278,7 +278,7 @@ NodePtr Parser::ParseIdentifier()
 
 NodePtr Parser::ParseInteger()
 {
-  return std::make_shared<IntegerNode>(std::stoi(current_token.value));
+  return std::make_shared<IntegerNode>(std::stoll(current_token.value));
 }
 
 NodePtr Parser::ParseDouble()

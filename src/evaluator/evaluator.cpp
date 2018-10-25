@@ -196,7 +196,7 @@ ObjectPtr Evaluator::EvalIntegerInfixExpression(Token::Type infix_operator, Obje
 {
   IntegerObjectPtr left_node = std::dynamic_pointer_cast<IntegerObject>(left);
   IntegerObjectPtr right_node = std::dynamic_pointer_cast<IntegerObject>(right);
-  int left_value = left_node->value, right_value = right_node->value;
+  int64_t left_value = left_node->value, right_value = right_node->value;
 
   // arithmetic operations
   if (infix_operator == Token::Type::ADDITION_OPERATOR)
