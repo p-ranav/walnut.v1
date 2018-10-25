@@ -666,3 +666,289 @@ TEST_CASE("Lexer can recognize the punctuation '×'", "[lexer]")
   REQUIRE(lexer.tokens[1].value == "EOF");
   lexer.Tokenize();
 }
+
+TEST_CASE("Lexer can recognize the punctuation '=='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "==";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::EQUALITY_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "==");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '!='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "!=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::INEQUALITY_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "!=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '+='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "+=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::ADD_AND_ASSIGN_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "+=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '-='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "-=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::SUBTRACT_AND_ASSIGN_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "-=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '*='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "*=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::MULTIPLY_AND_ASSIGN_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "*=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '/='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "/=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::DIVIDE_AND_ASSIGN_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "/=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '%='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "%=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::MODULUS_AND_ASSIGN_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "%=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '>='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = ">=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == ">=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '<='", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "<=";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "<=");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '<<'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "<<";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::BITWISE_LEFT_SHIFT_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "<<");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '>>'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = ">>";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::BITWISE_RIGHT_SHIFT_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == ">>");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '&&'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "&&";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::LOGICAL_AND_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "&&");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}
+
+TEST_CASE("Lexer can recognize the punctuation '||'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "||";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::LOGICAL_OR_OPERATOR);
+  REQUIRE(lexer.tokens[0].value == "||");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 3);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+  lexer.Tokenize();
+}

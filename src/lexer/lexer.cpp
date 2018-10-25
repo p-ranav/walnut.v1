@@ -7,7 +7,7 @@
 
 Lexer::Lexer(StringConstRef filename, StringConstRef buffer) : file(filename),
                                                                line(1),
-                                                               cursor(0),
+                                                               cursor(1),
                                                                buffer(buffer),
                                                                index(0),
                                                                exception_to_semicolon_rule(false) {}
@@ -44,13 +44,8 @@ void Lexer::Tokenize()
       if (character[0] == '\n')
       {
         line += 1;
-        cursor = 0;
-      }
-
-      if (character[0] == '\n')
-      {
+        cursor = 1;
         NextCharacter();
-        cursor -= 1;
       }
 
       continue;
@@ -152,6 +147,7 @@ void Lexer::ParseComment(StringRef character)
     ParseBlockComment(peek_character);
   else
   {
+    cursor -= 1;
     Token result(file, line, cursor, Token::Type::DIVISION_OPERATOR, character);
     cursor += 1;
     tokens.push_back(result);
@@ -242,7 +238,6 @@ bool Lexer::IsValidSymbol(StringRef character)
 
 void Lexer::ParseSymbol(StringRef character)
 {
-  cursor += 1;
   Token result(file, line, cursor, Token::Type::SYMBOL, "");
 
   while (true)
@@ -438,9 +433,8 @@ bool Lexer::IsValidPunctuation(StringRef character)
 
 void Lexer::ParsePunctuation(StringRef character)
 {
-  character = NextCharacter();
   Token result(file, line, cursor, Token::Type::PUNCTUATION, character);
-  cursor += 1;
+  NextCharacter();
 
   // delimiters
   if (result.value == ".")
