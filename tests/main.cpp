@@ -2,3 +2,4 @@
 #include <catch.hpp>
 #include <test_lexer_keywords.hpp>
 #include <test_lexer_punctuation.hpp>
+#include <test_lexer_comments.hpp>

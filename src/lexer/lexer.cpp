@@ -156,31 +156,29 @@ void Lexer::ParseComment(StringRef character)
 
 void Lexer::ParseLineComment(StringRef character)
 {
-  Token semicolon(file, line, cursor, Token::Type::SEMI_COLON_OPERATOR, ";");
-  tokens.push_back(semicolon);
   while (character[0] != 0x0A && index < buffer.size())
     character = NextCharacter();
-  line += 1;
-  cursor = 0;
 }
 
 void Lexer::ParseBlockComment(StringRef character)
 {
   while (true)
   {
-    character = NextCharacter();
+    character = PeekCharacter();
     if (character[0] == EOF)
       throw std::runtime_error("unterminated block comment");
 
     if (character[0] == 0x0A)
     {
+      NextCharacter();
       line += 1;
-      cursor = 0;
+      cursor = 1;
       continue;
     }
 
     if (character[0] == '*')
     {
+      NextCharacter();
       character = PeekCharacter();
 
       if (character[0] == EOF)
@@ -189,10 +187,10 @@ void Lexer::ParseBlockComment(StringRef character)
       if (character[0] == '/')
       {
         NextCharacter();
-        NextCharacter();
         return;
       }
     }
+    NextCharacter();
   }
 }
 
@@ -295,6 +293,7 @@ bool Lexer::IsValidWhitespace(StringRef character)
 
 void Lexer::ParseWhitespace(StringRef character)
 {
+  NextCharacter();
   while (true)
   {
     character = PeekCharacter();
