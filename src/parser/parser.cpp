@@ -22,7 +22,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
                                                           {Token::Type::MODULUS_OPERATOR, PRODUCT},
                                                           {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
                                                           {Token::Type::DOT_OPERATOR, DOT},
-                                                          {Token::Type::KEYWORD_IF, IF} })
+                                                          {Token::Type::KEYWORD_IF, IF},
+                                                          {Token::Type::ARROW_OPERATOR, ARROW} })
 {
   // prefix parse functions
   RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -61,6 +62,8 @@ Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
   RegisterInfixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
+  RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
+
 }
 
 void Parser::ParseProgram()
@@ -640,6 +643,63 @@ NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
     return result;
   }
 
-  NextToken();
+  // NextToken();
   return expression_list;
+}
+
+NodePtr Parser::ParseArrowOperator(NodePtr left)
+{
+  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+
+  if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
+  {
+    std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
+    return nullptr;
+  }
+  
+  if (left->type == Node::Type::TUPLE)
+  {
+    TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
+    for (auto& parameter : function_parameters->elements)
+    {
+      IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
+      if (identifier != nullptr)
+      {
+        result->parameters.push_back(identifier);
+      }
+      else
+      {
+        std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+      }
+    }
+  }
+  else if (left->type == Node::Type::IDENTIFIER)
+  {
+    IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
+    if (identifier != nullptr)
+    {
+      result->parameters.push_back(identifier);
+    }
+    else
+    {
+      std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
+    }
+  }
+
+  if (IsPeekToken(Token::Type::LEFT_CURLY_BRACES))
+  {
+    // Function body is a multi-statement block of code
+    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      return nullptr;
+    result->body = ParseBlockStatement();
+  }
+  else
+  {
+    NextToken();
+    result->body = std::make_shared<BlockStatementNode>();
+    NodePtr expression = ParseExpression(LOWEST);
+    result->body->statements.push_back(expression);
+  }
+
+  return result;
 }

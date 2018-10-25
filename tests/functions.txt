@@ -5,9 +5,27 @@ product = function(a, b) {
   return a * b
 };
 
-(5).product(10).println()
+(5).product(10).println();
 
-negate = function(a) { a = a * - 1 };
-x = 1;
-negate(x);
-println(x);
+sum = (a, b) => a + b;
+sum(2, 3).println();
+
+[1, 2, 3, 4, 5].map(a => a * 2).println();
+
+[1, 2, 3, 4, 5].filter(a => a % 2 != 0).println();
+
+functions = {
+  "sum": (a, b) => a + b,
+  "diff": (a, b) => a - b,
+  "negate": a => -a,
+  "divide": (a, b) => a/b,
+};
+
+functions["sum"](2, 3).println(); // 5
+functions["diff"](2, 3).println(); // -1
+functions["negate"](2).println(); // -2
+functions["divide"](2, 3.).println(); // 0.67
+
+apply = function(a, b, c) { c(a, b) };
+
+(5).apply(2, functions["sum"]).println(); // 7

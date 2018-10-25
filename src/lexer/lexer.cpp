@@ -75,6 +75,9 @@ void Lexer::Tokenize()
     // logical operators
     MergeTokenPair(i, Token::Type::BITWISE_AND_OPERATOR, Token::Type::BITWISE_AND_OPERATOR, Token::Type::LOGICAL_AND_OPERATOR, "&&");
     MergeTokenPair(i, Token::Type::BITWISE_OR_OPERATOR, Token::Type::BITWISE_OR_OPERATOR, Token::Type::LOGICAL_OR_OPERATOR, "||");
+
+    MergeTokenPair(i, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::GREATER_THAN_OPERATOR, Token::Type::ARROW_OPERATOR, "=>");
+
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
