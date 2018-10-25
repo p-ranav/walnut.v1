@@ -10,7 +10,6 @@ struct Node
   enum Type
   {
     IDENTIFIER,
-    IDENTIFIER_LIST,
     INTEGER,
     DOUBLE,
     CHARACTER,
