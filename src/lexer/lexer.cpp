@@ -309,8 +309,9 @@ void Lexer::ParseWhitespace(StringRef character)
 
 void Lexer::ParseCharacter(StringRef character)
 {
-  character = NextCharacter();
   Token result(file, line, cursor, Token::Type::CHARACTER);
+  character = NextCharacter();
+
   while (true)
   {
     character = PeekCharacter();
@@ -328,7 +329,6 @@ void Lexer::ParseCharacter(StringRef character)
         }
         else
         {
-          // TODO: maybe report error here - unrecognized escape sequence
           result.value += character;
         }
         continue;
