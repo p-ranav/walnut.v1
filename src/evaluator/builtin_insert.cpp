@@ -13,7 +13,7 @@ ObjectPtr Evaluator::BuiltinInsert(std::vector<ObjectPtr> arguments)
       ObjectPtr result = input_array->Copy();
       ArrayObjectPtr result_array = std::dynamic_pointer_cast<ArrayObject>(result);
 
-      if (static_cast<size_t>(index->value) < result_array->elements.size())
+      if (index->value < static_cast<int64_t>(result_array->elements.size()))
       {
         result_array->elements.insert(result_array->elements.begin() + index->value, arguments[2]);
         return result;

@@ -106,7 +106,7 @@ struct Evaluator
   ObjectPtr EvalTuple(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalTupleIndexExpression(ObjectPtr array, ObjectPtr index);
 
-  // Built-in Functions
+  /* Built-in Functions */
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
   ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinPrintln(std::vector<ObjectPtr> arguments);
@@ -118,4 +118,8 @@ struct Evaluator
   ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinMap(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
+
+  /* String Functions */
+  ObjectPtr BuiltinSplit(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinJoin(std::vector<ObjectPtr> arguments);
 };

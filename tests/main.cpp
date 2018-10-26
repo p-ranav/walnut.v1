@@ -12,3 +12,5 @@
 
 #include <test_parser_tuple.hpp>
 #include <test_parser_arrow.hpp>
+
+#include <test_evaluator_string.hpp>

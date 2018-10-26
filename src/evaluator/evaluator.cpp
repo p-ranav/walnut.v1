@@ -22,6 +22,9 @@ Evaluator::Evaluator()
   BUILTIN("range", BuiltinRange);
   BUILTIN("map", BuiltinMap);
   BUILTIN("filter", BuiltinFilter);
+
+  BUILTIN("split", BuiltinSplit);
+  BUILTIN("join", BuiltinJoin);
 }
 
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
@@ -596,9 +599,9 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
     {
       ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(identifier_object);
       IntegerObjectPtr integer_object = std::dynamic_pointer_cast<IntegerObject>(index_object);
-      if (integer_object->value < static_cast<int>(array_object->elements.size()))
+      if (integer_object->value < static_cast<int64_t>(array_object->elements.size()))
       {
-        array_object->elements[integer_object->value] = Eval(statement->expression, environment);
+        array_object->elements[static_cast<size_t>(integer_object->value)] = Eval(statement->expression, environment);
       }
       return array_object;
     }
@@ -748,7 +751,7 @@ ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
   int array_size = static_cast<int>(elements.size());
 
   IntegerObjectPtr array_index = std::dynamic_pointer_cast<IntegerObject>(index);
-  int index_value = array_index->value;
+  int64_t index_value = array_index->value;
 
   if (index_value >= array_size)
   {
@@ -760,7 +763,7 @@ ObjectPtr Evaluator::EvalArrayIndexExpression(ObjectPtr array, ObjectPtr index)
     std::cout << "error: array index cannot be negative" << std::endl;
     return std::make_shared<NullObject>();
   }
-  return elements[index_value];
+  return elements[static_cast<size_t>(index_value)];
 }
 
 ObjectPtr Evaluator::EvalHashLiteral(NodePtr node, EnvironmentPtr environment)
@@ -825,7 +828,7 @@ ObjectPtr Evaluator::EvalTupleIndexExpression(ObjectPtr array, ObjectPtr index)
   int tuple_size = static_cast<int>(elements.size());
 
   IntegerObjectPtr tuple_index = std::dynamic_pointer_cast<IntegerObject>(index);
-  int index_value = tuple_index->value;
+  int64_t index_value = tuple_index->value;
 
   if (index_value >= tuple_size)
   {
@@ -837,5 +840,5 @@ ObjectPtr Evaluator::EvalTupleIndexExpression(ObjectPtr array, ObjectPtr index)
     std::cout << "error: tuple index cannot be negative" << std::endl;
     return std::make_shared<NullObject>();
   }
-  return elements[index_value];
+  return elements[static_cast<size_t>(index_value)];
 }
