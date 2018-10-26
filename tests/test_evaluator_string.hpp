@@ -9,6 +9,44 @@
 #include <string>
 #include <clocale>
 
+TEST_CASE("The evaluator can interpret \"\".split(\"\")", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "\"\".split(\"\")";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+  Evaluator evaluator;
+  ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
+  String result_string = result->Inspect();
+  REQUIRE(result->type == ObjectType::ARRAY);
+  ArrayObjectPtr result_array = std::dynamic_pointer_cast<ArrayObject>(result);
+  REQUIRE(result_array->elements.size() == 0);
+  REQUIRE(result_string == "[]");
+}
+
+TEST_CASE("The evaluator can interpret \"\".split(\", \")", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "\"\".split(\", \")";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+  Evaluator evaluator;
+  ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
+  String result_string = result->Inspect();
+  REQUIRE(result->type == ObjectType::ARRAY);
+  ArrayObjectPtr result_array = std::dynamic_pointer_cast<ArrayObject>(result);
+  REQUIRE(result_array->elements.size() == 0);
+  REQUIRE(result_string == "[]");
+}
+
 TEST_CASE("The evaluator can interpret \"Hello World\".split(\" \")", "[lexer]")
 {
   setlocale(LC_ALL, "");
@@ -124,4 +162,38 @@ TEST_CASE("The evaluator can interpret [\"成功\", \"خيط\", \"தொட�
   StringObjectPtr result_string = std::dynamic_pointer_cast<StringObject>(result);
   REQUIRE(result->type == ObjectType::STRING);
   REQUIRE(result_string->Value() == "成功::خيط::தொடங்கியது");
+}
+
+TEST_CASE("The evaluator can interpret [].join()", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "[].join()";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+  Evaluator evaluator;
+  ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
+  StringObjectPtr result_string = std::dynamic_pointer_cast<StringObject>(result);
+  REQUIRE(result->type == ObjectType::STRING);
+  REQUIRE(result_string->Value() == "");
+}
+
+TEST_CASE("The evaluator can interpret [].join(\", \")", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "[].join(\", \")";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+  Evaluator evaluator;
+  ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
+  StringObjectPtr result_string = std::dynamic_pointer_cast<StringObject>(result);
+  REQUIRE(result->type == ObjectType::STRING);
+  REQUIRE(result_string->Value() == "");
 }
