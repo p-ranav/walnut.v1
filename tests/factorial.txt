@@ -1,0 +1,2 @@
+factorial = n => n * factorial(n - 1) if n > 0 else 1;
+factorial(5).println();

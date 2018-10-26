@@ -134,10 +134,27 @@ ObjectPtr Evaluator::EvalBangOperator(ObjectPtr right, EnvironmentPtr environmen
   if (right->type == ObjectType::NULL_)
     result->value = true;
 
-  BooleanObjectPtr boolean_right = std::dynamic_pointer_cast<BooleanObject>(right);
-  if (boolean_right != nullptr)
-    if (boolean_right->value == false)
-      result->value = true;
+  else if (right->type == ObjectType::BOOLEAN)
+  {
+    BooleanObjectPtr boolean_right = std::dynamic_pointer_cast<BooleanObject>(right);
+    if (boolean_right != nullptr)
+      if (boolean_right->value == false)
+        result->value = true;
+  }
+  else if (right->type == ObjectType::INTEGER)
+  {
+    IntegerObjectPtr integer_right = std::dynamic_pointer_cast<IntegerObject>(right);
+    if (integer_right != nullptr)
+      if (integer_right->value == 0)
+        result->value = true;
+  }
+  else if (right->type == ObjectType::DOUBLE)
+  {
+    DoubleObjectPtr double_right = std::dynamic_pointer_cast<DoubleObject>(right);
+    if (double_right != nullptr)
+      if (double_right->value == 0)
+        result->value = true;
+  }
 
   return result;
 }
