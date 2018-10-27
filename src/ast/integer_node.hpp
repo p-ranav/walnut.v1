@@ -9,7 +9,7 @@ namespace walnut
   struct IntegerNode : Node
   {
     int64_t value;
-    explicit IntegerNode(int64_t value) : Node(INTEGER),
+    explicit IntegerNode(Token token, int64_t value) : Node(token, INTEGER),
       value(value) {}
 
     String ToString() override

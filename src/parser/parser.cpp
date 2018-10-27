@@ -170,13 +170,13 @@ namespace walnut
 
   NodePtr Parser::ParseVarStatement()
   {
-    VarStatementNodePtr result = std::make_shared<VarStatementNode>();
+    VarStatementNodePtr result = std::make_shared<VarStatementNode>(current_token);
 
     if (!ExpectPeek(Token::Type::SYMBOL))
     {
       return nullptr;
     }
-    result->name = std::make_shared<IdentifierNode>(current_token.value);
+    result->name = std::make_shared<IdentifierNode>(current_token, current_token.value);
 
     if (!ExpectPeek(Token::Type::ASSIGNMENT_OPERATOR))
     {
@@ -196,7 +196,7 @@ namespace walnut
 
   NodePtr Parser::ParseReturnStatement()
   {
-    ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>();
+    ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>(current_token);
     NextToken();
 
     result->expression = ParseExpression(LOWEST);
@@ -206,7 +206,7 @@ namespace walnut
 
   NodePtr Parser::ParseImportStatement()
   {
-    ImportStatementNodePtr result = std::make_shared<ImportStatementNode>("");
+    ImportStatementNodePtr result = std::make_shared<ImportStatementNode>(current_token, "");
     if(!ExpectPeek(Token::Type::STRING_LITERAL))
       return nullptr;
 
@@ -253,7 +253,7 @@ namespace walnut
 
     if (IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR))
     {
-      ExpressionAssignmentStatementNodePtr statement = std::make_shared<ExpressionAssignmentStatementNode>();
+      ExpressionAssignmentStatementNodePtr statement = std::make_shared<ExpressionAssignmentStatementNode>(current_token);
       statement->left = result;
       NextToken();
       NextToken();
@@ -292,27 +292,27 @@ namespace walnut
 
   NodePtr Parser::ParseIdentifier()
   {
-    return std::make_shared<IdentifierNode>(current_token.value);
+    return std::make_shared<IdentifierNode>(current_token, current_token.value);
   }
 
   NodePtr Parser::ParseInteger()
   {
-    return std::make_shared<IntegerNode>(std::stoll(current_token.value));
+    return std::make_shared<IntegerNode>(current_token, std::stoll(current_token.value));
   }
 
   NodePtr Parser::ParseDouble()
   {
-    return std::make_shared<DoubleNode>(std::stod(current_token.value));
+    return std::make_shared<DoubleNode>(current_token, std::stod(current_token.value));
   }
 
   NodePtr Parser::ParseBoolean()
   {
-    return std::make_shared<BooleanNode>(current_token.type == Token::Type::KEYWORD_TRUE);
+    return std::make_shared<BooleanNode>(current_token, current_token.type == Token::Type::KEYWORD_TRUE);
   }
 
   NodePtr Parser::ParseCharacter()
   {
-    CharacterNodePtr result = std::make_shared<CharacterNode>(current_token.value);
+    CharacterNodePtr result = std::make_shared<CharacterNode>(current_token, current_token.value);
     while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
       NextToken();
     return result;
@@ -320,7 +320,7 @@ namespace walnut
 
   NodePtr Parser::ParseStringLiteral()
   {
-    StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token.value);
+    StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token, current_token.value);
     while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
       NextToken();
     return result;
@@ -328,7 +328,7 @@ namespace walnut
 
   NodePtr Parser::ParsePrefixExpression()
   {
-    PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token.type);
+    PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token, current_token.type);
     Token::Type prefix_operator = current_token.type;
     NextToken();
     if (prefix_operator == Token::Type::LOGICAL_NOT_OPERATOR)
@@ -356,7 +356,7 @@ namespace walnut
 
   BlockStatementNodePtr Parser::ParseBlockStatement()
   {
-    BlockStatementNodePtr result = std::make_shared<BlockStatementNode>();
+    BlockStatementNodePtr result = std::make_shared<BlockStatementNode>(current_token);
     NextToken();
 
     while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES) && !IsCurrentToken(Token::Type::END_OF_FILE))
@@ -371,7 +371,7 @@ namespace walnut
 
   NodePtr Parser::ParseIfExpression()
   {
-    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
+    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>(current_token);
     NextToken();
 
     result->condition = ParseExpression(LOWEST);
@@ -395,14 +395,14 @@ namespace walnut
 
   NodePtr Parser::ParseWhileExpression()
   {
-    WhileExpressionNodePtr result = std::make_shared<WhileExpressionNode>();
+    WhileExpressionNodePtr result = std::make_shared<WhileExpressionNode>(current_token);
 
     NextToken();
 
     if (IsCurrentToken(Token::Type::LEFT_CURLY_BRACES))
     {
       NextToken();
-      result->condition = std::make_shared<BooleanNode>(true);
+      result->condition = std::make_shared<BooleanNode>(current_token, true);
     }
     else
     {
@@ -419,7 +419,7 @@ namespace walnut
 
   NodePtr Parser::ParseForExpression()
   {
-    ForExpressionNodePtr result = std::make_shared<ForExpressionNode>();
+    ForExpressionNodePtr result = std::make_shared<ForExpressionNode>(current_token);
     NextToken();
 
     NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR });
@@ -461,14 +461,14 @@ namespace walnut
 
     NextToken();
 
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
+    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
     result.push_back(identifier);
 
     while (IsPeekToken(Token::Type::COMMA_OPERATOR))
     {
       NextToken();
       NextToken();
-      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
+      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
       result.push_back(identifier);
     }
 
@@ -480,7 +480,7 @@ namespace walnut
 
   NodePtr Parser::ParseFunctionLiteral()
   {
-    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>(current_token);
 
     if (!ExpectPeek(Token::Type::LEFT_PARENTHESIS))
       return nullptr;
@@ -497,7 +497,7 @@ namespace walnut
 
   NodePtr Parser::ParseCallExpression(NodePtr function)
   {
-    CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
+    CallExpressionNodePtr result = std::make_shared<CallExpressionNode>(current_token);
     result->function = function;
     NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
     result->arguments = std::dynamic_pointer_cast<TupleNode>(expression_list);
@@ -506,7 +506,7 @@ namespace walnut
 
   NodePtr Parser::ParseInfixExpression(NodePtr left)
   {
-    InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token.type);
+    InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token, current_token.type);
     result->left = left;
     Precedence precedence = CurrentPrecedence();
     NextToken();
@@ -517,7 +517,7 @@ namespace walnut
 
   NodePtr Parser::ParseArrayLiteral()
   {
-    ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
+    ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>(current_token);
 
     if (IsPeekToken(Token::Type::COMMA_OPERATOR))
     {
@@ -542,7 +542,7 @@ namespace walnut
     if (IsPeekToken(end))
     {
       NextToken();
-      return std::make_shared<TupleNode>(elements);
+      return std::make_shared<TupleNode>(current_token, elements);
     }
     NextToken();
 
@@ -563,14 +563,14 @@ namespace walnut
     }
 
     if (!ExpectPeek(end))
-      return std::make_shared<TupleNode>();
+      return std::make_shared<TupleNode>(current_token);
 
-    return std::make_shared<TupleNode>(elements);
+    return std::make_shared<TupleNode>(current_token, elements);
   }
 
   NodePtr Parser::ParseIndexExpression(NodePtr left)
   {
-    IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>(left);
+    IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>(current_token, left);
     NextToken();
     expression->index = ParseExpression(LOWEST);
     if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
@@ -590,7 +590,7 @@ namespace walnut
 
   NodePtr Parser::ParseHashLiteral()
   {
-    HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
+    HashLiteralNodePtr result = std::make_shared<HashLiteralNode>(current_token);
     NextToken();
     size_t current_index = current_token_index;
 
@@ -600,7 +600,7 @@ namespace walnut
       {
         return nullptr;
       }
-      return std::make_shared<SetLiteralNode>();
+      return std::make_shared<SetLiteralNode>(current_token);
     }
 
     while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
@@ -634,7 +634,7 @@ namespace walnut
   {
     while (current_token_index >= start_index)
       PreviousToken();
-    SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
+    SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>(current_token);
     NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
     TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
     set_literal->elements = expression_tuple->elements;
@@ -643,10 +643,10 @@ namespace walnut
 
   NodePtr Parser::ParseTernaryOperator(NodePtr left)
   {
-    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
+    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>(current_token);
     NextToken();
 
-    result->consequence = std::make_shared<BlockStatementNode>();
+    result->consequence = std::make_shared<BlockStatementNode>(current_token);
     result->consequence->statements.push_back(left);
 
     result->condition = ParseExpression(LOWEST,
@@ -659,7 +659,7 @@ namespace walnut
     else
     {
       NextToken();
-      result->alternative = std::make_shared<BlockStatementNode>();
+      result->alternative = std::make_shared<BlockStatementNode>(current_token);
       result->alternative->statements.push_back(ParseExpression(LOWEST));
     }
 
@@ -668,7 +668,7 @@ namespace walnut
 
   NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
   {
-    TupleNodePtr result = std::make_shared<TupleNode>();
+    TupleNodePtr result = std::make_shared<TupleNode>(current_token);
     while (current_token_index >= start_index)
       PreviousToken();
 
@@ -690,7 +690,7 @@ namespace walnut
 
   NodePtr Parser::ParseArrowOperator(NodePtr left)
   {
-    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>(current_token);
 
     if (left == nullptr)
       result->parameters = {};
@@ -742,7 +742,7 @@ namespace walnut
     else
     {
       NextToken();
-      result->body = std::make_shared<BlockStatementNode>();
+      result->body = std::make_shared<BlockStatementNode>(current_token);
       NodePtr expression = ParseExpression(LOWEST);
       result->body->statements.push_back(expression);
     }
