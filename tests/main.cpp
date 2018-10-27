@@ -11,6 +11,8 @@
 #include <test_lexer_whitespace.hpp>
 
 #include <test_parser_identifier.hpp>
+#include <test_parser_integer.hpp>
+#include <test_parser_double.hpp>
 #include <test_parser_tuple.hpp>
 #include <test_parser_set.hpp>
 #include <test_parser_array.hpp>

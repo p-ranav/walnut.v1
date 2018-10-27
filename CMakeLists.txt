@@ -48,15 +48,15 @@ ADD_SUBLIBRARY(OBJECT_MODEL src/object)
 set_target_properties(OBJECT_MODEL PROPERTIES OUTPUT_NAME object) # object.lib
 set_target_properties(OBJECT_MODEL PROPERTIES LINKER_LANGUAGE CXX)
 
-# STRCPP library
-ADD_SUBLIBRARY(STRCPP src/strcpp)
-set_target_properties(STRCPP PROPERTIES OUTPUT_NAME strcpp) # strcpp.lib
-set_target_properties(STRCPP PROPERTIES LINKER_LANGUAGE CXX)
+# UTILITIES library
+ADD_SUBLIBRARY(STRING src/string)
+set_target_properties(STRING PROPERTIES OUTPUT_NAME string) # string.lib
+set_target_properties(STRING PROPERTIES LINKER_LANGUAGE CXX)
 
 # EVALUATOR library
 ADD_SUBLIBRARY(EVALUATOR src/evaluator)
 set_target_properties(EVALUATOR PROPERTIES OUTPUT_NAME evaluator) # evaluator.lib
-TARGET_LINK_LIBRARIES(EVALUATOR PARSER OBJECT_MODEL STRCPP) 
+TARGET_LINK_LIBRARIES(EVALUATOR PARSER OBJECT_MODEL STRING) 
 
 # Main executable
 file(GLOB EXECUTABLE_SOURCES 
