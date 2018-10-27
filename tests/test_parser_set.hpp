@@ -162,10 +162,10 @@ namespace walnut
     REQUIRE(set->elements[1]->type == Node::Type::DOUBLE);
     REQUIRE(set->elements[2]->type == Node::Type::STRING_LITERAL);
     REQUIRE(set->elements[3]->type == Node::Type::BOOLEAN);
-    REQUIRE(set->elements[2]->ToString() == "1");
-    REQUIRE(set->elements[2]->ToString() == "3.14");
+    REQUIRE(set->elements[0]->ToString() == "1");
+    REQUIRE(set->elements[1]->ToString() == "3.14");
     REQUIRE(set->elements[2]->ToString() == "\"x\"");
-    REQUIRE(set->elements[2]->ToString() == "true");
+    REQUIRE(set->elements[3]->ToString() == "true");
   }
 
 }
