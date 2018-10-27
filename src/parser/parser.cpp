@@ -569,6 +569,15 @@ namespace walnut
     NextToken();
     size_t current_index = current_token_index;
 
+    if (IsCurrentToken(Token::Type::COMMA_OPERATOR))
+    {
+      if (!ExpectPeek(Token::Type::RIGHT_CURLY_BRACES))
+      {
+        return nullptr;
+      }
+      return std::make_shared<SetLiteralNode>();
+    }
+
     while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
     {
       NodePtr key = ParseExpression(LOWEST);

@@ -28,6 +28,26 @@ namespace walnut
     REQUIRE(tuple->elements.size() == 0);
   }
 
+  TEST_CASE("The parser can parse a tuple of integers '(1,)'", "[lexer]")
+  {
+    setlocale(LC_ALL, "");
+    EnvironmentPtr environment = std::make_shared<Environment>();
+    String filename = "";
+    String buffer = "(1,)";
+    Lexer lexer(filename, buffer);
+    lexer.Tokenize();
+    Parser parser(lexer.tokens);
+    parser.ParseProgram();
+    REQUIRE(parser.statements.size() == 1);
+    REQUIRE(parser.statements[0]->type == Node::Type::TUPLE);
+    REQUIRE(parser.statements[0]->ToString() == "(1)");
+    TupleNodePtr tuple = std::dynamic_pointer_cast<TupleNode>(parser.statements[0]);
+    REQUIRE(tuple->elements.size() == 1);
+    for (auto& element : tuple->elements)
+      REQUIRE(element->type == Node::Type::INTEGER);
+    REQUIRE(tuple->elements[0]->ToString() == "1");
+  }
+
   TEST_CASE("The parser can parse a tuple of integers '(1, 2, 3)'", "[lexer]")
   {
     setlocale(LC_ALL, "");
