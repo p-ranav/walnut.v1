@@ -556,12 +556,16 @@ namespace walnut
 
   ObjectPtr Evaluator::EvalImportStatement(NodePtr node, EnvironmentPtr environment)
   {
+
+    fs::path current_token_filename(node->token.file);
+    fs::path current_token_working_directory = current_token_filename.parent_path();
+
     ImportStatementNodePtr import_statement_node = std::dynamic_pointer_cast<ImportStatementNode>(node);
     if (node == nullptr)
       return std::make_shared<NullObject>();
 
     InputFileStream file_stream;
-    String filename = import_statement_node->value;
+    String filename = (current_token_working_directory / import_statement_node->value).string();
     String buffer;
     try
     {
