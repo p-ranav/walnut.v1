@@ -7,7 +7,7 @@ namespace walnut
   struct ReturnStatementNode : Node
   {
     NodePtr expression;
-    ReturnStatementNode() : Node(RETURN_STATEMENT) {}
+    ReturnStatementNode(Token token) : Node(token, RETURN_STATEMENT) {}
 
     String ToString() override
     {

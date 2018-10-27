@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <block_statement_node.hpp>
 #include <memory>
 
@@ -12,7 +13,7 @@ namespace walnut
     BlockStatementNodePtr consequence;
     BlockStatementNodePtr alternative;
 
-    explicit IfExpressionNode() : Node(IF_EXPRESSION),
+    explicit IfExpressionNode(Token token) : Node(token, IF_EXPRESSION),
       condition(nullptr),
       consequence(nullptr),
       alternative(nullptr) {}

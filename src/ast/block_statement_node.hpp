@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <vector>
 #include <memory>
 
@@ -9,7 +10,7 @@ namespace walnut
   struct BlockStatementNode : Node
   {
     std::vector<NodePtr> statements;
-    BlockStatementNode() : Node(BLOCK_STATEMENT),
+    BlockStatementNode(Token token) : Node(token, BLOCK_STATEMENT),
       statements({}) {}
 
     String ToString() override

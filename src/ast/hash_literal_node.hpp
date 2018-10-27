@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <map>
 
 namespace walnut
@@ -8,7 +9,7 @@ namespace walnut
   struct HashLiteralNode : Node
   {
     std::map<NodePtr, NodePtr> pairs;
-    explicit HashLiteralNode() : Node(HASH_LITERAL),
+    explicit HashLiteralNode(Token token) : Node(token, HASH_LITERAL),
       pairs({}) {}
 
     String ToString() override

@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 
 namespace walnut
 {
@@ -14,7 +15,7 @@ namespace walnut
   {
     NodePtr left;
     NodePtr expression;
-    ExpressionAssignmentStatementNode() : Node(EXPRESSION_ASSIGNMENT_STATEMENT) {}
+    ExpressionAssignmentStatementNode(Token token) : Node(token, EXPRESSION_ASSIGNMENT_STATEMENT) {}
 
     String ToString() override
     {

@@ -11,7 +11,7 @@ namespace walnut
     NodePtr condition;
     BlockStatementNodePtr consequence;
 
-    explicit WhileExpressionNode() : Node(WHILE_EXPRESSION),
+    explicit WhileExpressionNode(Token token) : Node(token, WHILE_EXPRESSION),
       condition(nullptr),
       consequence(nullptr) {}
 

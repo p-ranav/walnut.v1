@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <string>
 #include <iomanip>
 #include <sstream>
@@ -10,7 +11,7 @@ namespace walnut
   struct DoubleNode : Node
   {
     double value;
-    explicit DoubleNode(double value) : Node(DOUBLE),
+    explicit DoubleNode(Token token, double value) : Node(token, DOUBLE),
       value(value) {}
 
     String ToString() override

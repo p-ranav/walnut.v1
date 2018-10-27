@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <vector>
 
 namespace walnut
@@ -9,7 +10,7 @@ namespace walnut
   {
     NodePtr left;
     NodePtr index;
-    explicit IndexExpressionNode(NodePtr left) : Node(INDEX_EXPRESSION),
+    explicit IndexExpressionNode(Token token, NodePtr left) : Node(token, INDEX_EXPRESSION),
       left(left),
       index(nullptr) {}
 

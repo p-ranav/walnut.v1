@@ -8,7 +8,7 @@ namespace walnut
   struct StringLiteralNode : Node
   {
     String value;
-    explicit StringLiteralNode(StringConstRef value) : Node(STRING_LITERAL, true),
+    explicit StringLiteralNode(Token token, StringConstRef value) : Node(token, STRING_LITERAL, true),
       value(value) {}
 
     String ToString() override

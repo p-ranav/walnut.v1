@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <identifier_node.hpp>
 #include <block_statement_node.hpp>
 #include <vector>
@@ -11,7 +12,7 @@ namespace walnut
   {
     std::vector<IdentifierNodePtr> parameters;
     BlockStatementNodePtr body;
-    explicit FunctionLiteralNode() : Node(FUNCTION),
+    explicit FunctionLiteralNode(Token token) : Node(token, FUNCTION),
       parameters({}),
       body(nullptr) {}
 

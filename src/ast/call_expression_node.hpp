@@ -10,7 +10,7 @@ namespace walnut
   {
     NodePtr function;
     TupleNodePtr arguments;
-    explicit CallExpressionNode() : Node(CALL_EXPRESSION),
+    explicit CallExpressionNode(Token token) : Node(token, CALL_EXPRESSION),
       function(nullptr),
       arguments({}) {}
 

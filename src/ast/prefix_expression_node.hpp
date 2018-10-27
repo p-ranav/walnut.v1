@@ -10,7 +10,7 @@ namespace walnut
     Token::Type prefix_operator;
     NodePtr right;
 
-    explicit PrefixExpressionNode(Token::Type prefix_operator) : Node(PREFIX_EXPRESSION),
+    explicit PrefixExpressionNode(Token token, Token::Type prefix_operator) : Node(token, PREFIX_EXPRESSION),
       prefix_operator(prefix_operator),
       right(nullptr) {}
 

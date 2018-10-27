@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <string>
 
 namespace walnut
@@ -8,7 +9,7 @@ namespace walnut
   struct CharacterNode : Node
   {
     String value;
-    explicit CharacterNode(StringConstRef value) : Node(CHARACTER),
+    explicit CharacterNode(Token token, StringConstRef value) : Node(token, CHARACTER),
       value(value) {}
 
     String ToString() override

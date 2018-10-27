@@ -9,7 +9,7 @@ namespace walnut
   {
     IdentifierNodePtr name;
     NodePtr expression;
-    VarStatementNode() : Node(VAR_STATEMENT) {}
+    VarStatementNode(Token token) : Node(token, VAR_STATEMENT) {}
 
     String ToString() override
     {

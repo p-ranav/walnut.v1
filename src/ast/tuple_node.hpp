@@ -8,8 +8,8 @@ namespace walnut
   struct TupleNode : Node
   {
     std::vector<NodePtr> elements;
-    TupleNode() : Node(TUPLE, true), elements({}) {}
-    explicit TupleNode(std::vector<NodePtr> elements) : Node(TUPLE, true), elements(elements) {}
+    TupleNode(Token token) : Node(token, TUPLE, true), elements({}) {}
+    explicit TupleNode(Token token, std::vector<NodePtr> elements) : Node(token, TUPLE, true), elements(elements) {}
 
     String ToString() override
     {

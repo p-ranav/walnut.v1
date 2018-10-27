@@ -11,7 +11,7 @@ namespace walnut
     Token::Type infix_operator;
     NodePtr right;
 
-    explicit InfixExpressionNode(Token::Type infix_operator) : Node(INFIX_EXPRESSION),
+    explicit InfixExpressionNode(Token token, Token::Type infix_operator) : Node(token, INFIX_EXPRESSION),
       left(nullptr),
       infix_operator(infix_operator),
       right(nullptr) {}

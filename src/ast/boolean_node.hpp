@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 
 namespace walnut
 {
@@ -7,7 +8,7 @@ namespace walnut
   struct BooleanNode : Node
   {
     bool value;
-    explicit BooleanNode(bool value) : Node(BOOLEAN),
+    explicit BooleanNode(Token token, bool value) : Node(token, BOOLEAN),
       value(value) {}
 
     String ToString() override

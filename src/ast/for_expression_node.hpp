@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <block_statement_node.hpp>
 #include <memory>
 #include <vector>
@@ -13,7 +14,7 @@ namespace walnut
     NodePtr iterable;
     BlockStatementNodePtr body;
 
-    explicit ForExpressionNode() : Node(FOR_EXPRESSION),
+    explicit ForExpressionNode(Token token) : Node(token, FOR_EXPRESSION),
       iterators({}),
       iterable(nullptr),
       body(nullptr) {}

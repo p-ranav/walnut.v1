@@ -1,5 +1,6 @@
 #pragma once
 #include <node.hpp>
+#include <token.hpp>
 #include <vector>
 
 namespace walnut
@@ -8,7 +9,7 @@ namespace walnut
   struct ArrayLiteralNode : Node
   {
     std::vector<NodePtr> elements;
-    explicit ArrayLiteralNode() : Node(ARRAY_LITERAL, true),
+    explicit ArrayLiteralNode(Token token) : Node(token, ARRAY_LITERAL, true),
       elements({}) {}
 
     String ToString() override

@@ -38,10 +38,11 @@ namespace walnut
       INVALID
     };
 
+    Token token;
     Type type;
     bool iterable;
 
-    explicit Node(Type type, bool iterable = false) : type(type),
+    explicit Node(Token token, Type type, bool iterable = false) : token(token), type(type),
       iterable(iterable) {}
 
     virtual ~Node() {}
