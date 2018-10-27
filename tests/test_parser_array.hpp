@@ -11,7 +11,7 @@
 namespace walnut
 {
 
-  TEST_CASE("The parser can parse the empty list '[]'", "[lexer]")
+  TEST_CASE("The parser can parse the empty list '[]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -28,7 +28,7 @@ namespace walnut
     REQUIRE(list->elements.size() == 0);
   }
 
-  TEST_CASE("The parser can parse the empty list '[,]'", "[lexer]")
+  TEST_CASE("The parser can parse the empty list '[,]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -45,7 +45,7 @@ namespace walnut
     REQUIRE(list->elements.size() == 0);
   }
 
-  TEST_CASE("The parser can parse this list '[1]'", "[lexer]")
+  TEST_CASE("The parser can parse this list '[1]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -65,7 +65,7 @@ namespace walnut
     REQUIRE(list->elements[0]->ToString() == "1");
   }
 
-  TEST_CASE("The parser can parse a list of integers '[1, 2, 3]'", "[lexer]")
+  TEST_CASE("The parser can parse a list of integers '[1, 2, 3]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -87,7 +87,7 @@ namespace walnut
     REQUIRE(list->elements[2]->ToString() == "3");
   }
 
-  TEST_CASE("The parser can parse a list of doubles '[1.0, 2.5, 3.9]'", "[lexer]")
+  TEST_CASE("The parser can parse a list of doubles '[1.0, 2.5, 3.9]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -109,7 +109,7 @@ namespace walnut
     REQUIRE(list->elements[2]->ToString() == "3.90");
   }
 
-  TEST_CASE("The parser can parse a list of strings '[\"x\", \"y\", \"z\"]'", "[lexer]")
+  TEST_CASE("The parser can parse a list of strings '[\"x\", \"y\", \"z\"]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -131,7 +131,7 @@ namespace walnut
     REQUIRE(list->elements[2]->ToString() == "\"z\"");
   }
 
-  TEST_CASE("The parser can parse the list '[1, 3.14, \"x\", true]'", "[lexer]")
+  TEST_CASE("The parser can parse the list '[1, 3.14, \"x\", true]'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();

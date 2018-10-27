@@ -11,7 +11,7 @@
 namespace walnut
 {
 
-  TEST_CASE("The parser can parse the empty tuple '()'", "[lexer]")
+  TEST_CASE("The parser can parse the empty tuple '()'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -28,7 +28,7 @@ namespace walnut
     REQUIRE(tuple->elements.size() == 0);
   }
 
-  TEST_CASE("The parser can parse this tuple '(1,)'", "[lexer]")
+  TEST_CASE("The parser can parse this tuple '(1,)'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -48,7 +48,7 @@ namespace walnut
     REQUIRE(tuple->elements[0]->ToString() == "1");
   }
 
-  TEST_CASE("The parser can parse a tuple of integers '(1, 2, 3)'", "[lexer]")
+  TEST_CASE("The parser can parse a tuple of integers '(1, 2, 3)'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -70,7 +70,7 @@ namespace walnut
     REQUIRE(tuple->elements[2]->ToString() == "3");
   }
 
-  TEST_CASE("The parser can parse a tuple of doubles '(1.0, 2.5, 3.9)'", "[lexer]")
+  TEST_CASE("The parser can parse a tuple of doubles '(1.0, 2.5, 3.9)'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -92,7 +92,7 @@ namespace walnut
     REQUIRE(tuple->elements[2]->ToString() == "3.90");
   }
 
-  TEST_CASE("The parser can parse a tuple of strings '(\"x\", \"y\", \"z\")'", "[lexer]")
+  TEST_CASE("The parser can parse a tuple of strings '(\"x\", \"y\", \"z\")'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -114,7 +114,7 @@ namespace walnut
     REQUIRE(tuple->elements[2]->ToString() == "\"z\"");
   }
 
-  TEST_CASE("The parser can parse the tuple '(1, 3.14, \"x\", true)'", "[lexer]")
+  TEST_CASE("The parser can parse the tuple '(1, 3.14, \"x\", true)'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();

@@ -16,4 +16,5 @@
 #include <test_parser_array.hpp>
 #include <test_parser_arrow.hpp>
 
-#include <test_evaluator_string.hpp>
+#include <test_evaluator_split.hpp>
+#include <test_evaluator_join.hpp>

@@ -11,7 +11,7 @@
 namespace walnut
 {
 
-  TEST_CASE("The parser can parse the identifier 'foobar;'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar;'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -27,7 +27,7 @@ namespace walnut
     REQUIRE(identifier->ToString() == "foobar");
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = 5'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = 5'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -49,7 +49,7 @@ namespace walnut
     REQUIRE(integer_node->value == 5);
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = 3.14'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = 3.14'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -71,7 +71,7 @@ namespace walnut
     REQUIRE(double_node->value == 3.14);
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = \"Hello\"'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = \"Hello\"'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -93,7 +93,7 @@ namespace walnut
     REQUIRE(string_node->value == "Hello");
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = 'a''", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = 'a''", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -115,7 +115,7 @@ namespace walnut
     REQUIRE(char_node->value == "a");
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = true'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = true'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -137,7 +137,7 @@ namespace walnut
     REQUIRE(boolean_node->value == true);
   }
 
-  TEST_CASE("The parser can parse the identifier 'foobar = false'", "[lexer]")
+  TEST_CASE("The parser can parse the identifier 'foobar = false'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();

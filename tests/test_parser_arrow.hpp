@@ -11,7 +11,7 @@
 namespace walnut
 {
 
-  TEST_CASE("The parser can parse the empty function '() => {}'", "[lexer]")
+  TEST_CASE("The parser can parse the empty function '() => {}'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
@@ -28,7 +28,7 @@ namespace walnut
     REQUIRE(function->parameters.size() == 0);
   }
 
-  TEST_CASE("The parser can parse the identity function 'a => a'", "[lexer]")
+  TEST_CASE("The parser can parse the identity function 'a => a'", "[parser]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();
