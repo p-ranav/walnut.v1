@@ -61,6 +61,8 @@ namespace walnut
       return EvalBlockStatement(node, environment);
     case NodeType::RETURN_STATEMENT:
       return EvalReturnStatement(node, environment);
+    case NodeType::IMPORT_STATEMENT:
+      return EvalImportStatement(node, environment);
     case NodeType::IDENTIFIER:
       return EvalIdentifier(node, environment);
     case NodeType::VAR_STATEMENT:
@@ -550,6 +552,48 @@ namespace walnut
   {
     ReturnStatementNodePtr statement = std::dynamic_pointer_cast<ReturnStatementNode>(node);
     return std::make_shared<ReturnObject>(Eval(statement->expression, environment));
+  }
+
+  ObjectPtr Evaluator::EvalImportStatement(NodePtr node, EnvironmentPtr environment)
+  {
+    ImportStatementNodePtr import_statement_node = std::dynamic_pointer_cast<ImportStatementNode>(node);
+    if (node == nullptr)
+      return std::make_shared<NullObject>();
+
+    InputFileStream file_stream;
+    String filename = import_statement_node->value;
+    String buffer;
+    try
+    {
+      file_stream = InputFileStream(filename);
+      buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
+    }
+    catch (std::exception)
+    {
+      std::cout << "evaluator error: failed to import " << filename << std::endl;
+    }
+
+    if (buffer == "")
+    {
+      std::cout << "evaluator error: failed to import " << filename << " or file is empty" << std::endl;
+    }
+
+    Lexer lexer(filename, buffer);
+    lexer.Tokenize();
+
+    Parser parser(lexer.tokens);
+    parser.ParseProgram();
+
+    Evaluator evaluator;
+    for (auto &statement : parser.statements)
+    {
+      walnut::ObjectPtr result = evaluator.Eval(statement, environment);
+      if (result->type == walnut::ObjectType::RETURN)
+        break;
+    }
+    lexer.tokens.clear();
+    parser.statements.clear();
+    return std::make_shared<NullObject>();
   }
 
   ObjectPtr Evaluator::EvalIdentifier(NodePtr node, EnvironmentPtr environment)

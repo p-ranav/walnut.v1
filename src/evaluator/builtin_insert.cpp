@@ -18,7 +18,7 @@ namespace walnut
 
         if (index->value < static_cast<int64_t>(result_array->elements.size()))
         {
-          result_array->elements.insert(result_array->elements.begin() + index->value, arguments[2]);
+          result_array->elements.insert(result_array->elements.begin() + static_cast<size_t>(index->value), arguments[2]);
           return result;
         }
         else

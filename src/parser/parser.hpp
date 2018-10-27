@@ -22,6 +22,7 @@
 #include <call_expression_node.hpp>
 #include <infix_expression_node.hpp>
 #include <tuple_node.hpp>
+#include <import_statement_node.hpp>
 
 #include <iostream>
 #include <vector>
@@ -59,6 +60,7 @@ namespace walnut
     NodePtr ParseStatement();
     NodePtr ParseVarStatement();
     NodePtr ParseReturnStatement();
+    NodePtr ParseImportStatement();
     NodePtr ParseExpressionStatement();
 
     PrefixParseFunctionMap prefix_parse_functions;

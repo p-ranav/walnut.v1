@@ -284,6 +284,8 @@ namespace walnut
       result.type = Token::Type::LOGICAL_OR_OPERATOR;
     else if (result.value == "not")
       result.type = Token::Type::LOGICAL_NOT_OPERATOR;
+    else if (result.value == "import")
+      result.type = Token::Type::KEYWORD_IMPORT;
 
     tokens.push_back(result);
   }

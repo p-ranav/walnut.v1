@@ -78,6 +78,7 @@ namespace walnut
       KEYWORD_IN,
       KEYWORD_FUNCTION,
       KEYWORD_RETURN,
+      KEYWORD_IMPORT,
 
       END_OF_FILE,
       INVALID

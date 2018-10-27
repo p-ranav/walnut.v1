@@ -159,6 +159,9 @@ namespace walnut
     case Token::Type::KEYWORD_RETURN:
       return ParseReturnStatement();
       break;
+    case Token::Type::KEYWORD_IMPORT:
+      return ParseImportStatement();
+      break;
     default:
       return ParseExpressionStatement();
       break;
@@ -198,6 +201,17 @@ namespace walnut
 
     result->expression = ParseExpression(LOWEST);
 
+    return result;
+  }
+
+  NodePtr Parser::ParseImportStatement()
+  {
+    ImportStatementNodePtr result = std::make_shared<ImportStatementNode>("");
+    if(!ExpectPeek(Token::Type::STRING_LITERAL))
+      return nullptr;
+
+    result->value = current_token.value;
+    NextToken();
     return result;
   }
 

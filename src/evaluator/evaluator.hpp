@@ -9,6 +9,7 @@
 #include <var_statement_node.hpp>
 #include <expression_assignment_statement_node.hpp>
 #include <return_statement_node.hpp>
+#include <import_statement_node.hpp>
 #include <prefix_expression_node.hpp>
 #include <if_expression_node.hpp>
 #include <while_expression_node.hpp>
@@ -39,6 +40,8 @@
 #include <set_object.hpp>
 #include <tuple_object.hpp>
 
+#include <lexer.hpp>
+#include <parser.hpp>
 #include <environment.hpp>
 
 #include <iostream>
@@ -84,6 +87,7 @@ namespace walnut
     ObjectPtr EvalForExpression(NodePtr node, EnvironmentPtr environment);
 
     ObjectPtr EvalReturnStatement(NodePtr node, EnvironmentPtr environment);
+    ObjectPtr EvalImportStatement(NodePtr node, EnvironmentPtr environment);
 
     ObjectPtr EvalIdentifier(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalVarStatement(NodePtr node, EnvironmentPtr environment);

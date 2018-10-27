@@ -1,2 +1,3 @@
-import "../../blah.nut"
+import "factorial.txt";
 
+(5).factorial().println();
