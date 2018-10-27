@@ -28,7 +28,7 @@ namespace walnut
     REQUIRE(tuple->elements.size() == 0);
   }
 
-  TEST_CASE("The parser can parse a tuple of integers '(1,)'", "[lexer]")
+  TEST_CASE("The parser can parse this tuple '(1,)'", "[lexer]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();

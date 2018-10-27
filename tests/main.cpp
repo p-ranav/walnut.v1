@@ -13,6 +13,7 @@
 #include <test_parser_identifier.hpp>
 #include <test_parser_tuple.hpp>
 #include <test_parser_set.hpp>
+#include <test_parser_lists.hpp>
 #include <test_parser_arrow.hpp>
 
 #include <test_evaluator_string.hpp>
