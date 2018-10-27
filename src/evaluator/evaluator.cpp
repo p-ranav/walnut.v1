@@ -573,11 +573,6 @@ namespace walnut
       std::cout << "evaluator error: failed to import " << filename << std::endl;
     }
 
-    if (buffer == "")
-    {
-      std::cout << "evaluator error: failed to import " << filename << " or file is empty" << std::endl;
-    }
-
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
 
