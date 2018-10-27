@@ -143,7 +143,7 @@ namespace walnut
     REQUIRE(set->elements[5]->ToString() == "1");
   }
 
-  TEST_CASE("The parser can parse a set of strings '{1, 3.14, \"x\", true}'", "[lexer]")
+  TEST_CASE("The parser can parse the set '{1, 3.14, \"x\", true}'", "[lexer]")
   {
     setlocale(LC_ALL, "");
     EnvironmentPtr environment = std::make_shared<Environment>();

@@ -114,4 +114,29 @@ namespace walnut
     REQUIRE(tuple->elements[2]->ToString() == "\"z\"");
   }
 
+  TEST_CASE("The parser can parse the tuple '(1, 3.14, \"x\", true)'", "[lexer]")
+  {
+    setlocale(LC_ALL, "");
+    EnvironmentPtr environment = std::make_shared<Environment>();
+    String filename = "";
+    String buffer = "(1, 3.14, \"x\", true)";
+    Lexer lexer(filename, buffer);
+    lexer.Tokenize();
+    Parser parser(lexer.tokens);
+    parser.ParseProgram();
+    REQUIRE(parser.statements.size() == 1);
+    REQUIRE(parser.statements[0]->type == Node::Type::TUPLE);
+    REQUIRE(parser.statements[0]->ToString() == "(1, 3.14, \"x\", true)");
+    TupleNodePtr iterable = std::dynamic_pointer_cast<TupleNode>(parser.statements[0]);
+    REQUIRE(iterable->elements.size() == 4);
+    REQUIRE(iterable->elements[0]->type == Node::Type::INTEGER);
+    REQUIRE(iterable->elements[1]->type == Node::Type::DOUBLE);
+    REQUIRE(iterable->elements[2]->type == Node::Type::STRING_LITERAL);
+    REQUIRE(iterable->elements[3]->type == Node::Type::BOOLEAN);
+    REQUIRE(iterable->elements[0]->ToString() == "1");
+    REQUIRE(iterable->elements[1]->ToString() == "3.14");
+    REQUIRE(iterable->elements[2]->ToString() == "\"x\"");
+    REQUIRE(iterable->elements[3]->ToString() == "true");
+  }
+
 }
