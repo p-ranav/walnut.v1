@@ -90,6 +90,28 @@ TEST_CASE("The parser can parse the identifier 'foobar = \"Hello\"'", "[lexer]")
   REQUIRE(string_node->value == "Hello");
 }
 
+TEST_CASE("The parser can parse the identifier 'foobar = 'a''", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "foobar = 'a';";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens);
+  parser.ParseProgram();
+  REQUIRE(parser.statements.size() == 1);
+  REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
+  VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
+  REQUIRE(var_statement->ToString() == "foobar = 'a';");
+  IdentifierNodePtr identifier = var_statement->name;
+  REQUIRE(identifier->value == "foobar");
+  NodePtr expression = var_statement->expression;
+  REQUIRE(expression->type == Node::Type::CHARACTER);
+  CharacterNodePtr char_node = std::dynamic_pointer_cast<CharacterNode>(expression);
+  REQUIRE(char_node->value == "a");
+}
+
 TEST_CASE("The parser can parse the identifier 'foobar = true'", "[lexer]")
 {
   setlocale(LC_ALL, "");
