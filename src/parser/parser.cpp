@@ -70,7 +70,6 @@ void Parser::ParseProgram()
 {
   NextToken();
   NextToken();
-
   while (!IsPeekToken(Token::Type::END_OF_FILE))
   {
     NodePtr statement = ParseStatement();

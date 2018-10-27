@@ -10,6 +10,7 @@
 #include <test_lexer_symbol.hpp>
 #include <test_lexer_whitespace.hpp>
 
+#include <test_parser_identifier.hpp>
 #include <test_parser_tuple.hpp>
 #include <test_parser_arrow.hpp>
 
