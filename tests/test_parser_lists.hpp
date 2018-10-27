@@ -28,6 +28,23 @@ namespace walnut
     REQUIRE(list->elements.size() == 0);
   }
 
+  TEST_CASE("The parser can parse the empty list '[,]'", "[lexer]")
+  {
+    setlocale(LC_ALL, "");
+    EnvironmentPtr environment = std::make_shared<Environment>();
+    String filename = "";
+    String buffer = "[,]";
+    Lexer lexer(filename, buffer);
+    lexer.Tokenize();
+    Parser parser(lexer.tokens);
+    parser.ParseProgram();
+    REQUIRE(parser.statements.size() == 1);
+    REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
+    REQUIRE(parser.statements[0]->ToString() == "[]");
+    ArrayLiteralNodePtr list = std::dynamic_pointer_cast<ArrayLiteralNode>(parser.statements[0]);
+    REQUIRE(list->elements.size() == 0);
+  }
+
   TEST_CASE("The parser can parse this list '[1]'", "[lexer]")
   {
     setlocale(LC_ALL, "");

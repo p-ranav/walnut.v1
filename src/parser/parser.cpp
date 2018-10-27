@@ -504,6 +504,17 @@ namespace walnut
   NodePtr Parser::ParseArrayLiteral()
   {
     ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
+
+    if (IsPeekToken(Token::Type::COMMA_OPERATOR))
+    {
+      NextToken();
+      if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
+      {
+        return nullptr;
+      }
+      return array_literal;
+    }
+
     NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_SQUARE_BRACKETS);
     TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
     array_literal->elements = expression_tuple->elements;
