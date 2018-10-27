@@ -53,14 +53,8 @@
 #include <string.h>
 #include <stdarg.h>
 #include <cstdint>
-#if __cplusplus < 201703L // If the version of C++ is less than 17
 #include <experimental/filesystem>
-// It was still in the experimental:: namespace
 namespace fs = std::experimental::filesystem;
-#else
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
 
 namespace walnut
 {
