@@ -2,16 +2,21 @@
 #include <node.hpp>
 #include <string>
 
-struct StringLiteralNode : Node
+namespace walnut
 {
-  String value;
-  explicit StringLiteralNode(StringConstRef value) : Node(STRING_LITERAL, true),
-                                                     value(value) {}
 
-  String ToString() override
+  struct StringLiteralNode : Node
   {
-    return "\"" + value + "\"";
-  }
-};
+    String value;
+    explicit StringLiteralNode(StringConstRef value) : Node(STRING_LITERAL, true),
+      value(value) {}
 
-typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;
+    String ToString() override
+    {
+      return "\"" + value + "\"";
+    }
+  };
+
+  typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;
+
+}

@@ -7,17 +7,22 @@
 #include <memory>
 #include <functional>
 
-struct HashKey : Object
+namespace walnut
 {
-  size_t value;
-  explicit HashKey(ObjectType type, size_t value) : Object(type), value(value) {}
 
-  friend bool operator<(const HashKey &left, const HashKey &right)
+  struct HashKey : Object
   {
-    return (left.value < right.value);
-  }
-};
+    size_t value;
+    explicit HashKey(ObjectType type, size_t value) : Object(type), value(value) {}
 
-typedef std::shared_ptr<HashKey> HashKeyPtr;
+    friend bool operator<(const HashKey &left, const HashKey &right)
+    {
+      return (left.value < right.value);
+    }
+  };
 
-HashKey Hash(ObjectPtr object);
+  typedef std::shared_ptr<HashKey> HashKeyPtr;
+
+  HashKey Hash(ObjectPtr object);
+
+}

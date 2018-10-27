@@ -1,16 +1,21 @@
 #pragma once
 #include <node.hpp>
 
-struct BooleanNode : Node
+namespace walnut
 {
-  bool value;
-  explicit BooleanNode(bool value) : Node(BOOLEAN),
-                                     value(value) {}
 
-  String ToString() override
+  struct BooleanNode : Node
   {
-    return (value == true) ? "true" : "false";
-  }
-};
+    bool value;
+    explicit BooleanNode(bool value) : Node(BOOLEAN),
+      value(value) {}
 
-typedef std::shared_ptr<BooleanNode> BooleanNodePtr;
+    String ToString() override
+    {
+      return (value == true) ? "true" : "false";
+    }
+  };
+
+  typedef std::shared_ptr<BooleanNode> BooleanNodePtr;
+
+}

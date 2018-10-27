@@ -2,16 +2,21 @@
 #include <node.hpp>
 #include <string>
 
-struct CharacterNode : Node
+namespace walnut
 {
-  String value;
-  explicit CharacterNode(StringConstRef value) : Node(CHARACTER),
-                                                 value(value) {}
 
-  String ToString() override
+  struct CharacterNode : Node
   {
-    return "'" + value + "'";
-  }
-};
+    String value;
+    explicit CharacterNode(StringConstRef value) : Node(CHARACTER),
+      value(value) {}
 
-typedef std::shared_ptr<CharacterNode> CharacterNodePtr;
+    String ToString() override
+    {
+      return "'" + value + "'";
+    }
+  };
+
+  typedef std::shared_ptr<CharacterNode> CharacterNodePtr;
+
+}

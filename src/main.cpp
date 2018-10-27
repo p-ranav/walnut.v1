@@ -12,22 +12,22 @@ enum InterpreterMode
   READ_FROM_FILE
 };
 
-void InterpretBuffer(InterpreterMode mode, StringConstRef filename, String buffer, EnvironmentPtr environment)
+void InterpretBuffer(InterpreterMode mode, walnut::StringConstRef filename, walnut::String buffer, walnut::EnvironmentPtr environment)
 {
-  Lexer lexer(filename, buffer);
+  walnut::Lexer lexer(filename, buffer);
   lexer.Tokenize();
 
-  Parser parser(lexer.tokens);
+  walnut::Parser parser(lexer.tokens);
   parser.ParseProgram();
 
-  Evaluator evaluator;
+  walnut::Evaluator evaluator;
   for (auto &statement : parser.statements)
   {
-    ObjectPtr result = evaluator.Eval(statement, environment);
-    String inspect = result->Inspect();
+    walnut::ObjectPtr result = evaluator.Eval(statement, environment);
+    walnut::String inspect = result->Inspect();
     if (mode == READ_EVAL_PRINT && inspect != "")
       std::cout << inspect << std::endl;
-    if (result->type == ObjectType::RETURN)
+    if (result->type == walnut::ObjectType::RETURN)
       break;
   }
   lexer.tokens.clear();
@@ -36,14 +36,15 @@ void InterpretBuffer(InterpreterMode mode, StringConstRef filename, String buffe
 
 int main(int argc, char *argv[])
 {
+
   setlocale(LC_ALL, "");
-  EnvironmentPtr environment = std::make_shared<Environment>();
+  walnut::EnvironmentPtr environment = std::make_shared<walnut::Environment>();
   if (argc == 1)
   {
     while (true)
     {
       std::cout << ">>> ";
-      String buffer;
+      walnut::String buffer;
       char c = '\0';
       while (c != '\n')
       {
@@ -56,13 +57,13 @@ int main(int argc, char *argv[])
   }
   else if (argc == 2)
   {
-    String filename = argv[1];
-    InputFileStream file_stream;
-    String buffer;
+    walnut::String filename = argv[1];
+    walnut::InputFileStream file_stream;
+    walnut::String buffer;
     try
     {
-      file_stream = InputFileStream(filename);
-      buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
+      file_stream = walnut::InputFileStream(filename);
+      buffer = walnut::String((walnut::EndOfStreamIterator(file_stream)), walnut::EndOfStreamIterator());
     }
     catch (std::exception)
     {
@@ -77,4 +78,5 @@ int main(int argc, char *argv[])
   }
   environment->store.clear();
   return 0;
+
 }

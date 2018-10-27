@@ -1,714 +1,719 @@
 #include <parser.hpp>
 #include <algorithm>
 
-Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
-                                             peek_token(Token()),
-                                             current_token_index(0),
-                                             statements({}),
-                                             tokens(tokens),
-                                             precedences({{Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
-                                                          {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
-                                                          {Token::Type::LEFT_PARENTHESIS, CALL},
-                                                          {Token::Type::EQUALITY_OPERATOR, EQUAL},
-                                                          {Token::Type::INEQUALITY_OPERATOR, EQUAL},
-                                                          {Token::Type::LESSER_THAN_OPERATOR, LESSGREATER},
-                                                          {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                                                          {Token::Type::GREATER_THAN_OPERATOR, LESSGREATER},
-                                                          {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                                                          {Token::Type::ADDITION_OPERATOR, SUM},
-                                                          {Token::Type::SUBTRACTION_OPERATOR, SUM},
-                                                          {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
-                                                          {Token::Type::DIVISION_OPERATOR, PRODUCT},
-                                                          {Token::Type::MODULUS_OPERATOR, PRODUCT},
-                                                          {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
-                                                          {Token::Type::DOT_OPERATOR, DOT},
-                                                          {Token::Type::KEYWORD_IF, IF},
-                                                          {Token::Type::ARROW_OPERATOR, ARROW} })
+namespace walnut
 {
-  // prefix parse functions
-  RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
-  RegisterPrefixParseFunction(Token::Type::INTEGER, std::bind(&Parser::ParseInteger, this));
-  RegisterPrefixParseFunction(Token::Type::DOUBLE, std::bind(&Parser::ParseDouble, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
-  RegisterPrefixParseFunction(Token::Type::CHARACTER, std::bind(&Parser::ParseCharacter, this));
-  RegisterPrefixParseFunction(Token::Type::STRING_LITERAL, std::bind(&Parser::ParseStringLiteral, this));
-  RegisterPrefixParseFunction(Token::Type::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
-  RegisterPrefixParseFunction(Token::Type::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
-  RegisterPrefixParseFunction(Token::Type::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_FOR, std::bind(&Parser::ParseForExpression, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
-  RegisterPrefixParseFunction(Token::Type::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
-  RegisterPrefixParseFunction(Token::Type::LEFT_CURLY_BRACES, std::bind(&Parser::ParseHashLiteral, this));
-  RegisterPrefixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseArrayLiteral, this));
 
-  // infix parse functions
-  RegisterInfixParseFunction(Token::Type::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::SUBTRACTION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::MULTIPLICATION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::DIVISION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::MODULUS_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::EQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::INEQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LESSER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LOGICAL_AND_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LOGICAL_OR_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
-
-}
-
-void Parser::ParseProgram()
-{
-  NextToken();
-  NextToken();
-  while (!IsPeekToken(Token::Type::END_OF_FILE))
+  Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
+    peek_token(Token()),
+    current_token_index(0),
+    statements({}),
+    tokens(tokens),
+    precedences({ {Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
+                 {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
+                 {Token::Type::LEFT_PARENTHESIS, CALL},
+                 {Token::Type::EQUALITY_OPERATOR, EQUAL},
+                 {Token::Type::INEQUALITY_OPERATOR, EQUAL},
+                 {Token::Type::LESSER_THAN_OPERATOR, LESSGREATER},
+                 {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                 {Token::Type::GREATER_THAN_OPERATOR, LESSGREATER},
+                 {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
+                 {Token::Type::ADDITION_OPERATOR, SUM},
+                 {Token::Type::SUBTRACTION_OPERATOR, SUM},
+                 {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
+                 {Token::Type::DIVISION_OPERATOR, PRODUCT},
+                 {Token::Type::MODULUS_OPERATOR, PRODUCT},
+                 {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
+                 {Token::Type::DOT_OPERATOR, DOT},
+                 {Token::Type::KEYWORD_IF, IF},
+                 {Token::Type::ARROW_OPERATOR, ARROW} })
   {
-    NodePtr statement = ParseStatement();
-    if (statement != nullptr)
+    // prefix parse functions
+    RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
+    RegisterPrefixParseFunction(Token::Type::INTEGER, std::bind(&Parser::ParseInteger, this));
+    RegisterPrefixParseFunction(Token::Type::DOUBLE, std::bind(&Parser::ParseDouble, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_FALSE, std::bind(&Parser::ParseBoolean, this));
+    RegisterPrefixParseFunction(Token::Type::CHARACTER, std::bind(&Parser::ParseCharacter, this));
+    RegisterPrefixParseFunction(Token::Type::STRING_LITERAL, std::bind(&Parser::ParseStringLiteral, this));
+    RegisterPrefixParseFunction(Token::Type::SUBTRACTION_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
+    RegisterPrefixParseFunction(Token::Type::LOGICAL_NOT_OPERATOR, std::bind(&Parser::ParsePrefixExpression, this));
+    RegisterPrefixParseFunction(Token::Type::LEFT_PARENTHESIS, std::bind(&Parser::ParseGroupedExpression, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseIfExpression, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_WHILE, std::bind(&Parser::ParseWhileExpression, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_FOR, std::bind(&Parser::ParseForExpression, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_VAR, std::bind(&Parser::ParseVarStatement, this));
+    RegisterPrefixParseFunction(Token::Type::KEYWORD_FUNCTION, std::bind(&Parser::ParseFunctionLiteral, this));
+    RegisterPrefixParseFunction(Token::Type::LEFT_CURLY_BRACES, std::bind(&Parser::ParseHashLiteral, this));
+    RegisterPrefixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseArrayLiteral, this));
+
+    // infix parse functions
+    RegisterInfixParseFunction(Token::Type::ADDITION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::SUBTRACTION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::MULTIPLICATION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::DIVISION_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::MODULUS_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::EQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::INEQUALITY_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LESSER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::GREATER_THAN_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LOGICAL_AND_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LOGICAL_OR_OPERATOR, std::bind(&Parser::ParseInfixExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LEFT_PARENTHESIS, std::bind(&Parser::ParseCallExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
+
+  }
+
+  void Parser::ParseProgram()
+  {
+    NextToken();
+    NextToken();
+    while (!IsPeekToken(Token::Type::END_OF_FILE))
     {
-      statements.push_back(statement);
-      // std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+      NodePtr statement = ParseStatement();
+      if (statement != nullptr)
+      {
+        statements.push_back(statement);
+        // std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+      }
+      NextToken();
     }
-    NextToken();
-  }
-}
-
-void Parser::PreviousToken()
-{
-  peek_token = current_token;
-  current_token_index -= 1;
-  current_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
-  if (current_token_index - 2 >= 0 && current_token_index - 2 < tokens.size())
-    current_token = tokens[current_token_index - 2];
-  else
-    current_token = tokens[0];
-}
-
-void Parser::NextToken()
-{
-  current_token = peek_token;
-  current_token_index += 1;
-  peek_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
-  if (current_token_index - 1 < tokens.size())
-    peek_token = tokens[current_token_index - 1];
-}
-
-bool Parser::IsCurrentToken(Token::Type value)
-{
-  return (current_token.type == value);
-}
-
-bool Parser::IsCurrentTokenInList(const std::vector<Token::Type> &value)
-{
-  return (std::find(value.begin(), value.end(), current_token.type) != value.end());
-}
-
-bool Parser::IsPeekToken(Token::Type value)
-{
-  return (peek_token.type == value);
-}
-
-bool Parser::IsPeekTokenInList(const std::vector<Token::Type> &value)
-{
-  return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
-}
-
-void Parser::ReportError(Token::Type expected)
-{
-  String message;
-  if (peek_token.file != "")
-    message = "parser error: unexpected token \"" + peek_token.value + "\"" + ", expected \"" + TokenString(expected) + "\" at" + peek_token.file + ", line " + std::to_string(current_token.line) + " char " + std::to_string(current_token.cursor + 1);
-  else
-    message = "parser error: unexpected token \"" + peek_token.value + "\"";
-  std::cout << message << std::endl;
-}
-
-bool Parser::ExpectPeek(Token::Type value)
-{
-  if (IsPeekToken(value))
-  {
-    NextToken();
-    return true;
-  }
-  else
-  {
-    ReportError(value);
-    return false;
-  }
-}
-
-NodePtr Parser::ParseStatement()
-{
-  switch (current_token.type)
-  {
-  case Token::Type::KEYWORD_VAR:
-    return ParseVarStatement();
-    break;
-  case Token::Type::KEYWORD_RETURN:
-    return ParseReturnStatement();
-    break;
-  default:
-    return ParseExpressionStatement();
-    break;
-  }
-}
-
-NodePtr Parser::ParseVarStatement()
-{
-  VarStatementNodePtr result = std::make_shared<VarStatementNode>();
-
-  if (!ExpectPeek(Token::Type::SYMBOL))
-  {
-    return nullptr;
-  }
-  result->name = std::make_shared<IdentifierNode>(current_token.value);
-
-  if (!ExpectPeek(Token::Type::ASSIGNMENT_OPERATOR))
-  {
-    result->expression = nullptr;
-  }
-  else
-  {
-    NextToken();
-    result->expression = ParseExpression(LOWEST);
   }
 
-  if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::COMMA_OPERATOR))
-    NextToken();
-
-  return result;
-}
-
-NodePtr Parser::ParseReturnStatement()
-{
-  ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>();
-  NextToken();
-
-  result->expression = ParseExpression(LOWEST);
-
-  return result;
-}
-
-void Parser::RegisterPrefixParseFunction(Token::Type token_type, PrefixParseFunction function)
-{
-  if (prefix_parse_functions.find(token_type) != prefix_parse_functions.end())
-    prefix_parse_functions[token_type] = function;
-  else
-    prefix_parse_functions.insert(PrefixParseFunctionMap::value_type(token_type, function));
-}
-
-void Parser::RegisterInfixParseFunction(Token::Type token_type, InfixParseFunction function)
-{
-  if (infix_parse_functions.find(token_type) != infix_parse_functions.end())
-    infix_parse_functions[token_type] = function;
-  else
-    infix_parse_functions.insert(InfixParseFunctionMap::value_type(token_type, function));
-}
-
-Parser::Precedence Parser::PeekPrecedence()
-{
-  if (precedences.find(peek_token.type) != precedences.end())
-    return precedences[peek_token.type];
-  else
-    return LOWEST;
-}
-
-Parser::Precedence Parser::CurrentPrecedence()
-{
-  if (precedences.find(current_token.type) != precedences.end())
-    return precedences[current_token.type];
-  else
-    return LOWEST;
-}
-
-NodePtr Parser::ParseExpressionStatement()
-{
-  NodePtr result = ParseExpression(LOWEST);
-
-  if (IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR))
+  void Parser::PreviousToken()
   {
-    ExpressionAssignmentStatementNodePtr statement = std::make_shared<ExpressionAssignmentStatementNode>();
-    statement->left = result;
-    NextToken();
-    NextToken();
-    statement->expression = ParseExpression(LOWEST);
-    result = statement;
+    peek_token = current_token;
+    current_token_index -= 1;
+    current_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
+    if (current_token_index - 2 >= 0 && current_token_index - 2 < tokens.size())
+      current_token = tokens[current_token_index - 2];
+    else
+      current_token = tokens[0];
   }
 
-  if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::END_OF_FILE))
-    NextToken();
-
-  return result;
-}
-
-NodePtr Parser::ParseExpression(Precedence precedence, std::vector<Token::Type> end)
-{
-  PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
-
-  if (prefix == nullptr)
-    return nullptr;
-
-  NodePtr left_expression = prefix();
-
-  while (!IsPeekTokenInList(end) && precedence < PeekPrecedence())
+  void Parser::NextToken()
   {
-    InfixParseFunction infix = infix_parse_functions[peek_token.type];
-
-    if (infix == nullptr)
-      return left_expression;
-
-    NextToken();
-    left_expression = infix(left_expression);
+    current_token = peek_token;
+    current_token_index += 1;
+    peek_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
+    if (current_token_index - 1 < tokens.size())
+      peek_token = tokens[current_token_index - 1];
   }
 
-  return left_expression;
-}
-
-NodePtr Parser::ParseIdentifier()
-{
-  return std::make_shared<IdentifierNode>(current_token.value);
-}
-
-NodePtr Parser::ParseInteger()
-{
-  return std::make_shared<IntegerNode>(std::stoll(current_token.value));
-}
-
-NodePtr Parser::ParseDouble()
-{
-  return std::make_shared<DoubleNode>(std::stod(current_token.value));
-}
-
-NodePtr Parser::ParseBoolean()
-{
-  return std::make_shared<BooleanNode>(current_token.type == Token::Type::KEYWORD_TRUE);
-}
-
-NodePtr Parser::ParseCharacter()
-{
-  CharacterNodePtr result = std::make_shared<CharacterNode>(current_token.value);
-  while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
-    NextToken();
-  return result;
-}
-
-NodePtr Parser::ParseStringLiteral()
-{
-  StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token.value);
-  while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
-    NextToken();
-  return result;
-}
-
-NodePtr Parser::ParsePrefixExpression()
-{
-  PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token.type);
-  Token::Type prefix_operator = current_token.type;
-  NextToken();
-  if (prefix_operator == Token::Type::LOGICAL_NOT_OPERATOR)
-    result->right = ParseExpression(PREFIX);
-  else
-    result->right = ParseExpression(LOWEST);
-  return result;
-}
-
-NodePtr Parser::ParseGroupedExpression()
-{
-  NextToken();
-  size_t start_index = current_token_index;
-  NodePtr result = ParseExpression(LOWEST);
-
-  if (IsPeekToken(Token::Type::COMMA_OPERATOR) || 
-    // grouped expression is '()' - parse this as empty tuple
-    (IsCurrentToken(Token::Type::RIGHT_PARENTHESIS) && current_token_index == start_index))
-    return ParseTuple(result, start_index);
-
-  if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
-    return nullptr;
-  return result;
-}
-
-BlockStatementNodePtr Parser::ParseBlockStatement()
-{
-  BlockStatementNodePtr result = std::make_shared<BlockStatementNode>();
-  NextToken();
-
-  while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES) && !IsCurrentToken(Token::Type::END_OF_FILE))
+  bool Parser::IsCurrentToken(Token::Type value)
   {
-    NodePtr statement = ParseStatement();
-    if (statement != nullptr)
-      result->statements.push_back(statement);
-    NextToken();
-  }
-  return result;
-}
-
-NodePtr Parser::ParseIfExpression()
-{
-  IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
-  NextToken();
-
-  result->condition = ParseExpression(LOWEST);
-
-  if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-    return nullptr;
-
-  result->consequence = ParseBlockStatement();
-
-  if (IsPeekToken(Token::Type::KEYWORD_ELSE))
-  {
-    NextToken();
-    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-      return nullptr;
-
-    result->alternative = ParseBlockStatement();
+    return (current_token.type == value);
   }
 
-  return result;
-}
-
-NodePtr Parser::ParseWhileExpression()
-{
-  WhileExpressionNodePtr result = std::make_shared<WhileExpressionNode>();
-
-  NextToken();
-
-  if (IsCurrentToken(Token::Type::LEFT_CURLY_BRACES))
+  bool Parser::IsCurrentTokenInList(const std::vector<Token::Type> &value)
   {
-    NextToken();
-    result->condition = std::make_shared<BooleanNode>(true);
-  }
-  else
-  {
-    result->condition = ParseExpression(LOWEST, {Token::Type::LEFT_CURLY_BRACES});
-
-    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-      return nullptr;
+    return (std::find(value.begin(), value.end(), current_token.type) != value.end());
   }
 
-  result->consequence = ParseBlockStatement();
-
-  return result;
-}
-
-NodePtr Parser::ParseForExpression()
-{
-  ForExpressionNodePtr result = std::make_shared<ForExpressionNode>();
-  NextToken();
-
-  NodePtr iterator = ParseExpression(LOWEST, {Token::Type::COMMA_OPERATOR});
-  if (iterator)
-    result->iterators.push_back(iterator);
-
-  while (IsPeekToken(Token::Type::COMMA_OPERATOR))
+  bool Parser::IsPeekToken(Token::Type value)
   {
-    NextToken();
-    NextToken();
-    NodePtr iterator = ParseExpression(LOWEST, {Token::Type::COMMA_OPERATOR, Token::Type::KEYWORD_IN});
-    if (iterator)
-      result->iterators.push_back(iterator);
+    return (peek_token.type == value);
   }
 
-  if (!ExpectPeek(Token::Type::KEYWORD_IN))
-    return nullptr;
-
-  NextToken();
-  result->iterable = ParseExpression(LOWEST, {Token::Type::LEFT_CURLY_BRACES});
-
-  if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-    return nullptr;
-
-  result->body = ParseBlockStatement();
-
-  return result;
-}
-
-std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
-{
-  std::vector<IdentifierNodePtr> result = {};
-
-  if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
+  bool Parser::IsPeekTokenInList(const std::vector<Token::Type> &value)
   {
-    NextToken();
-    return result;
+    return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
   }
 
-  NextToken();
-
-  IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
-  result.push_back(identifier);
-
-  while (IsPeekToken(Token::Type::COMMA_OPERATOR))
+  void Parser::ReportError(Token::Type expected)
   {
-    NextToken();
-    NextToken();
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
-    result.push_back(identifier);
+    String message;
+    if (peek_token.file != "")
+      message = "parser error: unexpected token \"" + peek_token.value + "\"" + ", expected \"" + TokenString(expected) + "\" at" + peek_token.file + ", line " + std::to_string(current_token.line) + " char " + std::to_string(current_token.cursor + 1);
+    else
+      message = "parser error: unexpected token \"" + peek_token.value + "\"";
+    std::cout << message << std::endl;
   }
 
-  if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
-    return {};
-
-  return result;
-}
-
-NodePtr Parser::ParseFunctionLiteral()
-{
-  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
-
-  if (!ExpectPeek(Token::Type::LEFT_PARENTHESIS))
-    return nullptr;
-
-  result->parameters = ParseFunctionParameters();
-
-  if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-    return nullptr;
-
-  result->body = ParseBlockStatement();
-
-  return result;
-}
-
-NodePtr Parser::ParseCallExpression(NodePtr function)
-{
-  CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
-  result->function = function;
-  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
-  result->arguments = std::dynamic_pointer_cast<TupleNode>(expression_list);
-  return result;
-}
-
-NodePtr Parser::ParseInfixExpression(NodePtr left)
-{
-  InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token.type);
-  result->left = left;
-  Precedence precedence = CurrentPrecedence();
-  NextToken();
-  result->right = ParseExpression(precedence,
-                                  {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::RIGHT_PARENTHESIS});
-  return result;
-}
-
-NodePtr Parser::ParseArrayLiteral()
-{
-  ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
-  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_SQUARE_BRACKETS);
-  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
-  array_literal->elements = expression_tuple->elements;
-  return array_literal;
-}
-
-NodePtr Parser::ParseExpressionList(Token::Type end)
-{
-  std::vector<NodePtr> elements;
-
-  if (IsPeekToken(end))
+  bool Parser::ExpectPeek(Token::Type value)
   {
-    NextToken();
-    return std::make_shared<TupleNode>(elements);
-  }
-  NextToken();
-
-  elements.push_back(ParseExpression(LOWEST, 
-    { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS }));
-
-  while (IsPeekToken(Token::Type::COMMA_OPERATOR))
-  {
-    NextToken();
-    if (!IsPeekToken(end))
+    if (IsPeekToken(value))
     {
       NextToken();
-      elements.push_back(ParseExpression(LOWEST));
+      return true;
     }
-    else {
+    else
+    {
+      ReportError(value);
+      return false;
+    }
+  }
+
+  NodePtr Parser::ParseStatement()
+  {
+    switch (current_token.type)
+    {
+    case Token::Type::KEYWORD_VAR:
+      return ParseVarStatement();
+      break;
+    case Token::Type::KEYWORD_RETURN:
+      return ParseReturnStatement();
+      break;
+    default:
+      return ParseExpressionStatement();
       break;
     }
   }
 
-  if (!ExpectPeek(end))
-    return std::make_shared<TupleNode>();
-
-  return std::make_shared<TupleNode>(elements);
-}
-
-NodePtr Parser::ParseIndexExpression(NodePtr left)
-{
-  IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>(left);
-  NextToken();
-  expression->index = ParseExpression(LOWEST);
-  if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
-    return nullptr;
-  return expression;
-}
-
-NodePtr Parser::ParseDotOperator(NodePtr left)
-{
-  NextToken();
-  NodePtr right = ParseExpression(SUM, {Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR});
-  CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
-  if (call_expression != nullptr)
-    call_expression->arguments->elements.insert(call_expression->arguments->elements.begin(), left);
-  return call_expression;
-}
-
-NodePtr Parser::ParseHashLiteral()
-{
-  HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
-  NextToken();
-  size_t current_index = current_token_index;
-
-  while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
+  NodePtr Parser::ParseVarStatement()
   {
-    NodePtr key = ParseExpression(LOWEST);
+    VarStatementNodePtr result = std::make_shared<VarStatementNode>();
 
-    if (IsPeekToken(Token::Type::COMMA_OPERATOR))
-      return ParseSetLiteral(key, current_index); // this is not a dictionary but in fact a set
-
-    if (!ExpectPeek(Token::Type::COLON_OPERATOR))
-      return nullptr;
-
-    NextToken();
-    NodePtr value = ParseExpression(LOWEST);
-
-    if (result->pairs.find(key) != result->pairs.end())
-      result->pairs[key] = value;
-    else
-      result->pairs.insert(std::make_pair(key, value)); // TODO: report warning/error?
-
-    if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR))
+    if (!ExpectPeek(Token::Type::SYMBOL))
     {
       return nullptr;
     }
-    NextToken();
-  }
-  return result;
-}
+    result->name = std::make_shared<IdentifierNode>(current_token.value);
 
-NodePtr Parser::ParseSetLiteral(NodePtr first, size_t start_index)
-{
-  while(current_token_index >= start_index)
-    PreviousToken();
-  SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
-  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
-  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
-  set_literal->elements = expression_tuple->elements;
-  return set_literal;
-}
-
-NodePtr Parser::ParseTernaryOperator(NodePtr left)
-{
-  IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
-  NextToken();
-
-  result->consequence = std::make_shared<BlockStatementNode>();
-  result->consequence->statements.push_back(left);
-
-  result->condition = ParseExpression(LOWEST, 
-    { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE });
-
-  if (!ExpectPeek(Token::Type::KEYWORD_ELSE))
-  {
-    return nullptr;
-  }
-  else
-  {
-    NextToken();
-    result->alternative = std::make_shared<BlockStatementNode>();
-    result->alternative->statements.push_back(ParseExpression(LOWEST));
-  }
-
-  return result;
-}
-
-NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
-{
-  TupleNodePtr result = std::make_shared<TupleNode>();
-  while (current_token_index >= start_index)
-    PreviousToken();
-
-  NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
-  TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
-  if (expression_tuple->elements.size() == 0)
-  {
-    if (first != nullptr)
+    if (!ExpectPeek(Token::Type::ASSIGNMENT_OPERATOR))
     {
-      result->elements.push_back(first);
+      result->expression = nullptr;
+    }
+    else
+    {
+      NextToken();
+      result->expression = ParseExpression(LOWEST);
+    }
+
+    if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::COMMA_OPERATOR))
+      NextToken();
+
+    return result;
+  }
+
+  NodePtr Parser::ParseReturnStatement()
+  {
+    ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>();
+    NextToken();
+
+    result->expression = ParseExpression(LOWEST);
+
+    return result;
+  }
+
+  void Parser::RegisterPrefixParseFunction(Token::Type token_type, PrefixParseFunction function)
+  {
+    if (prefix_parse_functions.find(token_type) != prefix_parse_functions.end())
+      prefix_parse_functions[token_type] = function;
+    else
+      prefix_parse_functions.insert(PrefixParseFunctionMap::value_type(token_type, function));
+  }
+
+  void Parser::RegisterInfixParseFunction(Token::Type token_type, InfixParseFunction function)
+  {
+    if (infix_parse_functions.find(token_type) != infix_parse_functions.end())
+      infix_parse_functions[token_type] = function;
+    else
+      infix_parse_functions.insert(InfixParseFunctionMap::value_type(token_type, function));
+  }
+
+  Parser::Precedence Parser::PeekPrecedence()
+  {
+    if (precedences.find(peek_token.type) != precedences.end())
+      return precedences[peek_token.type];
+    else
+      return LOWEST;
+  }
+
+  Parser::Precedence Parser::CurrentPrecedence()
+  {
+    if (precedences.find(current_token.type) != precedences.end())
+      return precedences[current_token.type];
+    else
+      return LOWEST;
+  }
+
+  NodePtr Parser::ParseExpressionStatement()
+  {
+    NodePtr result = ParseExpression(LOWEST);
+
+    if (IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR))
+    {
+      ExpressionAssignmentStatementNodePtr statement = std::make_shared<ExpressionAssignmentStatementNode>();
+      statement->left = result;
+      NextToken();
+      NextToken();
+      statement->expression = ParseExpression(LOWEST);
+      result = statement;
+    }
+
+    if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::END_OF_FILE))
+      NextToken();
+
+    return result;
+  }
+
+  NodePtr Parser::ParseExpression(Precedence precedence, std::vector<Token::Type> end)
+  {
+    PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
+
+    if (prefix == nullptr)
+      return nullptr;
+
+    NodePtr left_expression = prefix();
+
+    while (!IsPeekTokenInList(end) && precedence < PeekPrecedence())
+    {
+      InfixParseFunction infix = infix_parse_functions[peek_token.type];
+
+      if (infix == nullptr)
+        return left_expression;
+
+      NextToken();
+      left_expression = infix(left_expression);
+    }
+
+    return left_expression;
+  }
+
+  NodePtr Parser::ParseIdentifier()
+  {
+    return std::make_shared<IdentifierNode>(current_token.value);
+  }
+
+  NodePtr Parser::ParseInteger()
+  {
+    return std::make_shared<IntegerNode>(std::stoll(current_token.value));
+  }
+
+  NodePtr Parser::ParseDouble()
+  {
+    return std::make_shared<DoubleNode>(std::stod(current_token.value));
+  }
+
+  NodePtr Parser::ParseBoolean()
+  {
+    return std::make_shared<BooleanNode>(current_token.type == Token::Type::KEYWORD_TRUE);
+  }
+
+  NodePtr Parser::ParseCharacter()
+  {
+    CharacterNodePtr result = std::make_shared<CharacterNode>(current_token.value);
+    while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
+      NextToken();
+    return result;
+  }
+
+  NodePtr Parser::ParseStringLiteral()
+  {
+    StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token.value);
+    while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
+      NextToken();
+    return result;
+  }
+
+  NodePtr Parser::ParsePrefixExpression()
+  {
+    PrefixExpressionNodePtr result = std::make_shared<PrefixExpressionNode>(current_token.type);
+    Token::Type prefix_operator = current_token.type;
+    NextToken();
+    if (prefix_operator == Token::Type::LOGICAL_NOT_OPERATOR)
+      result->right = ParseExpression(PREFIX);
+    else
+      result->right = ParseExpression(LOWEST);
+    return result;
+  }
+
+  NodePtr Parser::ParseGroupedExpression()
+  {
+    NextToken();
+    size_t start_index = current_token_index;
+    NodePtr result = ParseExpression(LOWEST);
+
+    if (IsPeekToken(Token::Type::COMMA_OPERATOR) ||
+      // grouped expression is '()' - parse this as empty tuple
+      (IsCurrentToken(Token::Type::RIGHT_PARENTHESIS) && current_token_index == start_index))
+      return ParseTuple(result, start_index);
+
+    if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
+      return nullptr;
+    return result;
+  }
+
+  BlockStatementNodePtr Parser::ParseBlockStatement()
+  {
+    BlockStatementNodePtr result = std::make_shared<BlockStatementNode>();
+    NextToken();
+
+    while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES) && !IsCurrentToken(Token::Type::END_OF_FILE))
+    {
+      NodePtr statement = ParseStatement();
+      if (statement != nullptr)
+        result->statements.push_back(statement);
       NextToken();
     }
     return result;
   }
 
-  // NextToken();
-  return expression_list;
-}
-
-NodePtr Parser::ParseArrowOperator(NodePtr left)
-{
-  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
-
-  if (left == nullptr)
-    result->parameters = {};
-  else
+  NodePtr Parser::ParseIfExpression()
   {
-    if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
-    {
-      std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
+    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
+    NextToken();
+
+    result->condition = ParseExpression(LOWEST);
+
+    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
       return nullptr;
+
+    result->consequence = ParseBlockStatement();
+
+    if (IsPeekToken(Token::Type::KEYWORD_ELSE))
+    {
+      NextToken();
+      if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+        return nullptr;
+
+      result->alternative = ParseBlockStatement();
     }
 
-    if (left->type == Node::Type::TUPLE)
+    return result;
+  }
+
+  NodePtr Parser::ParseWhileExpression()
+  {
+    WhileExpressionNodePtr result = std::make_shared<WhileExpressionNode>();
+
+    NextToken();
+
+    if (IsCurrentToken(Token::Type::LEFT_CURLY_BRACES))
     {
-      TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
-      for (auto& parameter : function_parameters->elements)
+      NextToken();
+      result->condition = std::make_shared<BooleanNode>(true);
+    }
+    else
+    {
+      result->condition = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
+
+      if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+        return nullptr;
+    }
+
+    result->consequence = ParseBlockStatement();
+
+    return result;
+  }
+
+  NodePtr Parser::ParseForExpression()
+  {
+    ForExpressionNodePtr result = std::make_shared<ForExpressionNode>();
+    NextToken();
+
+    NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR });
+    if (iterator)
+      result->iterators.push_back(iterator);
+
+    while (IsPeekToken(Token::Type::COMMA_OPERATOR))
+    {
+      NextToken();
+      NextToken();
+      NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR, Token::Type::KEYWORD_IN });
+      if (iterator)
+        result->iterators.push_back(iterator);
+    }
+
+    if (!ExpectPeek(Token::Type::KEYWORD_IN))
+      return nullptr;
+
+    NextToken();
+    result->iterable = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
+
+    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      return nullptr;
+
+    result->body = ParseBlockStatement();
+
+    return result;
+  }
+
+  std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
+  {
+    std::vector<IdentifierNodePtr> result = {};
+
+    if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
+    {
+      NextToken();
+      return result;
+    }
+
+    NextToken();
+
+    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
+    result.push_back(identifier);
+
+    while (IsPeekToken(Token::Type::COMMA_OPERATOR))
+    {
+      NextToken();
+      NextToken();
+      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token.value);
+      result.push_back(identifier);
+    }
+
+    if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
+      return {};
+
+    return result;
+  }
+
+  NodePtr Parser::ParseFunctionLiteral()
+  {
+    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+
+    if (!ExpectPeek(Token::Type::LEFT_PARENTHESIS))
+      return nullptr;
+
+    result->parameters = ParseFunctionParameters();
+
+    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      return nullptr;
+
+    result->body = ParseBlockStatement();
+
+    return result;
+  }
+
+  NodePtr Parser::ParseCallExpression(NodePtr function)
+  {
+    CallExpressionNodePtr result = std::make_shared<CallExpressionNode>();
+    result->function = function;
+    NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+    result->arguments = std::dynamic_pointer_cast<TupleNode>(expression_list);
+    return result;
+  }
+
+  NodePtr Parser::ParseInfixExpression(NodePtr left)
+  {
+    InfixExpressionNodePtr result = std::make_shared<InfixExpressionNode>(current_token.type);
+    result->left = left;
+    Precedence precedence = CurrentPrecedence();
+    NextToken();
+    result->right = ParseExpression(precedence,
+      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::RIGHT_PARENTHESIS });
+    return result;
+  }
+
+  NodePtr Parser::ParseArrayLiteral()
+  {
+    ArrayLiteralNodePtr array_literal = std::make_shared<ArrayLiteralNode>();
+    NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_SQUARE_BRACKETS);
+    TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+    array_literal->elements = expression_tuple->elements;
+    return array_literal;
+  }
+
+  NodePtr Parser::ParseExpressionList(Token::Type end)
+  {
+    std::vector<NodePtr> elements;
+
+    if (IsPeekToken(end))
+    {
+      NextToken();
+      return std::make_shared<TupleNode>(elements);
+    }
+    NextToken();
+
+    elements.push_back(ParseExpression(LOWEST,
+      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS }));
+
+    while (IsPeekToken(Token::Type::COMMA_OPERATOR))
+    {
+      NextToken();
+      if (!IsPeekToken(end))
       {
-        IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
+        NextToken();
+        elements.push_back(ParseExpression(LOWEST));
+      }
+      else {
+        break;
+      }
+    }
+
+    if (!ExpectPeek(end))
+      return std::make_shared<TupleNode>();
+
+    return std::make_shared<TupleNode>(elements);
+  }
+
+  NodePtr Parser::ParseIndexExpression(NodePtr left)
+  {
+    IndexExpressionNodePtr expression = std::make_shared<IndexExpressionNode>(left);
+    NextToken();
+    expression->index = ParseExpression(LOWEST);
+    if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
+      return nullptr;
+    return expression;
+  }
+
+  NodePtr Parser::ParseDotOperator(NodePtr left)
+  {
+    NextToken();
+    NodePtr right = ParseExpression(SUM, { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR });
+    CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
+    if (call_expression != nullptr)
+      call_expression->arguments->elements.insert(call_expression->arguments->elements.begin(), left);
+    return call_expression;
+  }
+
+  NodePtr Parser::ParseHashLiteral()
+  {
+    HashLiteralNodePtr result = std::make_shared<HashLiteralNode>();
+    NextToken();
+    size_t current_index = current_token_index;
+
+    while (!IsCurrentToken(Token::Type::RIGHT_CURLY_BRACES))
+    {
+      NodePtr key = ParseExpression(LOWEST);
+
+      if (IsPeekToken(Token::Type::COMMA_OPERATOR))
+        return ParseSetLiteral(key, current_index); // this is not a dictionary but in fact a set
+
+      if (!ExpectPeek(Token::Type::COLON_OPERATOR))
+        return nullptr;
+
+      NextToken();
+      NodePtr value = ParseExpression(LOWEST);
+
+      if (result->pairs.find(key) != result->pairs.end())
+        result->pairs[key] = value;
+      else
+        result->pairs.insert(std::make_pair(key, value)); // TODO: report warning/error?
+
+      if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR))
+      {
+        return nullptr;
+      }
+      NextToken();
+    }
+    return result;
+  }
+
+  NodePtr Parser::ParseSetLiteral(NodePtr first, size_t start_index)
+  {
+    while (current_token_index >= start_index)
+      PreviousToken();
+    SetLiteralNodePtr set_literal = std::make_shared<SetLiteralNode>();
+    NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_CURLY_BRACES);
+    TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+    set_literal->elements = expression_tuple->elements;
+    return set_literal;
+  }
+
+  NodePtr Parser::ParseTernaryOperator(NodePtr left)
+  {
+    IfExpressionNodePtr result = std::make_shared<IfExpressionNode>();
+    NextToken();
+
+    result->consequence = std::make_shared<BlockStatementNode>();
+    result->consequence->statements.push_back(left);
+
+    result->condition = ParseExpression(LOWEST,
+      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE });
+
+    if (!ExpectPeek(Token::Type::KEYWORD_ELSE))
+    {
+      return nullptr;
+    }
+    else
+    {
+      NextToken();
+      result->alternative = std::make_shared<BlockStatementNode>();
+      result->alternative->statements.push_back(ParseExpression(LOWEST));
+    }
+
+    return result;
+  }
+
+  NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
+  {
+    TupleNodePtr result = std::make_shared<TupleNode>();
+    while (current_token_index >= start_index)
+      PreviousToken();
+
+    NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+    TupleNodePtr expression_tuple = std::dynamic_pointer_cast<TupleNode>(expression_list);
+    if (expression_tuple->elements.size() == 0)
+    {
+      if (first != nullptr)
+      {
+        result->elements.push_back(first);
+        NextToken();
+      }
+      return result;
+    }
+
+    // NextToken();
+    return expression_list;
+  }
+
+  NodePtr Parser::ParseArrowOperator(NodePtr left)
+  {
+    FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>();
+
+    if (left == nullptr)
+      result->parameters = {};
+    else
+    {
+      if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
+      {
+        std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
+        return nullptr;
+      }
+
+      if (left->type == Node::Type::TUPLE)
+      {
+        TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
+        for (auto& parameter : function_parameters->elements)
+        {
+          IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
+          if (identifier != nullptr)
+          {
+            result->parameters.push_back(identifier);
+          }
+          else
+          {
+            std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+          }
+        }
+      }
+      else if (left->type == Node::Type::IDENTIFIER)
+      {
+        IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
         if (identifier != nullptr)
         {
           result->parameters.push_back(identifier);
         }
         else
         {
-          std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+          std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
         }
       }
     }
-    else if (left->type == Node::Type::IDENTIFIER)
+
+    if (IsPeekToken(Token::Type::LEFT_CURLY_BRACES))
     {
-      IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
-      if (identifier != nullptr)
-      {
-        result->parameters.push_back(identifier);
-      }
-      else
-      {
-        std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
-      }
+      // Function body is a multi-statement block of code
+      if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+        return nullptr;
+      result->body = ParseBlockStatement();
     }
+    else
+    {
+      NextToken();
+      result->body = std::make_shared<BlockStatementNode>();
+      NodePtr expression = ParseExpression(LOWEST);
+      result->body->statements.push_back(expression);
+    }
+
+    return result;
   }
 
-  if (IsPeekToken(Token::Type::LEFT_CURLY_BRACES))
-  {
-    // Function body is a multi-statement block of code
-    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-      return nullptr;
-    result->body = ParseBlockStatement();
-  }
-  else
-  {
-    NextToken();
-    result->body = std::make_shared<BlockStatementNode>();
-    NodePtr expression = ParseExpression(LOWEST);
-    result->body->statements.push_back(expression);
-  }
-
-  return result;
 }

@@ -29,102 +29,107 @@
 #include <memory>
 #include <functional>
 
-typedef std::vector<Token> TokenVector;
-typedef const std::vector<Token> &TokenVectorConstRef;
-typedef std::vector<NodePtr> Statements;
-typedef unsigned int UnsignedInt;
-typedef std::function<NodePtr(void)> PrefixParseFunction;
-typedef std::map<Token::Type, std::function<NodePtr(void)>> PrefixParseFunctionMap;
-typedef std::function<NodePtr(NodePtr)> InfixParseFunction;
-typedef std::map<Token::Type, std::function<NodePtr(NodePtr)>> InfixParseFunctionMap;
-
-struct Parser
+namespace walnut
 {
-  explicit Parser(TokenVectorConstRef tokens);
 
-  void ParseProgram();
+  typedef std::vector<Token> TokenVector;
+  typedef const std::vector<Token> &TokenVectorConstRef;
+  typedef std::vector<NodePtr> Statements;
+  typedef unsigned int UnsignedInt;
+  typedef std::function<NodePtr(void)> PrefixParseFunction;
+  typedef std::map<Token::Type, std::function<NodePtr(void)>> PrefixParseFunctionMap;
+  typedef std::function<NodePtr(NodePtr)> InfixParseFunction;
+  typedef std::map<Token::Type, std::function<NodePtr(NodePtr)>> InfixParseFunctionMap;
 
-  void PreviousToken();
-  void NextToken();
-  bool IsCurrentToken(Token::Type value);
-  bool IsCurrentTokenInList(const std::vector<Token::Type> &value);
-  bool IsPeekToken(Token::Type value);
-  bool IsPeekTokenInList(const std::vector<Token::Type> &value);
-  bool ExpectPeek(Token::Type value);
-  void ReportError(Token::Type expected);
-
-  NodePtr ParseStatement();
-  NodePtr ParseVarStatement();
-  NodePtr ParseReturnStatement();
-  NodePtr ParseExpressionStatement();
-
-  PrefixParseFunctionMap prefix_parse_functions;
-  void RegisterPrefixParseFunction(Token::Type token, PrefixParseFunction function);
-
-  InfixParseFunctionMap infix_parse_functions;
-  void RegisterInfixParseFunction(Token::Type token, InfixParseFunction function);
-
-  enum Precedence
+  struct Parser
   {
-    LOWEST,
-    IF,
-    LOGICAL_OR,  // ||
-    LOGICAL_AND, // &&
-    EQUAL,       // ==, !=
-    LESSGREATER, // >, >=, < and <=
-    SUM,         // +, -
-    PRODUCT,     // *, /, %
-    PREFIX,      // -X or !X
-    CALL,        // my_function(X)
-    INDEX,       // X[0], [1, 2, 3, 4][2]
-    DOT,         // x.y(), i.e., y(x)
-    ARROW,       // (x, y) => { x * y }
+    explicit Parser(TokenVectorConstRef tokens);
+
+    void ParseProgram();
+
+    void PreviousToken();
+    void NextToken();
+    bool IsCurrentToken(Token::Type value);
+    bool IsCurrentTokenInList(const std::vector<Token::Type> &value);
+    bool IsPeekToken(Token::Type value);
+    bool IsPeekTokenInList(const std::vector<Token::Type> &value);
+    bool ExpectPeek(Token::Type value);
+    void ReportError(Token::Type expected);
+
+    NodePtr ParseStatement();
+    NodePtr ParseVarStatement();
+    NodePtr ParseReturnStatement();
+    NodePtr ParseExpressionStatement();
+
+    PrefixParseFunctionMap prefix_parse_functions;
+    void RegisterPrefixParseFunction(Token::Type token, PrefixParseFunction function);
+
+    InfixParseFunctionMap infix_parse_functions;
+    void RegisterInfixParseFunction(Token::Type token, InfixParseFunction function);
+
+    enum Precedence
+    {
+      LOWEST,
+      IF,
+      LOGICAL_OR,  // ||
+      LOGICAL_AND, // &&
+      EQUAL,       // ==, !=
+      LESSGREATER, // >, >=, < and <=
+      SUM,         // +, -
+      PRODUCT,     // *, /, %
+      PREFIX,      // -X or !X
+      CALL,        // my_function(X)
+      INDEX,       // X[0], [1, 2, 3, 4][2]
+      DOT,         // x.y(), i.e., y(x)
+      ARROW,       // (x, y) => { x * y }
+    };
+    typedef std::map<Token::Type, Precedence> TokenPrecedenceMap;
+
+    Precedence PeekPrecedence();
+    Precedence CurrentPrecedence();
+    NodePtr ParseExpression(Precedence precedence,
+      std::vector<Token::Type> end = { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE });
+
+    /* Prefix parse functions */
+    NodePtr ParseIdentifier();
+    NodePtr ParseInteger();
+    NodePtr ParseDouble();
+    NodePtr ParseBoolean();
+    NodePtr ParseCharacter();
+    NodePtr ParseStringLiteral();
+    NodePtr ParsePrefixExpression();
+    NodePtr ParseGroupedExpression();
+    BlockStatementNodePtr ParseBlockStatement();
+    NodePtr ParseIfExpression();
+    NodePtr ParseWhileExpression();
+    NodePtr ParseForExpression();
+
+    std::vector<IdentifierNodePtr> ParseFunctionParameters();
+    NodePtr ParseFunctionLiteral();
+
+    NodePtr ParseArrayLiteral();
+    NodePtr ParseExpressionList(Token::Type end);
+
+    NodePtr ParseSetLiteral(NodePtr first, size_t start_index);
+    NodePtr ParseHashLiteral();
+
+    NodePtr ParseTuple(NodePtr first, size_t start_index);
+
+    /* Infix parse functions */
+    NodePtr ParseInfixExpression(NodePtr left);
+    NodePtr ParseCallExpression(NodePtr function);
+    NodePtr ParseIndexExpression(NodePtr left);
+    NodePtr ParseDotOperator(NodePtr left);
+    NodePtr ParseTernaryOperator(NodePtr left);
+    NodePtr ParseArrowOperator(NodePtr left);
+
+    /* Member variables */
+    TokenVector tokens;
+    Statements statements;
+    UnsignedInt current_token_index;
+    Token current_token;
+    Token peek_token;
+    TokenPrecedenceMap precedences;
   };
-  typedef std::map<Token::Type, Precedence> TokenPrecedenceMap;
 
-  Precedence PeekPrecedence();
-  Precedence CurrentPrecedence();
-  NodePtr ParseExpression(Precedence precedence,
-                          std::vector<Token::Type> end = {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE});
-
-  /* Prefix parse functions */
-  NodePtr ParseIdentifier();
-  NodePtr ParseInteger();
-  NodePtr ParseDouble();
-  NodePtr ParseBoolean();
-  NodePtr ParseCharacter();
-  NodePtr ParseStringLiteral();
-  NodePtr ParsePrefixExpression();
-  NodePtr ParseGroupedExpression();
-  BlockStatementNodePtr ParseBlockStatement();
-  NodePtr ParseIfExpression();
-  NodePtr ParseWhileExpression();
-  NodePtr ParseForExpression();
-
-  std::vector<IdentifierNodePtr> ParseFunctionParameters();
-  NodePtr ParseFunctionLiteral();
-
-  NodePtr ParseArrayLiteral();
-  NodePtr ParseExpressionList(Token::Type end);
-
-  NodePtr ParseSetLiteral(NodePtr first, size_t start_index);
-  NodePtr ParseHashLiteral();
-
-  NodePtr ParseTuple(NodePtr first, size_t start_index);
-
-  /* Infix parse functions */
-  NodePtr ParseInfixExpression(NodePtr left);
-  NodePtr ParseCallExpression(NodePtr function);
-  NodePtr ParseIndexExpression(NodePtr left);
-  NodePtr ParseDotOperator(NodePtr left);
-  NodePtr ParseTernaryOperator(NodePtr left);
-  NodePtr ParseArrowOperator(NodePtr left);
-
-  /* Member variables */
-  TokenVector tokens;
-  Statements statements;
-  UnsignedInt current_token_index;
-  Token current_token;
-  Token peek_token;
-  TokenPrecedenceMap precedences;
-};
+}

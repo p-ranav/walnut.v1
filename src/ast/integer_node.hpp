@@ -2,16 +2,21 @@
 #include <node.hpp>
 #include <cstdint>
 
-struct IntegerNode : Node
+namespace walnut
 {
-  int64_t value;
-  explicit IntegerNode(int64_t value) : Node(INTEGER),
-                                    value(value) {}
 
-  String ToString() override
+  struct IntegerNode : Node
   {
-    return std::to_string(value);
-  }
-};
+    int64_t value;
+    explicit IntegerNode(int64_t value) : Node(INTEGER),
+      value(value) {}
 
-typedef std::shared_ptr<IntegerNode> IntegerNodePtr;
+    String ToString() override
+    {
+      return std::to_string(value);
+    }
+  };
+
+  typedef std::shared_ptr<IntegerNode> IntegerNodePtr;
+
+}

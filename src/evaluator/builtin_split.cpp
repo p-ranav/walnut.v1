@@ -1,29 +1,34 @@
 #include <strcpp.hpp>
 #include <evaluator.hpp>
 
-ObjectPtr Evaluator::BuiltinSplit(std::vector<ObjectPtr> arguments)
+namespace walnut
 {
-  if (arguments.size() == 2)
+
+  ObjectPtr Evaluator::BuiltinSplit(std::vector<ObjectPtr> arguments)
   {
-    if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::STRING)
+    if (arguments.size() == 2)
     {
-      StringObjectPtr input_string = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-      StringObjectPtr split_string = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-
-      if (input_string->Value() == "")
-        return std::make_shared<ArrayObject>();
-
-      std::vector<std::string> split_result = split(input_string->Value(), split_string->Value());
-      ArrayObjectPtr result = std::make_shared<ArrayObject>();
-      for (auto& part : split_result)
+      if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::STRING)
       {
-        result->elements.push_back(std::make_shared<StringObject>(part));
+        StringObjectPtr input_string = std::dynamic_pointer_cast<StringObject>(arguments[0]);
+        StringObjectPtr split_string = std::dynamic_pointer_cast<StringObject>(arguments[1]);
+
+        if (input_string->Value() == "")
+          return std::make_shared<ArrayObject>();
+
+        std::vector<std::string> split_result = split(input_string->Value(), split_string->Value());
+        ArrayObjectPtr result = std::make_shared<ArrayObject>();
+        for (auto& part : split_result)
+        {
+          result->elements.push_back(std::make_shared<StringObject>(part));
+        }
+        return result;
       }
-      return result;
+      else
+        return std::make_shared<NullObject>();
     }
     else
       return std::make_shared<NullObject>();
   }
-  else
-    return std::make_shared<NullObject>();
+
 }

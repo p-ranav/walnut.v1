@@ -2,26 +2,31 @@
 #include <object.hpp>
 #include <memory>
 
-struct CharacterObject : Object
+namespace walnut
 {
-  String value;
 
-  explicit CharacterObject(StringConstRef value) : Object(CHARACTER), value(value) {}
-
-  ObjectPtr Copy() override
+  struct CharacterObject : Object
   {
-    return std::make_shared<CharacterObject>(value);
-  }
+    String value;
 
-  String Value()
-  {
-    return value;
-  }
+    explicit CharacterObject(StringConstRef value) : Object(CHARACTER), value(value) {}
 
-  String Inspect() override
-  {
-    return "'" + value + "'";
-  }
-};
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<CharacterObject>(value);
+    }
 
-typedef std::shared_ptr<CharacterObject> CharacterObjectPtr;
+    String Value()
+    {
+      return value;
+    }
+
+    String Inspect() override
+    {
+      return "'" + value + "'";
+    }
+  };
+
+  typedef std::shared_ptr<CharacterObject> CharacterObjectPtr;
+
+}

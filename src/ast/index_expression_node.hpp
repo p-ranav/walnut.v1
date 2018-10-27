@@ -2,18 +2,23 @@
 #include <node.hpp>
 #include <vector>
 
-struct IndexExpressionNode : Node
+namespace walnut
 {
-  NodePtr left;
-  NodePtr index;
-  explicit IndexExpressionNode(NodePtr left) : Node(INDEX_EXPRESSION),
-                                               left(left),
-                                               index(nullptr) {}
 
-  String ToString() override
+  struct IndexExpressionNode : Node
   {
-    return left->ToString() + "[" + index->ToString() + "]";
-  }
-};
+    NodePtr left;
+    NodePtr index;
+    explicit IndexExpressionNode(NodePtr left) : Node(INDEX_EXPRESSION),
+      left(left),
+      index(nullptr) {}
 
-typedef std::shared_ptr<IndexExpressionNode> IndexExpressionNodePtr;
+    String ToString() override
+    {
+      return left->ToString() + "[" + index->ToString() + "]";
+    }
+  };
+
+  typedef std::shared_ptr<IndexExpressionNode> IndexExpressionNodePtr;
+
+}

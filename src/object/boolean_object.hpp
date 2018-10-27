@@ -2,20 +2,25 @@
 #include <object.hpp>
 #include <memory>
 
-struct BooleanObject : Object
+namespace walnut
 {
-  bool value;
-  explicit BooleanObject(bool value) : Object(BOOLEAN, false, true), value(value) {}
 
-  ObjectPtr Copy() override
+  struct BooleanObject : Object
   {
-    return std::make_shared<BooleanObject>(value);
-  }
+    bool value;
+    explicit BooleanObject(bool value) : Object(BOOLEAN, false, true), value(value) {}
 
-  String Inspect() override
-  {
-    return (value == true) ? "true" : "false";
-  }
-};
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<BooleanObject>(value);
+    }
 
-typedef std::shared_ptr<BooleanObject> BooleanObjectPtr;
+    String Inspect() override
+    {
+      return (value == true) ? "true" : "false";
+    }
+  };
+
+  typedef std::shared_ptr<BooleanObject> BooleanObjectPtr;
+
+}

@@ -9,5 +9,3 @@ namespace math
 
 (5).math::factorial().println();
 println(math::factorial(5));
-
-

@@ -1,0 +1,10 @@
+x = 15;
+
+y = function(n) {
+  println("Inside before changing x:", x, n); // global x
+  x = 5; // local x; does not mutate global x
+  println("Inside after changing x:", x, n);
+};
+
+y(20); // 15 20
+println("Outside:", x); // 15

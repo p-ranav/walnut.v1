@@ -2,16 +2,21 @@
 #include <node.hpp>
 #include <string>
 
-struct IdentifierNode : Node
+namespace walnut
 {
-  String value;
-  explicit IdentifierNode(StringConstRef value) : Node(IDENTIFIER),
-                                                  value(value) {}
 
-  String ToString() override
+  struct IdentifierNode : Node
   {
-    return value;
-  }
-};
+    String value;
+    explicit IdentifierNode(StringConstRef value) : Node(IDENTIFIER),
+      value(value) {}
 
-typedef std::shared_ptr<IdentifierNode> IdentifierNodePtr;
+    String ToString() override
+    {
+      return value;
+    }
+  };
+
+  typedef std::shared_ptr<IdentifierNode> IdentifierNodePtr;
+
+}

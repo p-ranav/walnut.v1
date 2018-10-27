@@ -2,20 +2,25 @@
 #include <object.hpp>
 #include <memory>
 
-struct ReturnObject : Object
+namespace walnut
 {
-  ObjectPtr value;
-  explicit ReturnObject(ObjectPtr value) : Object(RETURN), value(value) {}
 
-  ObjectPtr Copy() override
+  struct ReturnObject : Object
   {
-    return std::make_shared<ReturnObject>(value);
-  }
+    ObjectPtr value;
+    explicit ReturnObject(ObjectPtr value) : Object(RETURN), value(value) {}
 
-  String Inspect() override
-  {
-    return value->Inspect();
-  }
-};
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<ReturnObject>(value);
+    }
 
-typedef std::shared_ptr<ReturnObject> ReturnObjectPtr;
+    String Inspect() override
+    {
+      return value->Inspect();
+    }
+  };
+
+  typedef std::shared_ptr<ReturnObject> ReturnObjectPtr;
+
+}

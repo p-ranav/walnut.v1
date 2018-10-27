@@ -2,16 +2,21 @@
 #include <node.hpp>
 #include <identifier_node.hpp>
 
-struct VarStatementNode : Node
+namespace walnut
 {
-  IdentifierNodePtr name;
-  NodePtr expression;
-  VarStatementNode() : Node(VAR_STATEMENT) {}
 
-  String ToString() override
+  struct VarStatementNode : Node
   {
-    return name->ToString() + " = " + expression->ToString() + ";";
-  }
-};
+    IdentifierNodePtr name;
+    NodePtr expression;
+    VarStatementNode() : Node(VAR_STATEMENT) {}
 
-typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;
+    String ToString() override
+    {
+      return name->ToString() + " = " + expression->ToString() + ";";
+    }
+  };
+
+  typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;
+
+}

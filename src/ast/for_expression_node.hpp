@@ -4,21 +4,26 @@
 #include <memory>
 #include <vector>
 
-struct ForExpressionNode : Node
+namespace walnut
 {
-  std::vector<NodePtr> iterators;
-  NodePtr iterable;
-  BlockStatementNodePtr body;
 
-  explicit ForExpressionNode() : Node(FOR_EXPRESSION),
-                                 iterators({}),
-                                 iterable(nullptr),
-                                 body(nullptr) {}
-
-  String ToString() override
+  struct ForExpressionNode : Node
   {
-    return "for ...";
-  }
-};
+    std::vector<NodePtr> iterators;
+    NodePtr iterable;
+    BlockStatementNodePtr body;
 
-typedef std::shared_ptr<ForExpressionNode> ForExpressionNodePtr;
+    explicit ForExpressionNode() : Node(FOR_EXPRESSION),
+      iterators({}),
+      iterable(nullptr),
+      body(nullptr) {}
+
+    String ToString() override
+    {
+      return "for ...";
+    }
+  };
+
+  typedef std::shared_ptr<ForExpressionNode> ForExpressionNodePtr;
+
+}

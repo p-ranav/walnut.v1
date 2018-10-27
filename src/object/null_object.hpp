@@ -1,12 +1,17 @@
 #pragma once
 #include <object.hpp>
 
-struct NullObject : Object
+namespace walnut
 {
-  explicit NullObject() : Object(NULL_) {}
 
-  String Inspect() override
+  struct NullObject : Object
   {
-    return "null";
-  }
-};
+    explicit NullObject() : Object(NULL_) {}
+
+    String Inspect() override
+    {
+      return "null";
+    }
+  };
+
+}

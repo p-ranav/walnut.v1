@@ -5,49 +5,54 @@
 #include <environment.hpp>
 #include <iostream>
 
-struct FunctionObject : Object
+namespace walnut
 {
-  std::vector<IdentifierNodePtr> parameters;
-  BlockStatementNodePtr body;
-  EnvironmentPtr environment;
 
-  explicit FunctionObject(const std::vector<IdentifierNodePtr> &parameters,
-                          BlockStatementNodePtr body, EnvironmentPtr environment) : Object(FUNCTION),
-                                                                                    parameters(parameters),
-                                                                                    body(body),
-                                                                                    environment(environment) {}
-
-  ObjectPtr Copy() override
+  struct FunctionObject : Object
   {
-    return std::make_shared<FunctionObject>(parameters, body, environment);
-  }
+    std::vector<IdentifierNodePtr> parameters;
+    BlockStatementNodePtr body;
+    EnvironmentPtr environment;
 
-  virtual ~FunctionObject()
-  {
-    environment.reset();
-  }
+    explicit FunctionObject(const std::vector<IdentifierNodePtr> &parameters,
+      BlockStatementNodePtr body, EnvironmentPtr environment) : Object(FUNCTION),
+      parameters(parameters),
+      body(body),
+      environment(environment) {}
 
-  String Inspect() override
-  {
-    String result = "";
-    result += "function(";
-    if (parameters.size() == 1)
+    ObjectPtr Copy() override
     {
-      result += parameters[0]->ToString();
+      return std::make_shared<FunctionObject>(parameters, body, environment);
     }
-    else if (parameters.size() > 1)
+
+    virtual ~FunctionObject()
     {
-      for (size_t i = 0; i < parameters.size() - 1; i++)
+      environment.reset();
+    }
+
+    String Inspect() override
+    {
+      String result = "";
+      result += "function(";
+      if (parameters.size() == 1)
       {
-        result += parameters[i]->ToString() + ", ";
+        result += parameters[0]->ToString();
       }
-      result += parameters[parameters.size() - 1]->ToString();
+      else if (parameters.size() > 1)
+      {
+        for (size_t i = 0; i < parameters.size() - 1; i++)
+        {
+          result += parameters[i]->ToString() + ", ";
+        }
+        result += parameters[parameters.size() - 1]->ToString();
+      }
+      result += ") ";
+      if (body)
+        result += body->ToString();
+      return result;
     }
-    result += ") ";
-    if (body)
-      result += body->ToString();
-    return result;
-  }
-};
+  };
 
-typedef std::shared_ptr<FunctionObject> FunctionObjectPtr;
+  typedef std::shared_ptr<FunctionObject> FunctionObjectPtr;
+
+}

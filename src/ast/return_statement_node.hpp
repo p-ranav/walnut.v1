@@ -1,15 +1,20 @@
 #pragma once
 #include <node.hpp>
 
-struct ReturnStatementNode : Node
+namespace walnut
 {
-  NodePtr expression;
-  ReturnStatementNode() : Node(RETURN_STATEMENT) {}
 
-  String ToString() override
+  struct ReturnStatementNode : Node
   {
-    return "return " + expression->ToString();
-  }
-};
+    NodePtr expression;
+    ReturnStatementNode() : Node(RETURN_STATEMENT) {}
 
-typedef std::shared_ptr<ReturnStatementNode> ReturnStatementNodePtr;
+    String ToString() override
+    {
+      return "return " + expression->ToString();
+    }
+  };
+
+  typedef std::shared_ptr<ReturnStatementNode> ReturnStatementNodePtr;
+
+}

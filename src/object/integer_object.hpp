@@ -3,25 +3,30 @@
 #include <double_object.hpp>
 #include <cstdint>
 
-struct IntegerObject : Object
+namespace walnut
 {
-  int64_t value;
-  explicit IntegerObject(int64_t value) : Object(INTEGER, false, true), value(value) {}
 
-  ObjectPtr Copy() override
+  struct IntegerObject : Object
   {
-    return std::make_shared<IntegerObject>(value);
-  }
+    int64_t value;
+    explicit IntegerObject(int64_t value) : Object(INTEGER, false, true), value(value) {}
 
-  String Inspect() override
-  {
-    return std::to_string(value);
-  }
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<IntegerObject>(value);
+    }
 
-  DoubleObjectPtr ToDouble()
-  {
-    return std::make_shared<DoubleObject>(static_cast<double>(value));
-  }
-};
+    String Inspect() override
+    {
+      return std::to_string(value);
+    }
 
-typedef std::shared_ptr<IntegerObject> IntegerObjectPtr;
+    DoubleObjectPtr ToDouble()
+    {
+      return std::make_shared<DoubleObject>(static_cast<double>(value));
+    }
+  };
+
+  typedef std::shared_ptr<IntegerObject> IntegerObjectPtr;
+
+}

@@ -4,23 +4,28 @@
 #include <vector>
 #include <functional>
 
-struct BuiltinFunctionObject : Object
+namespace walnut
 {
-  typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
-  BuiltinFunction function;
 
-  BuiltinFunctionObject(BuiltinFunction function) : Object(BUILTIN_FUNCTION),
-                                                    function(function) {}
-
-  ObjectPtr Copy() override
+  struct BuiltinFunctionObject : Object
   {
-    return std::make_shared<BuiltinFunctionObject>(function);
-  }
+    typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
+    BuiltinFunction function;
 
-  String Inspect() override
-  {
-    return "";
-  }
-};
+    BuiltinFunctionObject(BuiltinFunction function) : Object(BUILTIN_FUNCTION),
+      function(function) {}
 
-typedef std::shared_ptr<BuiltinFunctionObject> BuiltinFunctionObjectPtr;
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<BuiltinFunctionObject>(function);
+    }
+
+    String Inspect() override
+    {
+      return "";
+    }
+  };
+
+  typedef std::shared_ptr<BuiltinFunctionObject> BuiltinFunctionObjectPtr;
+
+}

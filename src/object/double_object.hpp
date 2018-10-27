@@ -1,26 +1,32 @@
 #pragma once
 #include <object.hpp>
 #include <integer_object.hpp>
-#include <iomanip> // setprecision
-#include <sstream> // stringstream
+#include <iomanip>
+#include <sstream>
+#include <memory>
 
-struct DoubleObject : Object
+namespace walnut
 {
-  double value;
-  std::streamsize str_precision;
-  explicit DoubleObject(double value) : Object(DOUBLE, false, true), value(value), str_precision(2) {}
 
-  ObjectPtr Copy() override
+  struct DoubleObject : Object
   {
-    return std::make_shared<DoubleObject>(value);
-  }
+    double value;
+    std::streamsize str_precision;
+    explicit DoubleObject(double value) : Object(DOUBLE, false, true), value(value), str_precision(2) {}
 
-  String Inspect() override
-  {
-    std::stringstream stream;
-    stream << std::fixed << std::setprecision(str_precision) << value;
-    return stream.str();
-  }
-};
+    ObjectPtr Copy() override
+    {
+      return std::make_shared<DoubleObject>(value);
+    }
 
-typedef std::shared_ptr<DoubleObject> DoubleObjectPtr;
+    String Inspect() override
+    {
+      std::stringstream stream;
+      stream << std::fixed << std::setprecision(str_precision) << value;
+      return stream.str();
+    }
+  };
+
+  typedef std::shared_ptr<DoubleObject> DoubleObjectPtr;
+
+}

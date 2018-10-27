@@ -1,13 +1,18 @@
 #include <evaluator.hpp>
 
-ObjectPtr Evaluator::BuiltinLength(std::vector<ObjectPtr> arguments)
+namespace walnut
 {
-  if (arguments.size() == 1)
+
+  ObjectPtr Evaluator::BuiltinLength(std::vector<ObjectPtr> arguments)
   {
-    if (arguments[0]->iterable == true)
+    if (arguments.size() == 1)
     {
-      return std::make_shared<IntegerObject>(static_cast<int>(arguments[0]->IterableSize()));
+      if (arguments[0]->iterable == true)
+      {
+        return std::make_shared<IntegerObject>(static_cast<int>(arguments[0]->IterableSize()));
+      }
     }
+    return std::make_shared<NullObject>();
   }
-  return std::make_shared<NullObject>();
+
 }
