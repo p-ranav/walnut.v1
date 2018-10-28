@@ -47,8 +47,8 @@ namespace walnut
         if (character[0] == '\n')
         {
           line += 1;
-          cursor = 1;
           NextCharacter();
+          cursor = 1;
         }
 
         continue;

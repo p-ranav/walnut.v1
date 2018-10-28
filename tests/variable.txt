@@ -1,5 +1,11 @@
+import <fibonacci.txt>
 a = 5;
 a.println();
 
 a = 5, b = 6, c = 7;
-println(a, b, c)
+println(a, b, c);
+
+
+
+
+import <fibonacci.txt>

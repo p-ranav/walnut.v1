@@ -174,11 +174,11 @@ namespace walnut
 
     if (peek_token.cursor > cursor)
     {
-      message_carets = String(peek_token.cursor - cursor - 1, '^');
+      message_carets = " " + String(peek_token.cursor - cursor - 1, '^');
     }
     else
     {
-      message_carets = String(1, '^');
+      message_carets = " " + String(1, '^');
     }
 
     std::vector<String> lines = split(buffer, "\n");
@@ -246,12 +246,20 @@ namespace walnut
 
     if (!ExpectPeek(Token::Type::SYMBOL))
     {
+      String brief_description = "failed to parse variable declaration statement";
+      String detailed_description = 
+        " LHS of assignment operator needs to be an identifier";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
     }
     result->name = std::make_shared<IdentifierNode>(current_token, current_token.value);
 
     if (!ExpectPeek(Token::Type::ASSIGNMENT_OPERATOR))
     {
+      String brief_description = "failed to parse variable declaration statement";
+      String detailed_description =
+        " expected the assignment operator '=' here";
+      ReportError(peek_token, brief_description, detailed_description);
       result->expression = nullptr;
     }
     else
@@ -279,8 +287,14 @@ namespace walnut
   NodePtr Parser::ParseImportStatement()
   {
     ImportStatementNodePtr result = std::make_shared<ImportStatementNode>(current_token, "");
-    if(!ExpectPeek(Token::Type::STRING_LITERAL))
+    if (!ExpectPeek(Token::Type::STRING_LITERAL))
+    {
+      String brief_description = "failed to parse import statement";
+      String detailed_description =
+        " the import filename must be a string literal, e.g., import \"logging.txt\"";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
 
     result->value = current_token.value;
     NextToken();
