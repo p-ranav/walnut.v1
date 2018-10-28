@@ -57,9 +57,8 @@ namespace walnut
     bool IsPeekToken(Token::Type value);
     bool IsPeekTokenInList(const std::vector<Token::Type> &value);
     bool ExpectPeek(Token::Type value);
-    void ReportError(Token::Type expected);
     unsigned int GetNumberOfDigits(unsigned int number);
-    void ReportParseError(Token error_token, String brief_description, String detailed_description);
+    void ReportError(Token error_token, String brief_description, String detailed_description);
 
     NodePtr ParseStatement();
     NodePtr ParseVarStatement();

@@ -126,16 +126,6 @@ namespace walnut
     return (std::find(value.begin(), value.end(), peek_token.type) != value.end());
   }
 
-  void Parser::ReportError(Token::Type expected)
-  {
-    String message;
-    if (peek_token.file != "")
-      message = "parser error: unexpected token \"" + peek_token.value + "\"" + ", expected \"" + TokenString(expected) + "\" at" + peek_token.file + ", line " + std::to_string(current_token.line) + " char " + std::to_string(current_token.cursor + 1);
-    else
-      message = "parser error: unexpected token \"" + peek_token.value + "\"";
-    std::cout << message << std::endl;
-  }
-
   bool Parser::ExpectPeek(Token::Type value)
   {
     if (IsPeekToken(value))
@@ -145,9 +135,90 @@ namespace walnut
     }
     else
     {
-      ReportError(value);
       return false;
     }
+  }
+
+  unsigned int Parser::GetNumberOfDigits(unsigned int number)
+  {
+    unsigned int digits = 0;
+    if (number < 0) digits = 1;
+    while (number) {
+      number /= 10;
+      digits += 1;
+    }
+    return digits;
+  }
+
+  void Parser::ReportError(Token error_token, String brief_descrition, String detailed_description)
+  {
+    String file = error_token.file;
+    unsigned int line = error_token.line;
+    unsigned int cursor = error_token.cursor;
+
+    std::vector<unsigned int> line_numbers = {};
+    if (line == 1)
+    {
+      line_numbers = std::vector<unsigned int>{ line, (line + 1) };
+    }
+    else
+    {
+      line_numbers = std::vector<unsigned int>{
+        (line - 1), line, (line + 1) };
+    }
+    unsigned int max_line_number = *(std::max_element(line_numbers.begin(), line_numbers.end()));
+    String blanks(GetNumberOfDigits(max_line_number), ' ');
+
+    String message_leading_blanks(cursor - 1, ' ');
+    String message_carets = "";
+
+    if (peek_token.cursor > cursor)
+    {
+      message_carets = String(peek_token.cursor - cursor - 1, '^');
+    }
+    else
+    {
+      message_carets = String(1, '^');
+    }
+
+    std::vector<String> lines = split(buffer, "\n");
+    String error_line = lines[line - 1];
+
+    std::cout << "error: " << brief_descrition << std::endl;
+    std::cout << blanks << "--> " << file << ":" << line << ":" << cursor << std::endl;
+
+    if ((line - 1) > 0)
+    {
+      String line_leading_blanks = "";
+      line_leading_blanks.insert(line_leading_blanks.begin(),
+        (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line - 1)),
+        ' ');
+      std::cout << blanks << " |  " << std::endl;
+      if ((line - 2) < lines.size())
+        std::cout << line_leading_blanks << (line - 1) << " |  " << lines[line - 2] << std::endl;
+      else
+        std::cout << line_leading_blanks << (line - 1) << " |  " << std::endl;
+    }
+
+    String line_leading_blanks = "";
+    line_leading_blanks.insert(line_leading_blanks.begin(),
+      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line)), ' ');
+
+    std::cout << blanks << " |  " << std::endl;
+    std::cout << line_leading_blanks << line << " |  " << error_line << std::endl;
+    std::cout << blanks << " | " << message_leading_blanks << message_carets
+      << detailed_description << std::endl;
+
+    line_leading_blanks = "";
+    line_leading_blanks.insert(line_leading_blanks.begin(),
+      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line + 1)), ' ');
+
+    if ((line + 1) < lines.size())
+      std::cout << line_leading_blanks << (line + 1) << " |  " << lines[line] << std::endl;
+    else
+      std::cout << line_leading_blanks << (line + 1) << " |  " << std::endl;
+
+    std::cout << std::endl;
   }
 
   NodePtr Parser::ParseStatement()
@@ -703,7 +774,7 @@ namespace walnut
           " as left-hand side of => operator";
         String detailed_description = 
           " LHS of arrow operator needs to be an identifier or an identifier-tuple";
-        ReportParseError(left->token, brief_description, detailed_description);
+        ReportError(left->token, brief_description, detailed_description);
         return nullptr;
       }
 
@@ -753,88 +824,6 @@ namespace walnut
     }
 
     return result;
-  }
-
-  unsigned int Parser::GetNumberOfDigits(unsigned int number)
-  {
-    unsigned int digits = 0;
-    if (number < 0) digits = 1;
-    while (number) {
-      number /= 10;
-      digits += 1;
-    }
-    return digits;
-  }
-
-  void Parser::ReportParseError(Token error_token, String brief_descrition, String detailed_description)
-  {
-    String file = error_token.file;
-    unsigned int line = error_token.line;
-    unsigned int cursor = error_token.cursor;
-
-    std::vector<unsigned int> line_numbers = {};
-    if (line == 1)
-    {
-      line_numbers = std::vector<unsigned int>{ line, (line + 1) };
-    }
-    else
-    {
-      line_numbers = std::vector<unsigned int>{
-        (line - 1), line, (line + 1) };
-    }
-    unsigned int max_line_number = *(std::max_element(line_numbers.begin(), line_numbers.end()));
-    String blanks(GetNumberOfDigits(max_line_number), ' ');
-
-    String message_leading_blanks(cursor - 1, ' ');
-    String message_carets = "";
-
-    if (peek_token.cursor > cursor)
-    {
-      message_carets = String(peek_token.cursor - cursor - 1, '^');
-    }
-    else
-    {
-      message_carets = String(1, '^');
-    }
-
-    std::vector<String> lines = split(buffer, "\n");
-    String error_line = lines[line - 1];
-
-    std::cout << "error: " << brief_descrition << std::endl;
-    std::cout << blanks << "--> " << file << ":" << line << ":" << cursor << std::endl;
-
-    if ((line - 1) > 0)
-    {
-      String line_leading_blanks = "";
-      line_leading_blanks.insert(line_leading_blanks.begin(),
-        (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line - 1)),
-        ' ');
-      std::cout << blanks << " |  " << std::endl;
-      if ((line - 2) < lines.size())
-        std::cout << line_leading_blanks << (line - 1) << " |  " << lines[line - 2] << std::endl;
-      else
-        std::cout << line_leading_blanks << (line - 1) << " |  " << std::endl;
-    }
-
-    String line_leading_blanks = "";
-    line_leading_blanks.insert(line_leading_blanks.begin(),
-      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line)), ' ');
-
-    std::cout << blanks << " |  " << std::endl;
-    std::cout << line_leading_blanks << line << " |  " << error_line << std::endl;
-    std::cout << blanks << " | " << message_leading_blanks << message_carets
-      << detailed_description << std::endl;
-
-    line_leading_blanks = "";
-    line_leading_blanks.insert(line_leading_blanks.begin(),
-      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line + 1)), ' ');
-
-    if ((line + 1) < lines.size())
-      std::cout << line_leading_blanks << (line + 1) << " |  " << lines[line] << std::endl;
-    else
-      std::cout << line_leading_blanks << (line + 1) << " |  " << std::endl;
-
-    std::cout << std::endl;
   }
 
 }
