@@ -123,6 +123,8 @@ namespace walnut
     {
       current = result;
       tokens[index].value = result_value;
+      if (tokens[index].cursor != 1)
+        tokens[index].cursor -= 1;
       tokens.erase(tokens.begin() + index + 1);
     }
   }
@@ -164,6 +166,12 @@ namespace walnut
   {
     while (character[0] != 0x0A && index < buffer.size())
       character = NextCharacter();
+
+    if (character[0] != EOF)
+    {
+      line += 1;
+      cursor = 1;
+    }
   }
 
   void Lexer::ParseBlockComment(StringRef character)

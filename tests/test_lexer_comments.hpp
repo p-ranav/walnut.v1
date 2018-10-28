@@ -20,8 +20,8 @@ namespace walnut
     lexer.Tokenize();
     REQUIRE(lexer.tokens.size() == 1);
     REQUIRE(lexer.tokens[0].file == "");
-    REQUIRE(lexer.tokens[0].line == 1);
-    REQUIRE(lexer.tokens[0].cursor == 16);
+    REQUIRE(lexer.tokens[0].line == 2);
+    REQUIRE(lexer.tokens[0].cursor == 1);
     REQUIRE(lexer.tokens[0].type == Token::Type::END_OF_FILE);
     REQUIRE(lexer.tokens[0].value == "EOF");
   }
@@ -52,8 +52,8 @@ namespace walnut
     lexer.Tokenize();
     REQUIRE(lexer.tokens.size() == 1);
     REQUIRE(lexer.tokens[0].file == "");
-    REQUIRE(lexer.tokens[0].line == 1);
-    REQUIRE(lexer.tokens[0].cursor == 36);
+    REQUIRE(lexer.tokens[0].line == 2);
+    REQUIRE(lexer.tokens[0].cursor == 1);
     REQUIRE(lexer.tokens[0].type == Token::Type::END_OF_FILE);
     REQUIRE(lexer.tokens[0].value == "EOF");
   }

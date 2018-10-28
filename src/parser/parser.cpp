@@ -698,7 +698,9 @@ namespace walnut
     {
       if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
       {
-        std::cout << "parser error: left of '=>' operator must be a valid set of function parameters" << std::endl;
+        std::cout << "Parser Error: " << current_token.file << " (Line " << current_token.line 
+          << ", Character " << current_token.cursor << ")" << std::endl;
+        std::cout << " - Left of '=>' operator must be either an identifier or a tuple of identifiers" << std::endl;
         return nullptr;
       }
 

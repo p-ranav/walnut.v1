@@ -25,3 +25,5 @@ z.println(); // (3, 7)
 mutating_tuple = (1, 2, [3, 4, 5]);
 mutating_tuple[2][0] = -3;
 println(mutating_tuple); // (1, 2, [-3, 4, 5])
+
+x = 5 => println(5);
