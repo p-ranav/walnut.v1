@@ -218,6 +218,7 @@ namespace walnut
     else
       std::cout << line_leading_blanks << (line + 1) << " |  " << std::endl;
 
+    std::cout << blanks << " |  " << std::endl;
     std::cout << std::endl;
   }
 
