@@ -699,9 +699,11 @@ namespace walnut
     {
       if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
       {
-        std::cout << "Parser Error: " << current_token.file << " (Line " << current_token.line 
-          << ", Character " << current_token.cursor << ")" << std::endl;
-        std::cout << " - Left of '=>' operator must be either an identifier or a tuple of identifiers" << std::endl;
+        String brief_description = "cannot use " + left->ToString() +
+          " as left-hand side of => operator";
+        String detailed_description = 
+          " LHS of arrow operator needs to be an identifier or an identifier-tuple";
+        ReportParseError(left->token, brief_description, detailed_description);
         return nullptr;
       }
 
@@ -751,6 +753,88 @@ namespace walnut
     }
 
     return result;
+  }
+
+  unsigned int Parser::GetNumberOfDigits(unsigned int number)
+  {
+    unsigned int digits = 0;
+    if (number < 0) digits = 1;
+    while (number) {
+      number /= 10;
+      digits += 1;
+    }
+    return digits;
+  }
+
+  void Parser::ReportParseError(Token error_token, String brief_descrition, String detailed_description)
+  {
+    String file = error_token.file;
+    unsigned int line = error_token.line;
+    unsigned int cursor = error_token.cursor;
+
+    std::vector<unsigned int> line_numbers = {};
+    if (line == 1)
+    {
+      line_numbers = std::vector<unsigned int>{ line, (line + 1) };
+    }
+    else
+    {
+      line_numbers = std::vector<unsigned int>{
+        (line - 1), line, (line + 1) };
+    }
+    unsigned int max_line_number = *(std::max_element(line_numbers.begin(), line_numbers.end()));
+    String blanks(GetNumberOfDigits(max_line_number), ' ');
+
+    String message_leading_blanks(cursor - 1, ' ');
+    String message_carets = "";
+
+    if (peek_token.cursor > cursor)
+    {
+      message_carets = String(peek_token.cursor - cursor - 1, '^');
+    }
+    else
+    {
+      message_carets = String(1, '^');
+    }
+
+    std::vector<String> lines = split(buffer, "\n");
+    String error_line = lines[line - 1];
+
+    std::cout << "error: " << brief_descrition << std::endl;
+    std::cout << blanks << "--> " << file << ":" << line << ":" << cursor << std::endl;
+
+    if ((line - 1) > 0)
+    {
+      String line_leading_blanks = "";
+      line_leading_blanks.insert(line_leading_blanks.begin(),
+        (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line - 1)),
+        ' ');
+      std::cout << blanks << " |  " << std::endl;
+      if ((line - 2) < lines.size())
+        std::cout << line_leading_blanks << (line - 1) << " |  " << lines[line - 2] << std::endl;
+      else
+        std::cout << line_leading_blanks << (line - 1) << " |  " << std::endl;
+    }
+
+    String line_leading_blanks = "";
+    line_leading_blanks.insert(line_leading_blanks.begin(),
+      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line)), ' ');
+
+    std::cout << blanks << " |  " << std::endl;
+    std::cout << line_leading_blanks << line << " |  " << error_line << std::endl;
+    std::cout << blanks << " | " << message_leading_blanks << message_carets
+      << detailed_description << std::endl;
+
+    line_leading_blanks = "";
+    line_leading_blanks.insert(line_leading_blanks.begin(),
+      (GetNumberOfDigits(max_line_number) - GetNumberOfDigits(line + 1)), ' ');
+
+    if ((line + 1) < lines.size())
+      std::cout << line_leading_blanks << (line + 1) << " |  " << lines[line] << std::endl;
+    else
+      std::cout << line_leading_blanks << (line + 1) << " |  " << std::endl;
+
+    std::cout << std::endl;
   }
 
 }

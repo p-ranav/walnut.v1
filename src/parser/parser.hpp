@@ -24,6 +24,8 @@
 #include <tuple_node.hpp>
 #include <import_statement_node.hpp>
 
+#include <string.hpp>
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -56,6 +58,8 @@ namespace walnut
     bool IsPeekTokenInList(const std::vector<Token::Type> &value);
     bool ExpectPeek(Token::Type value);
     void ReportError(Token::Type expected);
+    unsigned int GetNumberOfDigits(unsigned int number);
+    void ReportParseError(Token error_token, String brief_description, String detailed_description);
 
     NodePtr ParseStatement();
     NodePtr ParseVarStatement();

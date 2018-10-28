@@ -24,9 +24,14 @@ if (WIN32)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
-# Utilities library
+# UTF-8 library
 ADD_SUBLIBRARY(UTF8 src/utf8)
 set_target_properties(UTF8 PROPERTIES OUTPUT_NAME utf8) # utf8.lib
+
+# STRING library
+ADD_SUBLIBRARY(STRING src/string)
+set_target_properties(STRING PROPERTIES OUTPUT_NAME string) # string.lib
+set_target_properties(STRING PROPERTIES LINKER_LANGUAGE CXX)
 
 # AST library
 ADD_SUBLIBRARY(AST src/ast)
@@ -41,17 +46,12 @@ TARGET_LINK_LIBRARIES(LEXER UTF8 AST)
 # Parser library
 ADD_SUBLIBRARY(PARSER src/parser)
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
-TARGET_LINK_LIBRARIES(PARSER LEXER AST) 
+TARGET_LINK_LIBRARIES(PARSER LEXER AST STRING) 
 
 # OBJECT_MODEL library
 ADD_SUBLIBRARY(OBJECT_MODEL src/object)
 set_target_properties(OBJECT_MODEL PROPERTIES OUTPUT_NAME object) # object.lib
 set_target_properties(OBJECT_MODEL PROPERTIES LINKER_LANGUAGE CXX)
-
-# UTILITIES library
-ADD_SUBLIBRARY(STRING src/string)
-set_target_properties(STRING PROPERTIES OUTPUT_NAME string) # string.lib
-set_target_properties(STRING PROPERTIES LINKER_LANGUAGE CXX)
 
 # EVALUATOR library
 ADD_SUBLIBRARY(EVALUATOR src/evaluator)
