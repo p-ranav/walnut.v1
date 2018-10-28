@@ -19,7 +19,7 @@ namespace walnut
     String buffer = "() => {}";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::FUNCTION);
@@ -36,7 +36,7 @@ namespace walnut
     String buffer = "a => a";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::FUNCTION);

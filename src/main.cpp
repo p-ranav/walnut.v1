@@ -17,7 +17,7 @@ void InterpretBuffer(InterpreterMode mode, walnut::StringConstRef filename, waln
   walnut::Lexer lexer(filename, buffer);
   lexer.Tokenize();
 
-  walnut::Parser parser(lexer.tokens);
+  walnut::Parser parser(lexer.tokens, buffer);
   parser.ParseProgram();
 
   walnut::Evaluator evaluator;

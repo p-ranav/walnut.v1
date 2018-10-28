@@ -20,7 +20,7 @@ namespace walnut
     String buffer = "[\"Hello\", \"World\"].join(\" \")";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     Evaluator evaluator;
     ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
@@ -37,7 +37,7 @@ namespace walnut
     String buffer = "[\"A\", \"B\", \"C\", \"D\"].join(\", \")";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     Evaluator evaluator;
     ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
@@ -54,7 +54,7 @@ namespace walnut
     String buffer = "[\"成功\", \"خيط\", \"தொடங்கியது\"].join(\"::\")";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     Evaluator evaluator;
     ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
@@ -71,7 +71,7 @@ namespace walnut
     String buffer = "[].join()";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     Evaluator evaluator;
     ObjectPtr result = evaluator.Eval(parser.statements[0], environment);
@@ -88,7 +88,7 @@ namespace walnut
     String buffer = "[].join(\", \")";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     Evaluator evaluator;
     ObjectPtr result = evaluator.Eval(parser.statements[0], environment);

@@ -19,7 +19,7 @@ namespace walnut
     String buffer = "[]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -36,7 +36,7 @@ namespace walnut
     String buffer = "[,]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -53,7 +53,7 @@ namespace walnut
     String buffer = "[1]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -73,7 +73,7 @@ namespace walnut
     String buffer = "[1, 2, 3]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -95,7 +95,7 @@ namespace walnut
     String buffer = "[1.0, 2.5, 3.9]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -117,7 +117,7 @@ namespace walnut
     String buffer = "[\"x\", \"y\", \"z\"]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);
@@ -139,7 +139,7 @@ namespace walnut
     String buffer = "[1, 3.14, \"x\", true]";
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
     REQUIRE(parser.statements.size() == 1);
     REQUIRE(parser.statements[0]->type == Node::Type::ARRAY_LITERAL);

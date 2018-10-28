@@ -4,7 +4,8 @@
 namespace walnut
 {
 
-  Parser::Parser(TokenVectorConstRef tokens) : current_token(Token()),
+  Parser::Parser(TokenVectorConstRef tokens, StringConstRef buffer) : current_token(Token()),
+    buffer(buffer),
     peek_token(Token()),
     current_token_index(0),
     statements({}),

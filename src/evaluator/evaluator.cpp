@@ -580,7 +580,7 @@ namespace walnut
     Lexer lexer(filename, buffer);
     lexer.Tokenize();
 
-    Parser parser(lexer.tokens);
+    Parser parser(lexer.tokens, buffer);
     parser.ParseProgram();
 
     Evaluator evaluator;

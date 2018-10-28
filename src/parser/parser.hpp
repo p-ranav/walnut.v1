@@ -44,7 +44,7 @@ namespace walnut
 
   struct Parser
   {
-    explicit Parser(TokenVectorConstRef tokens);
+    explicit Parser(TokenVectorConstRef tokens, StringConstRef buffer);
 
     void ParseProgram();
 
@@ -127,6 +127,7 @@ namespace walnut
 
     /* Member variables */
     TokenVector tokens;
+    String buffer;
     Statements statements;
     UnsignedInt current_token_index;
     Token current_token;
