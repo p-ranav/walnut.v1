@@ -1,6 +1,4 @@
-factorial = function(m) { /* ... */ };
-(5).factorial().println();
-println(factorial(5));
+import "factorial.txt";
 
 namespace math
 {

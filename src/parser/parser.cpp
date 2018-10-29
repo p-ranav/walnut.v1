@@ -290,15 +290,16 @@ namespace walnut
     ImportStatementNodePtr result = std::make_shared<ImportStatementNode>(current_token, "");
     if (!ExpectPeek(Token::Type::STRING_LITERAL))
     {
-      String brief_description = "failed to parse import statement";
+      String brief_description = "expected string literal in import statement";
       String detailed_description =
-        " the import filename must be a string literal, e.g., import \"logging.txt\"";
+        " this filename must be provided as a string literal, e.g., import \"logging.txt\"";
       ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
     }
 
     result->value = current_token.value;
-    NextToken();
+
+    NextToken(); // assuming semicolon here, not checking
     return result;
   }
 
@@ -437,7 +438,13 @@ namespace walnut
       return ParseTuple(result, start_index);
 
     if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
+    {
+      String brief_description = "expected ')' to terminate grouped expression";
+      String detailed_description =
+        " grouped expressions need to start with '(' and terminate with ')'";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
     return result;
   }
 
@@ -464,7 +471,13 @@ namespace walnut
     result->condition = ParseExpression(LOWEST);
 
     if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+    {
+      String brief_description = "expected '{' to mark the start of if block";
+      String detailed_description =
+        " the 'if' block needs to be wrapped inside curly braces: if <condition> { <consequence> }";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
 
     result->consequence = ParseBlockStatement();
 
@@ -472,7 +485,13 @@ namespace walnut
     {
       NextToken();
       if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      {
+        String brief_description = "expected '{' to mark the start of else block";
+        String detailed_description =
+          " the else block needs to be wrapped inside curly braces: else { <alternative> }";
+        ReportError(peek_token, brief_description, detailed_description);
         return nullptr;
+      }
 
       result->alternative = ParseBlockStatement();
     }
@@ -496,7 +515,13 @@ namespace walnut
       result->condition = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
 
       if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      {
+        String brief_description = "expected '{' to mark the start of while block";
+        String detailed_description =
+          " the while block needs to be wrapped inside curly braces: while <condition> { <consequence> }";
+        ReportError(peek_token, brief_description, detailed_description);
         return nullptr;
+      }
     }
 
     result->consequence = ParseBlockStatement();
@@ -523,13 +548,25 @@ namespace walnut
     }
 
     if (!ExpectPeek(Token::Type::KEYWORD_IN))
+    {
+      String brief_description = "expected 'in' keyword in for expression";
+      String detailed_description =
+        " 'for' expressions operate on iterables like so: for <iterator(s)> in <iterable> { <consequence> }";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
 
     NextToken();
     result->iterable = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
 
     if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+    {
+      String brief_description = "expected '{' to mark the start of for block";
+      String detailed_description =
+        " the for block needs to be wrapped inside curly braces: for <iterator(s)> in <iterable> { <consequence> }";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
 
     result->body = ParseBlockStatement();
 
