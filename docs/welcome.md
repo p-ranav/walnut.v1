@@ -97,7 +97,7 @@ x.square().println();             // 25
 [1, 2, 3].map(square).println();  // [1, 4, 9]
 ```
 
-## Closure
+## Decorators
 
 Decorators are a good example of closure.
 
@@ -137,6 +137,33 @@ sum = add;
 sum(2, 3).println();
 ```
 
+## Lists
+
+A list is an ordered, changeable collection. In Walnut, lists are written with square brackets.
+
+```javascript
+list = [
+  1,                             // integer
+  3.14,                          // double
+  false,                         // boolean
+  'λ',                           // character
+  "Hello, 世界",                 // string
+  function(i, j) { i * j },      // function
+  [2, 3],                        // sub-list
+  {"a": 1, "b": 2},              // dictionary
+  {4, 5, 6},                     // set
+  (7, 8)                         // tuple
+];
+```
+
+The above list is pretty heterogeneous. It contains integers, doubles, booleans, characters, strings, functions, lists, dictionaries, sets and tuples! You can index into this list and modify anything.
+
+```javascript
+list[5](2, 3).println(); // access function and call with arguments (2, 3) - result = 6
+list[0] = 3;             // modify element at index 0
+list[7]["a"] = 0.88;     // change value at dictionary key "a"
+```
+
 ## Range-based Iteration
 
 Walnut provides a range-based 'for' loop construct identical to Python:
@@ -165,3 +192,6 @@ The internal iterator of range objects can be used with built-in functions like 
 ```javascript
 range(9).map(i => i * i).println(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
 ```
+
+## Dictionaries
+
