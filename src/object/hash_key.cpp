@@ -25,6 +25,11 @@ namespace walnut
       StringObjectPtr string__ = std::dynamic_pointer_cast<StringObject>(object);
       return HashKey(ObjectType::STRING, std::hash<String>()(string__->Value()));
     }
+    else if (object->type == ObjectType::CHARACTER)
+    {
+      CharacterObjectPtr string__ = std::dynamic_pointer_cast<CharacterObject>(object);
+      return HashKey(ObjectType::CHARACTER, std::hash<String>()(string__->Value()));
+    }
     else
     {
       return HashKey(ObjectType::NULL_, 0);

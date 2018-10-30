@@ -597,7 +597,9 @@ namespace walnut
     }
 
     if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
+    {
       return {};
+    }
 
     return result;
   }

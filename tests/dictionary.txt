@@ -105,8 +105,11 @@ z = {
     "c": "Hello, 世界", 
     "func": function(a, b) { a * b }
   },
-  "test2" : 15
+  "test2" : 15,
+  '世': "Hah!"
 };
 
 z["value"]["c"] = "Hello, World!"
 z.println()
+
+z['世'].println();

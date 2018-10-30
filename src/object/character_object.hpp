@@ -9,7 +9,7 @@ namespace walnut
   {
     String value;
 
-    explicit CharacterObject(StringConstRef value) : Object(CHARACTER), value(value) {}
+    explicit CharacterObject(StringConstRef value) : Object(CHARACTER, false, true), value(value) {}
 
     ObjectPtr Copy() override
     {
