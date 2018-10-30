@@ -43,3 +43,5 @@ my_function();
 (() => true)().println(); // true
 
 (() => 50)().println(); // 50
+
+range(9).map(i => i * i).println(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]

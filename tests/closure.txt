@@ -1,0 +1,11 @@
+decorate = function(f) {
+    wrapped_function = function() {
+        println("Function is being called");
+        f();
+        println("Function call is finished");
+    };
+    return wrapped_function;
+}
+
+my_function = function() { println("Hello World"); }.decorate();
+my_function();
