@@ -44,4 +44,33 @@ my_function();
 
 (() => 50)().println(); // 50
 
-range(9).map(i => i * i).println(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
+
+dict = {
+  "value" : 
+  { 
+    "pi": 3.14, 
+    "c": "Hello, 世界", 
+    "func": function(a, b) { a * b }
+  },
+};
+
+pi = "pi";
+dict["value"][pi].println(); // 3.14
+
+dict["value"]["func"](2, 3).println(); // 6
+
+for key, value in dict["value"] {
+  println(key, ":", value)
+}
+
+// func : function(a, b) { a * b; }
+// c : Hello, 世界
+// pi : 3.14
+
+for pair in dict["value"] {
+  println(pair)
+}
+
+// [func, function(a, b) { a * b; }]
+// [c, Hello, 世界]
+// [pi, 3.14]

@@ -29,7 +29,7 @@ $ make check
 * A large pile of built-in functions implemented in C++
 * Test suite checking over xyz assertions across abc test cases
 
-A detailed wiki for this language can be found [here](https://github.com/pranav-srinivas-kumar/walnut/wiki).
+A detailed wiki for this language can be found [here](https://github.com/pranav-srinivas-kumar/walnut/wiki). Everything described below, although not exhaustive, is a working, completed language feature:
 
 ## Functions
 
@@ -45,7 +45,7 @@ Functions are first-class objects in walnut. With UTF-8 support, you can write f
  * Aₑ - exit area of nozzle (m²)
  */
 thrust = function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
-  q • Vₑ + (Pₑ - Pₐ) • Aₑ 
+    q • Vₑ + (Pₑ - Pₐ) • Aₑ 
 }
 ```
 
@@ -143,16 +143,16 @@ A list is an ordered, changeable collection. In Walnut, lists are written with s
 
 ```javascript
 list = [
-  1,                             // integer
-  3.14,                          // double
-  false,                         // boolean
-  'λ',                           // character
-  "Hello, 世界",                 // string
-  function(i, j) { i * j },      // function
-  [2, 3],                        // sub-list
-  {"a": 1, "b": 2},              // dictionary
-  {4, 5, 6},                     // set
-  (7, 8)                         // tuple
+    1,                             // integer
+    3.14,                          // double
+    false,                         // boolean
+    'λ',                           // character
+    "Hello, 世界",                 // string
+    function(i, j) { i * j },      // function
+    [2, 3, [4, 5, [6]]],           // nested lists
+    {"a": 7, "b": 8.0},            // dictionary
+    {9, 10, 10},                   // set {9, 10}
+    (x, true)                      // tuple
 ];
 ```
 
@@ -193,5 +193,50 @@ The internal iterator of range objects can be used with built-in functions like 
 range(9).map(i => i * i).println(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
 ```
 
-## Dictionaries
+## Javascript-style Dictionaries
+
+Walnut dictionaries are most like Javascript objects. You can use range-based iteration on dictionaries too!
+
+```javascript
+dict = {
+    "value" : 
+    { 
+        "pi": 3.14, 
+        "greet": "Hello, 世界", 
+        "func": function(a, b) { a * b }
+    },
+};
+
+for key, value in dict["value"] {
+    println(key, ":", value)
+}
+
+// func : function(a, b) { a * b; }
+// greet : Hello, 世界
+// pi : 3.14
+
+for pair in dict["value"] {
+    println(pair)
+}
+
+// [func, function(a, b) { a * b; }]
+// [greet, Hello, 世界]
+// [pi, 3.14]
+```
+
+## Rust-style Error Reporting
+
+The Walnut parser and interpreter use a Rust-style error reporting system. Here's an example parser error message:
+
+```cpp
+error: cannot use 5 as left-hand side of => operator
+  --> tests/tuple.txt:31:5
+   |
+30 |  println("Process started");
+   |
+31 |  x = 5 => println(5);
+   |      ^^^^ LHS of arrow operator needs to be an identifier or an identifier-tuple
+32 |
+   |
+```
 
