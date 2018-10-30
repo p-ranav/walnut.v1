@@ -672,8 +672,15 @@ namespace walnut
     }
     NextToken();
 
-    elements.push_back(ParseExpression(LOWEST,
-      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS }));
+    if (IsCurrentToken(Token::Type::KEYWORD_VAR))
+    {
+      NextToken();
+      NodePtr argument = ParseExpression(LOWEST);
+      NextToken();
+      elements.push_back(ParseKeyValueArgument(argument));
+    }
+    else
+      elements.push_back(ParseExpression(LOWEST));
 
     while (IsPeekToken(Token::Type::COMMA_OPERATOR))
     {
@@ -681,7 +688,16 @@ namespace walnut
       if (!IsPeekToken(end))
       {
         NextToken();
-        elements.push_back(ParseExpression(LOWEST));
+
+        if (IsCurrentToken(Token::Type::KEYWORD_VAR))
+        {
+          NextToken();
+          NodePtr argument = ParseExpression(LOWEST);
+          NextToken();
+          elements.push_back(ParseKeyValueArgument(argument));
+        }
+        else
+          elements.push_back(ParseExpression(LOWEST));
       }
       else {
         break;
@@ -877,6 +893,28 @@ namespace walnut
       result->body->statements.push_back(expression);
     }
 
+    return result;
+  }
+
+  NodePtr Parser::ParseKeyValueArgument(NodePtr left)
+  {
+    KeyValueArgumentNodePtr result = std::make_shared<KeyValueArgumentNode>(current_token);
+    NextToken();
+    if (left->type == Node::Type::IDENTIFIER)
+    {
+      IdentifierNodePtr key = std::dynamic_pointer_cast<IdentifierNode>(left);
+      result->key = key;
+      NodePtr value = ParseExpression(LOWEST,
+        { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::COMMA_OPERATOR });
+
+      // TODO: check if value is nullptr
+      result->value = value;
+      std::cout << "Parsed KeyValueArgument: " << result->ToString() << std::endl;
+    }
+    else
+    {
+      // TODO: report error
+    }
     return result;
   }
 

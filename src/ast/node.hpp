@@ -36,6 +36,7 @@ namespace walnut
       SET_LITERAL,
       TUPLE,
       IMPORT_STATEMENT,
+      KEY_VALUE_ARGUMENT,
       INVALID
     };
 

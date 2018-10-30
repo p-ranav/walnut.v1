@@ -23,6 +23,7 @@
 #include <infix_expression_node.hpp>
 #include <tuple_node.hpp>
 #include <import_statement_node.hpp>
+#include <key_value_argument_node.hpp>
 
 #include <string.hpp>
 
@@ -127,6 +128,7 @@ namespace walnut
     NodePtr ParseDotOperator(NodePtr left);
     NodePtr ParseTernaryOperator(NodePtr left);
     NodePtr ParseArrowOperator(NodePtr left);
+    NodePtr ParseKeyValueArgument(NodePtr left);
 
     /* Member variables */
     TokenVector tokens;
