@@ -510,7 +510,7 @@ namespace walnut
       {
         String brief_description = "expected '{' to mark the start of else block";
         String detailed_description =
-          " the else block needs to be wrapped inside curly braces: else { <alternative> }";
+          " the 'else' block needs to be wrapped inside curly braces: else { <alternative> }";
         ReportError(peek_token, brief_description, detailed_description);
         return nullptr;
       }

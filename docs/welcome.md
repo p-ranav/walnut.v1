@@ -159,7 +159,7 @@ list = [
 The above list is pretty heterogeneous. It contains integers, doubles, booleans, characters, strings, functions, lists, dictionaries, sets and tuples! You can index into this list and modify anything.
 
 ```javascript
-list[5](2, 3).print(); // access function and call with arguments (2, 3) - result = 6
+list[5](2, 3).print();   // access function and call with arguments (2, 3) - result = 6
 list[0] = 3;             // modify element at index 0
 list[7]["a"] = 0.88;     // change value at dictionary key "a"
 ```
@@ -174,26 +174,24 @@ for i in range(99, 0, -1) {
         print("1 bottle of beer on the wall, 1 bottle of beer!");
         print("So take it down, pass it around, no more bottles of beer on the wall!");        
     }  
+    else if i == 2 {
+        print("2 more bottles of beer on the wall, 2 more bottles of beer!");
+        print("So take one down, pass it around, 1 more bottle of beer on the wall!");            
+    }
     else {
-        if i == 2 {
-            print("2 more bottles of beer on the wall, 2 more bottles of beer!");
-            print("So take one down, pass it around, 1 more bottle of beer on the wall!");            
-        }
-        else {
-            print(i, "bottles of beer on the wall,", i, "bottles of beer!");
-            print("So take it down, pass it around,", (i - 1), "more bottles of beer on the wall!");            
-        }
+        print(i, "bottles of beer on the wall,", i, "bottles of beer!");
+        print("So take it down, pass it around,", (i - 1), "more bottles of beer on the wall!");            
     }
 }
 ```
 
-The internal iterator of range objects can be used with built-in functions like map (or fiter) to quickly build lists:
+The iterator for range objects can be used with built-in functions like map (or fiter) to quickly build lists:
 
 ```javascript
 range(9).map(i => i * i).print(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
 ```
 
-## Javascript-style Dictionaries
+## Dictionaries
 
 Walnut dictionaries are most like Javascript objects. You can use range-based iteration on dictionaries too!
 
@@ -222,6 +220,24 @@ for pair in dict["value"] {
 // [func, function(a, b) { a * b; }]
 // [greet, Hello, 世界]
 // [pi, 3.14]
+```
+
+## Sets
+
+Sets are unordered collections of unique elements. Common uses include membership testing, removing duplicates from sequences, and computing standard math operations on sets such as intersection, union, difference, and symmetric difference.
+
+```cpp
+x = {1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 4, 5, 6};
+print(x);
+// {1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+for i in x { i.print(end = " ") }
+print()
+// 1 2 3 4 5 6 7 8 9
+
+x = {1, 3.14, 3.14, 5, 3.1415, 6, "H", 'c', function(a) { a }};
+x.print()
+// {1, 3.14, 5, 6, "H", 'c', function(a) { a; }}
 ```
 
 ## Rust-style Error Reporting
