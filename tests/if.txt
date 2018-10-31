@@ -1,19 +1,34 @@
 if (true and (true or false)) { 
-  print("inside if block");
+  print("Correctly inside if block");
 } else { 
-  print("inside else block"); 
+  print("Wrongly inside else block"); 
 }
 
 if (false and (true or false)) { 
-  print("inside if block");
+  print("Wrongly inside if block");
 } else { 
-  print("inside else block");
+  print("Correctly inside else block");
 }
 
 if true {
-  (true).print();
+  (true).print("correct!");
 }
 
 if false {} else {
-  (false).print();
+  (false).print("correct!");
+}
+
+for i in range(99, 0, -1) {
+    if i == 1 {
+        print("1 bottle of beer on the wall, 1 bottle of beer!");
+        print("So take it down, pass it around, no more bottles of beer on the wall!");        
+    }  
+    else if i == 2 {
+        print("2 more bottles of beer on the wall, 2 more bottles of beer!");
+        print("So take one down, pass it around, 1 more bottle of beer on the wall!");            
+    }
+    else {
+        print(i, "bottles of beer on the wall,", i, "bottles of beer!");
+        print("So take it down, pass it around,", (i - 1), "more bottles of beer on the wall!");            
+    }
 }

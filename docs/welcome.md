@@ -25,7 +25,7 @@ $ make check
 * Strongly-typed - you can't add an integer with a string
 * Sets, tuples, lists, dictionaries, and functions are all first-class objects
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
-* Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * 2 }).println();```
+* Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * 2 }).print();```
 * A large pile of built-in functions implemented in C++
 * Test suite checking over xyz assertions across abc test cases
 
@@ -72,10 +72,10 @@ volume = {
     },
 };
 
-volume["cube"](5).println();          // 125
-volume["cylinder"](5, 10).println();  // 785.38
-volume["cone"](5, 10).println();      // 261.79
-volume["sphere"](5).println();        // 523.58
+volume["cube"](5).print();          // 125
+volume["cylinder"](5, 10).print();  // 785.38
+volume["cone"](5, 10).print();      // 261.79
+volume["sphere"](5).print();        // 523.58
 ```
 
 ## Chaining Function Calls
@@ -88,13 +88,13 @@ square = ƒ(a) { return a • a };   // ƒ is a keyword, just like 'function'
 // Function Application
 x = 5;
 y = square(x);
-println(y);                       // 25
+print(y);                       // 25
 
 // Dot operator
-x.square().println();             // 25
-(10).square().println();          // 100
-(3.14 * 2).square().println();    // 39.438400
-[1, 2, 3].map(square).println();  // [1, 4, 9]
+x.square().print();             // 25
+(10).square().print();          // 100
+(3.14 * 2).square().print();    // 39.438400
+[1, 2, 3].map(square).print();  // [1, 4, 9]
 ```
 
 ## Decorators
@@ -104,14 +104,14 @@ Decorators are a good example of closure.
 ```javascript
 decorate = function(f) {
     wrapped_function = function() {
-        println("Function is being called");
+        print("Function is being called");
         f();
-        println("Function call is finished");
+        print("Function call is finished");
     };
     return wrapped_function;
 }
 
-my_function = function() { println("Hello World"); }.decorate();
+my_function = function() { print("Hello World"); }.decorate();
 my_function();
 // Function is being called
 // Hello World
@@ -126,15 +126,15 @@ Trivially create aliases to both user-defined and built-in functions
 
 ```javascript
 // Alias to functions
-log = println;
+log = print;
 log("Hello");
 
 push = append;
-[].push(1).extend([2, 3]).println();
+[].push(1).extend([2, 3]).print();
 
 add = function(a, b) { a + b; };
 sum = add;
-sum(2, 3).println();
+sum(2, 3).print();
 ```
 
 ## Lists
@@ -159,7 +159,7 @@ list = [
 The above list is pretty heterogeneous. It contains integers, doubles, booleans, characters, strings, functions, lists, dictionaries, sets and tuples! You can index into this list and modify anything.
 
 ```javascript
-list[5](2, 3).println(); // access function and call with arguments (2, 3) - result = 6
+list[5](2, 3).print(); // access function and call with arguments (2, 3) - result = 6
 list[0] = 3;             // modify element at index 0
 list[7]["a"] = 0.88;     // change value at dictionary key "a"
 ```
@@ -171,17 +171,17 @@ Walnut provides a range-based 'for' loop construct identical to Python:
 ```javascript
 for i in range(99, 0, -1) {
     if i == 1 {
-        println("1 bottle of beer on the wall, 1 bottle of beer!");
-        println("So take it down, pass it around, no more bottles of beer on the wall!");        
+        print("1 bottle of beer on the wall, 1 bottle of beer!");
+        print("So take it down, pass it around, no more bottles of beer on the wall!");        
     }  
     else {
         if i == 2 {
-            println("2 more bottles of beer on the wall, 2 more bottles of beer!");
-            println("So take one down, pass it around, 1 more bottle of beer on the wall!");            
+            print("2 more bottles of beer on the wall, 2 more bottles of beer!");
+            print("So take one down, pass it around, 1 more bottle of beer on the wall!");            
         }
         else {
-            println(i, "bottles of beer on the wall,", i, "bottles of beer!");
-            println("So take it down, pass it around,", (i - 1), "more bottles of beer on the wall!");            
+            print(i, "bottles of beer on the wall,", i, "bottles of beer!");
+            print("So take it down, pass it around,", (i - 1), "more bottles of beer on the wall!");            
         }
     }
 }
@@ -190,7 +190,7 @@ for i in range(99, 0, -1) {
 The internal iterator of range objects can be used with built-in functions like map (or fiter) to quickly build lists:
 
 ```javascript
-range(9).map(i => i * i).println(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
+range(9).map(i => i * i).print(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
 ```
 
 ## Javascript-style Dictionaries
@@ -208,7 +208,7 @@ dict = {
 };
 
 for key, value in dict["value"] {
-    println(key, ":", value)
+    print(key, ":", value)
 }
 
 // func : function(a, b) { a * b; }
@@ -216,7 +216,7 @@ for key, value in dict["value"] {
 // pi : 3.14
 
 for pair in dict["value"] {
-    println(pair)
+    print(pair)
 }
 
 // [func, function(a, b) { a * b; }]
@@ -232,9 +232,9 @@ The Walnut parser and interpreter use a Rust-style error reporting system. Here'
 error: cannot use 5 as left-hand side of => operator
   --> tests/tuple.txt:31:5
    |
-30 |  println("Process started");
+30 |  print("Process started");
    |
-31 |  x = 5 => println(5);
+31 |  x = 5 => print(5);
    |      ^^^^ LHS of arrow operator needs to be an identifier or an identifier-tuple
 32 |
    |

@@ -371,6 +371,11 @@ namespace walnut
       if (infix == nullptr)
         return left_expression;
 
+      // if {...} else {...} if {...}
+      // the second if should not be treated as an infix operator
+      if (left_expression->type == NodeType::IF_EXPRESSION && peek_token.type == Token::Type::KEYWORD_IF)
+        return left_expression;
+
       NextToken();
       left_expression = infix(left_expression);
     }
@@ -468,7 +473,7 @@ namespace walnut
     IfExpressionNodePtr result = std::make_shared<IfExpressionNode>(current_token);
     NextToken();
 
-    result->condition = ParseExpression(LOWEST);
+    result->conditions.push_back(ParseExpression(LOWEST));
 
     if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
     {
@@ -479,7 +484,24 @@ namespace walnut
       return nullptr;
     }
 
-    result->consequence = ParseBlockStatement();
+    result->consequences.push_back(ParseBlockStatement());
+
+    while (IsPeekToken(Token::Type::KEYWORD_ELSE_IF))
+    {
+      NextToken();
+      NextToken();
+      result->conditions.push_back(ParseExpression(LOWEST));
+      if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
+      {
+        String brief_description = "expected '{' to mark the start of else if block";
+        String detailed_description =
+          " the 'else if' block needs to be wrapped inside curly braces: else if <condition> { <consequence> }";
+        ReportError(peek_token, brief_description, detailed_description);
+        return nullptr;
+      }
+
+      result->consequences.push_back(ParseBlockStatement());
+    }
 
     if (IsPeekToken(Token::Type::KEYWORD_ELSE))
     {
@@ -788,11 +810,11 @@ namespace walnut
     IfExpressionNodePtr result = std::make_shared<IfExpressionNode>(current_token);
     NextToken();
 
-    result->consequence = std::make_shared<BlockStatementNode>(current_token);
-    result->consequence->statements.push_back(left);
+    result->consequences.push_back(std::make_shared<BlockStatementNode>(current_token));
+    result->consequences[0]->statements.push_back(left);
 
-    result->condition = ParseExpression(LOWEST,
-      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE });
+    result->conditions.push_back(ParseExpression(LOWEST,
+      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE }));
 
     if (!ExpectPeek(Token::Type::KEYWORD_ELSE))
     {

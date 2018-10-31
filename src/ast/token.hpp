@@ -73,6 +73,7 @@ namespace walnut
       KEYWORD_FALSE,
       KEYWORD_IF,
       KEYWORD_ELSE,
+      KEYWORD_ELSE_IF,
       KEYWORD_WHILE,
       KEYWORD_FOR,
       KEYWORD_IN,

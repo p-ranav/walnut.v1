@@ -368,12 +368,16 @@ namespace walnut
   ObjectPtr Evaluator::EvalIfExpression(NodePtr node, EnvironmentPtr environment)
   {
     IfExpressionNodePtr expression = std::dynamic_pointer_cast<IfExpressionNode>(node);
-    ObjectPtr condition = Eval(expression->condition, environment);
-
-    if (IsTruth(condition, environment))
-      return Eval(expression->consequence, environment);
-    else
+    for (size_t i = 0; i < expression->conditions.size(); i++)
+    {
+      ObjectPtr condition = Eval(expression->conditions[i], environment);
+      if (IsTruth(condition, environment))
+        return Eval(expression->consequences[i], environment);
+    }
+    if (expression->alternative != nullptr)
       return Eval(expression->alternative, environment);
+    else
+      return std::make_shared<NullObject>();
   }
 
   bool Evaluator::IsTruth(ObjectPtr condition, EnvironmentPtr environment)

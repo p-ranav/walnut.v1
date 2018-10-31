@@ -9,19 +9,23 @@ namespace walnut
 
   struct IfExpressionNode : Node
   {
-    NodePtr condition;
-    BlockStatementNodePtr consequence;
-    BlockStatementNodePtr alternative;
+    std::vector<NodePtr> conditions;
+    std::vector<BlockStatementNodePtr> consequences;
+    BlockStatementNodePtr alternative; // else case
 
     explicit IfExpressionNode(Token token) : Node(token, IF_EXPRESSION),
-      condition(nullptr),
-      consequence(nullptr),
+      conditions({}),
+      consequences({}),
       alternative(nullptr) {}
 
     String ToString() override
     {
       String result = "";
-      result += "if (" + condition->ToString() + ") " + consequence->ToString();
+      for (size_t i = 0; i < conditions.size(); i++)
+      {
+        result += "if (" + conditions[i]->ToString() + ") " + consequences[i]->ToString();
+        result += "\n";
+      }
       if (alternative != nullptr)
         result += " else " + alternative->ToString();
       return result;
