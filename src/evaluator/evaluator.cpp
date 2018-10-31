@@ -25,6 +25,7 @@ namespace walnut
     BUILTIN("map", BuiltinMap);
     BUILTIN("filter", BuiltinFilter);
 
+    BUILTIN("format", BuiltinFormat);
     BUILTIN("split", BuiltinSplit);
     BUILTIN("join", BuiltinJoin);
   }

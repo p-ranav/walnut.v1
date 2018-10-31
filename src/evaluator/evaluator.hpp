@@ -133,6 +133,7 @@ namespace walnut
     ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
 
     /* String Functions */
+    ObjectPtr BuiltinFormat(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinSplit(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinJoin(std::vector<ObjectPtr> arguments);
   };

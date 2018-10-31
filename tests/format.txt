@@ -1,0 +1,11 @@
+"[Thread {thread}]::{log_level}::{message}"
+    .format(thread = 0, 
+            log_level = "INFO", 
+            message = "Recording started")
+    .print();
+
+// [Thread 0]::INFO::Recording started
+
+"{0}, {world}".format("Hello", world = "世界").print();
+
+(5).format().print(); // 5
