@@ -2,6 +2,6 @@
   .upsert("a", 10)
   .insert("A", 19)
   .upsert("A", 20)
-  .println();
+  .print();
 
 // {"a" : 10, "A" : 20}

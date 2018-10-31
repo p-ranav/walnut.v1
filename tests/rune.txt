@@ -1,1 +1,1 @@
-"ᛝ".println()
+"ᛝ".print()

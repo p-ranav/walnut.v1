@@ -1,19 +1,19 @@
-range(9).map(function(i) { i * i }).println()
+range(9).map(function(i) { i * i }).print()
 
-range(0.0, 1.0, 0.3).map(function(i) { i * 3}).println() 
+range(0.0, 1.0, 0.3).map(function(i) { i * 3}).print() 
 
 for x in range(5) {
-  print(x, " ") }, println()
+  print(x, " ") }, print()
 
 for x in range(5.0, 10.0) {
-  print(x, " ") }, println()
+  print(x, " ") }, print()
 
 for x in range(0.0, 1.0, 0.3) {
-  print(x, " ") }, println()
+  print(x, " ") }, print()
 
 s = ["Mary", "had", "a", "little", "lamb"]
 for i in range(length(s)) {
-  print(i, " ", s[i]), println() }
+  print(i, " ", s[i]), print() }
 
 for x in range(0, -10, -1) {
-  print(x, " ")}, println()
+  print(x, " ")}, print()

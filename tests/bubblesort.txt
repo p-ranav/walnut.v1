@@ -18,4 +18,4 @@ bubble_sort = function(list)
   return list;
 };
 
-[5, -4, 3, -2, 1].bubble_sort().println();
+[5, -4, 3, -2, 1].bubble_sort().print();

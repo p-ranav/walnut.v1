@@ -1,18 +1,18 @@
 product = ƒ(a, b) { return a * b }
-println(product(5, 10));
+print(product(5, 10));
 
 product = function(a, b) {
   return a * b
 };
 
-(5).product(10).println();
+(5).product(10).print();
 
 sum = (a, b) => a + b;
-sum(2, 3).println();
+sum(2, 3).print();
 
-[1, 2, 3, 4, 5].map(a => a * 2).println();
+[1, 2, 3, 4, 5].map(a => a * 2).print();
 
-[1, 2, 3, 4, 5].filter(a => a % 2 != 0).println();
+[1, 2, 3, 4, 5].filter(a => a % 2 != 0).print();
 
 functions = {
   "sum": (a, b) => a + b,
@@ -21,28 +21,28 @@ functions = {
   "divide": (a, b) => a/b,
 };
 
-functions["sum"](2, 3).println(); // 5
-functions["diff"](2, 3).println(); // -1
-functions["negate"](2).println(); // -2
-functions["divide"](2, 3.).println(); // 0.67
+functions["sum"](2, 3).print(); // 5
+functions["diff"](2, 3).print(); // -1
+functions["negate"](2).print(); // -2
+functions["divide"](2, 3.).print(); // 0.67
 
 apply = function(a, b, c) { c(a, b) };
 
-(5).apply(2, functions["sum"]).println(); // 7
+(5).apply(2, functions["sum"]).print(); // 7
 
-trace = message => { print("TRACE::"); println(message); };
+trace = message => { print("TRACE::"); print(message); };
 trace("Thread started");
 
 printer = function(text) {
-  return () => text.println();
+  return () => text.print();
 };
 
 my_function = printer("Hey");
 my_function();
 
-(() => true)().println(); // true
+(() => true)().print(); // true
 
-(() => 50)().println(); // 50
+(() => 50)().print(); // 50
 
 
 dict = {
@@ -55,12 +55,12 @@ dict = {
 };
 
 pi = "pi";
-dict["value"][pi].println(); // 3.14
+dict["value"][pi].print(); // 3.14
 
-dict["value"]["func"](2, 3).println(); // 6
+dict["value"]["func"](2, 3).print(); // 6
 
 for key, value in dict["value"] {
-  println(key, ":", value)
+  print(key, ":", value)
 }
 
 // func : function(a, b) { a * b; }
@@ -68,7 +68,7 @@ for key, value in dict["value"] {
 // pi : 3.14
 
 for pair in dict["value"] {
-  println(pair)
+  print(pair)
 }
 
 // [func, function(a, b) { a * b; }]

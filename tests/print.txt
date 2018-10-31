@@ -1,3 +1,15 @@
-print("Test", "String", end = '\n', sep = ' ');
+print("Test", "String");
+print("Test", "String", sep = "_");
 
-println(message = "Test", pi = 3.14, end = "\n", sep = ' ');
+fib = function(n) {
+    a = 0, b = 1, c = 1;
+    while c < n {
+        print(c, end = " ");
+        c = (a + b); 
+        a = b; 
+        b = c;
+    }
+    print();
+};
+
+fib(1000); // 0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987

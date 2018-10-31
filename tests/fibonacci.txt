@@ -4,7 +4,7 @@ fib = function(n) {
     print(c, " ");
     c = (a + b), a = b, b = c;
   }
-  println();
+  print();
 };
 
 fib(1000);

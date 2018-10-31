@@ -3,7 +3,7 @@ math_factorial = function(n) {
   return factorial(n);
 };
 
-math_factorial(5).println(); // this will work
-// factorial(5).println();   // this will fail
+math_factorial(5).print(); // this will work
+// factorial(5).print();   // this will fail
 
-for x in y x.println();
+for x in y x.print();

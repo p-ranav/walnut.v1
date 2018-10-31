@@ -3,7 +3,7 @@ for i in input
 {
   for j in input
   {
-    println(i, j)
+    print(i, j)
   }
 }
-println(input)
+print(input)

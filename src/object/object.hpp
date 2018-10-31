@@ -28,7 +28,8 @@ namespace walnut
       RANGE,
       HASH,
       SET,
-      TUPLE
+      TUPLE,
+      KEY_VALUE_ARGUMENT
     };
 
     Type type;

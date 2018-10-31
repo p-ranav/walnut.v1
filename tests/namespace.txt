@@ -5,5 +5,5 @@ namespace math
   factorial = function(n) { /* ... */ };
 }
 
-(5).math::factorial().println();
-println(math::factorial(5));
+(5).math::factorial().print();
+print(math::factorial(5));

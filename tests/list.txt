@@ -1,13 +1,13 @@
 x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-x.length().println();                         // 
-x.map(i => i * i).println();
-x.filter(i => i % 2 == 0).println();
+x.length().print();                         // 
+x.map(i => i * i).print();
+x.filter(i => i % 2 == 0).print();
 
-["Hello", "World"].join(" ").println();
+["Hello", "World"].join(" ").print();
 
 music = ["Abba","Rolling Stones","Black Sabbath","Metallica"];
 music.join("
-").println();
+").print();
 
-a = [], a = range(1, 6).map(i => i * i), a.println();
+a = [], a = range(1, 6).map(i => i * i), a.print();

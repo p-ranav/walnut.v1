@@ -1,19 +1,19 @@
 if (true and (true or false)) { 
-  println("inside if block");
+  print("inside if block");
 } else { 
-  println("inside else block"); 
+  print("inside else block"); 
 }
 
 if (false and (true or false)) { 
-  println("inside if block");
+  print("inside if block");
 } else { 
-  println("inside else block");
+  print("inside else block");
 }
 
 if true {
-  (true).println();
+  (true).print();
 }
 
 if false {} else {
-  (false).println();
+  (false).print();
 }

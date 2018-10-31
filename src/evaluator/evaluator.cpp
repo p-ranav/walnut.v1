@@ -16,7 +16,6 @@ namespace walnut
   Evaluator::Evaluator()
   {
     BUILTIN("print", BuiltinPrint);
-    BUILTIN("println", BuiltinPrintln);
     BUILTIN("length", BuiltinLength);
     BUILTIN("append", BuiltinAppend);
     BUILTIN("extend", BuiltinExtend);
@@ -83,6 +82,8 @@ namespace walnut
       return EvalSetLiteral(node, environment);
     case NodeType::TUPLE:
       return EvalTuple(node, environment);
+    case NodeType::KEY_VALUE_ARGUMENT:
+      return EvalKeyValueArgument(node, environment);
     default:
       return std::make_shared<NullObject>();
     }
@@ -887,6 +888,14 @@ namespace walnut
       return std::make_shared<NullObject>();
     }
     return elements[static_cast<size_t>(index_value)];
+  }
+
+  ObjectPtr Evaluator::EvalKeyValueArgument(NodePtr node, EnvironmentPtr environment)
+  {
+    KeyValueArgumentNodePtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentNode>(node);
+    KeyValueArgumentObjectPtr result = 
+      std::make_shared<KeyValueArgumentObject>(kvpair->key, Eval(kvpair->value, environment));
+    return result;
   }
 
 }

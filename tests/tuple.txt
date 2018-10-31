@@ -1,34 +1,34 @@
-x = 5 => println(5);
+x = 5 => print(5);
 x = (1, 3.14, "Hello");
-x.println();
-x[0].println();
+x.print();
+x[0].print();
 x[0] = 2; // does nothing
-x.println();
+x.print();
 
 thistuple = ("apple", "banana", "cherry");
-for x in thistuple { println(x) }
-x = 5 => println(5);
-println(length(thistuple));
+for x in thistuple { print(x) }
+x = 5 => print(5);
+print(length(thistuple));
 
 thistuple[3] = "orange"; // does nothing
-println(thistuple);
+print(thistuple);
 
 z = ("apple",);
-z.println();
+z.print();
 
 z = ('a', 'p', 'p', 'l', 'e')
-z.println();
+z.print();
 
 // Grouped expression within a tuple
 z = ((1 + 2), (3 + 4));
-z.println(); // (3, 7)
+z.print(); // (3, 7)
 
 mutating_tuple = (1, 2, [3, 4, 5]);
 mutating_tuple[2][0] = -3;
-println(mutating_tuple); // (1, 2, [-3, 4, 5])
+print(mutating_tuple); // (1, 2, [-3, 4, 5])
 
-println("Process started");
-x = 5 => println(5);
+print("Process started");
+x = 5 => print(5);
 
 
 
@@ -97,7 +97,7 @@ x = 5 => println(5);
 
 
 x = 5 
-=> println(5);
+=> print(5);
 
 
 

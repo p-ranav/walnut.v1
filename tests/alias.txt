@@ -1,14 +1,14 @@
 // Alias to functions
-log = println;
+log = print;
 log("Hello");
 
 push = append;
-[].push(1).println();
-[].push(1).extend([2, 3]).println();
+[].push(1).print();
+[].push(1).extend([2, 3]).print();
 
 add = function(a, b) { a + b };
 sum = add;
-sum(2, 3).println();
+sum(2, 3).print();
 
 proxy = function(message) { print("DEBUG::", message, "\n") }
 debug = proxy

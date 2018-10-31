@@ -909,7 +909,6 @@ namespace walnut
 
       // TODO: check if value is nullptr
       result->value = value;
-      std::cout << "Parsed KeyValueArgument: " << result->ToString() << std::endl;
     }
     else
     {
