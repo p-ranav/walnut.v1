@@ -16,7 +16,7 @@ namespace walnut
 
     String ToString() override
     {
-      return TokenString(prefix_operator) + right->ToString();
+      return "(" + TokenString(prefix_operator) + right->ToString() + ")";
     }
   };
 

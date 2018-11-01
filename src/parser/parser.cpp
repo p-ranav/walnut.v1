@@ -24,6 +24,7 @@ namespace walnut
                  {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
                  {Token::Type::DIVISION_OPERATOR, PRODUCT},
                  {Token::Type::MODULUS_OPERATOR, PRODUCT},
+                 {Token::Type::LOGICAL_NOT_OPERATOR, PREFIX},
                  {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
                  {Token::Type::DOT_OPERATOR, DOT},
                  {Token::Type::KEYWORD_IF, IF},
