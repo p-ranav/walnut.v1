@@ -48,6 +48,8 @@ namespace walnut
       return EvalCharacter(node, environment);
     case NodeType::STRING_LITERAL:
       return EvalString(node, environment);
+    case NodeType::TYPE:
+      return EvalType(node, environment);
     case NodeType::PREFIX_EXPRESSION:
       return EvalPrefixExpression(node, environment);
     case NodeType::INFIX_EXPRESSION:
@@ -119,6 +121,31 @@ namespace walnut
   {
     StringLiteralNodePtr string_literal_node = std::dynamic_pointer_cast<StringLiteralNode>(node);
     return std::make_shared<StringObject>(string_literal_node->value);
+  }
+
+  ObjectPtr Evaluator::EvalType(NodePtr node, EnvironmentPtr environment)
+  {
+    TypeNodePtr type_node = std::dynamic_pointer_cast<TypeNode>(node);
+    ObjectType object_type = ObjectType::NULL_;
+    if (type_node->value == Token::Type::KEYWORD_INTEGER)
+      object_type = ObjectType::INTEGER;
+    else if (type_node->value == Token::Type::KEYWORD_DOUBLE)
+      object_type = ObjectType::DOUBLE;
+    else if (type_node->value == Token::Type::KEYWORD_CHARACTER)
+      object_type = ObjectType::CHARACTER;
+    else if (type_node->value == Token::Type::KEYWORD_STRING)
+      object_type = ObjectType::STRING;
+    else if (type_node->value == Token::Type::KEYWORD_BOOLEAN)
+      object_type = ObjectType::BOOLEAN;
+    else if (type_node->value == Token::Type::KEYWORD_LIST)
+      object_type = ObjectType::ARRAY;
+    if (type_node->value == Token::Type::KEYWORD_DICTIONARY)
+      object_type = ObjectType::HASH;
+    if (type_node->value == Token::Type::KEYWORD_SET)
+      object_type = ObjectType::SET;
+    if (type_node->value == Token::Type::KEYWORD_TUPLE)
+      object_type = ObjectType::TUPLE;
+    return std::make_shared<TypeObject>(object_type);
   }
 
   ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node, EnvironmentPtr environment)

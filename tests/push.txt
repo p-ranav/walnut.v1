@@ -1,0 +1,11 @@
+push = function(iterable, item) {
+    if iterable.type() == list {
+        return iterable.append(item);
+    }
+    else if iterable.type() == string {
+        return iterable + item;
+    }
+};
+
+[].push(1).push(2).print();
+"Hello".push(" World!").print();

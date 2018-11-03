@@ -294,6 +294,24 @@ namespace walnut
       result.type = Token::Type::LOGICAL_NOT_OPERATOR;
     else if (result.value == "import")
       result.type = Token::Type::KEYWORD_IMPORT;
+    else if (result.value == "int")
+      result.type = Token::Type::KEYWORD_INTEGER;
+    else if (result.value == "double")
+      result.type = Token::Type::KEYWORD_DOUBLE;
+    else if (result.value == "string")
+      result.type = Token::Type::KEYWORD_STRING;
+    else if (result.value == "char")
+      result.type = Token::Type::KEYWORD_CHARACTER;
+    else if (result.value == "bool")
+      result.type = Token::Type::KEYWORD_BOOLEAN;
+    else if (result.value == "list")
+      result.type = Token::Type::KEYWORD_LIST;
+    else if (result.value == "dict")
+      result.type = Token::Type::KEYWORD_DICTIONARY;
+    else if (result.value == "set")
+      result.type = Token::Type::KEYWORD_SET;
+    else if (result.value == "tuple")
+      result.type = Token::Type::KEYWORD_TUPLE;
 
     tokens.push_back(result);
   }

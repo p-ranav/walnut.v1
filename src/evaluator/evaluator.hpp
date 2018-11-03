@@ -23,6 +23,7 @@
 #include <set_literal_node.hpp>
 #include <tuple_node.hpp>
 #include <key_value_argument_node.hpp>
+#include <type_node.hpp>
 
 #include <object.hpp>
 #include <integer_object.hpp>
@@ -71,6 +72,7 @@ namespace walnut
     ObjectPtr EvalBoolean(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalCharacter(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalString(NodePtr node, EnvironmentPtr environment);
+    ObjectPtr EvalType(NodePtr node, EnvironmentPtr environment);
 
     ObjectPtr EvalPrefixExpression(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalBangOperator(ObjectPtr right, EnvironmentPtr environment);

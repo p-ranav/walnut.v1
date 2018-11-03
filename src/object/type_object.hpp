@@ -17,24 +17,6 @@ namespace walnut
 
     String Inspect() override
     {
-      /*
-      TYPE,
-      INTEGER,
-      DOUBLE,
-      BOOLEAN,
-      CHARACTER,
-      STRING,
-      NULL_,
-      RETURN,
-      FUNCTION,
-      BUILTIN_FUNCTION,
-      ARRAY,
-      RANGE,
-      HASH,
-      SET,
-      TUPLE,
-      KEY_VALUE_ARGUMENT
-      */
       switch (value)
       {
       case INTEGER:
