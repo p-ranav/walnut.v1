@@ -134,7 +134,6 @@ namespace walnut
 
     /* List/Hash Functions */
     ObjectPtr BuiltinInsert(std::vector<ObjectPtr> arguments);
-    ObjectPtr BuiltinUpsert(std::vector<ObjectPtr> arguments);
 
     ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
 
