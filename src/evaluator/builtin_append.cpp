@@ -12,28 +12,28 @@ namespace walnut
         StringObjectPtr result;
         StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
         StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-        return std::make_shared<StringObject>(first->Value() + second->Value());
+        first->buffer.insert(first->buffer.end(), second->buffer.begin(), second->buffer.end());
+        return first;
       }
       else if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::CHARACTER)
       {
         StringObjectPtr result;
         StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
         CharacterObjectPtr second = std::dynamic_pointer_cast<CharacterObject>(arguments[1]);
-        return std::make_shared<StringObject>(first->Value() + second->Value());
+        first->buffer.push_back(second);
+        return first;
       }
       else if (arguments[0]->type == ObjectType::ARRAY)
       {
         ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        ArrayObject array_copy = ArrayObject(*(array_object.get()));
-        array_copy.elements.push_back(arguments[1]);
-        return std::make_shared<ArrayObject>(array_copy);
+        array_object->IterableAppend(arguments[1]);
+        return array_object;
       }
       else if (arguments[0]->type == ObjectType::SET)
       {
         SetObjectPtr set_object = std::dynamic_pointer_cast<SetObject>(arguments[0]);
-        SetObject set_copy = SetObject(*(set_object.get()));
-        set_copy.IterableAppend(arguments[1]);
-        return std::make_shared<SetObject>(set_copy);
+        set_object->IterableAppend(arguments[1]);
+        return set_object;
       }
     }
     return std::make_shared<NullObject>();
