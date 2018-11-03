@@ -9,6 +9,7 @@ namespace walnut
     {
       return std::make_shared<TypeObject>(arguments[0]->type);
     }
+    return std::make_shared<NullObject>();
   }
 
 }

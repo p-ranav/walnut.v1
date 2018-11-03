@@ -131,6 +131,7 @@ namespace walnut
     ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinAppend(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinExtend(std::vector<ObjectPtr> arguments);
+    ObjectPtr BuiltinInsert(std::vector<ObjectPtr> arguments);
 
     ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
 
