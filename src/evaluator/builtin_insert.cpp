@@ -27,11 +27,8 @@ namespace walnut
           }
           else
           {
-            std::cout << "evaluator error: list index out of range - "
-              << "array size = " << input_array->elements.size()
-              << "; provided index = " << index->value
-              << std::endl;
-            return std::make_shared<NullObject>();
+            input_array->elements.insert(input_array->elements.begin() + input_array->elements.size(), arguments[2]);
+            return input_array;
           }
         }
       }
@@ -39,27 +36,7 @@ namespace walnut
       {
         HashObjectPtr input_hash = std::dynamic_pointer_cast<HashObject>(arguments[0]);
 
-        if (input_hash->pairs.find(Hash(arguments[1])) != input_hash->pairs.end())
-        {
-          String key = arguments[1]->Inspect();
-          if (arguments[1]->type == ObjectType::STRING)
-          {
-            StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-            key = "\"" + string_argument->Value() + "\"";
-          }
-          String value = arguments[2]->Inspect();
-          if (arguments[2]->type == ObjectType::STRING)
-          {
-            StringObjectPtr string_argument = std::dynamic_pointer_cast<StringObject>(arguments[2]);
-            value = "\"" + string_argument->Value() + "\"";
-          }
-          std::cout << "evaluator warning: "
-            << "dictionary already has key " << key
-            << " - dictionary.insert(" << key << ", " << value
-            << ") has done nothing"
-            << std::endl;
-        }
-        else
+        if (input_hash->pairs.find(Hash(arguments[1])) == input_hash->pairs.end())
         {
           HashPair pair(arguments[1], arguments[2]);
           input_hash->pairs.insert(std::make_pair(Hash(arguments[1]), pair));
