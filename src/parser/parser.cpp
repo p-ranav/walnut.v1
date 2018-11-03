@@ -436,6 +436,16 @@ namespace walnut
   {
     NextToken();
     size_t start_index = current_token_index;
+
+    if (IsCurrentToken(Token::Type::COMMA_OPERATOR))
+    {
+      if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
+      {
+        return nullptr;
+      }
+      return std::make_shared<TupleNode>(current_token);
+    }
+
     NodePtr result = ParseExpression(LOWEST);
 
     if (IsPeekToken(Token::Type::COMMA_OPERATOR) ||

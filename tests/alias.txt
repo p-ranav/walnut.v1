@@ -25,3 +25,5 @@ error = proxy
 // DEBUG::In function x
 // INFO::Thread started
 // ERROR::Segmentation Fault
+
+👍 = true, 👎 = false;
