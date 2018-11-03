@@ -691,17 +691,8 @@ namespace walnut
         }
         catch (std::exception &e)
         {
-          if (index_object->type != ObjectType::STRING)
-          {
-            std::cout << e.what() << " - " << index_object->Inspect() << std::endl;
-          }
-          else
-          {
-            StringObjectPtr string_index_object = std::dynamic_pointer_cast<StringObject>(index_object);
-            std::cout << e.what() << " - "
-              << "\"" << string_index_object->Value() << "\"" << std::endl;
-          }
-          exit(EXIT_FAILURE);
+          HashPair new_pair(index_object, Eval(statement->expression, environment));
+          hash_object->Set(Hash(index_object), new_pair);
         }
       }
 

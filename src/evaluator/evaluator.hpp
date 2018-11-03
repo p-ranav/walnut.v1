@@ -127,12 +127,18 @@ namespace walnut
     ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinType(std::vector<ObjectPtr> arguments);
 
+    /* List/Sequence Functions */
     ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinAppend(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinExtend(std::vector<ObjectPtr> arguments);
+
+    /* List/Hash Functions */
     ObjectPtr BuiltinInsert(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinUpsert(std::vector<ObjectPtr> arguments);
+
     ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
+
+    /* Map & Filter Functions */
     ObjectPtr BuiltinMap(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
 
