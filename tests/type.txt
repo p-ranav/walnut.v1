@@ -2,3 +2,10 @@ x = "Hello";
 x.type().print();
 
 (x.type() == "olleH".type()).print();
+
+[].type().print(); // array
+{}.type().print(); // dictionary
+{,}.type().print(); // set
+().type().print(); // tuple
+''.type().print(); // character
+"".type().print(); // string
