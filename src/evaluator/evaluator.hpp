@@ -132,9 +132,6 @@ namespace walnut
     ObjectPtr BuiltinAppend(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinExtend(std::vector<ObjectPtr> arguments);
 
-    /* List/Hash Functions */
-    ObjectPtr BuiltinInsert(std::vector<ObjectPtr> arguments);
-
     ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
 
     /* Map & Filter Functions */

@@ -20,7 +20,6 @@ namespace walnut
     BUILTIN("length", BuiltinLength);
     BUILTIN("append", BuiltinAppend);
     BUILTIN("extend", BuiltinExtend);
-    BUILTIN("insert", BuiltinInsert);
     BUILTIN("range", BuiltinRange);
     BUILTIN("map", BuiltinMap);
     BUILTIN("filter", BuiltinFilter);
