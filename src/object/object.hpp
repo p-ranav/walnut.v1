@@ -15,6 +15,7 @@ namespace walnut
   {
     enum Type
     {
+      TYPE,
       INTEGER,
       DOUBLE,
       BOOLEAN,

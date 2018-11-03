@@ -41,6 +41,7 @@
 #include <set_object.hpp>
 #include <tuple_object.hpp>
 #include <key_value_argument_object.hpp>
+#include <type_object.hpp>
 
 #include <lexer.hpp>
 #include <parser.hpp>
@@ -81,6 +82,7 @@ namespace walnut
     ObjectPtr EvalBooleanInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
     ObjectPtr EvalStringInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
     ObjectPtr EvalCharacterInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+    ObjectPtr EvalTypeInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
 
     ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
@@ -123,6 +125,8 @@ namespace walnut
     /* Built-in Functions */
     std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
     ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
+    ObjectPtr BuiltinType(std::vector<ObjectPtr> arguments);
+
     ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinAppend(std::vector<ObjectPtr> arguments);
     ObjectPtr BuiltinExtend(std::vector<ObjectPtr> arguments);

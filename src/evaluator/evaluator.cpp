@@ -16,6 +16,7 @@ namespace walnut
   Evaluator::Evaluator()
   {
     BUILTIN("print", BuiltinPrint);
+    BUILTIN("type", BuiltinType);
     BUILTIN("length", BuiltinLength);
     BUILTIN("append", BuiltinAppend);
     BUILTIN("extend", BuiltinExtend);
@@ -214,6 +215,8 @@ namespace walnut
       return EvalStringInfixExpression(infix_operator, left, right, environment);
     else if (left->type == ObjectType::CHARACTER && right->type == ObjectType::CHARACTER)
       return EvalCharacterInfixExpression(infix_operator, left, right, environment);
+    else if (left->type == ObjectType::TYPE && right->type == ObjectType::TYPE)
+      return EvalTypeInfixExpression(infix_operator, left, right, environment);
 
     else
       return std::make_shared<NullObject>();
@@ -340,6 +343,20 @@ namespace walnut
     CharacterObjectPtr left_node = std::dynamic_pointer_cast<CharacterObject>(left);
     CharacterObjectPtr right_node = std::dynamic_pointer_cast<CharacterObject>(right);
     String left_value = left_node->Value(), right_value = right_node->Value();
+
+    if (infix_operator == Token::Type::EQUALITY_OPERATOR)
+      return std::make_shared<BooleanObject>(left_value == right_value);
+    if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
+      return std::make_shared<BooleanObject>(left_value != right_value);
+    else
+      return std::make_shared<NullObject>();
+  }
+
+  ObjectPtr Evaluator::EvalTypeInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
+  {
+    TypeObjectPtr left_node = std::dynamic_pointer_cast<TypeObject>(left);
+    TypeObjectPtr right_node = std::dynamic_pointer_cast<TypeObject>(right);
+    ObjectType left_value = left_node->value, right_value = right_node->value;
 
     if (infix_operator == Token::Type::EQUALITY_OPERATOR)
       return std::make_shared<BooleanObject>(left_value == right_value);
