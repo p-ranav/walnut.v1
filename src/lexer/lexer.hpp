@@ -53,7 +53,6 @@ namespace walnut
     UnsignedInt cursor;
     String buffer;
     UnsignedInt index;
-    bool exception_to_semicolon_rule;
   };
 
 }

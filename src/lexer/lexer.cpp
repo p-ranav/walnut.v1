@@ -12,8 +12,7 @@ namespace walnut
     line(1),
     cursor(1),
     buffer(buffer),
-    index(0),
-    exception_to_semicolon_rule(false) {}
+    index(0) {}
 
   void Lexer::Tokenize()
   {
