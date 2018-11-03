@@ -246,7 +246,14 @@ namespace walnut
       return EvalTypeInfixExpression(infix_operator, left, right, environment);
 
     else
-      return std::make_shared<NullObject>();
+    {
+      if (infix_operator == Token::Type::EQUALITY_OPERATOR)
+        return std::make_shared<BooleanObject>(false);
+      else if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
+        return std::make_shared<BooleanObject>(true);
+      else
+        return std::make_shared<NullObject>();
+    }
   }
 
   ObjectPtr Evaluator::EvalIntegerInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
