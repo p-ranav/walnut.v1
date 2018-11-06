@@ -85,6 +85,8 @@ namespace walnut
       return EvalTuple(node, environment);
     case NodeType::KEY_VALUE_ARGUMENT:
       return EvalKeyValueArgument(node, environment);
+    case NodeType::IN_EXPRESSION:
+      return EvalInExpression(node, environment);
     default:
       return std::make_shared<NullObject>();
     }
@@ -354,6 +356,76 @@ namespace walnut
       return std::make_shared<BooleanObject>(left_value != right_value);
     else
       return std::make_shared<NullObject>();
+  }
+
+  ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
+  {
+    InExpressionNodePtr expression = std::dynamic_pointer_cast<InExpressionNode>(node);
+    NodePtr iterator = expression->iterator;
+    NodePtr iterable = expression->iterable;
+
+    ObjectPtr left = Eval(iterator, environment);
+    ObjectPtr right = Eval(iterable, environment);
+    bool result = false;
+    if (right->iterable == true)
+    {
+      if (right->type == ObjectType::HASH)
+      {
+        HashObjectPtr hash = std::dynamic_pointer_cast<HashObject>(right);
+        try
+        {
+          HashPair search = hash->Get(Hash(left));
+          if (search.value != nullptr)
+            result = true;
+        }
+        catch(...) {
+          result = false;
+        }
+      }
+      else if (right->type == ObjectType::STRING)
+      {
+        StringObjectPtr string = std::dynamic_pointer_cast<StringObject>(right);
+        if (left->type == ObjectType::STRING)
+        {
+          StringObjectPtr left_string = std::dynamic_pointer_cast<StringObject>(left);
+          if (contains(string->Value(), left_string->Value()))
+            result = true;
+        }
+        else if (left->type == ObjectType::CHARACTER)
+        {
+          CharacterObjectPtr left_string = std::dynamic_pointer_cast<CharacterObject>(left);
+          if (contains(string->Value(), left_string->Value()))
+            result = true;
+        }
+        else
+          result = false;
+      }
+      else
+      {
+        right->IterableInit();
+        do
+        {
+          ObjectPtr current_value = right->IterableCurrentValue();
+          if (!expression->negate_result)
+          {
+            if (left->Inspect() == current_value->Inspect())
+            {
+              result = true;
+              break;
+            }
+          }
+          else
+          {
+            if (left->Inspect() == current_value->Inspect())
+            {
+              result = true;
+              break;
+            }
+          }
+        } while (right->IterableNext() != right->IterableEnd());
+      }
+    }
+    return std::make_shared<BooleanObject>(result & !expression->negate_result);
   }
 
   ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment)

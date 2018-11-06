@@ -1,0 +1,34 @@
+fruits = ["apple", "banana", "cherry"];
+if "banana" in fruits { print("yes"); }
+
+fruits = ["apple", "banana", "cherry"];
+for x in fruits {
+  print(x);
+}
+
+keyword = "lambda";
+
+if keyword in ["and", "del", "from", "lambda"] {
+  "{0} is a keyword".format(keyword).print(); 
+}
+
+dict = {"hello" : "hi", "thank you" : "your welcome"};
+
+result = true if "hello" in dict else false;
+result.print();
+
+result = true if "hi" in dict else false;
+result.print();
+
+menu = "salad, pasta, sandwich, pizza, drinks, dessert";
+menu_ask = "pasta";
+
+if menu_ask in menu {
+  print("Your selected menu is available:", menu_ask);
+} else {
+  print("Unfortunately we don't offer", menu_ask);
+}
+
+if 1 in {1, 2, 3, 4, 5} { print("1 is in the set {1, 2, 3, 4, 5}"); }
+
+if 3.14 in (1, 3.14, 'c') { print("3.14 is in the tuple (1, 3.14, 'c')"); }

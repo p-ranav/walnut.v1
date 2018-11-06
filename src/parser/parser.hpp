@@ -24,6 +24,7 @@
 #include <tuple_node.hpp>
 #include <import_statement_node.hpp>
 #include <key_value_argument_node.hpp>
+#include <in_expression_node.hpp>
 
 #include <string.hpp>
 
@@ -109,6 +110,7 @@ namespace walnut
     NodePtr ParseIfExpression();
     NodePtr ParseWhileExpression();
     NodePtr ParseForExpression();
+    NodePtr ParseInExpression(NodePtr left);
 
     std::vector<IdentifierNodePtr> ParseFunctionParameters();
     NodePtr ParseFunctionLiteral();

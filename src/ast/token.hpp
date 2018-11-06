@@ -77,6 +77,7 @@ namespace walnut
       KEYWORD_WHILE,
       KEYWORD_FOR,
       KEYWORD_IN,
+      KEYWORD_NOT_IN,
       KEYWORD_FUNCTION,
       KEYWORD_RETURN,
       KEYWORD_IMPORT,

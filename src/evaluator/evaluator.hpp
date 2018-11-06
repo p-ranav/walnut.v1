@@ -119,6 +119,7 @@ namespace walnut
     ObjectPtr EvalTupleIndexExpression(ObjectPtr array, ObjectPtr index);
 
     ObjectPtr EvalKeyValueArgument(NodePtr node, EnvironmentPtr environment);
+    ObjectPtr EvalInExpression(NodePtr node, EnvironmentPtr environment);
 
     /* Built-in Functions */
     std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
