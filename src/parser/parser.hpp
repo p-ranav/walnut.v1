@@ -24,7 +24,6 @@
 #include <tuple_node.hpp>
 #include <import_statement_node.hpp>
 #include <key_value_argument_node.hpp>
-#include <type_node.hpp>
 
 #include <string.hpp>
 
@@ -98,7 +97,6 @@ namespace walnut
       std::vector<Token::Type> end = { Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE });
 
     /* Prefix parse functions */
-    NodePtr ParseType();
     NodePtr ParseIdentifier();
     NodePtr ParseInteger();
     NodePtr ParseDouble();

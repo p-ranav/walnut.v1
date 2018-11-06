@@ -23,7 +23,6 @@ $ make check
 
 * Dynamically-typed - inferred by the interpreter
 * Strongly-typed - you can't add an integer with a string
-* Runtime reflection, e.g., ```if x.type() == list and y.type() == int { /* do something */ }```
 * Lists, ranges, sets, tuples, dictionaries, and functions are all first-class objects
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * 2 }).print();```

@@ -80,16 +80,6 @@ namespace walnut
       KEYWORD_FUNCTION,
       KEYWORD_RETURN,
       KEYWORD_IMPORT,
-      // Types
-      KEYWORD_INTEGER,
-      KEYWORD_DOUBLE,
-      KEYWORD_STRING,
-      KEYWORD_CHARACTER,
-      KEYWORD_BOOLEAN,
-      KEYWORD_LIST,
-      KEYWORD_DICTIONARY,
-      KEYWORD_SET,
-      KEYWORD_TUPLE,
 
       END_OF_FILE,
       INVALID

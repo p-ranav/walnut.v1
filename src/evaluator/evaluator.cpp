@@ -16,7 +16,6 @@ namespace walnut
   Evaluator::Evaluator()
   {
     BUILTIN("print", BuiltinPrint);
-    BUILTIN("type", BuiltinType);
     BUILTIN("length", BuiltinLength);
     BUILTIN("append", BuiltinAppend);
     BUILTIN("extend", BuiltinExtend);
@@ -48,8 +47,6 @@ namespace walnut
       return EvalCharacter(node, environment);
     case NodeType::STRING_LITERAL:
       return EvalString(node, environment);
-    case NodeType::TYPE:
-      return EvalType(node, environment);
     case NodeType::PREFIX_EXPRESSION:
       return EvalPrefixExpression(node, environment);
     case NodeType::INFIX_EXPRESSION:
@@ -121,31 +118,6 @@ namespace walnut
   {
     StringLiteralNodePtr string_literal_node = std::dynamic_pointer_cast<StringLiteralNode>(node);
     return std::make_shared<StringObject>(string_literal_node->value);
-  }
-
-  ObjectPtr Evaluator::EvalType(NodePtr node, EnvironmentPtr environment)
-  {
-    TypeNodePtr type_node = std::dynamic_pointer_cast<TypeNode>(node);
-    ObjectType object_type = ObjectType::NULL_;
-    if (type_node->value == Token::Type::KEYWORD_INTEGER)
-      object_type = ObjectType::INTEGER;
-    else if (type_node->value == Token::Type::KEYWORD_DOUBLE)
-      object_type = ObjectType::DOUBLE;
-    else if (type_node->value == Token::Type::KEYWORD_CHARACTER)
-      object_type = ObjectType::CHARACTER;
-    else if (type_node->value == Token::Type::KEYWORD_STRING)
-      object_type = ObjectType::STRING;
-    else if (type_node->value == Token::Type::KEYWORD_BOOLEAN)
-      object_type = ObjectType::BOOLEAN;
-    else if (type_node->value == Token::Type::KEYWORD_LIST)
-      object_type = ObjectType::ARRAY;
-    if (type_node->value == Token::Type::KEYWORD_DICTIONARY)
-      object_type = ObjectType::HASH;
-    if (type_node->value == Token::Type::KEYWORD_SET)
-      object_type = ObjectType::SET;
-    if (type_node->value == Token::Type::KEYWORD_TUPLE)
-      object_type = ObjectType::TUPLE;
-    return std::make_shared<TypeObject>(object_type);
   }
 
   ObjectPtr Evaluator::EvalPrefixExpression(NodePtr node, EnvironmentPtr environment)
@@ -242,8 +214,6 @@ namespace walnut
       return EvalStringInfixExpression(infix_operator, left, right, environment);
     else if (left->type == ObjectType::CHARACTER && right->type == ObjectType::CHARACTER)
       return EvalCharacterInfixExpression(infix_operator, left, right, environment);
-    else if (left->type == ObjectType::TYPE && right->type == ObjectType::TYPE)
-      return EvalTypeInfixExpression(infix_operator, left, right, environment);
 
     else
     {
@@ -377,20 +347,6 @@ namespace walnut
     CharacterObjectPtr left_node = std::dynamic_pointer_cast<CharacterObject>(left);
     CharacterObjectPtr right_node = std::dynamic_pointer_cast<CharacterObject>(right);
     String left_value = left_node->Value(), right_value = right_node->Value();
-
-    if (infix_operator == Token::Type::EQUALITY_OPERATOR)
-      return std::make_shared<BooleanObject>(left_value == right_value);
-    if (infix_operator == Token::Type::INEQUALITY_OPERATOR)
-      return std::make_shared<BooleanObject>(left_value != right_value);
-    else
-      return std::make_shared<NullObject>();
-  }
-
-  ObjectPtr Evaluator::EvalTypeInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment)
-  {
-    TypeObjectPtr left_node = std::dynamic_pointer_cast<TypeObject>(left);
-    TypeObjectPtr right_node = std::dynamic_pointer_cast<TypeObject>(right);
-    ObjectType left_value = left_node->value, right_value = right_node->value;
 
     if (infix_operator == Token::Type::EQUALITY_OPERATOR)
       return std::make_shared<BooleanObject>(left_value == right_value);

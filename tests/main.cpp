@@ -23,6 +23,5 @@
 #include <test_parser_grouped_expressions.hpp>
 #include <test_parser_boolean.hpp> 
 
-#include <test_evaluator_type.hpp>
 #include <test_evaluator_split.hpp>
 #include <test_evaluator_join.hpp>

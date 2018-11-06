@@ -32,15 +32,6 @@ namespace walnut
   {
     // prefix parse functions
     RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_INTEGER, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_DOUBLE, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_CHARACTER, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_STRING, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_BOOLEAN, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_LIST, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_DICTIONARY, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_SET, std::bind(&Parser::ParseType, this));
-    RegisterPrefixParseFunction(Token::Type::KEYWORD_TUPLE, std::bind(&Parser::ParseType, this));
     RegisterPrefixParseFunction(Token::Type::INTEGER, std::bind(&Parser::ParseInteger, this));
     RegisterPrefixParseFunction(Token::Type::DOUBLE, std::bind(&Parser::ParseDouble, this));
     RegisterPrefixParseFunction(Token::Type::KEYWORD_TRUE, std::bind(&Parser::ParseBoolean, this));
@@ -391,11 +382,6 @@ namespace walnut
     }
 
     return left_expression;
-  }
-
-  NodePtr Parser::ParseType()
-  {
-    return std::make_shared<TypeNode>(current_token, current_token.type);
   }
 
   NodePtr Parser::ParseIdentifier()

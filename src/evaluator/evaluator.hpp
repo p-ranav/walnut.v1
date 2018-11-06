@@ -23,7 +23,6 @@
 #include <set_literal_node.hpp>
 #include <tuple_node.hpp>
 #include <key_value_argument_node.hpp>
-#include <type_node.hpp>
 
 #include <object.hpp>
 #include <integer_object.hpp>
@@ -42,7 +41,6 @@
 #include <set_object.hpp>
 #include <tuple_object.hpp>
 #include <key_value_argument_object.hpp>
-#include <type_object.hpp>
 
 #include <lexer.hpp>
 #include <parser.hpp>
@@ -72,7 +70,6 @@ namespace walnut
     ObjectPtr EvalBoolean(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalCharacter(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalString(NodePtr node, EnvironmentPtr environment);
-    ObjectPtr EvalType(NodePtr node, EnvironmentPtr environment);
 
     ObjectPtr EvalPrefixExpression(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalBangOperator(ObjectPtr right, EnvironmentPtr environment);
@@ -84,7 +81,6 @@ namespace walnut
     ObjectPtr EvalBooleanInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
     ObjectPtr EvalStringInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
     ObjectPtr EvalCharacterInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
-    ObjectPtr EvalTypeInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
 
     ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
     ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
@@ -127,7 +123,6 @@ namespace walnut
     /* Built-in Functions */
     std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
     ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
-    ObjectPtr BuiltinType(std::vector<ObjectPtr> arguments);
 
     /* List/Sequence Functions */
     ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);
