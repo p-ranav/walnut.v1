@@ -884,7 +884,7 @@ namespace walnut
     REQUIRE(lexer.tokens[0].line == 1);
     REQUIRE(lexer.tokens[0].cursor == 1);
     REQUIRE(lexer.tokens[0].type == Token::Type::LOGICAL_AND_OPERATOR);
-    REQUIRE(lexer.tokens[0].value == "&&");
+    REQUIRE(lexer.tokens[0].value == "and");
     REQUIRE(lexer.tokens[1].file == "");
     REQUIRE(lexer.tokens[1].line == 1);
     REQUIRE(lexer.tokens[1].cursor == 3);
@@ -905,7 +905,7 @@ namespace walnut
     REQUIRE(lexer.tokens[0].line == 1);
     REQUIRE(lexer.tokens[0].cursor == 1);
     REQUIRE(lexer.tokens[0].type == Token::Type::LOGICAL_OR_OPERATOR);
-    REQUIRE(lexer.tokens[0].value == "||");
+    REQUIRE(lexer.tokens[0].value == "or");
     REQUIRE(lexer.tokens[1].file == "");
     REQUIRE(lexer.tokens[1].line == 1);
     REQUIRE(lexer.tokens[1].cursor == 3);

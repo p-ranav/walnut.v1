@@ -23,8 +23,9 @@ namespace walnut
       String result = "";
       for (size_t i = 0; i < conditions.size(); i++)
       {
+        if (i > 0)
+          result += " else ";
         result += "if (" + conditions[i]->ToString() + ") " + consequences[i]->ToString();
-        result += "\n";
       }
       if (alternative != nullptr)
         result += " else " + alternative->ToString();

@@ -62,9 +62,9 @@ namespace walnut
     case Token::Type::BITWISE_RIGHT_SHIFT_OPERATOR:
       return ">>";
     case Token::Type::LOGICAL_AND_OPERATOR:
-      return "&&";
+      return "and";
     case Token::Type::LOGICAL_OR_OPERATOR:
-      return "||";
+      return "or";
     case Token::Type::LOGICAL_NOT_OPERATOR:
       return "!";
     case Token::Type::KEYWORD_TRUE:
