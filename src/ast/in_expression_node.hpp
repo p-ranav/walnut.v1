@@ -9,7 +9,8 @@ namespace walnut
   {
     NodePtr iterator;
     NodePtr iterable;
-    explicit InExpressionNode(Token token) : Node(token, IN_EXPRESSION) {}
+    bool negate_result;
+    explicit InExpressionNode(Token token) : Node(token, IN_EXPRESSION), negate_result(false) {}
 
     String ToString() override
     {

@@ -29,7 +29,7 @@ namespace walnut
                  {Token::Type::DOT_OPERATOR, DOT},
                  {Token::Type::KEYWORD_IF, IF},
                  {Token::Type::ARROW_OPERATOR, ARROW},
-                 {Token::Type::KEYWORD_IN, ARROW} })
+                 {Token::Type::KEYWORD_IN, ARROW}, {Token::Type::KEYWORD_NOT_IN, ARROW} })
   {
     // prefix parse functions
     RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -70,6 +70,7 @@ namespace walnut
     RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
     RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
     RegisterInfixParseFunction(Token::Type::KEYWORD_IN, std::bind(&Parser::ParseInExpression, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::KEYWORD_NOT_IN, std::bind(&Parser::ParseInExpression, this, std::placeholders::_1));
 
   }
 
@@ -610,6 +611,8 @@ namespace walnut
   NodePtr Parser::ParseInExpression(NodePtr left)
   {
     InExpressionNodePtr expression = std::make_shared<InExpressionNode>(current_token);
+    if (current_token.type == Token::Type::KEYWORD_NOT_IN)
+      expression->negate_result = true;
     expression->iterator = left;
     NextToken();
     expression->iterable = ParseExpression(LOWEST);

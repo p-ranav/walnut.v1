@@ -1,0 +1,5 @@
+keyword = "lambda"
+ 
+if keyword in ["and", "del", "from", "lambda"] {
+  "{} is a keyword".format(keyword).print();
+}

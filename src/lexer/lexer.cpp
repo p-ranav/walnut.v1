@@ -80,6 +80,7 @@ namespace walnut
 
       MergeTokenPair(i, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::GREATER_THAN_OPERATOR, Token::Type::ARROW_OPERATOR, "=>");
       MergeTokenPair(i, Token::Type::KEYWORD_ELSE, Token::Type::KEYWORD_IF, Token::Type::KEYWORD_ELSE_IF, "else if");
+      MergeTokenPair(i, Token::Type::LOGICAL_NOT_OPERATOR, Token::Type::KEYWORD_IN, Token::Type::KEYWORD_NOT_IN, "not in");
 
     }
 

@@ -388,15 +388,26 @@ namespace walnut
         do
         {
           ObjectPtr current_value = right->IterableCurrentValue();
-          if (left == current_value || left->Inspect() == current_value->Inspect())
+          if (!expression->negate_result)
           {
-            result = true;
-            break;
+            if (left == current_value || left->Inspect() == current_value->Inspect())
+            {
+              result = true;
+              break;
+            }
+          }
+          else
+          {
+            if (left != current_value && left->Inspect() == current_value->Inspect())
+            {
+              result = true;
+              break;
+            }
           }
         } while (right->IterableNext() != right->IterableEnd());
       }
     }
-    return std::make_shared<BooleanObject>(result);
+    return std::make_shared<BooleanObject>(result & !expression->negate_result);
   }
 
   ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment)
