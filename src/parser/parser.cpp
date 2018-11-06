@@ -29,7 +29,7 @@ namespace walnut
                  {Token::Type::DOT_OPERATOR, DOT},
                  {Token::Type::KEYWORD_IF, IF},
                  {Token::Type::ARROW_OPERATOR, ARROW},
-                 {Token::Type::KEYWORD_IN, ARROW}, {Token::Type::KEYWORD_NOT_IN, ARROW} })
+                 {Token::Type::KEYWORD_IN, CALL}, {Token::Type::KEYWORD_NOT_IN, CALL} })
   {
     // prefix parse functions
     RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -84,7 +84,7 @@ namespace walnut
       if (statement != nullptr)
       {
         statements.push_back(statement);
-        // std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+        std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
       }
       NextToken();
     }
