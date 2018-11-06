@@ -418,14 +418,18 @@ namespace walnut
           {
             if (left->Inspect() == current_value->Inspect())
             {
-              result = true;
+              result = false;
               break;
+            }
+            else
+            {
+              result = true;
             }
           }
         } while (right->IterableNext() != right->IterableEnd());
       }
     }
-    return std::make_shared<BooleanObject>(result & !expression->negate_result);
+    return std::make_shared<BooleanObject>(result);
   }
 
   ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment)
