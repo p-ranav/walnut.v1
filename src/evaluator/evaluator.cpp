@@ -85,6 +85,8 @@ namespace walnut
       return EvalTuple(node, environment);
     case NodeType::KEY_VALUE_ARGUMENT:
       return EvalKeyValueArgument(node, environment);
+    case NodeType::IN_EXPRESSION:
+      return EvalInExpression(node, environment);
     default:
       return std::make_shared<NullObject>();
     }
@@ -354,6 +356,47 @@ namespace walnut
       return std::make_shared<BooleanObject>(left_value != right_value);
     else
       return std::make_shared<NullObject>();
+  }
+
+  ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
+  {
+    InExpressionNodePtr expression = std::dynamic_pointer_cast<InExpressionNode>(node);
+    NodePtr iterator = expression->iterator;
+    NodePtr iterable = expression->iterable;
+
+    ObjectPtr left = Eval(iterator, environment);
+    ObjectPtr right = Eval(iterable, environment);
+    bool result = false;
+    if (right->iterable == true)
+    {
+      if (right->type == ObjectType::HASH)
+      {
+        HashObjectPtr hash = std::dynamic_pointer_cast<HashObject>(right);
+        try
+        {
+          HashPair search = hash->Get(Hash(left));
+          if (search.value != nullptr)
+            result = true;
+        }
+        catch(...) {
+          result = false;
+        }
+      }
+      else
+      {
+        right->IterableInit();
+        do
+        {
+          ObjectPtr current_value = right->IterableCurrentValue();
+          if (left == current_value || left->Inspect() == current_value->Inspect())
+          {
+            result = true;
+            break;
+          }
+        } while (right->IterableNext() != right->IterableEnd());
+      }
+    }
+    return std::make_shared<BooleanObject>(result);
   }
 
   ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment)
