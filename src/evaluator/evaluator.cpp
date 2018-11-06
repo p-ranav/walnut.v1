@@ -382,6 +382,24 @@ namespace walnut
           result = false;
         }
       }
+      else if (right->type == ObjectType::STRING)
+      {
+        StringObjectPtr string = std::dynamic_pointer_cast<StringObject>(right);
+        if (left->type == ObjectType::STRING)
+        {
+          StringObjectPtr left_string = std::dynamic_pointer_cast<StringObject>(left);
+          if (contains(string->Value(), left_string->Value()))
+            result = true;
+        }
+        else if (left->type == ObjectType::CHARACTER)
+        {
+          CharacterObjectPtr left_string = std::dynamic_pointer_cast<CharacterObject>(left);
+          if (contains(string->Value(), left_string->Value()))
+            result = true;
+        }
+        else
+          result = false;
+      }
       else
       {
         right->IterableInit();

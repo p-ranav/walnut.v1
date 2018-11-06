@@ -410,16 +410,12 @@ namespace walnut
   NodePtr Parser::ParseCharacter()
   {
     CharacterNodePtr result = std::make_shared<CharacterNode>(current_token, current_token.value);
-    while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
-      NextToken();
     return result;
   }
 
   NodePtr Parser::ParseStringLiteral()
   {
     StringLiteralNodePtr result = std::make_shared<StringLiteralNode>(current_token, current_token.value);
-    while (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR))
-      NextToken();
     return result;
   }
 
