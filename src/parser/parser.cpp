@@ -28,7 +28,8 @@ namespace walnut
                  {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
                  {Token::Type::DOT_OPERATOR, DOT},
                  {Token::Type::KEYWORD_IF, IF},
-                 {Token::Type::ARROW_OPERATOR, ARROW} })
+                 {Token::Type::ARROW_OPERATOR, ARROW},
+                 {Token::Type::KEYWORD_IN, ARROW} })
   {
     // prefix parse functions
     RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -68,6 +69,7 @@ namespace walnut
     RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
     RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
     RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
+    RegisterInfixParseFunction(Token::Type::KEYWORD_IN, std::bind(&Parser::ParseInExpression, this, std::placeholders::_1));
 
   }
 
@@ -575,22 +577,21 @@ namespace walnut
     {
       NextToken();
       NextToken();
-      NodePtr iterator = ParseExpression(LOWEST, { Token::Type::COMMA_OPERATOR, Token::Type::KEYWORD_IN });
+      NodePtr iterator = ParseExpression(LOWEST);
       if (iterator)
         result->iterators.push_back(iterator);
     }
 
-    if (!ExpectPeek(Token::Type::KEYWORD_IN))
+    if (result->iterators.size() > 0)
     {
-      String brief_description = "expected 'in' keyword in for expression";
-      String detailed_description =
-        " 'for' expressions operate on iterables like so: for <iterator(s)> in <iterable> { <consequence> }";
-      ReportError(peek_token, brief_description, detailed_description);
-      return nullptr;
+      if (result->iterators[result->iterators.size() - 1]->type == Node::Type::IN_EXPRESSION)
+      {
+        InExpressionNodePtr expression = std::dynamic_pointer_cast<InExpressionNode>(result->iterators[result->iterators.size() - 1]);
+        result->iterators.pop_back();
+        result->iterators.push_back(expression->iterator);
+        result->iterable = expression->iterable;
+      }
     }
-
-    NextToken();
-    result->iterable = ParseExpression(LOWEST, { Token::Type::LEFT_CURLY_BRACES });
 
     if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
     {
@@ -604,6 +605,15 @@ namespace walnut
     result->body = ParseBlockStatement();
 
     return result;
+  }
+
+  NodePtr Parser::ParseInExpression(NodePtr left)
+  {
+    InExpressionNodePtr expression = std::make_shared<InExpressionNode>(current_token);
+    expression->iterator = left;
+    NextToken();
+    expression->iterable = ParseExpression(LOWEST);
+    return expression;
   }
 
   std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
