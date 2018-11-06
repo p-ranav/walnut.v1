@@ -28,3 +28,7 @@ if menu_ask in menu {
 } else {
   print("Unfortunately we don't offer", menu_ask);
 }
+
+if 1 in {1, 2, 3, 4, 5} { print("1 is in the set {1, 2, 3, 4, 5}"); }
+
+if 3.14 in (1, 3.14, 'c') { print("3.14 is in the tuple (1, 3.14, 'c')"); }

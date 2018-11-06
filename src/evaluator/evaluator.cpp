@@ -408,7 +408,7 @@ namespace walnut
           ObjectPtr current_value = right->IterableCurrentValue();
           if (!expression->negate_result)
           {
-            if (left == current_value || left->Inspect() == current_value->Inspect())
+            if (left->Inspect() == current_value->Inspect())
             {
               result = true;
               break;
@@ -416,7 +416,7 @@ namespace walnut
           }
           else
           {
-            if (left != current_value && left->Inspect() == current_value->Inspect())
+            if (left->Inspect() == current_value->Inspect())
             {
               result = true;
               break;
