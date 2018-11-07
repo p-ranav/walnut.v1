@@ -10,26 +10,37 @@ namespace walnut
     current_token_index(0),
     statements({}),
     tokens(tokens),
-    precedences({ {Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
-                 {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
-                 {Token::Type::LEFT_PARENTHESIS, CALL},
-                 {Token::Type::EQUALITY_OPERATOR, EQUAL},
-                 {Token::Type::INEQUALITY_OPERATOR, EQUAL},
-                 {Token::Type::LESSER_THAN_OPERATOR, LESSGREATER},
-                 {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                 {Token::Type::GREATER_THAN_OPERATOR, LESSGREATER},
-                 {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, LESSGREATER},
-                 {Token::Type::ADDITION_OPERATOR, SUM},
-                 {Token::Type::SUBTRACTION_OPERATOR, SUM},
-                 {Token::Type::MULTIPLICATION_OPERATOR, PRODUCT},
-                 {Token::Type::DIVISION_OPERATOR, PRODUCT},
-                 {Token::Type::MODULUS_OPERATOR, PRODUCT},
-                 {Token::Type::LOGICAL_NOT_OPERATOR, PREFIX},
-                 {Token::Type::LEFT_SQUARE_BRACKETS, INDEX},
-                 {Token::Type::DOT_OPERATOR, DOT},
-                 {Token::Type::KEYWORD_IF, IF},
-                 {Token::Type::ARROW_OPERATOR, ARROW},
-                 {Token::Type::KEYWORD_IN, CALL}, {Token::Type::KEYWORD_NOT_IN, CALL} })
+    precedences({ 
+      // If-else
+      {Token::Type::KEYWORD_IF, IF_ELSE},
+      // Logical AND
+      {Token::Type::LOGICAL_AND_OPERATOR, LOGICAL_AND},
+      // Logical OR
+      {Token::Type::LOGICAL_OR_OPERATOR, LOGICAL_OR},
+      // Logical NOT
+      {Token::Type::LOGICAL_NOT_OPERATOR, LOGICAL_NOT},
+      // Comparison
+      {Token::Type::EQUALITY_OPERATOR, EQUALITY},
+      {Token::Type::INEQUALITY_OPERATOR, EQUALITY},
+      {Token::Type::KEYWORD_IN, COMPARISON},
+      {Token::Type::KEYWORD_NOT_IN, COMPARISON},
+      {Token::Type::LESSER_THAN_OPERATOR, COMPARISON},
+      {Token::Type::LESSER_THAN_OR_EQUAL_OPERATOR, COMPARISON},
+      {Token::Type::GREATER_THAN_OPERATOR, COMPARISON},
+      {Token::Type::GREATER_THAN_OR_EQUAL_OPERATOR, COMPARISON},
+      // Addition/Subtraction
+      {Token::Type::ADDITION_OPERATOR, ADDITION_SUBTRACTION},
+      {Token::Type::SUBTRACTION_OPERATOR, ADDITION_SUBTRACTION},
+      // Multiplication/Division
+      {Token::Type::MULTIPLICATION_OPERATOR, MULTIPLICATION_DIVISION},
+      {Token::Type::DIVISION_OPERATOR, MULTIPLICATION_DIVISION},
+      {Token::Type::MODULUS_OPERATOR, MULTIPLICATION_DIVISION},
+      // Attribute
+      {Token::Type::LEFT_SQUARE_BRACKETS, ATTRIBUTE},
+      {Token::Type::DOT_OPERATOR, ATTRIBUTE},
+      {Token::Type::LEFT_PARENTHESIS, ATTRIBUTE},
+      {Token::Type::ARROW_OPERATOR, ATTRIBUTE},
+      })
   {
     // prefix parse functions
     RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
@@ -84,7 +95,7 @@ namespace walnut
       if (statement != nullptr)
       {
         statements.push_back(statement);
-        std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
+        // std::cout << "[STATEMENT] " << statement->ToString() << std::endl;
       }
       NextToken();
     }
@@ -425,7 +436,7 @@ namespace walnut
     Token::Type prefix_operator = current_token.type;
     NextToken();
     if (prefix_operator == Token::Type::LOGICAL_NOT_OPERATOR)
-      result->right = ParseExpression(PREFIX);
+      result->right = ParseExpression(LOGICAL_NOT);
     else
       result->right = ParseExpression(LOWEST);
     return result;
@@ -611,7 +622,7 @@ namespace walnut
       expression->negate_result = true;
     expression->iterator = left;
     NextToken();
-    expression->iterable = ParseExpression(LOWEST);
+    expression->iterable = ParseExpression(COMPARISON);
     return expression;
   }
 
@@ -765,7 +776,8 @@ namespace walnut
   NodePtr Parser::ParseDotOperator(NodePtr left)
   {
     NextToken();
-    NodePtr right = ParseExpression(SUM, { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR });
+    NodePtr right = ParseExpression(ADDITION_SUBTRACTION, 
+      { Token::Type::SEMI_COLON_OPERATOR, Token::Type::RIGHT_PARENTHESIS, Token::Type::DOT_OPERATOR });
     CallExpressionNodePtr call_expression = std::dynamic_pointer_cast<CallExpressionNode>(right);
     if (call_expression != nullptr)
       call_expression->arguments->elements.insert(call_expression->arguments->elements.begin(), left);
