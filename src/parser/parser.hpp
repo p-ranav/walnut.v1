@@ -77,18 +77,16 @@ namespace walnut
     enum Precedence
     {
       LOWEST,
-      IF,
-      LOGICAL_OR,  // ||
-      LOGICAL_AND, // &&
-      EQUAL,       // ==, !=
-      LESSGREATER, // >, >=, < and <=
-      SUM,         // +, -
-      PRODUCT,     // *, /, %
-      PREFIX,      // -X or !X
-      CALL,        // my_function(X)
-      INDEX,       // X[0], [1, 2, 3, 4][2]
-      DOT,         // x.y(), i.e., y(x)
-      ARROW,       // (x, y) => { x * y }
+      IF_ELSE,                 // if-else
+      LOGICAL_OR,              // or
+      LOGICAL_AND,             // and
+      LOGICAL_NOT,             // not x
+      EQUALITY,                // ==, !=
+      COMPARISON,              // in, not in, <, <=, >, >=, ==
+      ADDITION_SUBTRACTION,    // +, -
+      MULTIPLICATION_DIVISION, // *, /, %
+      NEGATION,                // -X
+      ATTRIBUTE,               // x[0], [1, 2, 3, 4][2], x.y() and y(x)
     };
     typedef std::map<Token::Type, Precedence> TokenPrecedenceMap;
 
