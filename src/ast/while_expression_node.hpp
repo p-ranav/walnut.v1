@@ -6,21 +6,21 @@
 namespace walnut
 {
 
-  struct WhileExpressionNode : Node
+struct WhileExpressionNode : Node
+{
+  NodePtr condition;
+  BlockStatementNodePtr consequence;
+
+  explicit WhileExpressionNode(Token token) : Node(token, WHILE_EXPRESSION),
+                                              condition(nullptr),
+                                              consequence(nullptr) {}
+
+  String ToString() override
   {
-    NodePtr condition;
-    BlockStatementNodePtr consequence;
+    return "while (" + condition->ToString() + ") " + consequence->ToString();
+  }
+};
 
-    explicit WhileExpressionNode(Token token) : Node(token, WHILE_EXPRESSION),
-      condition(nullptr),
-      consequence(nullptr) {}
+typedef std::shared_ptr<WhileExpressionNode> WhileExpressionNodePtr;
 
-    String ToString() override
-    {
-      return "while (" + condition->ToString() + ") " + consequence->ToString();
-    }
-  };
-
-  typedef std::shared_ptr<WhileExpressionNode> WhileExpressionNodePtr;
-
-}
+} // namespace walnut

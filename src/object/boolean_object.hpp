@@ -5,22 +5,22 @@
 namespace walnut
 {
 
-  struct BooleanObject : Object
+struct BooleanObject : Object
+{
+  bool value;
+  explicit BooleanObject(bool value) : Object(BOOLEAN, false, true), value(value) {}
+
+  ObjectPtr Copy() override
   {
-    bool value;
-    explicit BooleanObject(bool value) : Object(BOOLEAN, false, true), value(value) {}
+    return std::make_shared<BooleanObject>(value);
+  }
 
-    ObjectPtr Copy() override
-    {
-      return std::make_shared<BooleanObject>(value);
-    }
+  String Inspect() override
+  {
+    return (value == true) ? "true" : "false";
+  }
+};
 
-    String Inspect() override
-    {
-      return (value == true) ? "true" : "false";
-    }
-  };
+typedef std::shared_ptr<BooleanObject> BooleanObjectPtr;
 
-  typedef std::shared_ptr<BooleanObject> BooleanObjectPtr;
-
-}
+} // namespace walnut

@@ -6,18 +6,18 @@
 namespace walnut
 {
 
-  struct IntegerNode : Node
+struct IntegerNode : Node
+{
+  int64_t value;
+  explicit IntegerNode(Token token, int64_t value) : Node(token, INTEGER),
+                                                     value(value) {}
+
+  String ToString() override
   {
-    int64_t value;
-    explicit IntegerNode(Token token, int64_t value) : Node(token, INTEGER),
-      value(value) {}
+    return std::to_string(value);
+  }
+};
 
-    String ToString() override
-    {
-      return std::to_string(value);
-    }
-  };
+typedef std::shared_ptr<IntegerNode> IntegerNodePtr;
 
-  typedef std::shared_ptr<IntegerNode> IntegerNodePtr;
-
-}
+} // namespace walnut

@@ -7,24 +7,24 @@
 namespace walnut
 {
 
-  struct BlockStatementNode : Node
+struct BlockStatementNode : Node
+{
+  std::vector<NodePtr> statements;
+  BlockStatementNode(Token token) : Node(token, BLOCK_STATEMENT),
+                                    statements({}) {}
+
+  String ToString() override
   {
-    std::vector<NodePtr> statements;
-    BlockStatementNode(Token token) : Node(token, BLOCK_STATEMENT),
-      statements({}) {}
-
-    String ToString() override
+    String result = "{ ";
+    for (auto &statement : statements)
     {
-      String result = "{ ";
-      for (auto &statement : statements)
-      {
-        result += statement->ToString() + "; ";
-      }
-      result += "}";
-      return result;
+      result += statement->ToString() + "; ";
     }
-  };
+    result += "}";
+    return result;
+  }
+};
 
-  typedef std::shared_ptr<BlockStatementNode> BlockStatementNodePtr;
+typedef std::shared_ptr<BlockStatementNode> BlockStatementNodePtr;
 
-}
+} // namespace walnut

@@ -5,18 +5,18 @@
 namespace walnut
 {
 
-  struct StringLiteralNode : Node
+struct StringLiteralNode : Node
+{
+  String value;
+  explicit StringLiteralNode(Token token, StringConstRef value) : Node(token, STRING_LITERAL, true),
+                                                                  value(value) {}
+
+  String ToString() override
   {
-    String value;
-    explicit StringLiteralNode(Token token, StringConstRef value) : Node(token, STRING_LITERAL, true),
-      value(value) {}
+    return "\"" + value + "\"";
+  }
+};
 
-    String ToString() override
-    {
-      return "\"" + value + "\"";
-    }
-  };
+typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;
 
-  typedef std::shared_ptr<StringLiteralNode> StringLiteralNodePtr;
-
-}
+} // namespace walnut

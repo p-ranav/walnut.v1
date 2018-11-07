@@ -21,7 +21,7 @@
 #include <test_parser_infix_expression.hpp>
 #include <test_parser_operator_precedence.hpp>
 #include <test_parser_grouped_expressions.hpp>
-#include <test_parser_boolean.hpp> 
+#include <test_parser_boolean.hpp>
 #include <test_parser_if_else.h>
 
 #include <test_evaluator_split.hpp>

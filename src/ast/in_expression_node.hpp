@@ -5,19 +5,19 @@
 namespace walnut
 {
 
-  struct InExpressionNode : Node
+struct InExpressionNode : Node
+{
+  NodePtr iterator;
+  NodePtr iterable;
+  bool negate_result;
+  explicit InExpressionNode(Token token) : Node(token, IN_EXPRESSION), negate_result(false) {}
+
+  String ToString() override
   {
-    NodePtr iterator;
-    NodePtr iterable;
-    bool negate_result;
-    explicit InExpressionNode(Token token) : Node(token, IN_EXPRESSION), negate_result(false) {}
+    return iterator->ToString() + " in " + iterable->ToString();
+  }
+};
 
-    String ToString() override
-    {
-      return iterator->ToString() + " in " + iterable->ToString();
-    }
-  };
+typedef std::shared_ptr<InExpressionNode> InExpressionNodePtr;
 
-  typedef std::shared_ptr<InExpressionNode> InExpressionNodePtr;
-
-}
+} // namespace walnut

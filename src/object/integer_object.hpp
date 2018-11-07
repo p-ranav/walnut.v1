@@ -6,27 +6,27 @@
 namespace walnut
 {
 
-  struct IntegerObject : Object
+struct IntegerObject : Object
+{
+  int64_t value;
+  explicit IntegerObject(int64_t value) : Object(INTEGER, false, true), value(value) {}
+
+  ObjectPtr Copy() override
   {
-    int64_t value;
-    explicit IntegerObject(int64_t value) : Object(INTEGER, false, true), value(value) {}
+    return std::make_shared<IntegerObject>(value);
+  }
 
-    ObjectPtr Copy() override
-    {
-      return std::make_shared<IntegerObject>(value);
-    }
+  String Inspect() override
+  {
+    return std::to_string(value);
+  }
 
-    String Inspect() override
-    {
-      return std::to_string(value);
-    }
+  DoubleObjectPtr ToDouble()
+  {
+    return std::make_shared<DoubleObject>(static_cast<double>(value));
+  }
+};
 
-    DoubleObjectPtr ToDouble()
-    {
-      return std::make_shared<DoubleObject>(static_cast<double>(value));
-    }
-  };
+typedef std::shared_ptr<IntegerObject> IntegerObjectPtr;
 
-  typedef std::shared_ptr<IntegerObject> IntegerObjectPtr;
-
-}
+} // namespace walnut

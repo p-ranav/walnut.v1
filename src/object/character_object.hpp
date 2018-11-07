@@ -5,28 +5,28 @@
 namespace walnut
 {
 
-  struct CharacterObject : Object
+struct CharacterObject : Object
+{
+  String value;
+
+  explicit CharacterObject(StringConstRef value) : Object(CHARACTER, false, true), value(value) {}
+
+  ObjectPtr Copy() override
   {
-    String value;
+    return std::make_shared<CharacterObject>(value);
+  }
 
-    explicit CharacterObject(StringConstRef value) : Object(CHARACTER, false, true), value(value) {}
+  String Value()
+  {
+    return value;
+  }
 
-    ObjectPtr Copy() override
-    {
-      return std::make_shared<CharacterObject>(value);
-    }
+  String Inspect() override
+  {
+    return "'" + value + "'";
+  }
+};
 
-    String Value()
-    {
-      return value;
-    }
+typedef std::shared_ptr<CharacterObject> CharacterObjectPtr;
 
-    String Inspect() override
-    {
-      return "'" + value + "'";
-    }
-  };
-
-  typedef std::shared_ptr<CharacterObject> CharacterObjectPtr;
-
-}
+} // namespace walnut

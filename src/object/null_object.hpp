@@ -4,14 +4,14 @@
 namespace walnut
 {
 
-  struct NullObject : Object
+struct NullObject : Object
+{
+  explicit NullObject() : Object(NULL_) {}
+
+  String Inspect() override
   {
-    explicit NullObject() : Object(NULL_) {}
+    return "null";
+  }
+};
 
-    String Inspect() override
-    {
-      return "null";
-    }
-  };
-
-}
+} // namespace walnut

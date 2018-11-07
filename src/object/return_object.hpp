@@ -5,22 +5,22 @@
 namespace walnut
 {
 
-  struct ReturnObject : Object
+struct ReturnObject : Object
+{
+  ObjectPtr value;
+  explicit ReturnObject(ObjectPtr value) : Object(RETURN), value(value) {}
+
+  ObjectPtr Copy() override
   {
-    ObjectPtr value;
-    explicit ReturnObject(ObjectPtr value) : Object(RETURN), value(value) {}
+    return std::make_shared<ReturnObject>(value);
+  }
 
-    ObjectPtr Copy() override
-    {
-      return std::make_shared<ReturnObject>(value);
-    }
+  String Inspect() override
+  {
+    return value->Inspect();
+  }
+};
 
-    String Inspect() override
-    {
-      return value->Inspect();
-    }
-  };
+typedef std::shared_ptr<ReturnObject> ReturnObjectPtr;
 
-  typedef std::shared_ptr<ReturnObject> ReturnObjectPtr;
-
-}
+} // namespace walnut

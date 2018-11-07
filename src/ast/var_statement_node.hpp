@@ -5,18 +5,18 @@
 namespace walnut
 {
 
-  struct VarStatementNode : Node
+struct VarStatementNode : Node
+{
+  IdentifierNodePtr name;
+  NodePtr expression;
+  VarStatementNode(Token token) : Node(token, VAR_STATEMENT) {}
+
+  String ToString() override
   {
-    IdentifierNodePtr name;
-    NodePtr expression;
-    VarStatementNode(Token token) : Node(token, VAR_STATEMENT) {}
+    return name->ToString() + " = " + expression->ToString() + ";";
+  }
+};
 
-    String ToString() override
-    {
-      return name->ToString() + " = " + expression->ToString() + ";";
-    }
-  };
+typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;
 
-  typedef std::shared_ptr<VarStatementNode> VarStatementNodePtr;
-
-}
+} // namespace walnut

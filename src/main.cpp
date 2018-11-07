@@ -78,5 +78,4 @@ int main(int argc, char *argv[])
   }
   environment->store.clear();
   return 0;
-
 }

@@ -3,40 +3,40 @@
 namespace walnut
 {
 
-  ObjectPtr Evaluator::BuiltinAppend(std::vector<ObjectPtr> arguments)
+ObjectPtr Evaluator::BuiltinAppend(std::vector<ObjectPtr> arguments)
+{
+  if (arguments.size() == 2)
   {
-    if (arguments.size() == 2)
+    if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::STRING)
     {
-      if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::STRING)
-      {
-        StringObjectPtr result;
-        StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-        StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
-        first->buffer.insert(first->buffer.end(), second->buffer.begin(), second->buffer.end());
-        return first;
-      }
-      else if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::CHARACTER)
-      {
-        StringObjectPtr result;
-        StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
-        CharacterObjectPtr second = std::dynamic_pointer_cast<CharacterObject>(arguments[1]);
-        first->buffer.push_back(second);
-        return first;
-      }
-      else if (arguments[0]->type == ObjectType::ARRAY)
-      {
-        ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
-        array_object->IterableAppend(arguments[1]);
-        return array_object;
-      }
-      else if (arguments[0]->type == ObjectType::SET)
-      {
-        SetObjectPtr set_object = std::dynamic_pointer_cast<SetObject>(arguments[0]);
-        set_object->IterableAppend(arguments[1]);
-        return set_object;
-      }
+      StringObjectPtr result;
+      StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
+      StringObjectPtr second = std::dynamic_pointer_cast<StringObject>(arguments[1]);
+      first->buffer.insert(first->buffer.end(), second->buffer.begin(), second->buffer.end());
+      return first;
     }
-    return std::make_shared<NullObject>();
+    else if (arguments[0]->type == ObjectType::STRING && arguments[1]->type == ObjectType::CHARACTER)
+    {
+      StringObjectPtr result;
+      StringObjectPtr first = std::dynamic_pointer_cast<StringObject>(arguments[0]);
+      CharacterObjectPtr second = std::dynamic_pointer_cast<CharacterObject>(arguments[1]);
+      first->buffer.push_back(second);
+      return first;
+    }
+    else if (arguments[0]->type == ObjectType::ARRAY)
+    {
+      ArrayObjectPtr array_object = std::dynamic_pointer_cast<ArrayObject>(arguments[0]);
+      array_object->IterableAppend(arguments[1]);
+      return array_object;
+    }
+    else if (arguments[0]->type == ObjectType::SET)
+    {
+      SetObjectPtr set_object = std::dynamic_pointer_cast<SetObject>(arguments[0]);
+      set_object->IterableAppend(arguments[1]);
+      return set_object;
+    }
   }
-
+  return std::make_shared<NullObject>();
 }
+
+} // namespace walnut

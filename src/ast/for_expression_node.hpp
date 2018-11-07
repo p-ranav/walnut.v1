@@ -8,23 +8,23 @@
 namespace walnut
 {
 
-  struct ForExpressionNode : Node
+struct ForExpressionNode : Node
+{
+  std::vector<NodePtr> iterators;
+  NodePtr iterable;
+  BlockStatementNodePtr body;
+
+  explicit ForExpressionNode(Token token) : Node(token, FOR_EXPRESSION),
+                                            iterators({}),
+                                            iterable(nullptr),
+                                            body(nullptr) {}
+
+  String ToString() override
   {
-    std::vector<NodePtr> iterators;
-    NodePtr iterable;
-    BlockStatementNodePtr body;
+    return "for ...";
+  }
+};
 
-    explicit ForExpressionNode(Token token) : Node(token, FOR_EXPRESSION),
-      iterators({}),
-      iterable(nullptr),
-      body(nullptr) {}
+typedef std::shared_ptr<ForExpressionNode> ForExpressionNodePtr;
 
-    String ToString() override
-    {
-      return "for ...";
-    }
-  };
-
-  typedef std::shared_ptr<ForExpressionNode> ForExpressionNodePtr;
-
-}
+} // namespace walnut

@@ -4,17 +4,17 @@
 namespace walnut
 {
 
-  struct ReturnStatementNode : Node
+struct ReturnStatementNode : Node
+{
+  NodePtr expression;
+  ReturnStatementNode(Token token) : Node(token, RETURN_STATEMENT) {}
+
+  String ToString() override
   {
-    NodePtr expression;
-    ReturnStatementNode(Token token) : Node(token, RETURN_STATEMENT) {}
+    return "return " + expression->ToString();
+  }
+};
 
-    String ToString() override
-    {
-      return "return " + expression->ToString();
-    }
-  };
+typedef std::shared_ptr<ReturnStatementNode> ReturnStatementNodePtr;
 
-  typedef std::shared_ptr<ReturnStatementNode> ReturnStatementNodePtr;
-
-}
+} // namespace walnut

@@ -6,20 +6,20 @@
 namespace walnut
 {
 
-  struct IndexExpressionNode : Node
+struct IndexExpressionNode : Node
+{
+  NodePtr left;
+  NodePtr index;
+  explicit IndexExpressionNode(Token token, NodePtr left) : Node(token, INDEX_EXPRESSION),
+                                                            left(left),
+                                                            index(nullptr) {}
+
+  String ToString() override
   {
-    NodePtr left;
-    NodePtr index;
-    explicit IndexExpressionNode(Token token, NodePtr left) : Node(token, INDEX_EXPRESSION),
-      left(left),
-      index(nullptr) {}
+    return left->ToString() + "[" + index->ToString() + "]";
+  }
+};
 
-    String ToString() override
-    {
-      return left->ToString() + "[" + index->ToString() + "]";
-    }
-  };
+typedef std::shared_ptr<IndexExpressionNode> IndexExpressionNodePtr;
 
-  typedef std::shared_ptr<IndexExpressionNode> IndexExpressionNodePtr;
-
-}
+} // namespace walnut

@@ -7,25 +7,25 @@
 namespace walnut
 {
 
-  struct BuiltinFunctionObject : Object
+struct BuiltinFunctionObject : Object
+{
+  typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
+  BuiltinFunction function;
+
+  BuiltinFunctionObject(BuiltinFunction function) : Object(BUILTIN_FUNCTION),
+                                                    function(function) {}
+
+  ObjectPtr Copy() override
   {
-    typedef std::function<ObjectPtr(std::vector<ObjectPtr>)> BuiltinFunction;
-    BuiltinFunction function;
+    return std::make_shared<BuiltinFunctionObject>(function);
+  }
 
-    BuiltinFunctionObject(BuiltinFunction function) : Object(BUILTIN_FUNCTION),
-      function(function) {}
+  String Inspect() override
+  {
+    return "";
+  }
+};
 
-    ObjectPtr Copy() override
-    {
-      return std::make_shared<BuiltinFunctionObject>(function);
-    }
+typedef std::shared_ptr<BuiltinFunctionObject> BuiltinFunctionObjectPtr;
 
-    String Inspect() override
-    {
-      return "";
-    }
-  };
-
-  typedef std::shared_ptr<BuiltinFunctionObject> BuiltinFunctionObjectPtr;
-
-}
+} // namespace walnut

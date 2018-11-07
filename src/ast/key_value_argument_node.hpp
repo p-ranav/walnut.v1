@@ -6,22 +6,22 @@
 namespace walnut
 {
 
-  struct KeyValueArgumentNode : Node
+struct KeyValueArgumentNode : Node
+{
+  IdentifierNodePtr key;
+  NodePtr value;
+  explicit KeyValueArgumentNode(Token token) : Node(token, KEY_VALUE_ARGUMENT),
+                                               key(nullptr),
+                                               value(nullptr) {}
+
+  String ToString() override
   {
-    IdentifierNodePtr key;
-    NodePtr value;
-    explicit KeyValueArgumentNode(Token token) : Node(token, KEY_VALUE_ARGUMENT),
-      key(nullptr), 
-      value(nullptr) {}
+    String result = "";
+    result += key->ToString() + " = " + value->ToString();
+    return result;
+  }
+};
 
-    String ToString() override
-    {
-      String result = "";
-      result += key->ToString() + " = " + value->ToString();
-      return result;
-    }
-  };
+typedef std::shared_ptr<KeyValueArgumentNode> KeyValueArgumentNodePtr;
 
-  typedef std::shared_ptr<KeyValueArgumentNode> KeyValueArgumentNodePtr;
-
-}
+} // namespace walnut
