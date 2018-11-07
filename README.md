@@ -47,6 +47,8 @@
   }
   ```
 
+  ## Arrow Functions
+
   You can also use the arrow operator '=>' like in Javascript to define your functions. Support for unicode characters in identifier names allows for highly readable function definitions like below:
 
   ```javascript
@@ -97,7 +99,7 @@
 
   ## Decorators
 
-  Decorators are a good example of closure.
+  Decorators are a good example of closure. The function ```wrapped_function``` is a closure, because it retains access to the variables in its scope.
 
   ```javascript
   decorate = function(f) {
@@ -115,8 +117,6 @@
   // Hello World
   // Function call is finished
   ```
-
-  The function ```wrapped_function``` is a closure, because it retains access to the variables in its scope -- in particular, the parameter f, the original function. Closures allow you to access it. 
 
   ## Function Aliasing
 
@@ -195,53 +195,35 @@
 
   ```javascript
   config = {  
-    "Component Instances":[  
-        {  
-          "Name":"client_component",
-          "Definition":"client_component.so",
-          "Timers":[  
-              {  
-                "Name":"timer_1",
-                "Priority":50,
-                "Period":1.0,
-                "Function":"timer_function"
-              }
-          ],
-          "Clients":[  
-              {  
-                "Name":"client_port",
-                "Timeout":0.5,
-                "Endpoints":[  
-                    "tcp://129.43.6.8:5510"
-                ]
-              }
-          ]
-        },
-        {  
-          "Name":"server_component",
-          "Definition":"server_component.so",
-          "Servers": [  
-              {  
-                "Name":"server_port",
-                "Priority":60,
-                "Function":"server_function",
-                "Endpoints":[  
-                    "tcp://*:5510"
-                ],
-                "Timeout":0.5
-              }
-          ]
-        }
+    "Component Instances": [  
+      {  
+        "Name":"client_1_instance",
+        "Definition":"client_1.so",
+        "Timers":[  
+            {  
+              "Name":"timer_1",
+              "Period":2.0,
+              "Priority":50,
+              "Function":"call_the_server"
+            }
+        ],
+        "Clients":[  
+            {  
+              "Name":"client_port",
+              "Timeout":2.5,
+              "Endpoints":[  
+                  "tcp://127.0.0.1:5510"
+              ]
+            }
+        ]
+      }
     ]
   };
 
   for instance in config["Component Instances"] {
-      "{name} - {definition}".format(
-        name = instance["Name"], 
-        definition = instance["Definition"]).print()
+      "{name} => {definition}".format(name = instance["Name"], definition = instance["Definition"]).print()
   }
-  // client_component - client_component.so
-  // server_component - server_component.so
+  // client_1_instance => client_1.so
   ```
 
   ## Sets
