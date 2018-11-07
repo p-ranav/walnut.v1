@@ -25,7 +25,7 @@ namespace walnut
       {
         if (i > 0)
           result += " else ";
-        result += "if (" + conditions[i]->ToString() + ") " + consequences[i]->ToString();
+        result += "if " + conditions[i]->ToString() + " " + consequences[i]->ToString();
       }
       if (alternative != nullptr)
         result += " else " + alternative->ToString();
