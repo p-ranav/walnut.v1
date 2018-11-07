@@ -113,3 +113,50 @@ z["value"]["c"] = "Hello, World!"
 z.print()
 
 z['世'].print();
+
+config = {  
+   "Component Instances":[  
+      {  
+         "Name":"client_component",
+         "Definition":"client_component.so",
+         "Timers":[  
+            {  
+               "Name":"timer_1",
+               "Priority":50,
+               "Period":1.0,
+               "Function":"timer_function"
+            }
+         ],
+         "Clients":[  
+            {  
+               "Name":"client_port",
+               "Timeout":0.5,
+               "Endpoints":[  
+                  "tcp://129.43.6.8:5510"
+               ]
+            }
+         ]
+      },
+      {  
+         "Name":"server_component",
+         "Definition":"server_component.so",
+         "Servers":[  
+            {  
+               "Name":"server_port",
+               "Priority":60,
+               "Function":"server_function",
+               "Endpoints":[  
+                  "tcp://*:5510"
+               ],
+               "Timeout":0.5
+            }
+         ]
+      }
+   ]
+};
+
+for instance in config["Component Instances"] {
+    "{name} - {definition}".format(
+      name = instance["Name"], 
+      definition = instance["Definition"]).print()
+}

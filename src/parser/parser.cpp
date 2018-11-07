@@ -850,9 +850,9 @@ NodePtr Parser::ParseTernaryOperator(NodePtr left)
   result->conditions.push_back(ParseExpression(LOWEST,
                                                {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::KEYWORD_ELSE}));
 
-  if (!ExpectPeek(Token::Type::KEYWORD_ELSE))
+  if (!IsPeekToken(Token::Type::KEYWORD_ELSE))
   {
-    return nullptr;
+    result->alternative = nullptr;
   }
   else
   {
