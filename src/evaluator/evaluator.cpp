@@ -662,7 +662,7 @@ ObjectPtr Evaluator::EvalImportStatement(NodePtr node, EnvironmentPtr environmen
     file_stream = InputFileStream(filename);
     buffer = String((EndOfStreamIterator(file_stream)), EndOfStreamIterator());
   }
-  catch (std::exception)
+  catch (...)
   {
     std::cout << "evaluator error: failed to import " << filename << std::endl;
   }
@@ -756,7 +756,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
         pair.value = Eval(statement->expression, environment);
         return hash_object;
       }
-      catch (std::exception &e)
+      catch(...)
       {
         HashPair new_pair(index_object, Eval(statement->expression, environment));
         hash_object->Set(Hash(index_object), new_pair);

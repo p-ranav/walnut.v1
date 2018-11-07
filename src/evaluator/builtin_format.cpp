@@ -76,7 +76,7 @@ ObjectPtr Evaluator::BuiltinFormat(std::vector<ObjectPtr> arguments)
             }
           }
         }
-        catch (std::exception &e)
+        catch (...)
         {
         }
       }
@@ -95,7 +95,7 @@ ObjectPtr Evaluator::BuiltinFormat(std::vector<ObjectPtr> arguments)
             format_string.replace(begin, end, pair.second);
           }
         }
-        catch (std::exception &e)
+        catch (...)
         {
         }
       }
