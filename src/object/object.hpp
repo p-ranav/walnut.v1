@@ -15,7 +15,6 @@ struct Object
 {
   enum Type
   {
-    TYPE,
     INTEGER,
     DOUBLE,
     BOOLEAN,

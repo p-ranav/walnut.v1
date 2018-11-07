@@ -124,6 +124,7 @@ struct Evaluator
   /* Built-in Functions */
   std::map<String, BuiltinFunctionObjectPtr> builtin_functions;
   ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinType(std::vector<ObjectPtr> arguments);
 
   /* List/Sequence Functions */
   ObjectPtr BuiltinLength(std::vector<ObjectPtr> arguments);

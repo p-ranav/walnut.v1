@@ -24,7 +24,19 @@ void InterpretBuffer(InterpreterMode mode, walnut::StringConstRef filename, waln
   for (auto &statement : parser.statements)
   {
     walnut::ObjectPtr result = evaluator.Eval(statement, environment);
-    walnut::String inspect = result->Inspect();
+    walnut::String inspect = "";
+    if (result->type == walnut::ObjectType::STRING)
+    {
+      walnut::StringObjectPtr result_string = std::dynamic_pointer_cast<walnut::StringObject>(result);
+      inspect = result_string->Value();
+    }
+    else if (result->type == walnut::ObjectType::CHARACTER)
+    {
+      walnut::CharacterObjectPtr result_string = std::dynamic_pointer_cast<walnut::CharacterObject>(result);
+      inspect = result_string->Value();
+    }
+    else
+     inspect = result->Inspect();
     if (mode == READ_EVAL_PRINT && inspect != "")
       std::cout << inspect << std::endl;
     if (result->type == walnut::ObjectType::RETURN)

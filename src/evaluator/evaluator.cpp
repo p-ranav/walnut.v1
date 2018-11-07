@@ -16,6 +16,8 @@ namespace walnut
 Evaluator::Evaluator()
 {
   BUILTIN("print", BuiltinPrint);
+  BUILTIN("type", BuiltinType);
+
   BUILTIN("length", BuiltinLength);
   BUILTIN("append", BuiltinAppend);
   BUILTIN("extend", BuiltinExtend);
