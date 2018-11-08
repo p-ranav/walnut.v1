@@ -137,6 +137,7 @@ struct Evaluator
   /* Map & Filter Functions */
   ObjectPtr BuiltinMap(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinEnumerate(std::vector<ObjectPtr> arguments);
 
   /* String Functions */
   ObjectPtr BuiltinFormat(std::vector<ObjectPtr> arguments);

@@ -26,6 +26,7 @@ Evaluator::Evaluator()
   BUILTIN("range", BuiltinRange);
   BUILTIN("map", BuiltinMap);
   BUILTIN("filter", BuiltinFilter);
+  BUILTIN("enumerate", BuiltinEnumerate);
 
   BUILTIN("format", BuiltinFormat);
   BUILTIN("split", BuiltinSplit);
