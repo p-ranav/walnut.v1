@@ -244,7 +244,66 @@ x.print()
 // {1, 3.14, 5, 6, "H", 'c', function(a) { a; }}
 ```
 
-## Rust-style Error Reporting
+## Tuples
+
+Tuples have many uses. For example: (x, y) coordinate pairs, employee records from a database, etc. Tuples, like strings, are immutable: it is not possible to assign to the individual items of a tuple (you can simulate much of the same effect with slicing and concatenation, though). It is also possible to create tuples which contain mutable objects, such as lists.
+
+```cpp
+// Empty tuple
+empty = ()
+
+// Single-valued tuples
+z = ("apple",); // notice the trailing comma
+
+// Tuples are immutable 
+x = (1, 3.14, "Hello");
+x[0] = 2; // does nothing
+
+// Tuples are iterable
+thistuple = ("apple", "banana", "cherry");
+for x in thistuple { 
+    print(x) 
+}
+
+// Grouped expression within a tuple
+z = ((1 + 2), (3 + 4));
+z.print(); // (3, 7)
+
+// If an element in a tuple is mutable, you can mutate this element
+mutating_tuple = (1, 2, [3, 4, 5]);
+mutating_tuple[2][0] = -3;
+print(mutating_tuple); // (1, 2, [-3, 4, 5])
+```
+
+## Enumerate
+
+A lot of times when dealing with iterators, one also gets the need to keep a count of iterations. Walnut eases the programmers’ task by providing a built-in function enumerate() for this task. Enumerate() method adds a counter to an iterable and returns it in a form of enumerate object. This enumerate object can then be used directly in for loops.
+
+```cpp
+fruits = ("apple", "banana", "grapes", "pear");
+for c, value in fruits.enumerate(start = 1) { 
+    print(c, value) 
+}
+// Output:
+// 1 apple
+// 2 banana
+// 3 grapes
+// 4 pear
+
+print(type(fruits.enumerate())); // enumerate
+
+data = ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
+enumObject = enumerate(data); // make an enumerate object
+for element in enumObject { print(element) }
+
+// (0, 'Love')
+// (1, 'Hate')
+// (2, 'Death')
+// (3, 123)
+// (4, ['Alice', 'Bob', 'Trudy'])
+```
+
+## Error Reporting
 
 The Walnut parser and interpreter use a Rust-style error reporting system. Here's an example parser error message:
 
