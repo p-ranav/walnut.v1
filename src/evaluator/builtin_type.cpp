@@ -40,6 +40,8 @@ namespace walnut
         return std::make_shared<StringObject>("tuple");
       case ObjectType::KEY_VALUE_ARGUMENT:
         return std::make_shared<StringObject>("pair");
+      case ObjectType::ENUMERATE:
+        return std::make_shared<StringObject>("enumerate");
       default:
         return std::make_shared<StringObject>("");
       }

@@ -35,6 +35,12 @@ ObjectPtr Evaluator::BuiltinAppend(std::vector<ObjectPtr> arguments)
       set_object->IterableAppend(arguments[1]);
       return set_object;
     }
+    else if (arguments[0]->type == ObjectType::ENUMERATE)
+    {
+      EnumerateObjectPtr enumerate_object = std::dynamic_pointer_cast<EnumerateObject>(arguments[0]);
+      enumerate_object->IterableAppend(arguments[1]);
+      return enumerate_object;
+    }
   }
   return std::make_shared<NullObject>();
 }

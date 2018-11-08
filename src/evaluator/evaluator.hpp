@@ -41,6 +41,7 @@
 #include <set_object.hpp>
 #include <tuple_object.hpp>
 #include <key_value_argument_object.hpp>
+#include <enumerate_object.hpp>
 
 #include <lexer.hpp>
 #include <parser.hpp>

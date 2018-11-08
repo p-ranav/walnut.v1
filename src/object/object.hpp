@@ -29,6 +29,7 @@ struct Object
     HASH,
     SET,
     TUPLE,
+    ENUMERATE,
     KEY_VALUE_ARGUMENT
   };
 
