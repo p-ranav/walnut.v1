@@ -27,40 +27,11 @@ $ make check
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
 * A large pile of built-in functions implemented in C++
-* Test suite checking over xyz assertions across abc test cases
-
-## Variables
-
-A new variable can be declared using the ```:=``` operator. An existing variable can be mutated with the ```=``` assignment operator.
-
-```go
-x := 5;    // declares a new variable x
-x = 3.14;  // updates the variable x
-
-y = "foo"; // error: y not initialized
-```
-
-Here's an example of how scoping works:
-
-```go
-exclaim := function() {
-    print(message);
-    message = "Me too!";
-} 
-
-// Global scope 
-message := "I love Walnut!" 
-exclaim();
-message.print();
-
-// I love Walnut!
-// Me too!
-```
-
+* Test suite checking over xyz assertions across abc test 
 
 ## Functions
 
-Functions are first-class objects in walnut. With UTF-8 support, you can write functions that look like this:
+Functions are first-class objects in Walnut. With UTF-8 support, you can write functions that look like this:
 
 ```javascript
 /*
@@ -109,10 +80,10 @@ volume["sphere"](5).print();        // 523.58
 
 ## Chaining Function Calls
 
-There are two ways to call any function (both user-defined and built-in functions) in walnut:
+There are two ways to call any function (both user-defined and built-in functions) in Walnut:
 
 ```javascript
-square := ƒ(a) { return a • a };   // ƒ is a keyword, just like 'function'
+square := ƒ(a) { a • a };   // ƒ is a keyword, just like 'function'
 
 // Function Application
 x := 5;
