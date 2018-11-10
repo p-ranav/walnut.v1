@@ -20,3 +20,16 @@ doesnt_mutate_y := function(n) {
 
 doesnt_mutate_y(20); // 15 20
 print("Outside:", y); // 15
+
+exclaim := function() {
+    print(message);
+    message = "Me too!";
+} 
+
+// Global scope 
+message := "I love Walnut!" 
+exclaim();
+message.print();
+
+// I love Walnut!
+// Me too!
