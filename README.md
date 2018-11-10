@@ -42,7 +42,7 @@ Functions are first-class objects in walnut. With UTF-8 support, you can write f
 * Vₑ - exit velocity 🙮 (m/s)
 * Aₑ - exit area of nozzle (m²)
 */
-thrust = function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
+thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
     q • Vₑ + (Pₑ - Pₐ) • Aₑ 
 }
 ```
@@ -52,8 +52,8 @@ thrust = function(q, Vₑ, Pₑ, Pₐ, Aₑ) {
 You can also use the arrow operator '=>' like in Javascript to define your functions. Support for unicode characters in identifier names allows for highly readable function definitions like below:
 
 ```javascript
-π = 3.1415;
-volume = {
+π := 3.1415;
+volume := {
     "cube" : s => { 
         s³ = s • s • s; 
         return s³; 
@@ -83,11 +83,11 @@ volume["sphere"](5).print();        // 523.58
 There are two ways to call any function (both user-defined and built-in functions) in walnut:
 
 ```javascript
-square = ƒ(a) { return a • a };   // ƒ is a keyword, just like 'function'
+square := ƒ(a) { return a • a };   // ƒ is a keyword, just like 'function'
 
 // Function Application
-x = 5;
-y = square(x);
+x := 5;
+y := square(x);
 print(y);                       // 25
 
 // Dot operator
@@ -102,7 +102,7 @@ x.square().print();             // 25
 Decorators are a good example of closure. The function ```wrapped_function``` is a closure, because it retains access to the variables in its scope.
 
 ```javascript
-decorate = function(f) {
+decorate := function(f) {
     wrapped_function = function() {
         print("Function is being called");
         f();
@@ -111,7 +111,7 @@ decorate = function(f) {
     return wrapped_function;
 }
 
-my_function = function() { print("Hello World"); }.decorate();
+my_function := function() { print("Hello World"); }.decorate();
 my_function();
 // Function is being called
 // Hello World
@@ -124,14 +124,14 @@ Trivially create aliases to both user-defined and built-in functions
 
 ```javascript
 // Alias to functions
-log = print;
+log := print;
 log("Hello");
 
-push = append;
+push := append;
 [].push(1).extend([2, 3]).print();
 
-add = function(a, b) { a + b; };
-sum = add;
+add := function(a, b) { a + b; };
+sum := add;
 sum(2, 3).print();
 ```
 
@@ -140,7 +140,7 @@ sum(2, 3).print();
 A list is an ordered, changeable collection. In Walnut, lists are written with square brackets.
 
 ```javascript
-list = [
+list := [
     1,                             // integer
     3.14,                          // double
     false,                         // boolean
@@ -194,7 +194,7 @@ range(9).map(i => i * i).print(); // [0, 1, 4, 9, 16, 25, 36, 49, 64]
 Walnut dictionaries are most like Javascript objects. You can use range-based iteration on dictionaries too!
 
 ```javascript
-config = {  
+config := {  
   "Component Instances": [  
     {  
       "Name":"client_1_instance",
@@ -231,7 +231,7 @@ for instance in config["Component Instances"] {
 Sets are unordered collections of unique elements. Common uses include membership testing, removing duplicates from sequences, and computing standard math operations on sets such as intersection, union, difference, and symmetric difference.
 
 ```cpp
-x = {1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 4, 5, 6};
+x := {1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 4, 5, 6};
 print(x);
 // {1, 2, 3, 4, 5, 6, 7, 8, 9}
 
@@ -250,17 +250,17 @@ Tuples have many uses. For example: (x, y) coordinate pairs, employee records fr
 
 ```cpp
 // Empty tuple
-empty = ()
+empty := ()
 
 // Single-valued tuples
-z = ("apple",); // notice the trailing comma
+z := ("apple",); // notice the trailing comma
 
 // Tuples are immutable 
-x = (1, 3.14, "Hello");
+x := (1, 3.14, "Hello");
 x[0] = 2; // does nothing
 
 // Tuples are iterable
-thistuple = ("apple", "banana", "cherry");
+thistuple := ("apple", "banana", "cherry");
 for x in thistuple { 
     print(x) 
 }
@@ -270,7 +270,7 @@ z = ((1 + 2), (3 + 4));
 z.print(); // (3, 7)
 
 // If an element in a tuple is mutable, you can mutate this element
-mutating_tuple = (1, 2, [3, 4, 5]);
+mutating_tuple := (1, 2, [3, 4, 5]);
 mutating_tuple[2][0] = -3;
 print(mutating_tuple); // (1, 2, [-3, 4, 5])
 ```
@@ -280,7 +280,7 @@ print(mutating_tuple); // (1, 2, [-3, 4, 5])
 A lot of times when dealing with iterators, one also gets the need to keep a count of iterations. Walnut eases the programmers’ task by providing a built-in function enumerate() for this task. Enumerate() method adds a counter to an iterable and returns it in a form of enumerate object. This enumerate object can then be used directly in for loops.
 
 ```cpp
-fruits = ("apple", "banana", "grapes", "pear");
+fruits := ("apple", "banana", "grapes", "pear");
 for c, value in fruits.enumerate(start = 1) { 
     print(c, value) 
 }
@@ -290,10 +290,10 @@ for c, value in fruits.enumerate(start = 1) {
 // 3 grapes
 // 4 pear
 
-print(type(fruits.enumerate())); // enumerate
+fruits.enumerate().type().print(); // enumerate
 
-data = ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
-enumObject = enumerate(data); // make an enumerate object
+data := ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
+enumObject := enumerate(data); // make an enumerate object
 for element in enumObject { print(element) }
 
 // (0, 'Love')
