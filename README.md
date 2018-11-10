@@ -195,26 +195,26 @@ Walnut dictionaries are most like Javascript objects. You can use range-based it
 
 ```javascript
 config := {  
-  "Component Instances": [  
+  "Component Instances" : [  
     {  
-      "Name":"client_1_instance",
-      "Definition":"client_1.so",
-      "Timers":[  
-          {  
-            "Name":"timer_1",
-            "Period":2.0,
-            "Priority":50,
-            "Function":"call_the_server"
-          }
+      "Name" : "client_1_instance",
+      "Definition" : "client_1.so",
+      "Timers" : [  
+        {  
+          "Name" : "timer_1",
+          "Period" : 2.0,
+          "Priority" : 50,
+          "Function" : "call_the_server"
+        }
       ],
-      "Clients":[  
-          {  
-            "Name":"client_port",
-            "Timeout":2.5,
-            "Endpoints":[  
-                "tcp://127.0.0.1:5510"
-            ]
-          }
+      "Clients" : [  
+        {  
+          "Name" : "client_port",
+          "Timeout" : 2.5,
+          "Endpoints" : [  
+              "tcp://127.0.0.1:5510"
+          ]
+        }
       ]
     }
   ]
