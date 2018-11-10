@@ -55,19 +55,19 @@ You can also use the arrow operator '=>' like in Javascript to define your funct
 π := 3.1415;
 volume := {
     "cube" : s => { 
-        s³ = s • s • s; 
+        s³ := s • s • s; 
         return s³; 
     },
     "cylinder" : (r, h) => {  
-        r² = r • r; 
+        r² := r • r; 
         return π • r² • h; 
     },
-    "cone": (r, h) => { 
-        r² = r • r; 
+    "cone" : (r, h) => { 
+        r² := r • r; 
         return π • r² • h / 3.0; 
     },
-    "sphere": r => { 
-        r³ = r • r • r; 
+    "sphere" : r => { 
+        r³ := r • r • r; 
         return 4./3 • π • r³; 
     },
 };
