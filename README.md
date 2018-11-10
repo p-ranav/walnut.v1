@@ -29,6 +29,35 @@ $ make check
 * A large pile of built-in functions implemented in C++
 * Test suite checking over xyz assertions across abc test cases
 
+## Variables
+
+A new variable can be declared using the ```:=``` operator. An existing variable can be mutated with the ```=``` assignment operator.
+
+```go
+x := 5;    // declares a new variable x
+x = 3.14;  // updates the variable x
+
+y = "foo"; // error: y not initialized
+```
+
+Here's an example of how scoping works:
+
+```go
+exclaim := function() {
+    print(message);
+    message = "Me too!";
+} 
+
+// Global scope 
+message := "I love Walnut!" 
+exclaim();
+message.print();
+
+// I love Walnut!
+// Me too!
+```
+
+
 ## Functions
 
 Functions are first-class objects in walnut. With UTF-8 support, you can write functions that look like this:
