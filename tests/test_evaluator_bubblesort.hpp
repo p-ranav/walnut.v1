@@ -18,7 +18,7 @@ TEST_CASE("The evaluator can interpret bubblesort", "[evaluator]")
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
   String buffer =
-    "bubble_sort : = function(input) {"
+    "bubble_sort := function(input) {"
     "  for current in range(length(input) - 1, 0, -1) {"
     "    for i in range(current) {"
     "      if input[i] > input[i + 1] {"
