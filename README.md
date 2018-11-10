@@ -292,7 +292,7 @@ for c, value in fruits.enumerate(start = 1) {
 
 fruits.enumerate().type().print(); // enumerate
 
-data := ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
+data := ["Love", "Hate", "Death", 123, ["Alice", "Bob", "Trudy"]];
 enumObject := enumerate(data); // make an enumerate object
 for element in enumObject { print(element) }
 
