@@ -714,7 +714,28 @@ ObjectPtr Evaluator::EvalVarStatement(NodePtr node, EnvironmentPtr environment)
     value = Eval(statement->expression, environment);
   else
     value = std::make_shared<NullObject>();
-  environment->Set(statement->name->value, value);
+
+  if (statement->statement_type == VarStatementNode::StatementType::INITIALIZATION)
+  {
+    environment->Set(statement->name->value, value);
+  }
+  else if (statement->statement_type == VarStatementNode::StatementType::ASSIGNMENT)
+  {
+    ObjectPtr variable = environment->Get(statement->name->value);
+    if (variable == nullptr)
+    {
+      std::cout << "evaluator error: variable " << statement->name->value << " doesn't exist" << std::endl;
+    }
+    else
+    {
+      EnvironmentPtr var_environment = environment;
+      while (var_environment != nullptr && var_environment->store.find(statement->name->value) == var_environment->store.end())
+      {
+        var_environment = var_environment->outer;
+      }
+      var_environment->Set(statement->name->value, value);
+    }
+  }
   return value;
 }
 

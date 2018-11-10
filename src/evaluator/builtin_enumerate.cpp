@@ -29,7 +29,7 @@ namespace walnut
       else if (arguments[1]->type == ObjectType::INTEGER)
       {
         IntegerObjectPtr start_argument = std::dynamic_pointer_cast<IntegerObject>(arguments[1]);
-        start = start_argument->value;
+        start = static_cast<size_t>(start_argument->value);
         arguments.erase(arguments.begin() + 1);
       }
       else
