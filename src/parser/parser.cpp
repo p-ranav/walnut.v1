@@ -245,6 +245,9 @@ NodePtr Parser::ParseStatement()
   case Token::Type::KEYWORD_VAR:
     return ParseVarStatement();
     break;
+  case Token::Type::KEYWORD_ASSIGN:
+    return ParseAssignmentStatement();
+    break;
   case Token::Type::KEYWORD_RETURN:
     return ParseReturnStatement();
     break;
@@ -260,12 +263,48 @@ NodePtr Parser::ParseStatement()
 NodePtr Parser::ParseVarStatement()
 {
   VarStatementNodePtr result = std::make_shared<VarStatementNode>(current_token);
+  result->statement_type = VarStatementNode::StatementType::INITIALIZATION;
 
   if (!ExpectPeek(Token::Type::SYMBOL))
   {
-    String brief_description = "failed to parse variable declaration statement";
+    String brief_description = "failed to parse variable initialization statement";
     String detailed_description =
-        " LHS of assignment operator needs to be an identifier";
+        " LHS of initialization operator needs to be an identifier";
+    ReportError(peek_token, brief_description, detailed_description);
+    return nullptr;
+  }
+  result->name = std::make_shared<IdentifierNode>(current_token, current_token.value);
+
+  if (!ExpectPeek(Token::Type::INITIALIZATION_OPERATOR))
+  {
+    String brief_description = "failed to parse variable initialization statement";
+    String detailed_description =
+        " expected the assignment operator '=' here";
+    ReportError(peek_token, brief_description, detailed_description);
+    result->expression = nullptr;
+  }
+  else
+  {
+    NextToken();
+    result->expression = ParseExpression(LOWEST);
+  }
+
+  if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::COMMA_OPERATOR))
+    NextToken();
+
+  return result;
+}
+
+NodePtr Parser::ParseAssignmentStatement()
+{
+  VarStatementNodePtr result = std::make_shared<VarStatementNode>(current_token);
+  result->statement_type = VarStatementNode::StatementType::ASSIGNMENT;
+
+  if (!ExpectPeek(Token::Type::SYMBOL))
+  {
+    String brief_description = "failed to parse variable assignment statement";
+    String detailed_description =
+      " LHS of assignment operator needs to be an identifier";
     ReportError(peek_token, brief_description, detailed_description);
     return nullptr;
   }
@@ -273,9 +312,9 @@ NodePtr Parser::ParseVarStatement()
 
   if (!ExpectPeek(Token::Type::ASSIGNMENT_OPERATOR))
   {
-    String brief_description = "failed to parse variable declaration statement";
+    String brief_description = "failed to parse variable assignment statement";
     String detailed_description =
-        " expected the assignment operator '=' here";
+      " expected the assignment operator '=' here";
     ReportError(peek_token, brief_description, detailed_description);
     result->expression = nullptr;
   }
@@ -726,7 +765,7 @@ NodePtr Parser::ParseExpressionList(Token::Type end)
   }
   NextToken();
 
-  if (IsCurrentToken(Token::Type::KEYWORD_VAR))
+  if (IsCurrentToken(Token::Type::KEYWORD_ASSIGN))
   {
     NextToken();
     NodePtr argument = ParseExpression(LOWEST);
@@ -743,7 +782,7 @@ NodePtr Parser::ParseExpressionList(Token::Type end)
     {
       NextToken();
 
-      if (IsCurrentToken(Token::Type::KEYWORD_VAR))
+      if (IsCurrentToken(Token::Type::KEYWORD_ASSIGN))
       {
         NextToken();
         NodePtr argument = ParseExpression(LOWEST);
@@ -858,6 +897,7 @@ NodePtr Parser::ParseTernaryOperator(NodePtr left)
   {
     NextToken();
     result->alternative = std::make_shared<BlockStatementNode>(current_token);
+    NextToken();
     result->alternative->statements.push_back(ParseExpression(LOWEST));
   }
 
