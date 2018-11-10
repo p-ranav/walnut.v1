@@ -64,7 +64,7 @@ namespace walnut
 
 struct Evaluator
 {
-  Evaluator();
+  Evaluator(String buffer);
   ObjectPtr Eval(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);
@@ -144,6 +144,9 @@ struct Evaluator
   ObjectPtr BuiltinFormat(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinSplit(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinJoin(std::vector<ObjectPtr> arguments);
+
+  /* Member variables */
+  String buffer;
 };
 
 } // namespace walnut

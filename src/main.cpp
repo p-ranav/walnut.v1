@@ -20,7 +20,7 @@ void InterpretBuffer(InterpreterMode mode, walnut::StringConstRef filename, waln
   walnut::Parser parser(lexer.tokens, buffer);
   parser.ParseProgram();
 
-  walnut::Evaluator evaluator;
+  walnut::Evaluator evaluator(buffer);
   for (auto &statement : parser.statements)
   {
     walnut::ObjectPtr result = evaluator.Eval(statement, environment);

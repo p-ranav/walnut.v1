@@ -16,7 +16,7 @@ TEST_CASE("The parser can parse the empty tuple '()'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "()";
+  String buffer = "();";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -33,7 +33,7 @@ TEST_CASE("The parser can parse the empty tuple '(,)'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(,)";
+  String buffer = "(,);";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -50,7 +50,7 @@ TEST_CASE("The parser can parse this tuple '(1,)'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(1,)";
+  String buffer = "(1,);";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -70,7 +70,7 @@ TEST_CASE("The parser can parse a tuple of integers '(1, 2, 3)'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(1, 2, 3)";
+  String buffer = "(1, 2, 3);";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -92,7 +92,7 @@ TEST_CASE("The parser can parse a tuple of doubles '(1.0, 2.5, 3.9)'", "[parser]
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(1.0, 2.5, 3.9)";
+  String buffer = "(1.0, 2.5, 3.9);";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -114,7 +114,7 @@ TEST_CASE("The parser can parse a tuple of strings '(\"x\", \"y\", \"z\")'", "[p
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(\"x\", \"y\", \"z\")";
+  String buffer = "(\"x\", \"y\", \"z\");";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -136,7 +136,7 @@ TEST_CASE("The parser can parse the tuple '(1, 3.14, \"x\", true)'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "(1, 3.14, \"x\", true)";
+  String buffer = "(1, 3.14, \"x\", true);";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);

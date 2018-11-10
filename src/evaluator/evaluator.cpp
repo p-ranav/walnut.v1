@@ -13,7 +13,7 @@ namespace walnut
                         function,              \
                     this, std::placeholders::_1))));
 
-Evaluator::Evaluator()
+Evaluator::Evaluator(String buffer) : buffer(buffer)
 {
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
@@ -676,7 +676,7 @@ ObjectPtr Evaluator::EvalImportStatement(NodePtr node, EnvironmentPtr environmen
   Parser parser(lexer.tokens, buffer);
   parser.ParseProgram();
 
-  Evaluator evaluator;
+  Evaluator evaluator(buffer);
   for (auto &statement : parser.statements)
   {
     walnut::ObjectPtr result = evaluator.Eval(statement, environment);

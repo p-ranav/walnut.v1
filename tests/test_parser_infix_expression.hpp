@@ -16,7 +16,7 @@ TEST_CASE("The parser can parse the infix expression '5 + 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 + 5";
+  String buffer = "5 + 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -32,7 +32,7 @@ TEST_CASE("The parser can parse the infix expression '5 - 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 - 5";
+  String buffer = "5 - 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -48,7 +48,7 @@ TEST_CASE("The parser can parse the infix expression '5 * 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 * 5";
+  String buffer = "5 * 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -64,7 +64,7 @@ TEST_CASE("The parser can parse the infix expression '5 / 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 / 5";
+  String buffer = "5 / 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -80,7 +80,7 @@ TEST_CASE("The parser can parse the infix expression '5 % 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 % 5";
+  String buffer = "5 % 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -96,7 +96,7 @@ TEST_CASE("The parser can parse the infix expression '5 > 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 > 5";
+  String buffer = "5 > 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -112,7 +112,7 @@ TEST_CASE("The parser can parse the infix expression '5 >= 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 >= 5";
+  String buffer = "5 >= 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -128,7 +128,7 @@ TEST_CASE("The parser can parse the infix expression '5 < 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 < 5";
+  String buffer = "5 < 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -144,7 +144,7 @@ TEST_CASE("The parser can parse the infix expression '5 <= 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 <= 5";
+  String buffer = "5 <= 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -160,7 +160,7 @@ TEST_CASE("The parser can parse the infix expression '5 == 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 == 5";
+  String buffer = "5 == 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -176,7 +176,7 @@ TEST_CASE("The parser can parse the infix expression '5 != 5'", "[parser]")
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "5 != 5";
+  String buffer = "5 != 5;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -192,7 +192,7 @@ TEST_CASE("The parser can parse the infix expression 'true == true'", "[parser]"
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "true == true";
+  String buffer = "true == true;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -208,7 +208,7 @@ TEST_CASE("The parser can parse the infix expression 'true != false'", "[parser]
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "true != false";
+  String buffer = "true != false;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -224,7 +224,7 @@ TEST_CASE("The parser can parse the infix expression 'false == false'", "[parser
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "false == false";
+  String buffer = "false == false;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -240,7 +240,7 @@ TEST_CASE("The parser can parse the boolean expression '3 < 5 == false'", "[pars
   setlocale(LC_ALL, "");
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
-  String buffer = "3 < 5 == false";
+  String buffer = "3 < 5 == false;";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
