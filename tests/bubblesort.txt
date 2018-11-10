@@ -1,21 +1,14 @@
-bubble_sort := function(list) 
-{
-  i := 0, j := 0;
-  while i < (list.length() - 1)
-  {
-    while j < (list.length() - i - 1)
-    {
-      if (list[j] > list[j + 1])
-      {
-        temp := list[j];
-        list[j] = list[(j + 1)];
-        list[(j + 1)] = temp;
+bubble_sort := function(input) {
+  for current in range(length(input) - 1, 0, -1) {
+    for i in range(current) {
+      if input[i] > input[i+1] {
+        temp := input[i];
+        input[i] = input[i+1];
+        input[i+1] = temp;
       }
-      j = j + 1;
     }
-    i = i + 1, j = 0;
   }
-  return list;
+  return input;
 };
 
 [5, -4, 3, -2, 1].bubble_sort().print();

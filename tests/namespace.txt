@@ -1,9 +1,0 @@
-import "factorial.txt";
-
-namespace math
-{
-  factorial = function(n) { /* ... */ };
-}
-
-(5).math::factorial().print();
-print(math::factorial(5));

@@ -2,7 +2,7 @@ x := {"a": 5, "b": 3.14, "c": "Hello", "d": false};
 x.print();
 
 for k, v in x {
-  print(k, ":", v)
+  print(k, ":", v);
 }
 
 y := {"value": x};
@@ -14,7 +14,7 @@ z := {
   { 
     "pi": 3.14, 
     "c": "Hello, 世界", 
-    "func": function(a, b) { a * b }
+    "func": function(a, b) { a * b; }
   },
   "test2" : 15
 };
@@ -25,7 +25,7 @@ z["value"][pi].print(); // 3.14
 z["value"]["func"](2, 3).print(); // 6
 
 for key, value in z["value"] {
-  print(key, ":", value)
+  print(key, ":", value);
 }
 
 // func : function(a, b) { a * b; }
@@ -33,14 +33,14 @@ for key, value in z["value"] {
 // pi : 3.14
 
 for pair in z["value"] {
-  print(pair)
+  print(pair);
 }
 
 // [func, function(a, b) { a * b; }]
 // [c, Hello, 世界]
 // [pi, 3.14]
 
-z.print()
+z.print();
 
 thisdict :=	{
   "brand": "Ford",
@@ -91,11 +91,11 @@ Menu := {
 
 Menu.print();
 
-range(10).map(function(i) { i * 2 }).print()
+range(10).map(function(i) { i * 2; }).print();
 
-a := {"a": 5, "b": 6, "c": 7}
-a["a"] := 4
-a.print()
+a := {"a": 5, "b": 6, "c": 7};
+a["a"] := 4;
+a.print();
 
 z := {
   "test": 5,
@@ -103,14 +103,14 @@ z := {
   { 
     "pi": 3.14, 
     "c": "Hello, 世界", 
-    "func": function(a, b) { a * b }
+    "func": function(a, b) { a * b; }
   },
   "test2" : 15,
   '世': "Hah!"
 };
 
-z["value"]["c"] = "Hello, World!"
-z.print()
+z["value"]["c"] = "Hello, World!";
+z.print();
 
 z['世'].print();
 
@@ -143,6 +143,6 @@ config := {
   for instance in config["Component Instances"] {
       "{name} => {definition}".format(
         name = instance["Name"], 
-        definition = instance["Definition"]).print()
+        definition = instance["Definition"]).print();
   }
   // client_1_instance => client_1.so

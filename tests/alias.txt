@@ -6,22 +6,22 @@ push := append;
 [].push(1).print();
 [].push(1).extend([2, 3]).print();
 
-add := function(a, b) { a + b };
+add := function(a, b) { a + b; };
 sum := add;
 sum(2, 3).print();
 
-proxy := function(message) { print("DEBUG::", message, "\n") }
+proxy := function(message) { print("DEBUG::", message); }
 debug := proxy
 
-proxy = function(message) { print("INFO::", message, "\n") }
+proxy = function(message) { print("INFO::", message); }
 info := proxy
 
-proxy = function(message) { print("ERROR::", message, "\n") }
+proxy = function(message) { print("ERROR::", message); }
 error := proxy
 
-"In function x".debug()
-"Thread started".info()
-"Segmentation Fault".error()
+"In function x".debug();
+"Thread started".info();
+"Segmentation Fault".error();
 // DEBUG::In function x
 // INFO::Thread started
 // ERROR::Segmentation Fault

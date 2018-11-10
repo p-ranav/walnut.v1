@@ -334,9 +334,7 @@ NodePtr Parser::ParseReturnStatement()
 {
   ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>(current_token);
   NextToken();
-
   result->expression = ParseExpression(LOWEST);
-
   return result;
 }
 
@@ -354,7 +352,16 @@ NodePtr Parser::ParseImportStatement()
 
   result->value = current_token.value;
 
-  NextToken(); // assuming semicolon here, not checking
+  if (!ExpectPeek(Token::Type::SEMI_COLON_OPERATOR))
+  {
+    String brief_description = "failed to parse import statement";
+    String detailed_description = " expected a ';' here";
+    ReportError(peek_token, brief_description, detailed_description);
+  }
+  else
+  {
+    NextToken();
+  }
   return result;
 }
 
@@ -404,7 +411,24 @@ NodePtr Parser::ParseExpressionStatement()
     result = statement;
   }
 
-  if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::END_OF_FILE))
+  if (result != nullptr &&
+    result->type != NodeType::BLOCK_STATEMENT &&
+    result->type != NodeType::FOR_EXPRESSION &&
+    result->type != NodeType::IF_EXPRESSION &&
+    result->type != NodeType::FUNCTION &&
+    result->type != NodeType::WHILE_EXPRESSION &&
+    !IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) &&
+    !IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR) &&
+    !IsPeekToken(Token::Type::INITIALIZATION_OPERATOR))
+  {
+    if (!ExpectPeek(Token::Type::SEMI_COLON_OPERATOR))
+    {
+      String brief_description = "failed to parse expression statement";
+      String detailed_description = " expected a ';' here";
+      ReportError(peek_token, brief_description, detailed_description);
+    }
+  }
+  else if (IsPeekToken(Token::Type::SEMI_COLON_OPERATOR) || IsPeekToken(Token::Type::END_OF_FILE))
     NextToken();
 
   return result;

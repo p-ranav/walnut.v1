@@ -16,4 +16,5 @@ for i in range(length(s)) {
   print(i, s[i]) }
 
 for x in range(0, -10, -1) {
-  print(x, end = " ")}, print()
+  print(x, end = " ")
+}, print();
