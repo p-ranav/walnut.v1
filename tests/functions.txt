@@ -1,4 +1,4 @@
-product = ƒ(a, b) { return a * b }
+product := ƒ(a, b) { return a * b }
 print(product(5, 10));
 
 product = function(a, b) {
@@ -7,14 +7,14 @@ product = function(a, b) {
 
 (5).product(10).print();
 
-sum = (a, b) => a + b;
+sum := (a, b) => a + b;
 sum(2, 3).print();
 
 [1, 2, 3, 4, 5].map(a => a * 2).print();
 
 [1, 2, 3, 4, 5].filter(a => a % 2 != 0).print();
 
-functions = {
+functions := {
   "sum": (a, b) => a + b,
   "diff": (a, b) => a - b,
   "negate": a => -a,
@@ -26,18 +26,18 @@ functions["diff"](2, 3).print(); // -1
 functions["negate"](2).print(); // -2
 functions["divide"](2, 3.).print(); // 0.67
 
-apply = function(a, b, c) { c(a, b) };
+apply := function(a, b, c) { c(a, b) };
 
 (5).apply(2, functions["sum"]).print(); // 7
 
-trace = message => { print("TRACE::"); print(message); };
+trace := message => { print("TRACE::", end=""); print(message); };
 trace("Thread started");
 
-printer = function(text) {
+printer := function(text) {
   return () => text.print();
 };
 
-my_function = printer("Hey");
+my_function := printer("Hey");
 my_function();
 
 (() => true)().print(); // true
@@ -45,7 +45,7 @@ my_function();
 (() => 50)().print(); // 50
 
 
-dict = {
+dict := {
   "value" : 
   { 
     "pi": 3.14, 
@@ -54,7 +54,7 @@ dict = {
   },
 };
 
-pi = "pi";
+pi := "pi";
 dict["value"][pi].print(); // 3.14
 
 dict["value"]["func"](2, 3).print(); // 6

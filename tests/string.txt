@@ -1,4 +1,4 @@
-multi_line = " Hello This is a 
+multi_line := "Hello This is a 
 multi-line string. 
 Blah blah blah
 ";

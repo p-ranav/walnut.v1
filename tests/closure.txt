@@ -1,5 +1,5 @@
-decorate = function(f) {
-    wrapped_function = function() {
+decorate := function(f) {
+    wrapped_function := function() {
         print("Function is being called");
         f();
         print("Function call is finished");
@@ -7,5 +7,5 @@ decorate = function(f) {
     return wrapped_function;
 }
 
-my_function = function() { print("Hello World"); }.decorate();
+my_function := function() { print("Hello World"); }.decorate();
 my_function();

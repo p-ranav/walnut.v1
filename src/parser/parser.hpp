@@ -64,6 +64,7 @@ struct Parser
 
   NodePtr ParseStatement();
   NodePtr ParseVarStatement();
+  NodePtr ParseAssignmentStatement();
   NodePtr ParseReturnStatement();
   NodePtr ParseImportStatement();
   NodePtr ParseExpressionStatement();

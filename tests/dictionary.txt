@@ -1,14 +1,14 @@
-x = {"a": 5, "b": 3.14, "c": "Hello", "d": false};
+x := {"a": 5, "b": 3.14, "c": "Hello", "d": false};
 x.print();
 
 for k, v in x {
   print(k, ":", v)
 }
 
-y = {"value": x};
+y := {"value": x};
 y["value"]["a"].print(); // 5
 
-z = {
+z := {
   "test": 5,
   "value" : 
   { 
@@ -19,7 +19,7 @@ z = {
   "test2" : 15
 };
 
-pi = "pi";
+pi := "pi";
 z["value"][pi].print(); // 3.14
 
 z["value"]["func"](2, 3).print(); // 6
@@ -42,14 +42,14 @@ for pair in z["value"] {
 
 z.print()
 
-thisdict =	{
+thisdict :=	{
   "brand": "Ford",
   "model": "Mustang",
   "year": 1964
 };
 print(thisdict);
 
-animals = [
+animals := [
     {
         "animal" : {
             "type" : "bunny"
@@ -63,7 +63,7 @@ animals = [
 
 for item in animals { print(item); }
 
-Menu = {
+Menu := {
   "PLU" : 234,
   "Salad": {
     "salad": {
@@ -93,11 +93,11 @@ Menu.print();
 
 range(10).map(function(i) { i * 2 }).print()
 
-a = {"a": 5, "b": 6, "c": 7}
-a["a"] = 4
+a := {"a": 5, "b": 6, "c": 7}
+a["a"] := 4
 a.print()
 
-z = {
+z := {
   "test": 5,
   "value" : 
   { 
@@ -114,27 +114,27 @@ z.print()
 
 z['世'].print();
 
-  config = {  
-    "Component Instances": [  
-      {  
-        "Name":"client_1_instance",
-        "Definition":"client_1.so",
-        "Timers":[  
-            {  
-              "Name":"timer_1",
-              "Period":2.0,
-              "Priority":50,
-              "Function":"call_the_server"
-            }
-        ],
-        "Clients":[  
-            {  
-              "Name":"client_port",
-              "Timeout":2.5,
-              "Endpoints":[  
-                  "tcp://127.0.0.1:5510"
-              ]
-            }
+config := {  
+  "Component Instances": [  
+    {  
+      "Name":"client_1_instance",
+      "Definition":"client_1.so",
+      "Timers":[  
+          {  
+            "Name":"timer_1",
+            "Period":2.0,
+            "Priority":50,
+            "Function":"call_the_server"
+          }
+      ],
+      "Clients":[  
+          {  
+            "Name":"client_port",
+            "Timeout":2.5,
+            "Endpoints":[  
+                "tcp://127.0.0.1:5510"
+            ]
+          }
         ]
       }
     ]

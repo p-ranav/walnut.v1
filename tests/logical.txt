@@ -1,15 +1,15 @@
-(true and false).print() // false
-(true or false).print() // true
+(true and false).print(); // false
+(true or false).print(); // true
 
-(true and not false).print() // true
-(true or not true and true).print()  // (true or (!true and true)) = true
-(true or not true and false).print() // (true or (!true and false)) = true
+(true and not false).print(); // true
+(true or not true and true).print();  // (true or (!true and true)) = true
+(true or not true and false).print(); // (true or (!true and false)) = true
 
-(true and not true and false).print() // (true and (!true and false)) = false
-(true and false and not true).print() // (true and (false and !true)) = false
+(true and not true and false).print(); // (true and (!true and false)) = false
+(true and false and not true).print(); // (true and (false and !true)) = false
 
-x = !(true and false)
-print(x) // true
+x := !(true and false);
+print(x); // true
 
-x = !(true or false)
-print(x) // false
+x = !(true or false);
+print(x); // false

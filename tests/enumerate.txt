@@ -1,4 +1,4 @@
-fruits = ("apple", "banana", "grapes", "pear");
+fruits := ("apple", "banana", "grapes", "pear");
 for c, value in fruits.enumerate(start = 1) { 
     print(c, value) 
 }
@@ -10,8 +10,8 @@ for c, value in fruits.enumerate(start = 1) {
 
 print(type(fruits.enumerate())); // enumerate
 
-data = ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
-enumObject = enumerate(data); // make an enumerate object
+data := ['Love', 'Hate', 'Death', 123, ['Alice', 'Bob', 'Trudy']];
+enumObject := enumerate(data); // make an enumerate object
 for element in enumObject { print(element) }
 
 // (0, 'Love')

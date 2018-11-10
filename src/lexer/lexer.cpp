@@ -81,6 +81,7 @@ void Lexer::Tokenize()
     MergeTokenPair(i, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::GREATER_THAN_OPERATOR, Token::Type::ARROW_OPERATOR, "=>");
     MergeTokenPair(i, Token::Type::KEYWORD_ELSE, Token::Type::KEYWORD_IF, Token::Type::KEYWORD_ELSE_IF, "else if");
     MergeTokenPair(i, Token::Type::LOGICAL_NOT_OPERATOR, Token::Type::KEYWORD_IN, Token::Type::KEYWORD_NOT_IN, "not in");
+    MergeTokenPair(i, Token::Type::COLON_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::INITIALIZATION_OPERATOR, ":=");
   }
 
   for (size_t i = 0; i < tokens.size(); i++)
@@ -134,9 +135,15 @@ void Lexer::InsertKeywordVar(size_t &index)
   auto &current = tokens[index].type;
   auto next = (index + 1) < tokens.size() ? tokens[index + 1].type : Token::Type::INVALID;
 
-  if (current == Token::Type::SYMBOL && next == Token::Type::ASSIGNMENT_OPERATOR)
+  if (current == Token::Type::SYMBOL && next == Token::Type::INITIALIZATION_OPERATOR)
   {
     Token result(tokens[index].file, tokens[index].line, tokens[index].cursor, Token::Type::KEYWORD_VAR, "var");
+    tokens.insert(tokens.begin() + index, result);
+    index += 1;
+  }
+  else if (current == Token::Type::SYMBOL && next == Token::Type::ASSIGNMENT_OPERATOR)
+  {
+    Token result(tokens[index].file, tokens[index].line, tokens[index].cursor, Token::Type::KEYWORD_ASSIGN, "assign");
     tokens.insert(tokens.begin() + index, result);
     index += 1;
   }

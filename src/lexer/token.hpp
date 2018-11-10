@@ -30,6 +30,9 @@ struct Token
     DIVISION_OPERATOR,
     MODULUS_OPERATOR,
 
+    // Initialization operators
+    INITIALIZATION_OPERATOR,
+
     // Assignment Operators
     ASSIGNMENT_OPERATOR,
     ADD_AND_ASSIGN_OPERATOR,
@@ -69,6 +72,7 @@ struct Token
 
     // Keywords
     KEYWORD_VAR,
+    KEYWORD_ASSIGN,
     KEYWORD_TRUE,
     KEYWORD_FALSE,
     KEYWORD_IF,
