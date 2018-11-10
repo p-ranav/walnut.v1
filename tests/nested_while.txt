@@ -1,5 +1,5 @@
-nested_whiles = function(i, j, k) {
-  i_done = false, j_done = false, k_done = false
+nested_whiles := function(i, j, k) {
+  i_done := false, j_done := false, k_done := false
   while i < 10 {
     if (i == 9) { i_done = true }
     while j < 10 {
@@ -13,7 +13,7 @@ nested_whiles = function(i, j, k) {
     i = i + 1
   }
   return [i_done, j_done, k_done, "OK"]
-}
+};
 
-i = 0, j = 0, k = 0
+i := 0, j := 0, k := 0
 print(nested_whiles(i, j, k))

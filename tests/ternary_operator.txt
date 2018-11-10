@@ -1,10 +1,10 @@
-x = 5 if true else 3;
-y = 5 if false else 3;
+x := 5 if true else 3;
+y := 5 if false else 3;
 print(x, y); // 5 3
 
-z = (x * (y if y < 2 else 10));
+z := (x * (y if y < 2 else 10));
 z.print(); // 50
 
-even = function(n) { true if n % 2 == 0 else false }
+even := function(n) { true if n % 2 == 0 else false }
 even(14).print();
 even(3).print();

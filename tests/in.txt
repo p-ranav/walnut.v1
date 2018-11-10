@@ -1,27 +1,27 @@
-fruits = ["apple", "banana", "cherry"];
+fruits := ["apple", "banana", "cherry"];
 if "banana" in fruits { print("yes"); }
 
-fruits = ["apple", "banana", "cherry"];
+fruits := ["apple", "banana", "cherry"];
 for x in fruits {
   print(x);
 }
 
-keyword = "lambda";
+keyword := "lambda";
 
 if keyword in ["and", "del", "from", "lambda"] {
   "{0} is a keyword".format(keyword).print(); 
 }
 
-dict = {"hello" : "hi", "thank you" : "your welcome"};
+dict := {"hello" : "hi", "thank you" : "your welcome"};
 
-result = true if "hello" in dict else false;
+result := true if "hello" in dict else false;
 result.print();
 
-result = true if "hi" in dict else false;
+result := true if "hi" in dict else false;
 result.print();
 
-menu = "salad, pasta, sandwich, pizza, drinks, dessert";
-menu_ask = "pasta";
+menu := "salad, pasta, sandwich, pizza, drinks, dessert";
+menu_ask := "pasta";
 
 if menu_ask in menu {
   print("Your selected menu is available:", menu_ask);
@@ -35,7 +35,5 @@ if 3.14 in (1, 3.14, 'c') { print("3.14 is in the tuple (1, 3.14, 'c')"); }
 
 if ((1 in [1, 2, 3]) and (2 in (2, 3, 4)) and (3 not in {4, 5, 6})) { "Success".print() } 
 
-// TODO: Fix operator precedence to get this to work
 if 1 in [1, 2, 3] and 2 in (2, 3, 4) and 3 not in {4, 5, 6} { "Success".print() } 
-
 if 1 not in {2, 3, 4} { "1 is not in {2, 3, 4}".print() }

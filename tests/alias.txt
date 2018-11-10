@@ -1,23 +1,23 @@
 // Alias to functions
-log = print;
+log := print;
 log("Hello");
 
-push = append;
+push := append;
 [].push(1).print();
 [].push(1).extend([2, 3]).print();
 
-add = function(a, b) { a + b };
-sum = add;
+add := function(a, b) { a + b };
+sum := add;
 sum(2, 3).print();
 
-proxy = function(message) { print("DEBUG::", message, "\n") }
-debug = proxy
+proxy := function(message) { print("DEBUG::", message, "\n") }
+debug := proxy
 
 proxy = function(message) { print("INFO::", message, "\n") }
-info = proxy
+info := proxy
 
 proxy = function(message) { print("ERROR::", message, "\n") }
-error = proxy
+error := proxy
 
 "In function x".debug()
 "Thread started".info()
@@ -25,5 +25,3 @@ error = proxy
 // DEBUG::In function x
 // INFO::Thread started
 // ERROR::Segmentation Fault
-
-👍 = true, 👎 = false;

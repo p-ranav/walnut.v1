@@ -1,7 +1,8 @@
-x = ["Hello", "World"]
-y = x.join(" ")
+x := ["Hello", "World"]
+y := x.join(" ")
 print(x, y)
 // ["Hello", "World"] Hello World
 
-z = x.append(["!"]).print()
-print(x, z) // ["Hello", "World"] ["Hello", "World", ["!"]]
+z := x;
+z.append(["!"]);
+print(x, z) // ["Hello", "World", ["!"]] ["Hello", "World", ["!"]]

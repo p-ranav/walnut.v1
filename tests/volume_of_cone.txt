@@ -1,6 +1,6 @@
-volume = ƒ(r, h) {
-  π = 3.1415
-  r² = r • r
+volume := ƒ(r, h) {
+  π := 3.1415
+  r² := r • r
   return π • r² • h • 1./3.
 }
 

@@ -1,9 +1,7 @@
-math_factorial = function(n) {
+math_factorial := function(n) {
   import "factorial.txt";
   return factorial(n);
 };
 
-math_factorial(5).print(); // this will work
+math_factorial(15).print(); // this will work
 // factorial(5).print();   // this will fail
-
-for x in y x.print();

@@ -6,6 +6,6 @@
  * Vₑ - exit velocity 🙮 (m/s)
  * Aₑ - exit area of nozzle (m²)
  */
-thrust = function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
+thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
   q • Vₑ + (Pₑ - Pₐ) • Aₑ 
 }

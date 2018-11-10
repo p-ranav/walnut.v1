@@ -1,13 +1,12 @@
-x = [1, 2, 3, 4, 5];
-y = x.insert(0, 0);
+x := [1, 2, 3, 4, 5];
+y := x.insert(0, 0);
 y.print(); // [0, 1, 2, 3, 4, 5]
 
-z = x.insert(11, 15); // evaluator error: list index out of range - array size = 5; provided index = 11
+z := x.insert(11, 15);
+print(z); // [0, 1, 2, 3, 4, 5, 15]
 
-{}.insert("a", 5).print();
+{}.insert("a", 5).print(); // {"a": 5}
 
 x = {};
-x = x.insert("pi", 3.14);
-print(x);
-
-x = x.insert("pi", 3.14); // evaluator warning: dictionary already has key "pi" - dictionary.insert("pi", 3.14) has done nothing
+x.insert("pi", 3.14);
+print(x); // {"pi", 3.14}

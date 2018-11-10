@@ -1,1 +1,10 @@
-factorial = n => n * factorial(n - 1) if n > 0 else 1;
+factorial := n => n * factorial(n - 1) if n > 0 else 1;
+
+print("5! = ", end = ""), factorial(5).print();
+
+factorial := function(n) {
+  if n > 0 { n * factorial(n - 1) }
+  else { 1 }
+};
+
+factorial(5).print();

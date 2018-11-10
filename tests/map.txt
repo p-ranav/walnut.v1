@@ -1,7 +1,7 @@
-x = [1, 2, 3, 4, 5]
-y = x.map(function(i) { i * 2 })
-print(x, y)                         // [1, 2, 3, 4, 5] [2, 4, 6, 8, 10]
+x := [1, 2, 3, 4, 5];
+y := x.map(function(i) { i * 2 });
+print(x, y);                         // [1, 2, 3, 4, 5] [2, 4, 6, 8, 10]
 
-z = "This_is_some_test_message".map(
-  function(c) { if c == '_' { '-' } else { c } })
+z := "This_is_some_test_message".map(
+  function(c) { if c == '_' { '-' } else { c } });
 z.print()
