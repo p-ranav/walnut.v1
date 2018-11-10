@@ -24,5 +24,6 @@
 #include <test_parser_boolean.hpp>
 #include <test_parser_if_else.h>
 
+#include <test_evaluator_bubblesort.hpp>
 #include <test_evaluator_split.hpp>
 #include <test_evaluator_join.hpp>
