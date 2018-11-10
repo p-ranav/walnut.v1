@@ -64,7 +64,7 @@ namespace walnut
 
 struct Evaluator
 {
-  Evaluator(String buffer);
+  explicit Evaluator(StringConstRef buffer);
   ObjectPtr Eval(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);

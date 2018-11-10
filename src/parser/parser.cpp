@@ -105,7 +105,7 @@ void Parser::PreviousToken()
   peek_token = current_token;
   current_token_index -= 1;
   current_token = Token("", 1, 1, Token::Type::END_OF_FILE, "");
-  if (current_token_index - 2 >= 0 && current_token_index - 2 < tokens.size())
+  if (current_token_index - 2 < tokens.size())
     current_token = tokens[current_token_index - 2];
   else
     current_token = tokens[0];
@@ -123,11 +123,6 @@ void Parser::NextToken()
 bool Parser::IsCurrentToken(Token::Type value)
 {
   return (current_token.type == value);
-}
-
-bool Parser::IsCurrentTokenInList(const std::vector<Token::Type> &value)
-{
-  return (std::find(value.begin(), value.end(), current_token.type) != value.end());
 }
 
 bool Parser::IsPeekToken(Token::Type value)
@@ -156,8 +151,6 @@ bool Parser::ExpectPeek(Token::Type value)
 unsigned int Parser::GetNumberOfDigits(unsigned int number)
 {
   unsigned int digits = 0;
-  if (number < 0)
-    digits = 1;
   while (number)
   {
     number /= 10;
@@ -434,7 +427,7 @@ NodePtr Parser::ParseExpressionStatement()
   return result;
 }
 
-NodePtr Parser::ParseExpression(Precedence precedence, std::vector<Token::Type> end)
+NodePtr Parser::ParseExpression(Precedence precedence, const std::vector<Token::Type>& end)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
 

@@ -17,7 +17,7 @@ size_t strlcpy(char *dst, const char *src, size_t destination_size)
 
 std::string format(const std::string format_string, ...)
 {
-  int final_n, n = ((int)format_string.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
+  int n = ((int)format_string.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
   std::unique_ptr<char[]> formatted;
   va_list ap;
   while (1)
@@ -25,7 +25,7 @@ std::string format(const std::string format_string, ...)
     formatted.reset(new char[n]); /* Wrap the plain char array into the unique_ptr */
     strlcpy(&formatted[0], format_string.c_str(), format_string.length());
     va_start(ap, format_string);
-    final_n = vsnprintf(&formatted[0], n, format_string.c_str(), ap);
+    int final_n = vsnprintf(&formatted[0], n, format_string.c_str(), ap);
     va_end(ap);
     if (final_n < 0 || final_n >= n)
       n += abs(final_n - n + 1);
@@ -81,15 +81,14 @@ std::string slice(std::string input_string, int start_index, int end_index, int 
 // returns a vector of substrings after split
 std::vector<std::string> split(std::string input_string, std::string delimiter, std::vector<std::string> *result)
 {
-  size_t counter_position = 0;
   size_t delimiter_position = input_string.find(delimiter); // check if delimiter is in input string
   if (delimiter_position != std::string::npos)
   { // if delimiter position is not end_of_string
+    size_t counter_position = 0;
     std::string split_string = input_string.substr(counter_position, delimiter_position);
     delimiter_position += delimiter.size();
     std::string split_remaining = input_string.erase(counter_position, delimiter_position);
     result->push_back(split_string);
-    // Recursion! Recursion everywhere!
     std::vector<std::string> result_remaining = split(split_remaining, delimiter, result);
   }
   else

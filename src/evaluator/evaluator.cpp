@@ -13,7 +13,7 @@ namespace walnut
                         function,              \
                     this, std::placeholders::_1))));
 
-Evaluator::Evaluator(String buffer) : buffer(buffer)
+Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
 {
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
