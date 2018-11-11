@@ -18,17 +18,18 @@ size_t Copy(char *dst, const char *src, size_t destination_size)
   return length;
 }
 
-String Format(StringConst format_string, ...)
+String Format(StringConstRef format_string, ...)
 {
-  int n = ((int)format_string.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
+  String input_string(format_string);
+  int n = ((int)input_string.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
   std::unique_ptr<char[]> formatted;
   va_list ap;
   while (1)
   {
     formatted.reset(new char[n]); /* Wrap the plain char array into the unique_ptr */
-    Copy(&formatted[0], format_string.c_str(), format_string.length());
-    va_start(ap, format_string);
-    int final_n = vsnprintf(&formatted[0], n, format_string.c_str(), ap);
+    Copy(&formatted[0], input_string.c_str(), input_string.length());
+    va_start(ap, input_string);
+    int final_n = vsnprintf(&formatted[0], n, input_string.c_str(), ap);
     va_end(ap);
     if (final_n < 0 || final_n >= n)
       n += abs(final_n - n + 1);

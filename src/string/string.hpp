@@ -25,7 +25,7 @@ typedef const std::string &StringConstRef;
 
 size_t Copy(char *dst, const char *src, size_t destination_size);
 
-String Format(StringConst format_string, ...);
+String Format(StringConstRef format_string, ...);
 String Slice(StringConstRef input_string, int start_index, int end_index = INT_MAX, int step = 1);
 
 // split string based on a delimiter string
