@@ -190,7 +190,7 @@ void Parser::ReportError(Token error_token, String brief_descrition, String deta
     message_carets = " " + String(1, '^');
   }
 
-  std::vector<String> lines = split(buffer, "\n");
+  std::vector<String> lines = string::Split(buffer, "\n");
   String error_line = lines[line - 1];
 
   std::cout << "error: " << brief_descrition << std::endl;

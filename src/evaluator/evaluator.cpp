@@ -392,13 +392,13 @@ ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
       if (left->type == ObjectType::STRING)
       {
         StringObjectPtr left_string = std::dynamic_pointer_cast<StringObject>(left);
-        if (contains(string->Value(), left_string->Value()))
+        if (string::Contains(string->Value(), left_string->Value()))
           result = true;
       }
       else if (left->type == ObjectType::CHARACTER)
       {
         CharacterObjectPtr left_string = std::dynamic_pointer_cast<CharacterObject>(left);
-        if (contains(string->Value(), left_string->Value()))
+        if (string::Contains(string->Value(), left_string->Value()))
           result = true;
       }
       else

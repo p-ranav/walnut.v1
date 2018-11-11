@@ -12,7 +12,7 @@ ObjectPtr Evaluator::BuiltinJoin(std::vector<ObjectPtr> arguments)
     ObjectPtr connector = arguments.size() == 2 ? arguments[1] : std::make_shared<StringObject>("");
     StringObjectPtr connector_string = std::dynamic_pointer_cast<StringObject>(connector);
 
-    std::vector<std::string> input_vector;
+    std::vector<String> input_vector;
     for (auto &object : input_list->elements)
     {
       if (object->type == ObjectType::STRING)
@@ -31,7 +31,7 @@ ObjectPtr Evaluator::BuiltinJoin(std::vector<ObjectPtr> arguments)
       }
     }
 
-    std::string result = join(input_vector, connector_string->Value());
+    String result = string::Join(input_vector, connector_string->Value());
     return std::make_shared<StringObject>(result);
   }
   return std::make_shared<NullObject>();

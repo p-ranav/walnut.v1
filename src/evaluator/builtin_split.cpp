@@ -16,7 +16,7 @@ ObjectPtr Evaluator::BuiltinSplit(std::vector<ObjectPtr> arguments)
       if (input_string->Value() == "")
         return std::make_shared<ArrayObject>();
 
-      std::vector<std::string> split_result = split(input_string->Value(), split_string->Value());
+      std::vector<std::string> split_result = string::Split(input_string->Value(), split_string->Value());
       ArrayObjectPtr result = std::make_shared<ArrayObject>();
       for (auto &part : split_result)
       {
