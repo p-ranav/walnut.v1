@@ -4,11 +4,6 @@ Walnut is an interpreted high-level programming language implemented in modern C
 
 ## Quick Start
 
-### Dependencies
-
-* C++ compiler with C++11 language feature support
-* CMake to generate either the Makefile or the Visual Studio solution
-
 ```bash
 $ git clone https://github.com/pranav-srinivas-kumar/walnut.git
 $ cd walnut
