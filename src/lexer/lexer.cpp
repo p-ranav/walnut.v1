@@ -18,7 +18,7 @@ void Lexer::Tokenize()
 {
   for (index = 0; index < buffer.size();)
   {
-    if (isutf(buffer[index]))
+    if (IsUtf8(buffer[index]))
     {
       String character = PeekCharacter();
 
@@ -97,7 +97,7 @@ void Lexer::Tokenize()
 String Lexer::NextCharacter(Bool update_index)
 {
   String result = "";
-  int length = u8_seqlen(&(buffer[index]));
+  int length = utf8::SequenceLength(&(buffer[index]));
 
   for (int i = 0; i < length; i++, index++)
     result += buffer[index];

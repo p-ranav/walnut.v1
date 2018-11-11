@@ -22,7 +22,7 @@ struct StringObject : Object
     while (index < value_string.length())
     {
       String current_character = "";
-      int length = u8_seqlen(&(value_string[index]));
+      int length = utf8::SequenceLength(&(value_string[index]));
 
       for (int i = 0; i < length; i++, index++)
         current_character += value_string[index];
