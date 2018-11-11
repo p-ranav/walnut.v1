@@ -93,8 +93,8 @@ struct Parser
   Precedence PeekPrecedence();
   Precedence CurrentPrecedence();
   NodePtr ParseExpression(Precedence precedence,
-                          const std::vector<Token::Type>& end = 
-    {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE});
+                          const std::vector<Token::Type> &end =
+                              {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE});
 
   /* Prefix parse functions */
   NodePtr ParseIdentifier();

@@ -18,21 +18,20 @@ TEST_CASE("The evaluator can interpret bubblesort", "[evaluator]")
   EnvironmentPtr environment = std::make_shared<Environment>();
   String filename = "";
   String buffer =
-    "bubble_sort := function(input) {"
-    "  for current in range(length(input) - 1, 0, -1) {"
-    "    for i in range(current) {"
-    "      if input[i] > input[i + 1] {"
-    "        temp: = input[i];"
-    "        input[i] = input[i + 1];"
-    "        input[i + 1] = temp;"
-    "      }"
-    "    }"
-    "  }"
-    "  return input;"
-    "};"
-    ""
-    "[5, -4, 3, -2, 1].bubble_sort();"
-    ;
+      "bubble_sort := function(input) {"
+      "  for current in range(length(input) - 1, 0, -1) {"
+      "    for i in range(current) {"
+      "      if input[i] > input[i + 1] {"
+      "        temp: = input[i];"
+      "        input[i] = input[i + 1];"
+      "        input[i + 1] = temp;"
+      "      }"
+      "    }"
+      "  }"
+      "  return input;"
+      "};"
+      ""
+      "[5, -4, 3, -2, 1].bubble_sort();";
   Lexer lexer(filename, buffer);
   lexer.Tokenize();
   Parser parser(lexer.tokens, buffer);
@@ -45,4 +44,4 @@ TEST_CASE("The evaluator can interpret bubblesort", "[evaluator]")
   REQUIRE(result->Inspect() == "[-4, -2, 1, 3, 5]");
 }
 
-}
+} // namespace walnut

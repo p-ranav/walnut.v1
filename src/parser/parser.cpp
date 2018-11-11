@@ -297,7 +297,7 @@ NodePtr Parser::ParseAssignmentStatement()
   {
     String brief_description = "failed to parse variable assignment statement";
     String detailed_description =
-      " LHS of assignment operator needs to be an identifier";
+        " LHS of assignment operator needs to be an identifier";
     ReportError(peek_token, brief_description, detailed_description);
     return nullptr;
   }
@@ -307,7 +307,7 @@ NodePtr Parser::ParseAssignmentStatement()
   {
     String brief_description = "failed to parse variable assignment statement";
     String detailed_description =
-      " expected the assignment operator '=' here";
+        " expected the assignment operator '=' here";
     ReportError(peek_token, brief_description, detailed_description);
     result->expression = nullptr;
   }
@@ -405,14 +405,14 @@ NodePtr Parser::ParseExpressionStatement()
   }
 
   if (result != nullptr &&
-    result->type != NodeType::BLOCK_STATEMENT &&
-    result->type != NodeType::FOR_EXPRESSION &&
-    result->type != NodeType::IF_EXPRESSION &&
-    result->type != NodeType::FUNCTION &&
-    result->type != NodeType::WHILE_EXPRESSION &&
-    !IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) &&
-    !IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR) &&
-    !IsPeekToken(Token::Type::INITIALIZATION_OPERATOR))
+      result->type != NodeType::BLOCK_STATEMENT &&
+      result->type != NodeType::FOR_EXPRESSION &&
+      result->type != NodeType::IF_EXPRESSION &&
+      result->type != NodeType::FUNCTION &&
+      result->type != NodeType::WHILE_EXPRESSION &&
+      !IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) &&
+      !IsPeekToken(Token::Type::ASSIGNMENT_OPERATOR) &&
+      !IsPeekToken(Token::Type::INITIALIZATION_OPERATOR))
   {
     if (!ExpectPeek(Token::Type::SEMI_COLON_OPERATOR))
     {
@@ -427,7 +427,7 @@ NodePtr Parser::ParseExpressionStatement()
   return result;
 }
 
-NodePtr Parser::ParseExpression(Precedence precedence, const std::vector<Token::Type>& end)
+NodePtr Parser::ParseExpression(Precedence precedence, const std::vector<Token::Type> &end)
 {
   PrefixParseFunction prefix = prefix_parse_functions[current_token.type];
 

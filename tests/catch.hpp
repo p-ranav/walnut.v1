@@ -2084,18 +2084,18 @@ public:
 #define INTERNAL_CATCH_REACT(handler) handler.complete();
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_TEST(macroName, resultDisposition, ...)                                                                                                     \
-  do                                                                                                                                                               \
-  {                                                                                                                                                                \
-    Catch::AssertionHandler catchAssertionHandler(macroName##_catch_sr, CATCH_INTERNAL_LINEINFO, CATCH_INTERNAL_STRINGIFY(__VA_ARGS__), resultDisposition);        \
-    INTERNAL_CATCH_TRY                                                                                                                                             \
-    {                                                                                                                                                              \
-      CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS                                                                                                                 \
-      catchAssertionHandler.handleExpr(Catch::Decomposer() <= __VA_ARGS__);                                                                                        \
-      CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS                                                                                                               \
-    }                                                                                                                                                              \
-    INTERNAL_CATCH_CATCH(catchAssertionHandler)                                                                                                                    \
-    INTERNAL_CATCH_REACT(catchAssertionHandler)                                                                                                                    \
+#define INTERNAL_CATCH_TEST(macroName, resultDisposition, ...)                                                                                              \
+  do                                                                                                                                                        \
+  {                                                                                                                                                         \
+    Catch::AssertionHandler catchAssertionHandler(macroName##_catch_sr, CATCH_INTERNAL_LINEINFO, CATCH_INTERNAL_STRINGIFY(__VA_ARGS__), resultDisposition); \
+    INTERNAL_CATCH_TRY                                                                                                                                      \
+    {                                                                                                                                                       \
+      CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS                                                                                                          \
+      catchAssertionHandler.handleExpr(Catch::Decomposer() <= __VA_ARGS__);                                                                                 \
+      CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS                                                                                                        \
+    }                                                                                                                                                       \
+    INTERNAL_CATCH_CATCH(catchAssertionHandler)                                                                                                             \
+    INTERNAL_CATCH_REACT(catchAssertionHandler)                                                                                                             \
   } while ((void)0, false && static_cast<bool>(!!(__VA_ARGS__))) // the expression here is never evaluated at runtime but it forces the compiler to give it a look \
                                                                  // The double negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
 

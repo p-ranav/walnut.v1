@@ -36,7 +36,7 @@ void InterpretBuffer(InterpreterMode mode, walnut::StringConstRef filename, waln
       inspect = result_string->Value();
     }
     else
-     inspect = result->Inspect();
+      inspect = result->Inspect();
     if (mode == READ_EVAL_PRINT && inspect != "")
       std::cout << inspect << std::endl;
     if (result->type == walnut::ObjectType::RETURN)

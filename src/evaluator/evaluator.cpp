@@ -780,7 +780,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
         pair.value = Eval(statement->expression, environment);
         return hash_object;
       }
-      catch(...)
+      catch (...)
       {
         HashPair new_pair(index_object, Eval(statement->expression, environment));
         hash_object->Set(Hash(index_object), new_pair);
