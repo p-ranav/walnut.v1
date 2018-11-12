@@ -141,8 +141,8 @@ config := {
   };
 
   for instance in config["Component Instances"] {
-      "{name} => {definition}".format(
-        name = instance["Name"], 
-        definition = instance["Definition"]).print();
+    "{name} => {definition}".format(
+      name = instance["Name"], 
+      definition = instance["Definition"]).print();
   }
   // client_1_instance => client_1.so

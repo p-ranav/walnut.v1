@@ -361,6 +361,28 @@ ObjectPtr Evaluator::EvalCharacterInfixExpression(Token::Type infix_operator, Ob
     return std::make_shared<NullObject>();
 }
 
+ObjectPtr Evaluator::EvalStringIndexExpression(ObjectPtr array, ObjectPtr index)
+{
+  StringObjectPtr string_object = std::dynamic_pointer_cast<StringObject>(array);
+  std::vector<ObjectPtr> &characters = string_object->buffer;
+  int array_size = static_cast<int>(characters.size());
+
+  IntegerObjectPtr array_index = std::dynamic_pointer_cast<IntegerObject>(index);
+  int64_t index_value = array_index->value;
+
+  if (index_value >= array_size)
+  {
+    std::cout << "error: index out of range" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  else if (index_value < 0)
+  {
+    std::cout << "error: index cannot be negative" << std::endl;
+    return std::make_shared<NullObject>();
+  }
+  return characters[static_cast<size_t>(index_value)];
+}
+
 ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
 {
   InExpressionNodePtr expression = std::dynamic_pointer_cast<InExpressionNode>(node);
@@ -787,6 +809,23 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
       }
     }
 
+    else if (identifier_object != nullptr && identifier_object->type == ObjectType::STRING && index_object->type == ObjectType::INTEGER)
+    {
+      StringObjectPtr array_object = std::dynamic_pointer_cast<StringObject>(identifier_object);
+      IntegerObjectPtr integer_object = std::dynamic_pointer_cast<IntegerObject>(index_object);
+      if (integer_object->value < static_cast<int64_t>(array_object->buffer.size()))
+      {
+        ObjectPtr new_character = Eval(statement->expression, environment);
+        if (new_character->type == ObjectType::CHARACTER)
+          array_object->buffer[static_cast<size_t>(integer_object->value)] = new_character;
+        else
+        {
+          // TODO: report error
+        }
+      }
+      return array_object;
+    }
+
     else
     {
       std::cout << "error: index operator not supported " << std::endl;
@@ -879,13 +918,17 @@ ObjectPtr Evaluator::EvalIndexOperator(NodePtr node, EnvironmentPtr environment)
   {
     return EvalArrayIndexExpression(left, index);
   }
-  if (left->type == ObjectType::TUPLE && index->type == Object::INTEGER)
+  else if (left->type == ObjectType::TUPLE && index->type == Object::INTEGER)
   {
     return EvalTupleIndexExpression(left, index);
   }
-  if (left->type == ObjectType::HASH)
+  else if (left->type == ObjectType::HASH)
   {
     return EvalHashIndexExpression(left, index);
+  }
+  else if (left->type == ObjectType::STRING)
+  {
+    return EvalStringIndexExpression(left, index);
   }
   else
   {

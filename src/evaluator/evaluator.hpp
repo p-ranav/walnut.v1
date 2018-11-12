@@ -80,8 +80,10 @@ struct Evaluator
   ObjectPtr EvalIntegerInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
   ObjectPtr EvalDoubleInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
   ObjectPtr EvalBooleanInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  
   ObjectPtr EvalStringInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
   ObjectPtr EvalCharacterInfixExpression(Token::Type infix_operator, ObjectPtr left, ObjectPtr right, EnvironmentPtr environment);
+  ObjectPtr EvalStringIndexExpression(ObjectPtr array, ObjectPtr index);
 
   ObjectPtr EvalBlockStatement(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalIfExpression(NodePtr node, EnvironmentPtr environment);
