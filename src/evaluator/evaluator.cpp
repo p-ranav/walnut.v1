@@ -17,6 +17,7 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
 {
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
+  BUILTIN("copy", BuiltinCopy);
 
   BUILTIN("length", BuiltinLength);
   BUILTIN("append", BuiltinAppend);
