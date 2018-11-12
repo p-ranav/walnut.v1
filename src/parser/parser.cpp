@@ -351,10 +351,6 @@ NodePtr Parser::ParseImportStatement()
     String detailed_description = " expected a ';' here";
     ReportError(peek_token, brief_description, detailed_description);
   }
-  else
-  {
-    NextToken();
-  }
   return result;
 }
 

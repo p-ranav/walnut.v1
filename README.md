@@ -157,6 +157,23 @@ list[0] = 3;             // modify element at index 0
 list[7]["a"] = 0.88;     // change value at dictionary key "a"
 ```
 
+### Nested Lists
+
+Lists can be nested. Here's a canonical matrix transpose example:
+
+```javascript
+Matrix := [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]];
+
+Matrixᵀ := [];
+for i in range(4) {
+    Rowᵀ := [], for Row in Matrix { Rowᵀ.append(Row[i]); }
+    Matrixᵀ.append(Rowᵀ);
+}
+
+Matrixᵀ.print();
+// [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+```
+
 ## Range-based Iteration
 
 Walnut provides a range-based 'for' loop construct identical to Python:
