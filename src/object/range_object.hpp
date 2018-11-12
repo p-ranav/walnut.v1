@@ -98,7 +98,9 @@ struct RangeObject : Object
 
   String Inspect() override
   {
-    return "range [" + std::to_string(start) + ", " + std::to_string(end) + ") @ " + std::to_string(step);
+    return "[" + std::to_string(start) + ", " +
+      std::to_string(start + step) + ",...," +
+      std::to_string(end) + ")";
   }
 };
 
