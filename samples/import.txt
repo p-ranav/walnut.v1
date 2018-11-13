@@ -5,3 +5,9 @@ math_factorial := function(n) {
 
 math_factorial(15).print(); // this will work
 // factorial(5).print();   // this will fail
+
+functions := {
+    "factorial": () => { import "factorial.txt"; return factorial; }()
+};
+
+functions["factorial"](25).print();

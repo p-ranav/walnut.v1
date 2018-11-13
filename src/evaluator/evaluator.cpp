@@ -885,6 +885,8 @@ ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectP
 EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments)
 {
   EnvironmentPtr environment = std::make_shared<Environment>(function->environment);
+  // TODO: compare length of function->parameters and length of arguments
+  // TODO: support variadic arguments and keyword arguments here
   for (size_t i = 0; i < function->parameters.size(); i++)
   {
     if (function->parameters[i])
