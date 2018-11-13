@@ -889,8 +889,31 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
   // TODO: support variadic arguments and keyword arguments here
   for (size_t i = 0; i < function->parameters.size(); i++)
   {
-    if (function->parameters[i])
-      environment->Set(function->parameters[i]->value, arguments[i]);
+    if (function->parameters[i] && i < arguments.size())
+    {
+      if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
+        environment->Set(function->parameters[i]->value, arguments[i]);
+      else
+      {
+        KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
+        if (function->parameters[i]->value == kvpair->key->value)
+          environment->Set(kvpair->key->value, kvpair->value);
+        else
+        {
+          // TODO: report error
+          // Scenario: my_func := function(a) { print(a) }
+          // calling my_func(b = 3) should throw an error
+          // "Expected argument a, instead got keyword argument b = 3"
+          std::cout << "error: expected argument " << function->parameters[i]->value <<
+            ", instead got keyword argument " << kvpair->Inspect() << std::endl;
+          exit(EXIT_FAILURE);
+        }
+      }
+    }
+    else
+    {
+      // TODO: report error
+    }
   }
   return environment;
 }
