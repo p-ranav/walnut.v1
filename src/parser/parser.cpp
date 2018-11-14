@@ -704,6 +704,10 @@ std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
 
   if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
   {
+    String brief_description = "failed to parse function parameters";
+    String detailed_description =
+      " expected ')' here";
+    ReportError(peek_token, brief_description, detailed_description);
     return {};
   }
 
@@ -756,6 +760,10 @@ NodePtr Parser::ParseArrayLiteral()
     NextToken();
     if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
     {
+      String brief_description = "failed to parse list";
+      String detailed_description =
+        " expected ']' here";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
     }
     return array_literal;
@@ -823,7 +831,14 @@ NodePtr Parser::ParseIndexExpression(NodePtr left)
   NextToken();
   expression->index = ParseExpression(LOWEST);
   if (!ExpectPeek(Token::Type::RIGHT_SQUARE_BRACKETS))
+  {
+    String brief_description = "failed to parse index expression";
+    String detailed_description =
+      " expected ']' here";
+    ReportError(peek_token, brief_description, detailed_description);
     return nullptr;
+  }
+
   return expression;
 }
 
@@ -848,6 +863,10 @@ NodePtr Parser::ParseHashLiteral()
   {
     if (!ExpectPeek(Token::Type::RIGHT_CURLY_BRACES))
     {
+      String brief_description = "failed to parse dictionary";
+      String detailed_description =
+        " expected '}' here while parsing empty dictionary";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
     }
     return std::make_shared<SetLiteralNode>(current_token);
@@ -861,7 +880,13 @@ NodePtr Parser::ParseHashLiteral()
       return ParseSetLiteral(key, current_index); // this is not a dictionary but in fact a set
 
     if (!ExpectPeek(Token::Type::COLON_OPERATOR))
+    {
+      String brief_description = "failed to parse dictionary";
+      String detailed_description =
+        " expected ':' here";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
+    }
 
     NextToken();
     NodePtr value = ParseExpression(LOWEST);
@@ -873,6 +898,10 @@ NodePtr Parser::ParseHashLiteral()
 
     if (!IsPeekToken(Token::Type::RIGHT_CURLY_BRACES) && !ExpectPeek(Token::Type::COMMA_OPERATOR))
     {
+      String brief_description = "failed to parse dictionary";
+      String detailed_description =
+        " expected either '}' or ',' here";
+      ReportError(peek_token, brief_description, detailed_description);
       return nullptr;
     }
     NextToken();
@@ -934,8 +963,6 @@ NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
     }
     return result;
   }
-
-  // NextToken();
   return expression_list;
 }
 
@@ -969,7 +996,10 @@ NodePtr Parser::ParseArrowOperator(NodePtr left)
         }
         else
         {
-          std::cout << "Parameter " << parameter->ToString() << " is not a valid identifier" << std::endl;
+          String brief_description = "failed to parse arrow function";
+          String detailed_description =
+            " parameter " + parameter->ToString() + " is not a valid identifier";
+          ReportError(peek_token, brief_description, detailed_description);
         }
       }
     }
@@ -982,7 +1012,10 @@ NodePtr Parser::ParseArrowOperator(NodePtr left)
       }
       else
       {
-        std::cout << "Parameter " << identifier->ToString() << " is not a valid identifier" << std::endl;
+        String brief_description = "failed to parse arrow function";
+        String detailed_description =
+          " parameter " + identifier->ToString() + " is not a valid identifier";
+        ReportError(peek_token, brief_description, detailed_description);
       }
     }
   }
@@ -1016,12 +1049,21 @@ NodePtr Parser::ParseKeyValueArgument(NodePtr left)
     NodePtr value = ParseExpression(LOWEST,
                                     {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE, Token::Type::COMMA_OPERATOR});
 
-    // TODO: check if value is nullptr
+    if (value == nullptr)
+    {
+      String brief_description = "failed to parse keyword argument";
+      String detailed_description =
+        " expected valid expression here";
+      ReportError(peek_token, brief_description, detailed_description);
+    }
     result->value = value;
   }
   else
   {
-    // TODO: report error
+    String brief_description = "failed to parse keyword argument";
+    String detailed_description =
+      " left hand side of keyword argument should be an identifier";
+    ReportError(peek_token, brief_description, detailed_description);
   }
   return result;
 }

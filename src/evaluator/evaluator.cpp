@@ -900,7 +900,6 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
           environment->Set(kvpair->key->value, kvpair->value);
         else
         {
-          // TODO: report error
           // Scenario: my_func := function(a) { print(a) }
           // calling my_func(b = 3) should throw an error
           // "Expected argument a, instead got keyword argument b = 3"
