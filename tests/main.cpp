@@ -29,7 +29,6 @@
 #include <test_evaluator_set.hpp>
 #include <test_evaluator_tuple.hpp>
 #include <test_evaluator_while.hpp>
-#include <test_evaluator_matrix.hpp>
 #include <test_evaluator_bubblesort.hpp>
 #include <test_evaluator_matrix_transpose.hpp>
 #include <test_evaluator_split.hpp>
