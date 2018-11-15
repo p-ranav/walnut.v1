@@ -5,6 +5,5 @@
     <analyze-all-vs-configs>true</analyze-all-vs-configs>
     <paths>
         <dir name="src"/>
-        <dir name="tests"/>
     </paths>
 </project>

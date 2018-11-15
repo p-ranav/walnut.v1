@@ -889,7 +889,7 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
   // TODO: support variadic arguments and keyword arguments here
   for (size_t i = 0; i < function->parameters.size(); i++)
   {
-    if (function->parameters[i] && i < arguments.size())
+    if (i < arguments.size() && function->parameters[i])
     {
       if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
         environment->Set(function->parameters[i]->value, arguments[i]);
