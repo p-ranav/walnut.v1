@@ -42,35 +42,31 @@ thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) {
 }
 ```
 
+To take advantage of UTF-8, Walnut treats bytes higher than 127 as perfectly ordinary characters. In the following example, ```string⏵contains``` is just a variable name - ```⏵``` is not some special operator.
+
+```javascript
+string⏵contains := function(string, character) { 
+    for c in string {
+        if c == character { return true }
+    }
+    return false
+};
+
+string⏵contains("Hello World", 'H').print(); // true
+```
+
 ## Arrow Functions
 
-You can also use the arrow operator '=>' like in Javascript to define your functions. Support for unicode characters in identifier names allows for highly readable function definitions like below:
+You can also use the ```=>``` operator like in Javascript to define your functions:
 
 ```javascript
 π := 3.1415;
-volume := {
-    "cube" : s => { 
-        s³ := s • s • s; 
-        return s³; 
-    },
-    "cylinder" : (r, h) => {  
-        r² := r • r; 
-        return π • r² • h; 
-    },
-    "cone" : (r, h) => { 
-        r² := r • r; 
-        return π • r² • h / 3.0; 
-    },
-    "sphere" : r => { 
-        r³ := r • r • r; 
-        return 4./3 • π • r³; 
-    },
+cone_volume := (r, h) => {
+    r² := r • r;
+    return π • r² • h / 3.0    
 };
 
-volume["cube"](5).print();          // 125
-volume["cylinder"](5, 10).print();  // 785.38
-volume["cone"](5, 10).print();      // 261.79
-volume["sphere"](5).print();        // 523.58
+cone_volume(r = 5, h = 10);      // 261.79
 ```
 
 ## Chaining Function Calls
@@ -78,7 +74,7 @@ volume["sphere"](5).print();        // 523.58
 There are two ways to call any function (both user-defined and built-in functions) in Walnut:
 
 ```javascript
-square := ƒ(a) { a • a };   // ƒ is a keyword, just like 'function'
+square := function(a) { a • a };
 
 // Function Application
 x := 5;
@@ -92,13 +88,15 @@ x.square().print();             // 25
 [1, 2, 3].map(square).print();  // [1, 4, 9]
 ```
 
-## Decorators
+When you use the ```.``` operator, the right hand side of the operator is assumed to be a function name. The left hand side of the operator becomes the first argument of this function. So ```x.y()``` is the same as ```y(x)```.
 
-Decorators are a good example of closure. The function ```wrapped_function``` is a closure, because it retains access to the variables in its scope.
+## Functional Closure
+
+Decorators are a good example of closure:
 
 ```javascript
 decorate := function(f) {
-    wrapped_function = function() {
+    wrapped_function := function() {
         print("Function is being called");
         f();
         print("Function call is finished");
@@ -111,23 +109,6 @@ my_function();
 // Function is being called
 // Hello World
 // Function call is finished
-```
-
-## Function Aliasing
-
-Trivially create aliases to both user-defined and built-in functions
-
-```javascript
-// Alias to functions
-log := print;
-log("Hello");
-
-push := append;
-[].push(1).extend([2, 3]).print();
-
-add := function(a, b) { a + b; };
-sum := add;
-sum(2, 3).print();
 ```
 
 ## Lists
@@ -149,7 +130,7 @@ list := [
 ];
 ```
 
-The above list is pretty heterogeneous. It contains integers, doubles, booleans, characters, strings, functions, lists, dictionaries, sets and tuples! You can index into this list and modify anything.
+You can index into this list and modify anything.
 
 ```javascript
 list[5](2, 3).print();   // access function and call with arguments (2, 3) - result = 6
@@ -330,4 +311,3 @@ error: cannot use 5 as left-hand side of => operator
 32 |
    |
 ```
-
