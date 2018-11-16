@@ -29,12 +29,6 @@ ObjectPtr Evaluator::BuiltinAppend(std::vector<ObjectPtr> arguments)
       array_object->IterableAppend(arguments[1]);
       return array_object;
     }
-    else if (arguments[0]->type == ObjectType::TUPLE)
-    {
-      TupleObjectPtr tuple_object = std::dynamic_pointer_cast<TupleObject>(arguments[0]);
-      tuple_object->IterableAppend(arguments[1]);
-      return tuple_object;
-    }
     else if (arguments[0]->type == ObjectType::SET)
     {
       SetObjectPtr set_object = std::dynamic_pointer_cast<SetObject>(arguments[0]);

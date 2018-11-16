@@ -23,14 +23,6 @@ ObjectPtr Evaluator::BuiltinExtend(std::vector<ObjectPtr> arguments)
         first->elements.push_back(element);
       return first;
     }
-    else if (arguments[0]->type == ObjectType::TUPLE && arguments[1]->type == ObjectType::TUPLE)
-    {
-      TupleObjectPtr first = std::dynamic_pointer_cast<TupleObject>(arguments[0]);
-      TupleObjectPtr second = std::dynamic_pointer_cast<TupleObject>(arguments[1]);
-      for (auto &element : second->elements)
-        first->elements.push_back(element);
-      return first;
-    }
     return arguments[0];
   }
   return std::make_shared<NullObject>();

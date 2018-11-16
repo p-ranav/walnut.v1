@@ -186,7 +186,7 @@ namespace walnut
     String filename = "";
     String buffer =
       "thistuple := (\"apple\", \"banana\", \"cherry\");"
-      "y := ();"
+      "y := [];"
       "for x in thistuple { y.append(x) }"
       "z := y;";
 
@@ -201,8 +201,8 @@ namespace walnut
     evaluator.Eval(parser.statements[1], environment);
     evaluator.Eval(parser.statements[2], environment);
     ObjectPtr y = evaluator.Eval(parser.statements[3], environment);
-    REQUIRE(y->type == ObjectType::TUPLE);
-    REQUIRE(y->Inspect() == "(\"apple\", \"banana\", \"cherry\")");
+    REQUIRE(y->type == ObjectType::ARRAY);
+    REQUIRE(y->Inspect() == "[\"apple\", \"banana\", \"cherry\"]");
   }
 
 } // namespace walnut
