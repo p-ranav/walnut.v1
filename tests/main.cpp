@@ -28,6 +28,7 @@
 #include <test_evaluator_list.hpp>
 #include <test_evaluator_append.hpp>
 #include <test_evaluator_extend.hpp>
+#include <test_evaluator_insert.hpp>
 #include <test_evaluator_set.hpp>
 #include <test_evaluator_tuple.hpp>
 #include <test_evaluator_while.hpp>

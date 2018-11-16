@@ -32,6 +32,31 @@ ObjectPtr Evaluator::BuiltinInsert(std::vector<ObjectPtr> arguments)
         }
       }
     }
+    else if (arguments[0]->type == ObjectType::TUPLE &&
+      arguments[1]->type == ObjectType::INTEGER)
+    {
+      TupleObjectPtr input_tuple = std::dynamic_pointer_cast<TupleObject>(arguments[0]);
+      IntegerObjectPtr index = std::dynamic_pointer_cast<IntegerObject>(arguments[1]);
+
+      if (index->value < static_cast<int64_t>(input_tuple->elements.size()))
+      {
+        input_tuple->elements.insert(input_tuple->elements.begin() + static_cast<size_t>(index->value), arguments[2]);
+        return input_tuple;
+      }
+      else
+      {
+        if (input_tuple->elements.size() == 0)
+        {
+          input_tuple->elements.insert(input_tuple->elements.begin(), arguments[2]);
+          return input_tuple;
+        }
+        else
+        {
+          input_tuple->elements.insert(input_tuple->elements.begin() + input_tuple->elements.size(), arguments[2]);
+          return input_tuple;
+        }
+      }
+    }
     else if (arguments[0]->type == ObjectType::HASH)
     {
       HashObjectPtr input_hash = std::dynamic_pointer_cast<HashObject>(arguments[0]);
