@@ -1,4 +1,18 @@
 #include <evaluator.hpp>
+#include <builtin_copy.hpp>
+#include <builtin_append.hpp>
+#include <builtin_enumerate.hpp>
+#include <builtin_extend.hpp>
+#include <builtin_filter.hpp>
+#include <builtin_format.hpp>
+#include <builtin_insert.hpp>
+#include <builtin_join.hpp>
+#include <builtin_length.hpp>
+#include <builtin_map.hpp>
+#include <builtin_print.hpp>
+#include <builtin_range.hpp>
+#include <builtin_split.hpp>
+#include <builtin_type.hpp>
 #include <math.h>
 #include <utf8.hpp>
 
