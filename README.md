@@ -88,7 +88,7 @@ x.square().print();             // 25
 [1, 2, 3].map(square).print();  // [1, 4, 9]
 ```
 
-When you use the ```.``` operator, the right hand side of the operator is assumed to be a function name. The left hand side of the operator becomes the first argument of this function. So ```x.y()``` is the same as ```y(x)```.
+When you use the ```.``` operator, the right hand side of the operator is expected to be a function call expression. The left hand side of the operator becomes the first argument of this function call. So ```x.y()``` is the same as ```y(x)```.
 
 ## Functional Closure
 
