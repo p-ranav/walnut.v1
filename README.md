@@ -22,7 +22,7 @@ $ make check
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
 * A large pile of built-in functions implemented in C++
-* Test suite currently checking 1500+ assertions across 250+ unit tests 
+* Test suite - currently around 250 unit tests 
 
 ## Functions
 
