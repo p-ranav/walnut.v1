@@ -4,14 +4,13 @@ Walnut is an interpreted high-level programming language implemented in modern C
 
 ## Quick Start
 
+I've tested this code base with both Visual Studio 2017 and gcc 7.3.0. 
+
 ```bash
-$ git clone https://github.com/pranav-srinivas-kumar/walnut.git
-$ cd walnut
 $ mkdir build
 $ cd build
 $ cmake ../.
-$ make
-$ make check
+$ make && make check
 ```
 
 ## Highlights
@@ -42,7 +41,7 @@ thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) {
 }
 ```
 
-To take advantage of UTF-8, Walnut treats bytes higher than 127 as perfectly ordinary characters. In the following example, ```string⏵contains``` is just a variable name - ```⏵``` is not some special operator.
+To take advantage of UTF-8, Walnut treats bytes higher than 127 as perfectly ordinary characters. 
 
 ```javascript
 string⏵contains := function(string, character) { 
