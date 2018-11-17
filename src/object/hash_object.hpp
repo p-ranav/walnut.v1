@@ -48,10 +48,10 @@ struct HashObject : Object
 
     for (auto &pair : pairs)
     {
-      std::shared_ptr<TupleObject> pair_as_array = std::make_shared<TupleObject>();
-      pair_as_array->IterableAppend(pair.second.key);
-      pair_as_array->IterableAppend(pair.second.value);
-      elements.push_back(pair_as_array);
+      std::shared_ptr<TupleObject> pair_as_tuple = std::make_shared<TupleObject>();
+      pair_as_tuple->IterableAppend(pair.second.key);
+      pair_as_tuple->IterableAppend(pair.second.value);
+      elements.push_back(pair_as_tuple);
       break;
     }
   }
@@ -72,10 +72,10 @@ struct HashObject : Object
       {
         if (index == current_index)
         {
-          std::shared_ptr<TupleObject> pair_as_array = std::make_shared<TupleObject>();
-          pair_as_array->IterableAppend(pair.second.key);
-          pair_as_array->IterableAppend(pair.second.value);
-          elements.push_back(pair_as_array);
+          std::shared_ptr<TupleObject> pair_as_tuple = std::make_shared<TupleObject>();
+          pair_as_tuple->IterableAppend(pair.second.key);
+          pair_as_tuple->IterableAppend(pair.second.value);
+          elements.push_back(pair_as_tuple);
           break;
         }
         index += 1;
@@ -88,10 +88,10 @@ struct HashObject : Object
       {
         if (index == current_index)
         {
-          std::shared_ptr<TupleObject> pair_as_array = std::make_shared<TupleObject>();
-          pair_as_array->IterableAppend(pair.second.key);
-          pair_as_array->IterableAppend(pair.second.value);
-          elements[0] = pair_as_array;
+          std::shared_ptr<TupleObject> pair_as_tuple = std::make_shared<TupleObject>();
+          pair_as_tuple->IterableAppend(pair.second.key);
+          pair_as_tuple->IterableAppend(pair.second.value);
+          elements[0] = pair_as_tuple;
           break;
         }
         index += 1;

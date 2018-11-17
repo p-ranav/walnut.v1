@@ -736,6 +736,14 @@ NodePtr Parser::ParseCallExpression(NodePtr function)
   CallExpressionNodePtr result = std::make_shared<CallExpressionNode>(current_token);
   result->function = function;
   NodePtr expression_list = ParseExpressionList(Token::Type::RIGHT_PARENTHESIS);
+  if (!IsCurrentToken(Token::Type::RIGHT_PARENTHESIS))
+  {
+    String brief_description = "failed to parse call expression";
+    String detailed_description =
+      " expected ')' here";
+    ReportError(peek_token, brief_description, detailed_description);
+    return nullptr;
+  }
   result->arguments = std::dynamic_pointer_cast<TupleNode>(expression_list);
   return result;
 }
