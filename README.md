@@ -33,7 +33,7 @@ Functions are first-class objects in Walnut. With UTF-8 support, you can write f
   q  - mass flow rate (kg/s)
   Pₐ - 🌍 atmospheric pressure (N/m²)
   Pₑ - exit pressure (N/m²)
-  Vₑ - exit velocity 🙮 (m/s)
+  Vₑ - exit velocity (m/s)
   Aₑ - exit area of nozzle (m²) */
 thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
     q • Vₑ + (Pₑ - Pₐ) • Aₑ 
@@ -58,6 +58,10 @@ string⏵contains("Hello World", 'H').print(); // true
 You can also use the ```=>``` operator like in Javascript to define your functions:
 
 ```javascript
+/* 
+  Volume of a cone with radius r is ⅓rd
+  the area of the base B times the height h
+ */
 π := 3.1415;
 cone_volume := (r, h) => {
     r² := r • r;
@@ -126,6 +130,8 @@ list := [
     {9, 10, 10},                   // set {9, 10}
     (x, true)                      // tuple
 ];
+
+for element in list { print(element) }
 ```
 
 You can index into this list and modify anything.

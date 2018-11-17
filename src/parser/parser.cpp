@@ -700,6 +700,7 @@ std::vector<NodePtr> Parser::ParseFunctionParameters(bool& variadic_positional_p
     PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
     result.push_back(identifier);
     NextToken();
+    // TODO: check for default value of this parameter
   }
   else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
   {
