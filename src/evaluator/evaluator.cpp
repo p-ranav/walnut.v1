@@ -1,5 +1,7 @@
 #include <evaluator.hpp>
 #include <builtin_copy.hpp>
+#include <builtin_all.hpp>
+#include <builtin_any.hpp>
 #include <builtin_append.hpp>
 #include <builtin_enumerate.hpp>
 #include <builtin_extend.hpp>
@@ -35,6 +37,8 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
   BUILTIN("copy", BuiltinCopy);
+  BUILTIN("all", BuiltinAll);
+  BUILTIN("any", BuiltinAny);
 
   BUILTIN("list", BuiltinList);
   BUILTIN("set", BuiltinSet);
@@ -532,12 +536,12 @@ bool Evaluator::IsTruth(ObjectPtr condition, EnvironmentPtr environment)
   }
   else if (condition->type == ObjectType::INTEGER)
   {
-    IntegerNodePtr integer_condition = std::dynamic_pointer_cast<IntegerNode>(condition);
+    IntegerObjectPtr integer_condition = std::dynamic_pointer_cast<IntegerObject>(condition);
     return (integer_condition->value != 0);
   }
   else if (condition->type == ObjectType::DOUBLE)
   {
-    DoubleNodePtr double_condition = std::dynamic_pointer_cast<DoubleNode>(condition);
+    DoubleObjectPtr double_condition = std::dynamic_pointer_cast<DoubleObject>(condition);
     return (double_condition->value != 0.0);
   }
   else

@@ -130,6 +130,8 @@ struct Evaluator
   ObjectPtr BuiltinPrint(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinType(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinCopy(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinAny(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinAll(std::vector<ObjectPtr> arguments);
 
   /* Constructor Functions */
   ObjectPtr BuiltinList(std::vector<ObjectPtr> arguments);
