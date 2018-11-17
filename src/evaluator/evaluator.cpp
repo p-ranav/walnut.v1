@@ -12,6 +12,7 @@
 #include <builtin_map.hpp>
 #include <builtin_print.hpp>
 #include <builtin_range.hpp>
+#include <builtin_set.hpp>
 #include <builtin_split.hpp>
 #include <builtin_type.hpp>
 #include <math.h>
@@ -35,6 +36,7 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
   BUILTIN("copy", BuiltinCopy);
 
   BUILTIN("list", BuiltinList);
+  BUILTIN("set", BuiltinSet);
 
   BUILTIN("length", BuiltinLength);
   BUILTIN("append", BuiltinAppend);
