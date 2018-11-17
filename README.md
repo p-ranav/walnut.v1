@@ -29,13 +29,12 @@ Functions are first-class objects in Walnut. With UTF-8 support, you can write f
 
 ```javascript
 /*
-* Function to calculate 🚀 thrust
-* q  - mass flow rate (kg/s)
-* Pₐ - 🌍 atmospheric pressure (N/m²)
-* Pₑ - exit pressure (N/m²)
-* Vₑ - exit velocity 🙮 (m/s)
-* Aₑ - exit area of nozzle (m²)
-*/
+  Function to calculate 🚀 thrust
+  q  - mass flow rate (kg/s)
+  Pₐ - 🌍 atmospheric pressure (N/m²)
+  Pₑ - exit pressure (N/m²)
+  Vₑ - exit velocity 🙮 (m/s)
+  Aₑ - exit area of nozzle (m²) */
 thrust := function(q, Vₑ, Pₑ, Pₐ, Aₑ) { 
     q • Vₑ + (Pₑ - Pₐ) • Aₑ 
 }
