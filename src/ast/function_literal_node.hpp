@@ -10,7 +10,7 @@ namespace walnut
 
 struct FunctionLiteralNode : Node
 {
-  std::vector<IdentifierNodePtr> parameters;
+  std::vector<NodePtr> parameters;
   BlockStatementNodePtr body;
   explicit FunctionLiteralNode(Token token) : Node(token, FUNCTION),
                                               parameters({}),

@@ -925,18 +925,18 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
     if (i < arguments.size() && function->parameters[i])
     {
       if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
-        environment->Set(function->parameters[i]->value, arguments[i]);
+        environment->Set(function->parameters[i]->ToString(), arguments[i]);
       else
       {
         KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
-        if (function->parameters[i]->value == kvpair->key->value)
+        if (function->parameters[i]->ToString() == kvpair->key->value)
           environment->Set(kvpair->key->value, kvpair->value);
         else
         {
           // Scenario: my_func := function(a) { print(a) }
           // calling my_func(b = 3) should throw an error
           // "Expected argument a, instead got keyword argument b = 3"
-          std::cout << "error: expected argument " << function->parameters[i]->value <<
+          std::cout << "error: expected argument " << function->parameters[i]->ToString() <<
             ", instead got keyword argument " << kvpair->Inspect() << std::endl;
           exit(EXIT_FAILURE);
         }

@@ -685,9 +685,9 @@ NodePtr Parser::ParseInExpression(NodePtr left)
   return expression;
 }
 
-std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
+std::vector<NodePtr> Parser::ParseFunctionParameters()
 {
-  std::vector<IdentifierNodePtr> result = {};
+  std::vector<NodePtr> result = {};
 
   if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
   {
@@ -695,17 +695,36 @@ std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
     return result;
   }
 
-  NextToken();
-
-  IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
-  result.push_back(identifier);
+  if (IsPeekToken(Token::Type::SYMBOL))
+  {
+    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+  }
+  else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
+  {
+    NextToken();
+    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+  }
 
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
   {
     NextToken();
-    NextToken();
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
-    result.push_back(identifier);
+    if (IsPeekToken(Token::Type::SYMBOL))
+    {
+      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+      result.push_back(identifier);
+      NextToken();
+    }
+    else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
+    {
+      NextToken();
+      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+      result.push_back(identifier);
+      NextToken();
+    }
   }
 
   if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))

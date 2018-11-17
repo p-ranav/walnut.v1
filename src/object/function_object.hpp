@@ -10,11 +10,11 @@ namespace walnut
 
 struct FunctionObject : Object
 {
-  std::vector<IdentifierNodePtr> parameters;
+  std::vector<NodePtr> parameters;
   BlockStatementNodePtr body;
   EnvironmentPtr environment;
 
-  explicit FunctionObject(const std::vector<IdentifierNodePtr> &parameters,
+  explicit FunctionObject(const std::vector<NodePtr> &parameters,
                           BlockStatementNodePtr body, EnvironmentPtr environment) : Object(FUNCTION),
                                                                                     parameters(parameters),
                                                                                     body(body),

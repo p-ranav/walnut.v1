@@ -43,7 +43,7 @@ TEST_CASE("The parser can parse the identity function 'a => a'", "[parser]")
   REQUIRE(parser.statements[0]->ToString() == "function(a) { a; }");
   FunctionLiteralNodePtr function = std::dynamic_pointer_cast<FunctionLiteralNode>(parser.statements[0]);
   REQUIRE(function->parameters.size() == 1);
-  REQUIRE(function->parameters[0]->value == "a");
+  REQUIRE(function->parameters[0]->ToString() == "a");
   REQUIRE(function->body->statements.size() == 1);
   REQUIRE(function->body->statements[0]->ToString() == "a");
   REQUIRE(function->body->ToString() == "{ a; }");
