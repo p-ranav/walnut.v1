@@ -961,6 +961,27 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
         } while (i < arguments.size());
         environment->Set(parameter_name, parameter_value);
       }
+      // function(a, b, **kwargs) { ... }
+      // We're at **kwargs
+      else if (function->parameters[i]->type == NodeType::KEYWORD_PARAMETER)
+      {
+        KeywordParameterNodePtr parameter = std::dynamic_pointer_cast<KeywordParameterNode>(function->parameters[i]);
+        String parameter_name = parameter->value;
+        HashObjectPtr parameter_value = std::make_shared<HashObject>();
+        do
+        {
+          if (arguments[i]->type == ObjectType::KEY_VALUE_ARGUMENT)
+          {
+            KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
+            ObjectPtr key = std::make_shared<StringObject>(kvpair->key->value);
+            ObjectPtr value = kvpair->value;
+            HashKey hash = Hash(key);
+            parameter_value->Set(hash, HashPair(key, value));
+            i = i + 1;
+          }
+        } while (i < arguments.size());
+        environment->Set(parameter_name, parameter_value);
+      }
     }
     else
     {
