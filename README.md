@@ -276,7 +276,7 @@ print(mutating_tuple); // (1, 2, [-3, 4, 5])
 
 A lot of times when dealing with iterators, one also gets the need to keep a count of iterations. Walnut eases the programmers’ task by providing a built-in function enumerate() for this task. Enumerate() method adds a counter to an iterable and returns it in a form of enumerate object. This enumerate object can then be used directly in for loops.
 
-```cpp
+```javascript
 fruits := ("apple", "banana", "grapes", "pear");
 for c, value in fruits.enumerate(start = 1) { 
     print(c, value) 
@@ -304,7 +304,7 @@ for element in enumObject { print(element) }
 
 The Walnut parser and interpreter use a Rust-style error reporting system. Here's an example parser error message:
 
-```cpp
+```r
 error: cannot use 5 as left-hand side of => operator
   --> tests/tuple.txt:31:5
    |
@@ -315,3 +315,7 @@ error: cannot use 5 as left-hand side of => operator
 32 |
    |
 ```
+
+<p align="center">
+  <img src="images/01.png" width="100" title="hover text">
+</p>
