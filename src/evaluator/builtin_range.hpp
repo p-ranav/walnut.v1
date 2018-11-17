@@ -62,6 +62,9 @@ ObjectPtr Evaluator::BuiltinRange(std::vector<ObjectPtr> arguments)
       step = 1;
     }
 
+    if (arguments.size() == 2 && end < start)
+      step *= -1;
+
     return std::make_shared<RangeObject>(start, end, step, integral_range);
   }
   return std::make_shared<NullObject>();
