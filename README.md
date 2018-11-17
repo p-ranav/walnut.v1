@@ -316,6 +316,4 @@ error: cannot use 5 as left-hand side of => operator
    |
 ```
 
-<p align="center">
-  <img src="images/01.png" width="100" title="hover text">
-</p>
+![Alt text](images/01.png?raw=true "Title")
