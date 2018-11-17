@@ -689,6 +689,7 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
 {
   std::vector<NodePtr> result = {};
   bool variadic_positional_parameter_encountered = false;
+  bool keyword_parameter_encountered = false;
 
   if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
   {
@@ -710,13 +711,21 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
     NextToken();
     variadic_positional_parameter_encountered = true;
   }
+  else if (IsPeekToken(Token::Type::EXPONENTIATION_OPERATOR))
+  {
+    NextToken();
+    KeywordParameterNodePtr identifier = std::make_shared<KeywordParameterNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+    keyword_parameter_encountered = true;
+  }
 
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
   {
     NextToken();
     if (IsPeekToken(Token::Type::SYMBOL))
     {
-      if (!variadic_positional_parameter_encountered)
+      if (!variadic_positional_parameter_encountered && !keyword_parameter_encountered)
       {
         PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
         result.push_back(identifier);
@@ -724,16 +733,27 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
       }
       else
       {
-        String brief_description = "failed to parse function parameters";
-        String detailed_description =
-          " variadic positional parameter already encountered. This is invalid syntax";
-        ReportError(peek_token, brief_description, detailed_description);
-        return {};
+        if (variadic_positional_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " named positional parameters cannot follow variadic positional parameters";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+        else if (keyword_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " named positional parameters cannot follow variadic keyword parameters";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
       }
     }
     else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
     {
-      if (!variadic_positional_parameter_encountered)
+      if (!variadic_positional_parameter_encountered && !keyword_parameter_encountered)
       {
         NextToken();
         VariadicPositionalParameterNodePtr identifier = std::make_shared<VariadicPositionalParameterNode>(peek_token, peek_token.value);
@@ -743,9 +763,39 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
       }
       else
       {
+        if (variadic_positional_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " variadic positional parameter already encountered. This is invalid syntax";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+        else if (keyword_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " variadic positional parameters cannot follow variadic keyword parameters. This is invalid syntax";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+      }
+    }
+    else if (IsPeekToken(Token::Type::EXPONENTIATION_OPERATOR))
+    {
+      if (!keyword_parameter_encountered)
+      {
+        NextToken();
+        KeywordParameterNodePtr identifier = std::make_shared<KeywordParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+        keyword_parameter_encountered = true;
+      }
+      else
+      {
         String brief_description = "failed to parse function parameters";
         String detailed_description =
-          " variadic positional parameter already encountered. This is invalid syntax";
+          " variadic keyword parameter already encountered. This is invalid syntax";
         ReportError(peek_token, brief_description, detailed_description);
         return {};
       }
