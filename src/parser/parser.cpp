@@ -688,6 +688,7 @@ NodePtr Parser::ParseInExpression(NodePtr left)
 std::vector<NodePtr> Parser::ParseFunctionParameters()
 {
   std::vector<NodePtr> result = {};
+  bool variadic_positional_parameter_encountered = false;
 
   if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
   {
@@ -697,16 +698,17 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
 
   if (IsPeekToken(Token::Type::SYMBOL))
   {
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+    PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
     result.push_back(identifier);
     NextToken();
   }
   else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
   {
     NextToken();
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+    VariadicPositionalParameterNodePtr identifier = std::make_shared<VariadicPositionalParameterNode>(peek_token, peek_token.value);
     result.push_back(identifier);
     NextToken();
+    variadic_positional_parameter_encountered = true;
   }
 
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
@@ -714,16 +716,28 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
     NextToken();
     if (IsPeekToken(Token::Type::SYMBOL))
     {
-      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
+      PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
       result.push_back(identifier);
       NextToken();
     }
     else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
     {
-      NextToken();
-      IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(peek_token, peek_token.value);
-      result.push_back(identifier);
-      NextToken();
+      if (!variadic_positional_parameter_encountered)
+      {
+        NextToken();
+        VariadicPositionalParameterNodePtr identifier = std::make_shared<VariadicPositionalParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+        variadic_positional_parameter_encountered = true;
+      }
+      else
+      {
+        String brief_description = "failed to parse function parameters";
+        String detailed_description =
+          " variadic positional argument already encountered. This is invalid syntax";
+        ReportError(peek_token, brief_description, detailed_description);
+        return {};
+      }
     }
   }
 
