@@ -301,6 +301,8 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = Token::Type::LOGICAL_NOT_OPERATOR;
   else if (result.value == "import")
     result.type = Token::Type::KEYWORD_IMPORT;
+  else if (result.value == "null")
+    result.type = Token::Type::KEYWORD_NULL;
 
   tokens.push_back(result);
 }

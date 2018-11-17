@@ -60,6 +60,8 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
 
   switch (node->type)
   {
+  case NodeType::NULL_:
+    return EvalNull(node, environment);
   case NodeType::INTEGER:
     return EvalInteger(node, environment);
   case NodeType::DOUBLE:
@@ -113,6 +115,12 @@ ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
   default:
     return std::make_shared<NullObject>();
   }
+}
+
+ObjectPtr Evaluator::EvalNull(NodePtr node, EnvironmentPtr environment)
+{
+  // TODO: get token context from node argument
+  return std::make_shared<NullObject>();
 }
 
 ObjectPtr Evaluator::EvalInteger(NodePtr node, EnvironmentPtr environment)

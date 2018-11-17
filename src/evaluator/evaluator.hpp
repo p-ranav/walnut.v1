@@ -66,6 +66,7 @@ struct Evaluator
 {
   explicit Evaluator(StringConstRef buffer);
   ObjectPtr Eval(NodePtr node, EnvironmentPtr environment);
+  ObjectPtr EvalNull(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalInteger(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalDouble(NodePtr node, EnvironmentPtr environment);
   ObjectPtr EvalBoolean(NodePtr node, EnvironmentPtr environment);

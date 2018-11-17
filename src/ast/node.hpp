@@ -38,6 +38,7 @@ struct Node
     IMPORT_STATEMENT,
     KEY_VALUE_ARGUMENT,
     IN_EXPRESSION,
+    NULL_,
     INVALID
   };
 

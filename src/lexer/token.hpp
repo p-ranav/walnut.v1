@@ -71,6 +71,7 @@ struct Token
     LOGICAL_NOT_OPERATOR,
 
     // Keywords
+    KEYWORD_NULL,
     KEYWORD_VAR,
     KEYWORD_ASSIGN,
     KEYWORD_TRUE,

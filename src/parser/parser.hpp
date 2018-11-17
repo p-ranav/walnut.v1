@@ -25,6 +25,7 @@
 #include <import_statement_node.hpp>
 #include <key_value_argument_node.hpp>
 #include <in_expression_node.hpp>
+#include <null_node.hpp>
 
 #include <string.hpp>
 
@@ -97,6 +98,7 @@ struct Parser
                               {Token::Type::SEMI_COLON_OPERATOR, Token::Type::END_OF_FILE});
 
   /* Prefix parse functions */
+  NodePtr ParseNull();
   NodePtr ParseIdentifier();
   NodePtr ParseInteger();
   NodePtr ParseDouble();

@@ -43,6 +43,7 @@ Parser::Parser(TokenVectorConstRef tokens, StringConstRef buffer) : current_toke
                                                                     })
 {
   // prefix parse functions
+  RegisterPrefixParseFunction(Token::Type::KEYWORD_NULL, std::bind(&Parser::ParseNull, this));
   RegisterPrefixParseFunction(Token::Type::SYMBOL, std::bind(&Parser::ParseIdentifier, this));
   RegisterPrefixParseFunction(Token::Type::INTEGER, std::bind(&Parser::ParseInteger, this));
   RegisterPrefixParseFunction(Token::Type::DOUBLE, std::bind(&Parser::ParseDouble, this));
@@ -449,6 +450,11 @@ NodePtr Parser::ParseExpression(Precedence precedence, const std::vector<Token::
   }
 
   return left_expression;
+}
+
+NodePtr Parser::ParseNull()
+{
+  return std::make_shared<NullNode>(current_token);
 }
 
 NodePtr Parser::ParseIdentifier()
