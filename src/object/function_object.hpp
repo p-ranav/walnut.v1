@@ -10,19 +10,26 @@ namespace walnut
 
 struct FunctionObject : Object
 {
-  std::vector<IdentifierNodePtr> parameters;
+  std::vector<NodePtr> parameters;
+  bool variadic_positional_arguments_expected;
+  bool variadic_keyword_arguments_expected;
   BlockStatementNodePtr body;
   EnvironmentPtr environment;
 
-  explicit FunctionObject(const std::vector<IdentifierNodePtr> &parameters,
+  explicit FunctionObject(const std::vector<NodePtr> &parameters,
+                          bool variadic_positional_arguments_expected,
+                          bool variadic_keyword_arguments_expected,
                           BlockStatementNodePtr body, EnvironmentPtr environment) : Object(FUNCTION),
                                                                                     parameters(parameters),
+                                                                                    variadic_positional_arguments_expected(variadic_positional_arguments_expected),
+                                                                                    variadic_keyword_arguments_expected(variadic_keyword_arguments_expected),
                                                                                     body(body),
                                                                                     environment(environment) {}
 
   ObjectPtr Copy() override
   {
-    return std::make_shared<FunctionObject>(parameters, body, environment);
+    return std::make_shared<FunctionObject>(parameters, variadic_positional_arguments_expected, 
+      variadic_keyword_arguments_expected, body, environment);
   }
 
   virtual ~FunctionObject()

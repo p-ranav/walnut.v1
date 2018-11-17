@@ -82,6 +82,7 @@ void Lexer::Tokenize()
     MergeTokenPair(i, Token::Type::KEYWORD_ELSE, Token::Type::KEYWORD_IF, Token::Type::KEYWORD_ELSE_IF, "else if");
     MergeTokenPair(i, Token::Type::LOGICAL_NOT_OPERATOR, Token::Type::KEYWORD_IN, Token::Type::KEYWORD_NOT_IN, "not in");
     MergeTokenPair(i, Token::Type::COLON_OPERATOR, Token::Type::ASSIGNMENT_OPERATOR, Token::Type::INITIALIZATION_OPERATOR, ":=");
+    MergeTokenPair(i, Token::Type::MULTIPLICATION_OPERATOR, Token::Type::MULTIPLICATION_OPERATOR, Token::Type::EXPONENTIATION_OPERATOR, "**");
   }
 
   for (size_t i = 0; i < tokens.size(); i++)

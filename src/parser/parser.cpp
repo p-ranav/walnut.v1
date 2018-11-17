@@ -685,9 +685,9 @@ NodePtr Parser::ParseInExpression(NodePtr left)
   return expression;
 }
 
-std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
+std::vector<NodePtr> Parser::ParseFunctionParameters(bool& variadic_positional_parameter_encountered, bool& keyword_parameter_encountered)
 {
-  std::vector<IdentifierNodePtr> result = {};
+  std::vector<NodePtr> result = {};
 
   if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
   {
@@ -695,17 +695,109 @@ std::vector<IdentifierNodePtr> Parser::ParseFunctionParameters()
     return result;
   }
 
-  NextToken();
-
-  IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
-  result.push_back(identifier);
+  if (IsPeekToken(Token::Type::SYMBOL))
+  {
+    PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+  }
+  else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
+  {
+    NextToken();
+    VariadicPositionalParameterNodePtr identifier = std::make_shared<VariadicPositionalParameterNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+    variadic_positional_parameter_encountered = true;
+  }
+  else if (IsPeekToken(Token::Type::EXPONENTIATION_OPERATOR))
+  {
+    NextToken();
+    KeywordParameterNodePtr identifier = std::make_shared<KeywordParameterNode>(peek_token, peek_token.value);
+    result.push_back(identifier);
+    NextToken();
+    keyword_parameter_encountered = true;
+  }
 
   while (IsPeekToken(Token::Type::COMMA_OPERATOR))
   {
     NextToken();
-    NextToken();
-    IdentifierNodePtr identifier = std::make_shared<IdentifierNode>(current_token, current_token.value);
-    result.push_back(identifier);
+    if (IsPeekToken(Token::Type::SYMBOL))
+    {
+      if (!variadic_positional_parameter_encountered && !keyword_parameter_encountered)
+      {
+        PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+      }
+      else
+      {
+        if (variadic_positional_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " named positional parameters cannot follow variadic positional parameters";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+        else if (keyword_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " named positional parameters cannot follow variadic keyword parameters";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+      }
+    }
+    else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
+    {
+      if (!variadic_positional_parameter_encountered && !keyword_parameter_encountered)
+      {
+        NextToken();
+        VariadicPositionalParameterNodePtr identifier = std::make_shared<VariadicPositionalParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+        variadic_positional_parameter_encountered = true;
+      }
+      else
+      {
+        if (variadic_positional_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " variadic positional parameter already encountered. This is invalid syntax";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+        else if (keyword_parameter_encountered)
+        {
+          String brief_description = "failed to parse function parameters";
+          String detailed_description =
+            " variadic positional parameters cannot follow variadic keyword parameters. This is invalid syntax";
+          ReportError(peek_token, brief_description, detailed_description);
+          return {};
+        }
+      }
+    }
+    else if (IsPeekToken(Token::Type::EXPONENTIATION_OPERATOR))
+    {
+      if (!keyword_parameter_encountered)
+      {
+        NextToken();
+        KeywordParameterNodePtr identifier = std::make_shared<KeywordParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+        keyword_parameter_encountered = true;
+      }
+      else
+      {
+        String brief_description = "failed to parse function parameters";
+        String detailed_description =
+          " variadic keyword parameter already encountered. This is invalid syntax";
+        ReportError(peek_token, brief_description, detailed_description);
+        return {};
+      }
+    }
   }
 
   if (!ExpectPeek(Token::Type::RIGHT_PARENTHESIS))
@@ -727,7 +819,7 @@ NodePtr Parser::ParseFunctionLiteral()
   if (!ExpectPeek(Token::Type::LEFT_PARENTHESIS))
     return nullptr;
 
-  result->parameters = ParseFunctionParameters();
+  result->parameters = ParseFunctionParameters(result->variadic_positional_arguments_expected, result->variadic_keyword_arguments_expected);
 
   if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
     return nullptr;

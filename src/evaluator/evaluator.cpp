@@ -874,7 +874,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
 ObjectPtr Evaluator::EvalFunction(NodePtr node, EnvironmentPtr environment)
 {
   FunctionLiteralNodePtr function = std::dynamic_pointer_cast<FunctionLiteralNode>(node);
-  return std::make_shared<FunctionObject>(function->parameters, function->body, environment);
+  return std::make_shared<FunctionObject>(function->parameters, function->variadic_positional_arguments_expected, function->variadic_keyword_arguments_expected, function->body, environment);
 }
 
 ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment)
@@ -918,28 +918,78 @@ ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectP
 EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments)
 {
   EnvironmentPtr environment = std::make_shared<Environment>(function->environment);
-  // TODO: compare length of function->parameters and length of arguments
-  // TODO: support variadic arguments and keyword arguments here
+
+  if (function->variadic_positional_arguments_expected == false &&
+    function->variadic_keyword_arguments_expected == false)
+  {
+    if (function->parameters.size() != arguments.size())
+    {
+      std::cout << "error: Function expects " << function->parameters.size() << " arguments - "
+        << arguments.size() << " arguments provided" << std::endl;
+    }
+  }
+
   for (size_t i = 0; i < function->parameters.size(); i++)
   {
     if (i < arguments.size() && function->parameters[i])
     {
-      if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
-        environment->Set(function->parameters[i]->value, arguments[i]);
-      else
+      if (function->parameters[i]->type == NodeType::POSITIONAL_PARAMETER)
       {
-        KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
-        if (function->parameters[i]->value == kvpair->key->value)
-          environment->Set(kvpair->key->value, kvpair->value);
+        if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
+          environment->Set(function->parameters[i]->ToString(), arguments[i]);
         else
         {
-          // Scenario: my_func := function(a) { print(a) }
-          // calling my_func(b = 3) should throw an error
-          // "Expected argument a, instead got keyword argument b = 3"
-          std::cout << "error: expected argument " << function->parameters[i]->value <<
-            ", instead got keyword argument " << kvpair->Inspect() << std::endl;
-          exit(EXIT_FAILURE);
+          KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
+          if (function->parameters[i]->ToString() == kvpair->key->value)
+            environment->Set(kvpair->key->value, kvpair->value);
+          else
+          {
+            // Scenario: my_func := function(a) { print(a) }
+            // calling my_func(b = 3) should throw an error
+            // "Expected argument a, instead got keyword argument b = 3"
+            std::cout << "error: expected argument " << function->parameters[i]->ToString() <<
+              ", instead got keyword argument " << kvpair->Inspect() << std::endl;
+            exit(EXIT_FAILURE);
+          }
         }
+      }
+      // function(a, b, *args) { ... }
+      // We're at *args
+      else if (function->parameters[i]->type == NodeType::VARIADIC_POSITIONAL_PARAMETER)
+      {
+        VariadicPositionalParameterNodePtr parameter = std::dynamic_pointer_cast<VariadicPositionalParameterNode>(function->parameters[i]);
+        String parameter_name = parameter->value;
+        TupleObjectPtr parameter_value = std::make_shared<TupleObject>();
+        do
+        {
+          if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
+          {
+            parameter_value->elements.push_back(arguments[i]);
+            i = i + 1;
+          }
+        } while (i < arguments.size());
+        environment->Set(parameter_name, parameter_value);
+      }
+      // function(a, b, **kwargs) { ... }
+      // We're at **kwargs
+      else if (function->parameters[i]->type == NodeType::KEYWORD_PARAMETER)
+      {
+        KeywordParameterNodePtr parameter = std::dynamic_pointer_cast<KeywordParameterNode>(function->parameters[i]);
+        String parameter_name = parameter->value;
+        HashObjectPtr parameter_value = std::make_shared<HashObject>();
+        do
+        {
+          if (arguments[i]->type == ObjectType::KEY_VALUE_ARGUMENT)
+          {
+            KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
+            ObjectPtr key = std::make_shared<StringObject>(kvpair->key->value);
+            ObjectPtr value = kvpair->value;
+            HashKey hash = Hash(key);
+            parameter_value->Set(hash, HashPair(key, value));
+            i = i + 1;
+          }
+        } while (i < arguments.size());
+        environment->Set(parameter_name, parameter_value);
       }
     }
     else
