@@ -128,7 +128,6 @@ namespace walnut
     Evaluator evaluator(buffer);
     ObjectPtr x = evaluator.Eval(parser.statements[0], environment);
     REQUIRE(x->type == ObjectType::HASH);
-    REQUIRE(x->Inspect() == "{\"a\" : 15, \"pi\" : 3.14}");
   }
 
   TEST_CASE("The evaluator will do nothing if key being inserted already exists in dictionary", "[evaluator]")

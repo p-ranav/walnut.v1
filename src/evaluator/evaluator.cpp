@@ -8,6 +8,7 @@
 #include <builtin_insert.hpp>
 #include <builtin_join.hpp>
 #include <builtin_length.hpp>
+#include <builtin_list.hpp>
 #include <builtin_map.hpp>
 #include <builtin_print.hpp>
 #include <builtin_range.hpp>
@@ -32,6 +33,8 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
   BUILTIN("copy", BuiltinCopy);
+
+  BUILTIN("list", BuiltinList);
 
   BUILTIN("length", BuiltinLength);
   BUILTIN("append", BuiltinAppend);

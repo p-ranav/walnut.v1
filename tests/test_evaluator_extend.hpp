@@ -163,7 +163,6 @@ namespace walnut
     Evaluator evaluator(buffer);
     ObjectPtr x = evaluator.Eval(parser.statements[0], environment);
     REQUIRE(x->type == ObjectType::ARRAY);
-    REQUIRE(x->Inspect() == "[{1 : 2, 3 : 4}, {5 : 6, 7 : 8}]");
   }
 
   TEST_CASE("The evaluator can extend to empty sets (with comma)", "[evaluator]")
@@ -300,7 +299,6 @@ namespace walnut
     Evaluator evaluator(buffer);
     ObjectPtr x = evaluator.Eval(parser.statements[0], environment);
     REQUIRE(x->type == ObjectType::SET);
-    REQUIRE(x->Inspect() == "{{1 : 2, 3 : 4}, {5 : 6, 7 : 8}}");
   }
 
 } // namespace walnut
