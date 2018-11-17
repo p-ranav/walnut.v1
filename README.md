@@ -316,4 +316,4 @@ error: cannot use 5 as left-hand side of => operator
    |
 ```
 
-![Alt text](images/01.png?raw=true "Title")
+![Alt text](images/01.png?raw=true "Title" | width=100)
