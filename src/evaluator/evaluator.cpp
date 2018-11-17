@@ -14,6 +14,7 @@
 #include <builtin_range.hpp>
 #include <builtin_set.hpp>
 #include <builtin_split.hpp>
+#include <builtin_tuple.hpp>
 #include <builtin_type.hpp>
 #include <math.h>
 #include <utf8.hpp>
@@ -37,6 +38,7 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
 
   BUILTIN("list", BuiltinList);
   BUILTIN("set", BuiltinSet);
+  BUILTIN("tuple", BuiltinTuple);
 
   BUILTIN("length", BuiltinLength);
   BUILTIN("append", BuiltinAppend);
