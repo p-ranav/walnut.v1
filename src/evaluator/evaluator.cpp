@@ -874,7 +874,7 @@ ObjectPtr Evaluator::EvalExpressionAssignmentStatement(NodePtr node, Environment
 ObjectPtr Evaluator::EvalFunction(NodePtr node, EnvironmentPtr environment)
 {
   FunctionLiteralNodePtr function = std::dynamic_pointer_cast<FunctionLiteralNode>(node);
-  return std::make_shared<FunctionObject>(function->parameters, function->body, environment);
+  return std::make_shared<FunctionObject>(function->parameters, function->variadic_positional_arguments_expected, function->variadic_keyword_arguments_expected, function->body, environment);
 }
 
 ObjectPtr Evaluator::EvalCallExpression(NodePtr node, EnvironmentPtr environment)
@@ -918,8 +918,17 @@ ObjectPtr Evaluator::ApplyFunction(ObjectPtr function, const std::vector<ObjectP
 EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, std::vector<ObjectPtr> arguments)
 {
   EnvironmentPtr environment = std::make_shared<Environment>(function->environment);
-  // TODO: compare length of function->parameters and length of arguments
-  // TODO: support variadic arguments and keyword arguments here
+
+  if (function->variadic_positional_arguments_expected == false &&
+    function->variadic_keyword_arguments_expected == false)
+  {
+    if (function->parameters.size() != arguments.size())
+    {
+      std::cout << "error: Function expects " << function->parameters.size() << " arguments - "
+        << arguments.size() << " arguments provided" << std::endl;
+    }
+  }
+
   for (size_t i = 0; i < function->parameters.size(); i++)
   {
     if (i < arguments.size() && function->parameters[i])

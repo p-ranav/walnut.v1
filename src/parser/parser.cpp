@@ -685,11 +685,9 @@ NodePtr Parser::ParseInExpression(NodePtr left)
   return expression;
 }
 
-std::vector<NodePtr> Parser::ParseFunctionParameters()
+std::vector<NodePtr> Parser::ParseFunctionParameters(bool& variadic_positional_parameter_encountered, bool& keyword_parameter_encountered)
 {
   std::vector<NodePtr> result = {};
-  bool variadic_positional_parameter_encountered = false;
-  bool keyword_parameter_encountered = false;
 
   if (IsPeekToken(Token::Type::RIGHT_PARENTHESIS))
   {
@@ -821,7 +819,7 @@ NodePtr Parser::ParseFunctionLiteral()
   if (!ExpectPeek(Token::Type::LEFT_PARENTHESIS))
     return nullptr;
 
-  result->parameters = ParseFunctionParameters();
+  result->parameters = ParseFunctionParameters(result->variadic_positional_arguments_expected, result->variadic_keyword_arguments_expected);
 
   if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
     return nullptr;

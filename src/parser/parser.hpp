@@ -116,7 +116,7 @@ struct Parser
   NodePtr ParseForExpression();
   NodePtr ParseInExpression(NodePtr left);
 
-  std::vector<NodePtr> ParseFunctionParameters();
+  std::vector<NodePtr> ParseFunctionParameters(bool& variadic_positional_arguments_encountered, bool& variadic_keyword_arguments_encountered);
   NodePtr ParseFunctionLiteral();
 
   NodePtr ParseArrayLiteral();

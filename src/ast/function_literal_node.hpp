@@ -12,8 +12,13 @@ struct FunctionLiteralNode : Node
 {
   std::vector<NodePtr> parameters;
   BlockStatementNodePtr body;
+  bool variadic_positional_arguments_expected;
+  bool variadic_keyword_arguments_expected;
+
   explicit FunctionLiteralNode(Token token) : Node(token, FUNCTION),
                                               parameters({}),
+                                              variadic_positional_arguments_expected(false),
+                                              variadic_keyword_arguments_expected(false),
                                               body(nullptr) {}
 
   String ToString() override
