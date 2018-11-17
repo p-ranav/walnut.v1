@@ -716,9 +716,20 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
     NextToken();
     if (IsPeekToken(Token::Type::SYMBOL))
     {
-      PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
-      result.push_back(identifier);
-      NextToken();
+      if (!variadic_positional_parameter_encountered)
+      {
+        PositionalParameterNodePtr identifier = std::make_shared<PositionalParameterNode>(peek_token, peek_token.value);
+        result.push_back(identifier);
+        NextToken();
+      }
+      else
+      {
+        String brief_description = "failed to parse function parameters";
+        String detailed_description =
+          " variadic positional parameter already encountered. This is invalid syntax";
+        ReportError(peek_token, brief_description, detailed_description);
+        return {};
+      }
     }
     else if (IsPeekToken(Token::Type::MULTIPLICATION_OPERATOR))
     {
@@ -734,7 +745,7 @@ std::vector<NodePtr> Parser::ParseFunctionParameters()
       {
         String brief_description = "failed to parse function parameters";
         String detailed_description =
-          " variadic positional argument already encountered. This is invalid syntax";
+          " variadic positional parameter already encountered. This is invalid syntax";
         ReportError(peek_token, brief_description, detailed_description);
         return {};
       }

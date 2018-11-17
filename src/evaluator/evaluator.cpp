@@ -924,22 +924,42 @@ EnvironmentPtr Evaluator::ExtendFunctionEnvironment(FunctionObjectPtr function, 
   {
     if (i < arguments.size() && function->parameters[i])
     {
-      if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
-        environment->Set(function->parameters[i]->ToString(), arguments[i]);
-      else
+      if (function->parameters[i]->type == NodeType::POSITIONAL_PARAMETER)
       {
-        KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
-        if (function->parameters[i]->ToString() == kvpair->key->value)
-          environment->Set(kvpair->key->value, kvpair->value);
+        if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
+          environment->Set(function->parameters[i]->ToString(), arguments[i]);
         else
         {
-          // Scenario: my_func := function(a) { print(a) }
-          // calling my_func(b = 3) should throw an error
-          // "Expected argument a, instead got keyword argument b = 3"
-          std::cout << "error: expected argument " << function->parameters[i]->ToString() <<
-            ", instead got keyword argument " << kvpair->Inspect() << std::endl;
-          exit(EXIT_FAILURE);
+          KeyValueArgumentObjectPtr kvpair = std::dynamic_pointer_cast<KeyValueArgumentObject>(arguments[i]);
+          if (function->parameters[i]->ToString() == kvpair->key->value)
+            environment->Set(kvpair->key->value, kvpair->value);
+          else
+          {
+            // Scenario: my_func := function(a) { print(a) }
+            // calling my_func(b = 3) should throw an error
+            // "Expected argument a, instead got keyword argument b = 3"
+            std::cout << "error: expected argument " << function->parameters[i]->ToString() <<
+              ", instead got keyword argument " << kvpair->Inspect() << std::endl;
+            exit(EXIT_FAILURE);
+          }
         }
+      }
+      // function(a, b, *args) { ... }
+      // We're at *args
+      else if (function->parameters[i]->type == NodeType::VARIADIC_POSITIONAL_PARAMETER)
+      {
+        VariadicPositionalParameterNodePtr parameter = std::dynamic_pointer_cast<VariadicPositionalParameterNode>(function->parameters[i]);
+        String parameter_name = parameter->value;
+        TupleObjectPtr parameter_value = std::make_shared<TupleObject>();
+        do
+        {
+          if (arguments[i]->type != ObjectType::KEY_VALUE_ARGUMENT)
+          {
+            parameter_value->elements.push_back(arguments[i]);
+            i = i + 1;
+          }
+        } while (i < arguments.size());
+        environment->Set(parameter_name, parameter_value);
       }
     }
     else
