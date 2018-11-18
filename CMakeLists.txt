@@ -5,57 +5,50 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-MACRO(ADD_SUBLIBRARY LIBRARY_NAME RELATIVE_PATH)
-  #Compute required sources
-  file(GLOB SUBLIBRARY_SOURCES 
-    "${RELATIVE_PATH}/*.cpp" 
-    "${RELATIVE_PATH}/*.hpp")
-
-  #Create library
-  ADD_LIBRARY(${LIBRARY_NAME} STATIC ${SUBLIBRARY_SOURCES})
-
-  #add this library's header folder to the global include set
-  INCLUDE_DIRECTORIES("${RELATIVE_PATH}")
-
-ENDMACRO(ADD_SUBLIBRARY)
-
 # Disable deprecation for windows
 if (WIN32)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
-# STRING library
-ADD_SUBLIBRARY(STRING src/string)
-set_target_properties(STRING PROPERTIES OUTPUT_NAME string) # string.lib
-set_target_properties(STRING PROPERTIES LINKER_LANGUAGE CXX)
-
 # LEXER library
-ADD_SUBLIBRARY(LEXER src/lexer)
+file(GLOB LEXER_SOURCES 
+  "src/lexer/*.cpp" 
+  "src/lexer/*.hpp"
+  "src/lexer/token/*.hpp"
+  "src/lexer/token/*.cpp"
+  "src/lexer/utils/*.hpp"
+  "src/lexer/utils/*.cpp"
+  )
+ADD_LIBRARY(LEXER STATIC ${LEXER_SOURCES})
+INCLUDE_DIRECTORIES("src/lexer" "src/lexer/token" "src/lexer/utils")
 set_target_properties(LEXER PROPERTIES OUTPUT_NAME lexer) # lexer.lib
-TARGET_LINK_LIBRARIES(LEXER STRING)
-
-# ABSTRACT_SYNTAX_TREE library
-ADD_SUBLIBRARY(ABSTRACT_SYNTAX_TREE src/ast)
-set_target_properties(ABSTRACT_SYNTAX_TREE PROPERTIES OUTPUT_NAME ast) # ast.lib
-set_target_properties(ABSTRACT_SYNTAX_TREE PROPERTIES LINKER_LANGUAGE CXX)
+TARGET_LINK_LIBRARIES(LEXER)
 
 # PARSER library
-ADD_SUBLIBRARY(PARSER src/parser)
+file(GLOB PARSER_SOURCES 
+  "src/parser/*.cpp" 
+  "src/parser/*.hpp"
+  "src/parser/ast/*.hpp"
+  )
+ADD_LIBRARY(PARSER STATIC ${PARSER_SOURCES})
+INCLUDE_DIRECTORIES("src/parser" "src/parser/ast")
 set_target_properties(PARSER PROPERTIES OUTPUT_NAME parser) # parser.lib
-TARGET_LINK_LIBRARIES(PARSER LEXER STRING) 
-
-# OBJECT_MODEL library
-ADD_SUBLIBRARY(OBJECT_MODEL src/object)
-set_target_properties(OBJECT_MODEL PROPERTIES OUTPUT_NAME object) # object.lib
-set_target_properties(OBJECT_MODEL PROPERTIES LINKER_LANGUAGE CXX)
+TARGET_LINK_LIBRARIES(PARSER LEXER) 
 
 # EVALUATOR library
-ADD_SUBLIBRARY(EVALUATOR src/evaluator)
+file(GLOB EVALUATOR_SOURCES 
+  "src/evaluator/*.cpp" 
+  "src/evaluator/*.hpp"
+  "src/evaluator/builtin/*.cpp"
+  "src/evaluator/object/*.cpp"
+  "src/evaluator/object/*.hpp")
+ADD_LIBRARY(EVALUATOR STATIC ${EVALUATOR_SOURCES})
+INCLUDE_DIRECTORIES("src/evaluator" "src/evaluator/object")
 set_target_properties(EVALUATOR PROPERTIES OUTPUT_NAME evaluator) # evaluator.lib
-TARGET_LINK_LIBRARIES(EVALUATOR PARSER OBJECT_MODEL STRING)
+TARGET_LINK_LIBRARIES(EVALUATOR PARSER)
 set_property(TARGET EVALUATOR PROPERTY CXX_STANDARD 17)
 if (UNIX)
-TARGET_LINK_LIBRARIES(EVALUATOR PARSER OBJECT_MODEL STRING stdc++fs)
+TARGET_LINK_LIBRARIES(EVALUATOR PARSER stdc++fs)
 endif()
 
 # Main executable
@@ -66,7 +59,7 @@ ADD_EXECUTABLE(WALNUT ${EXECUTABLE_SOURCES})
 set_target_properties(WALNUT PROPERTIES OUTPUT_NAME walnut)
 
 #Link any of the created libraries
-TARGET_LINK_LIBRARIES(WALNUT STRING LEXER PARSER EVALUATOR OBJECT_MODEL)
+TARGET_LINK_LIBRARIES(WALNUT LEXER PARSER EVALUATOR)
 
 # Set ${PROJECT_NAME} as the startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WALNUT)
@@ -80,7 +73,7 @@ file(GLOB TESTS_SOURCES
 INCLUDE_DIRECTORIES("tests")
 ADD_EXECUTABLE(TESTS ${TESTS_SOURCES})
 set_target_properties(TESTS PROPERTIES OUTPUT_NAME tests) # tests.exe
-TARGET_LINK_LIBRARIES(TESTS STRING LEXER PARSER EVALUATOR)
+TARGET_LINK_LIBRARIES(TESTS LEXER PARSER EVALUATOR)
 
 # make check - runs unit tests
 if (UNIX)
