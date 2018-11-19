@@ -33,6 +33,8 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
   BUILTIN("range", BuiltinRange);
   BUILTIN("map", BuiltinMap);
   BUILTIN("filter", BuiltinFilter);
+  BUILTIN("reduce", BuiltinReduce);
+
   BUILTIN("enumerate", BuiltinEnumerate);
 
   BUILTIN("format", BuiltinFormat);

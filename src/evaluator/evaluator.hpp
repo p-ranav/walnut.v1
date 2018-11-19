@@ -146,9 +146,11 @@ struct Evaluator
 
   ObjectPtr BuiltinRange(std::vector<ObjectPtr> arguments);
 
-  /* Map & Filter Functions */
+  /* Map, Filter & Reduce Functions */
   ObjectPtr BuiltinMap(std::vector<ObjectPtr> arguments);
   ObjectPtr BuiltinFilter(std::vector<ObjectPtr> arguments);
+  ObjectPtr BuiltinReduce(std::vector<ObjectPtr> arguments);
+
   ObjectPtr BuiltinEnumerate(std::vector<ObjectPtr> arguments);
 
   /* String Functions */

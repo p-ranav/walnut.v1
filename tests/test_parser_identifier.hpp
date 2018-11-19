@@ -40,7 +40,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = 5'", "[parser]")
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = 5;");
+  REQUIRE(var_statement->ToString() == "foobar = 5");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
@@ -62,7 +62,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = 3.14'", "[parser]")
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = 3.14;");
+  REQUIRE(var_statement->ToString() == "foobar = 3.14");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
@@ -84,7 +84,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = \"Hello\"'", "[parser]"
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = \"Hello\";");
+  REQUIRE(var_statement->ToString() == "foobar = \"Hello\"");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
@@ -106,7 +106,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = 'a''", "[parser]")
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = 'a';");
+  REQUIRE(var_statement->ToString() == "foobar = 'a'");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
@@ -128,7 +128,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = true'", "[parser]")
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = true;");
+  REQUIRE(var_statement->ToString() == "foobar = true");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
@@ -150,7 +150,7 @@ TEST_CASE("The parser can parse the identifier 'foobar = false'", "[parser]")
   REQUIRE(parser.statements.size() == 1);
   REQUIRE(parser.statements[0]->type == Node::Type::VAR_STATEMENT);
   VarStatementNodePtr var_statement = std::dynamic_pointer_cast<VarStatementNode>(parser.statements[0]);
-  REQUIRE(var_statement->ToString() == "foobar = false;");
+  REQUIRE(var_statement->ToString() == "foobar = false");
   IdentifierNodePtr identifier = var_statement->name;
   REQUIRE(identifier->value == "foobar");
   NodePtr expression = var_statement->expression;
