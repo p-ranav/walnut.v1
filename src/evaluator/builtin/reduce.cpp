@@ -5,7 +5,7 @@ namespace walnut
 
   ObjectPtr Evaluator::BuiltinReduce(std::vector<ObjectPtr> arguments)
   {
-    ObjectPtr result;
+    ObjectPtr result = std::make_shared<IntegerObject>(0);
 
     if (arguments.size() == 3)
     {
@@ -20,7 +20,10 @@ namespace walnut
       else {
         result = arguments[2];
       }
+    }
 
+    if (arguments.size() >= 2) 
+    {
       if (arguments[0]->iterable == true && arguments[1]->type == ObjectType::FUNCTION)
       {
         FunctionObjectPtr reduce_function = std::dynamic_pointer_cast<FunctionObject>(arguments[1]);
@@ -32,10 +35,8 @@ namespace walnut
         return result;
       }
     }
-    else
-    {
-      // TODO: report error
-    }
+
+    // TODO: report error
     return std::make_shared<NullObject>();
   }
 
