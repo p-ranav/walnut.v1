@@ -38,8 +38,7 @@ Parser::Parser(TokenVectorConstRef tokens, StringConstRef buffer) : current_toke
                                                                         // Attribute
                                                                         {Token::Type::LEFT_SQUARE_BRACKETS, ATTRIBUTE},
                                                                         {Token::Type::DOT_OPERATOR, ATTRIBUTE},
-                                                                        {Token::Type::LEFT_PARENTHESIS, ATTRIBUTE},
-                                                                        {Token::Type::ARROW_OPERATOR, ATTRIBUTE},
+                                                                        {Token::Type::LEFT_PARENTHESIS, ATTRIBUTE}
                                                                     })
 {
   // prefix parse functions
@@ -80,7 +79,6 @@ Parser::Parser(TokenVectorConstRef tokens, StringConstRef buffer) : current_toke
   RegisterInfixParseFunction(Token::Type::LEFT_SQUARE_BRACKETS, std::bind(&Parser::ParseIndexExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::DOT_OPERATOR, std::bind(&Parser::ParseDotOperator, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::KEYWORD_IF, std::bind(&Parser::ParseTernaryOperator, this, std::placeholders::_1));
-  RegisterInfixParseFunction(Token::Type::ARROW_OPERATOR, std::bind(&Parser::ParseArrowOperator, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::KEYWORD_IN, std::bind(&Parser::ParseInExpression, this, std::placeholders::_1));
   RegisterInfixParseFunction(Token::Type::KEYWORD_NOT_IN, std::bind(&Parser::ParseInExpression, this, std::placeholders::_1));
 }
@@ -1071,78 +1069,6 @@ NodePtr Parser::ParseTuple(NodePtr first, size_t start_index)
     return result;
   }
   return expression_list;
-}
-
-NodePtr Parser::ParseArrowOperator(NodePtr left)
-{
-  FunctionLiteralNodePtr result = std::make_shared<FunctionLiteralNode>(current_token);
-
-  if (left == nullptr)
-    result->parameters = {};
-  else
-  {
-    if (left->type != Node::Type::TUPLE && left->type != Node::Type::IDENTIFIER)
-    {
-      String brief_description = "cannot use " + left->ToString() +
-                                 " as left-hand side of => operator";
-      String detailed_description =
-          " LHS of arrow operator needs to be an identifier or an identifier-tuple";
-      ReportError(left->token, brief_description, detailed_description);
-      return nullptr;
-    }
-
-    if (left->type == Node::Type::TUPLE)
-    {
-      TupleNodePtr function_parameters = std::dynamic_pointer_cast<TupleNode>(left);
-      for (auto &parameter : function_parameters->elements)
-      {
-        IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(parameter);
-        if (identifier != nullptr)
-        {
-          result->parameters.push_back(identifier);
-        }
-        else
-        {
-          String brief_description = "failed to parse arrow function";
-          String detailed_description =
-            " parameter " + parameter->ToString() + " is not a valid identifier";
-          ReportError(peek_token, brief_description, detailed_description);
-        }
-      }
-    }
-    else if (left->type == Node::Type::IDENTIFIER)
-    {
-      IdentifierNodePtr identifier = std::dynamic_pointer_cast<IdentifierNode>(left);
-      if (identifier != nullptr)
-      {
-        result->parameters.push_back(identifier);
-      }
-      else
-      {
-        String brief_description = "failed to parse arrow function";
-        String detailed_description =
-          " parameter " + identifier->ToString() + " is not a valid identifier";
-        ReportError(peek_token, brief_description, detailed_description);
-      }
-    }
-  }
-
-  if (IsPeekToken(Token::Type::LEFT_CURLY_BRACES))
-  {
-    // Function body is a multi-statement block of code
-    if (!ExpectPeek(Token::Type::LEFT_CURLY_BRACES))
-      return nullptr;
-    result->body = ParseBlockStatement();
-  }
-  else
-  {
-    NextToken();
-    result->body = std::make_shared<BlockStatementNode>(current_token);
-    NodePtr expression = ParseExpression(LOWEST);
-    result->body->statements.push_back(expression);
-  }
-
-  return result;
 }
 
 NodePtr Parser::ParseKeyValueArgument(NodePtr left)

@@ -16,7 +16,6 @@
 #include <test_parser_tuple.hpp>
 #include <test_parser_set.hpp>
 #include <test_parser_array.hpp>
-#include <test_parser_arrow.hpp>
 #include <test_parser_prefix_expression.hpp>
 #include <test_parser_infix_expression.hpp>
 #include <test_parser_operator_precedence.hpp>

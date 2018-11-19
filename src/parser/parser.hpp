@@ -133,7 +133,6 @@ struct Parser
   NodePtr ParseIndexExpression(NodePtr left);
   NodePtr ParseDotOperator(NodePtr left);
   NodePtr ParseTernaryOperator(NodePtr left);
-  NodePtr ParseArrowOperator(NodePtr left);
   NodePtr ParseKeyValueArgument(NodePtr left);
 
   /* Member variables */

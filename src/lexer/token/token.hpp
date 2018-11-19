@@ -21,7 +21,6 @@ struct Token
     COMMA_OPERATOR,
     COLON_OPERATOR,
     SEMI_COLON_OPERATOR,
-    ARROW_OPERATOR,
 
     // Arithmetic Operators
     ADDITION_OPERATOR,

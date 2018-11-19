@@ -21,7 +21,7 @@ struct VarStatementNode : Node
 
   String ToString() override
   {
-    return name->ToString() + " = " + expression->ToString() + ";";
+    return name->ToString() + " = " + expression->ToString();
   }
 };
 
