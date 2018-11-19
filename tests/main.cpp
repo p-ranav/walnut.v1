@@ -10,6 +10,7 @@
 #include <test_lexer_symbol.hpp>
 #include <test_lexer_whitespace.hpp>
 
+#include <test_parser_null.hpp>
 #include <test_parser_identifier.hpp>
 #include <test_parser_integer.hpp>
 #include <test_parser_double.hpp>
