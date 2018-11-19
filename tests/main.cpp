@@ -23,6 +23,7 @@
 #include <test_parser_boolean.hpp>
 #include <test_parser_if_else.hpp>
 #include <test_parser_function.hpp>
+#include <test_parser_call_expression.hpp>
 
 #include <test_evaluator_logical.hpp>
 #include <test_evaluator_list.hpp>
