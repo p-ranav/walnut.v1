@@ -16,7 +16,7 @@ $ make && make check
 ## Highlights
 
 * Dynamically-typed and Strongly-typed
-* Lists, ranges, sets, tuples, dictionaries, and functions are all first-class objects
+* Lists, sets, tuples, dictionaries, functions and more
 * Simple, expressive syntax, e.g., ```x := 5, y := 10, z := "Success" if x.type() == "int" and y in [1, 2, 3, 4, 5].map(a => a * 2)```
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
