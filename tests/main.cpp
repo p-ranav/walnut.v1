@@ -50,3 +50,4 @@
 #include <test_evaluator_reduce.hpp>
 #include <test_evaluator_closure.hpp>
 #include <test_evaluator_enumerate.hpp>
+#include <test_evaluator_nested_while.hpp>
