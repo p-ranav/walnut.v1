@@ -1,6 +1,0 @@
-multi_line := "Hello This is a 
-multi-line string. 
-Blah blah blah
-";
-
-multi_line.print();
