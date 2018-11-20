@@ -48,3 +48,4 @@
 #include <test_evaluator_ternary.hpp>
 #include <test_evaluator_scope.hpp>
 #include <test_evaluator_reduce.hpp>
+#include <test_evaluator_closure.hpp>
