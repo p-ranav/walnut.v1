@@ -47,3 +47,4 @@
 #include <test_evaluator_factorial.hpp>
 #include <test_evaluator_ternary.hpp>
 #include <test_evaluator_scope.hpp>
+#include <test_evaluator_reduce.hpp>
