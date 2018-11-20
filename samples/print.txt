@@ -1,2 +1,0 @@
-print("Test", "String");
-print("Test", "String", end= "!\n", sep = "_");
