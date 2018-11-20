@@ -42,3 +42,6 @@
 #include <test_evaluator_if_else.hpp>
 #include <test_evaluator_index.hpp>
 #include <test_evaluator_map.hpp>
+#include <test_evaluator_filter.hpp>
+#include <test_evaluator_fibonacci.hpp>
+#include <test_evaluator_factorial.hpp>
