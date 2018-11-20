@@ -39,3 +39,4 @@
 #include <test_evaluator_split.hpp>
 #include <test_evaluator_join.hpp>
 #include <test_evaluator_range.hpp>
+#include <test_evaluator_if_else.hpp>
