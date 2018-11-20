@@ -41,3 +41,4 @@
 #include <test_evaluator_range.hpp>
 #include <test_evaluator_if_else.hpp>
 #include <test_evaluator_index.hpp>
+#include <test_evaluator_map.hpp>

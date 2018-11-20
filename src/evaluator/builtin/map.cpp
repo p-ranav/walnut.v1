@@ -15,6 +15,9 @@ ObjectPtr Evaluator::BuiltinMap(std::vector<ObjectPtr> arguments)
       case ObjectType::ARRAY:
         result = std::make_shared<ArrayObject>();
         break;
+      case ObjectType::TUPLE:
+        result = std::make_shared<TupleObject>();
+        break;
       case ObjectType::STRING:
         result = std::make_shared<StringObject>("");
         break;
