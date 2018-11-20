@@ -290,6 +290,35 @@ TEST_CASE("Walnut can check if a key exists in a dictionary with the 'in' operat
   REQUIRE(exists->Inspect() == "true");
 }
 
+TEST_CASE("Walnut can check if a key exists in a dictionary with the 'in' operator (II)", "[evaluator]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "dict := {1: 2}; exists := 3 in dict;";
+
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  Parser parser(lexer.tokens, buffer);
+  parser.ParseProgram();
+  Evaluator evaluator(buffer);
+  for (auto& statement : parser.statements)
+  {
+    evaluator.Eval(statement, environment);
+  }
+  ObjectPtr result = environment->Get("dict");
+  REQUIRE(result != nullptr);
+  REQUIRE(result->type == ObjectType::HASH);
+  REQUIRE(result->Inspect() == "{1 : 2}");
+  HashObjectPtr result_dict = std::dynamic_pointer_cast<HashObject>(result);
+  REQUIRE(result_dict->pairs.size() == 1);
+  REQUIRE(result_dict->pairs.find(Hash(std::make_shared<IntegerObject>(1))) != result_dict->pairs.end());
+  ObjectPtr exists = environment->Get("exists");
+  REQUIRE(exists != nullptr);
+  REQUIRE(exists->type == ObjectType::BOOLEAN);
+  REQUIRE(exists->Inspect() == "false");
+}
+
 TEST_CASE("Walnut can check if a key doesn't exist in a dictionary with the 'not in' operator", "[evaluator]")
 {
   setlocale(LC_ALL, "");
