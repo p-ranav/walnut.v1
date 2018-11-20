@@ -418,11 +418,19 @@ ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
       {
         HashPair search = hash->Get(Hash(left));
         if (search.value != nullptr)
-          result = true;
+        {
+          if (!expression->negate_result)
+            result = true;
+          else
+            result = false;
+        }
       }
       catch (...)
       {
-        result = false;
+        if (!expression->negate_result)
+          result = false;
+        else
+          result = true;
       }
     }
     else if (right->type == ObjectType::STRING)
@@ -432,16 +440,31 @@ ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
       {
         StringObjectPtr left_string = std::dynamic_pointer_cast<StringObject>(left);
         if (string::Contains(string->Value(), left_string->Value()))
-          result = true;
+        {
+          if (!expression->negate_result)
+            result = true;
+          else
+            result = false;
+        }
       }
       else if (left->type == ObjectType::CHARACTER)
       {
         CharacterObjectPtr left_string = std::dynamic_pointer_cast<CharacterObject>(left);
         if (string::Contains(string->Value(), left_string->Value()))
+        {
+          if (!expression->negate_result)
+            result = true;
+          else
+            result = false;
+        }
+      }
+      else 
+      {
+        if (!expression->negate_result)
+          result = false;
+        else
           result = true;
       }
-      else
-        result = false;
     }
     else
     {

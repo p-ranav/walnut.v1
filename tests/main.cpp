@@ -52,3 +52,4 @@
 #include <test_evaluator_enumerate.hpp>
 #include <test_evaluator_nested_while.hpp>
 #include <test_evaluator_format.hpp>
+#include <test_evaluator_dictionary.hpp>
