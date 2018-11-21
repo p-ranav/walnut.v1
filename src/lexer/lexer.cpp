@@ -303,6 +303,10 @@ void Lexer::ParseSymbol(StringRef character)
     result.type = Token::Type::KEYWORD_IMPORT;
   else if (result.value == "null")
     result.type = Token::Type::KEYWORD_NULL;
+  else if (result.value == "break")
+    result.type = Token::Type::KEYWORD_BREAK;
+  else if (result.value == "continue")
+    result.type = Token::Type::KEYWORD_CONTINUE;
 
   tokens.push_back(result);
 }
