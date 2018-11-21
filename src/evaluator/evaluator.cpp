@@ -520,10 +520,17 @@ ObjectPtr Evaluator::EvalBlockStatement(NodePtr node, EnvironmentPtr environment
   BlockStatementNodePtr block = std::dynamic_pointer_cast<BlockStatementNode>(node);
   for (auto &statement : block->statements)
   {
-    result = Eval(statement, environment);
+    if (statement->type == NodeType::BREAK_STATEMENT)
+      throw(BreakStatementNode(statement->token));
+    else if (statement->type == NodeType::CONTINUE_STATEMENT)
+      throw(ContinueStatementNode(statement->token));
+    else
+    {
+      result = Eval(statement, environment);
 
-    if (result->type == ObjectType::RETURN)
-      return result;
+      if (result->type == ObjectType::RETURN)
+        return result;
+    }
   }
 
   return result;
@@ -536,10 +543,10 @@ ObjectPtr Evaluator::EvalIfExpression(NodePtr node, EnvironmentPtr environment)
   {
     ObjectPtr condition = Eval(expression->conditions[i], environment);
     if (IsTruth(condition, environment))
-      return Eval(expression->consequences[i], environment);
+      return EvalBlockStatement(expression->consequences[i], environment);
   }
   if (expression->alternative != nullptr)
-    return Eval(expression->alternative, environment);
+    return EvalBlockStatement(expression->alternative, environment);
   else
     return std::make_shared<NullObject>();
 }
@@ -585,11 +592,22 @@ ObjectPtr Evaluator::EvalWhileExpression(NodePtr node, EnvironmentPtr environmen
       break;
 
     NodePtr consequence = expression->consequence;
-    ObjectPtr consequence_result = Eval(consequence, while_environment);
-    if (consequence_result->type == ObjectType::RETURN)
-      return consequence_result;
-    else
-      result = consequence_result;
+    try
+    {
+      ObjectPtr consequence_result = EvalBlockStatement(consequence, while_environment);
+      if (consequence_result->type == ObjectType::RETURN)
+        return consequence_result;
+      else
+        result = consequence_result;
+    }
+    catch (BreakStatementNode)
+    {
+      break;
+    }
+    catch (ContinueStatementNode)
+    {
+      continue;
+    }
   }
 
   std::vector<EnvironmentPtr> environments = {environment};
@@ -688,7 +706,18 @@ ObjectPtr Evaluator::EvalForExpression(NodePtr node, EnvironmentPtr environment)
       }
 
       // Evaluate body of for loop using iterator values set in for_environment
-      result = Eval(expression->body, for_environment);
+      try
+      {
+        result = EvalBlockStatement(expression->body, for_environment);
+      }
+      catch (BreakStatementNode)
+      {
+        break;
+      }
+      catch (ContinueStatementNode)
+      {
+        continue;
+      }
       if (result->type == ObjectType::RETURN)
         return result;
 
