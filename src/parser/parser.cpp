@@ -243,6 +243,12 @@ NodePtr Parser::ParseStatement()
   case Token::Type::KEYWORD_RETURN:
     return ParseReturnStatement();
     break;
+  case Token::Type::KEYWORD_BREAK:
+    return ParseBreakStatement();
+    break;
+  case Token::Type::KEYWORD_CONTINUE:
+    return ParseContinueStatement();
+    break;
   case Token::Type::KEYWORD_IMPORT:
     return ParseImportStatement();
     break;
@@ -327,6 +333,30 @@ NodePtr Parser::ParseReturnStatement()
   ReturnStatementNodePtr result = std::make_shared<ReturnStatementNode>(current_token);
   NextToken();
   result->expression = ParseExpression(LOWEST);
+  return result;
+}
+
+NodePtr Parser::ParseBreakStatement()
+{
+  BreakStatementNodePtr result = std::make_shared<BreakStatementNode>(current_token);
+  if (!ExpectPeek(Token::Type::SEMI_COLON_OPERATOR))
+  {
+    String brief_description = "failed to parse break statement";
+    String detailed_description = " expected a ';' here";
+    ReportError(peek_token, brief_description, detailed_description);
+  }  
+  return result;
+}
+
+NodePtr Parser::ParseContinueStatement()
+{
+  ContinueStatementNodePtr result = std::make_shared<ContinueStatementNode>(current_token);
+  if (!ExpectPeek(Token::Type::SEMI_COLON_OPERATOR))
+  {
+    String brief_description = "failed to parse continue statement";
+    String detailed_description = " expected a ';' here";
+    ReportError(peek_token, brief_description, detailed_description);
+  }
   return result;
 }
 

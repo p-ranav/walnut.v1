@@ -29,6 +29,8 @@
 #include <key_value_argument_node.hpp>
 #include <in_expression_node.hpp>
 #include <null_node.hpp>
+#include <break_statement_node.hpp>
+#include <continue_statement_node.hpp>
 
 #include <string.hpp>
 
@@ -71,6 +73,8 @@ struct Parser
   NodePtr ParseReturnStatement();
   NodePtr ParseImportStatement();
   NodePtr ParseExpressionStatement();
+  NodePtr ParseBreakStatement();
+  NodePtr ParseContinueStatement();
 
   PrefixParseFunctionMap prefix_parse_functions;
   void RegisterPrefixParseFunction(Token::Type token, PrefixParseFunction function);
