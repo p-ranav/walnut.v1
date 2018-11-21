@@ -25,6 +25,8 @@
 #include <test_parser_if_else.hpp>
 #include <test_parser_function.hpp>
 #include <test_parser_call_expression.hpp>
+#include <test_parser_break_statement.hpp>
+#include <test_parser_continue_statement.hpp>
 
 #include <test_evaluator_logical.hpp>
 #include <test_evaluator_list.hpp>
@@ -55,3 +57,5 @@
 #include <test_evaluator_dictionary.hpp>
 #include <test_evaluator_alias.hpp>
 #include <test_evaluator_in.hpp>
+#include <test_evaluator_break_statement.hpp>
+#include <test_evaluator_continue_statement.hpp>
