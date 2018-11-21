@@ -24,3 +24,5 @@ $ make && make check
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
 * A large pile of built-in functions implemented in C++
 * Test suite - currently ~350 unit tests
+
+![Highlights](https://i.imgur.com/NOwlsUv.gif)
