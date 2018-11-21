@@ -42,6 +42,8 @@ struct Node
     KEY_VALUE_ARGUMENT,
     IN_EXPRESSION,
     NULL_,
+    BREAK_STATEMENT,
+    CONTINUE_STATEMENT,
     INVALID
   };
 
