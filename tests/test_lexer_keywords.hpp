@@ -325,4 +325,46 @@ TEST_CASE("Lexer can recognize the keyword 'null'", "[lexer]")
   REQUIRE(lexer.tokens[1].value == "EOF");
 }
 
+TEST_CASE("Lexer can recognize the keyword 'break'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "break";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::KEYWORD_BREAK);
+  REQUIRE(lexer.tokens[0].value == "break");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 6);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+}
+
+TEST_CASE("Lexer can recognize the keyword 'continue'", "[lexer]")
+{
+  setlocale(LC_ALL, "");
+  EnvironmentPtr environment = std::make_shared<Environment>();
+  String filename = "";
+  String buffer = "continue";
+  Lexer lexer(filename, buffer);
+  lexer.Tokenize();
+  REQUIRE(lexer.tokens.size() == 2);
+  REQUIRE(lexer.tokens[0].file == "");
+  REQUIRE(lexer.tokens[0].line == 1);
+  REQUIRE(lexer.tokens[0].cursor == 1);
+  REQUIRE(lexer.tokens[0].type == Token::Type::KEYWORD_CONTINUE);
+  REQUIRE(lexer.tokens[0].value == "continue");
+  REQUIRE(lexer.tokens[1].file == "");
+  REQUIRE(lexer.tokens[1].line == 1);
+  REQUIRE(lexer.tokens[1].cursor == 9);
+  REQUIRE(lexer.tokens[1].type == Token::Type::END_OF_FILE);
+  REQUIRE(lexer.tokens[1].value == "EOF");
+}
+
 } // namespace walnut
