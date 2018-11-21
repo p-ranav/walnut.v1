@@ -446,6 +446,13 @@ ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
           else
             result = false;
         }
+        else
+        {
+          if (!expression->negate_result)
+            result = false;
+          else
+            result = true;
+        }
       }
       else if (left->type == ObjectType::CHARACTER)
       {
@@ -457,9 +464,17 @@ ObjectPtr Evaluator::EvalInExpression(NodePtr node, EnvironmentPtr environment)
           else
             result = false;
         }
+        else
+        {
+          if (!expression->negate_result)
+            result = false;
+          else
+            result = true;
+        }
       }
       else 
       {
+        // TODO: This should be a type error
         if (!expression->negate_result)
           result = false;
         else

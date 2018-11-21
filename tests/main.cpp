@@ -54,3 +54,4 @@
 #include <test_evaluator_format.hpp>
 #include <test_evaluator_dictionary.hpp>
 #include <test_evaluator_alias.hpp>
+#include <test_evaluator_in.hpp>
