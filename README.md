@@ -25,4 +25,4 @@ $ make && make check
 * A large pile of built-in functions implemented in C++
 * Test suite - currently ~350 unit tests
 
-![Highlights](https://i.imgur.com/NOwlsUv.gif | width=100)
+<img src="https://i.imgur.com/QcTD29z.png" width="800">
