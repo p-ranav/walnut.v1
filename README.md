@@ -19,7 +19,7 @@ $ make && make check
 
 * Dynamically-typed and Strongly-typed
 * Lists, sets, tuples, dictionaries, functions and more
-* Simple, expressive syntax, e.g., ```x := 5, y := 10, z := "Success" if x.type() == "int" and y in [1, 2, 3, 4, 5].map(a => a * 2)```
+* Simple, expressive syntax, e.g., ```x := 5, y := 10, z := "Success" if x.type() == "int" and y in [2, 4, 6, 8, 10];```
 * UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
 * Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
 * A large pile of built-in functions implemented in C++
