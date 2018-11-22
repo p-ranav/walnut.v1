@@ -29,12 +29,12 @@ $ cmake ../.
 $ make && make check
 ```
 
-<img src="https://i.imgur.com/ugf7Qee.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/exchDSn.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/qkRegHZ.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/qkRegHZ.png" alt="Compound Data Types"/>
 
-<img src="https://i.imgur.com/158nYK7.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/158nYK7.png" alt="Intuitive Interpretation"/>
 
-<img src="https://i.imgur.com/Vz9gcaS.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/Vz9gcaS.png" alt="Quick & Easy to Learn"/>
 
-<img src="https://i.imgur.com/3boEIEb.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/3boEIEb.png" alt="All the Flow You'd Expect"/>
