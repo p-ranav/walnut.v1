@@ -8,6 +8,10 @@ Walnut is an interpreted high-level programming language implemented in C++. Wal
 * Recursive-descent Parser
 * Tree-walking Interpreter
 
+<p align="center">
+  <img src="https://i.imgur.com/NOwlsUv.gif" alt="highlights" width="500"/>
+</p>
+
 ## Highlights
 
 * Dynamically-typed and Strongly-typed
@@ -22,14 +26,12 @@ Walnut is an interpreted high-level programming language implemented in C++. Wal
 
 This code base has been tested with both Visual Studio 2017 and gcc 7.3.0. 
 
-```bash
+```console
 $ mkdir build
 $ cd build
 $ cmake ../.
 $ make && make check
 ```
-
-## Code Samples
 
 <img src="https://i.imgur.com/QcTD29z.png" alt="cone_volume" width="500"/>
 
