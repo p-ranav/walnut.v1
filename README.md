@@ -29,18 +29,12 @@ $ cmake ../.
 $ make && make check
 ```
 
-<img src="https://i.imgur.com/QcTD29z.png" alt="cone_volume" width="500"/>
+<img src="https://i.imgur.com/ugf7Qee.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/QVNIJbC.png" alt="matrix_transpose" width="500"/>
+<img src="https://i.imgur.com/qkRegHZ.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/mxXHJ5f.png" alt="list" width="500"/>
+<img src="https://i.imgur.com/158nYK7.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/rKrBVsP.png" alt="string_format" width="500"/>
+<img src="https://i.imgur.com/Vz9gcaS.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/ondFPbP.png" alt="map_filter_reduce" width="500"/>
-
-<img src="https://i.imgur.com/4w9ap1i.png" alt="dictionary" width="500"/>
-
-<img src="https://i.imgur.com/IN2EHWO.png" alt="decorator" width="500"/>
-
-<img src="https://i.imgur.com/WX96zH6.png" alt="kwargs" width="500"/>
+<img src="https://i.imgur.com/QfcCkNh.png" alt="Functions Defined"/>
