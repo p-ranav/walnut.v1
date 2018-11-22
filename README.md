@@ -4,7 +4,9 @@
 
 Walnut is an interpreted high-level programming language implemented in C++. Walnut is simple, elegant and inspired by concepts in a number of programming languages including Python, Go, Rust and Javascript. This project is very much a work in progress and a learning experience, as I explore the world of language interpreters. 
 
-DISCLAIMER: This is just a tree-walking interpreter. No bytecode. No VM. So, don't expect the performance to be comparable with languages like Python. Feel free to reuse the lexer and parser for your own VM implementation. Perhaps in the future, I'll work on a virtual machine for this language.
+* Lexer with UTF-8 support
+* Recursive-descent Parser
+* Tree-walking Interpreter
 
 ## Highlights
 
