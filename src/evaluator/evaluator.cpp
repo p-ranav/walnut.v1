@@ -13,7 +13,7 @@ namespace walnut
                         function,              \
                     this, std::placeholders::_1))));
 
-Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
+Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer), global_environment(nullptr)
 {
   BUILTIN("print", BuiltinPrint);
   BUILTIN("type", BuiltinType);
@@ -42,10 +42,18 @@ Evaluator::Evaluator(StringConstRef buffer) : buffer(buffer)
   BUILTIN("join", BuiltinJoin);
 }
 
+Evaluator::~Evaluator() {
+  global_environment->store.clear();
+  global_environment.reset();
+}
+
 ObjectPtr Evaluator::Eval(NodePtr node, EnvironmentPtr environment)
 {
   if (node == nullptr)
     return std::make_shared<NullObject>();
+
+  if (global_environment == nullptr)
+    global_environment = environment;
 
   switch (node->type)
   {

@@ -82,7 +82,7 @@ String Slice(StringConstRef input_string, int start_index, int end_index, int st
 // split string based on a delimiter string
 // supports multi-character delimiter
 // returns a vector of substrings after split
-std::vector<String> Split(StringConstRef input_string, StringConstRef delimiter, std::vector<String> *result)
+std::vector<String> Split(StringConstRef input_string, StringConstRef delimiter, std::shared_ptr<std::vector<String>> result)
 {
   String current_string(input_string);
   size_t delimiter_position = current_string.find(delimiter); // check if delimiter is in input string

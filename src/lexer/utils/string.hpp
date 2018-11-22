@@ -32,7 +32,7 @@ String Slice(StringConstRef input_string, int start_index, int end_index = INT_M
 // supports multi-character delimiter
 // returns a vector of substrings after split
 std::vector<String> Split(StringConstRef input_string, StringConstRef delimiter,
-                          std::vector<String> *result = new std::vector<String>());
+                          std::shared_ptr<std::vector<String>> result = std::make_shared<std::vector<String>>());
 
 // join a vector of strings into a single string
 String Join(const std::vector<String> &input, StringConstRef connector = "");
