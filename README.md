@@ -33,7 +33,7 @@ $ make && make check
 
 <img src="https://i.imgur.com/qkRegHZ.png" alt="Compound Data Types"/>
 
-<img src="https://i.imgur.com/158nYK7.png" alt="Intuitive Interpretation"/>
+<img src="https://i.imgur.com/njNDpY1.png" alt="Intuitive Interpretation"/>
 
 <img src="https://i.imgur.com/Vz9gcaS.png" alt="Quick & Easy to Learn"/>
 
