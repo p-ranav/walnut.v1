@@ -37,4 +37,4 @@ $ make && make check
 
 <img src="https://i.imgur.com/Vz9gcaS.png" alt="Functions Defined"/>
 
-<img src="https://i.imgur.com/QfcCkNh.png" alt="Functions Defined"/>
+<img src="https://i.imgur.com/3boEIEb.png" alt="Functions Defined"/>
