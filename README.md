@@ -8,18 +8,6 @@ Walnut is an interpreted high-level programming language implemented in C++. Wal
 * Recursive-descent Parser
 * Tree-walking Interpreter
 
-## Highlights
-
-* Dynamically-typed and Strongly-typed
-* Lists, sets, tuples, dictionaries, functions and more
-* Simple, expressive syntax, e.g., ```x := 5, y := 10, z := "Success" if x.type() == "int" and y in [2, 4, 6, 8, 10];```
-* UTF-8 support - you can use 信息 as your variable name. Emojis are cool too!
-* Function chaining with dot operator, e.g., ```[].append(2).extend([3, 4]).map(function(i) { i * i }).print();```
-* A large pile of built-in functions implemented in C++
-* Test suite - currently ~400 unit tests
-
-## Quick Start
-
 This code base has been tested with both Visual Studio 2017 and gcc 7.3.0. 
 
 ```console
