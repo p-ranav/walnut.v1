@@ -8,9 +8,7 @@ Walnut is an interpreted high-level programming language implemented in C++. Wal
 * Recursive-descent Parser
 * Tree-walking Interpreter
 
-<p align="center">
-  <img src="https://i.imgur.com/NOwlsUv.gif" alt="highlights" width="500"/>
-</p>
+![Highlights](https://i.imgur.com/NOwlsUv.gif)
 
 ## Highlights
 
